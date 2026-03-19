@@ -82,7 +82,7 @@ gorustbash_benchmark/
 | sqli | 89 | 65 | 58 | 123 |
 | cmdi | 78 | 30 | 30 | 60 |
 | pathtraver | 22 | 25 | 30 | 55 |
-| xss | 79 | 14 | 14 | 28 |
+| xss | 79 | 13 | 15 | 28 |
 | ssrf | 918 | 10 | 10 | 20 |
 | weakrand | 330 | 10 | 10 | 20 |
 | weakhash | 328 | 10 | 10 | 20 |
