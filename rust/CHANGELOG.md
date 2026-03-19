@@ -200,3 +200,169 @@ We are ~25% done. The 98 annotated test cases are correct and verified. But the 
 - FPR measurable: **94%** of test cases (was 31%)
 - Remaining TN gaps: infodisclosure (5 TP, 0 TN), inputval (1 TP, 0 TN)
 - All 119 annotations verified 1:1 with ground truth YAML (zero orphans)
+
+---
+
+## 2026-03-19 — M3: Answer Key Migration (Phase 6)
+
+### CSV Answer Key Created
+- `expectedresults-0.1.csv` — 119 test cases in flat CSV format
+- Format: `test_name,category,real_vulnerability,CWE` (matches Java/Go benchmarks exactly)
+- Sorted by category then key name
+- 78 TP + 41 TN (note: sqli has 21 TP due to ES injection counted under sqli)
+
+### Scoring Script Updated
+- Replaced YAML parser (~20 lines) with CSV parser (~10 lines)
+- Simpler, faster, matches Java benchmark scoring pattern
+- Annotation-based line range detection unchanged
+- taint_sinks still excluded (M1 fix preserved)
+
+### YAML Downgraded to Documentation
+- `rust_ground_truth.yml` header updated: "Scoring uses CSV. This file is documentation only."
+- YAML still has descriptions and methodology notes not in CSV
+- Both files must stay in sync when test cases are added
+
+### Files Changed
+- NEW: `expectedresults-0.1.csv`
+- MODIFIED: `rust_benchmark.md` (scoring script)
+- MODIFIED: `rust_ground_truth.yml` (header note, version 0.3)
+- MODIFIED: `CHANGELOG.md` (this entry)
+
+---
+
+## 2026-03-19 — M4: Dedicated Test Case Files (Phase 7)
+
+### testcode/ Directory Created
+Framework-agnostic standalone test files matching Java/Go benchmark pattern.
+
+**Design:** Each test is a pure function: `BenchmarkRequest -> BenchmarkResponse`. No framework dependency. `shared.rs` provides the abstraction types. Thin adapters (not yet written) convert framework HTTP to BenchmarkRequest.
+
+### Files Created
+| File | Category | TP/TN | Pattern |
+|------|----------|-------|---------|
+| `shared.rs` | - | - | BenchmarkRequest, BenchmarkResponse types |
+| `sqli_001_vulnerable.rs` | sqli | TP | format!() SQL with user param |
+| `sqli_002_safe.rs` | sqli | TN | Parameterized ? placeholder |
+| `cmdi_001_vulnerable.rs` | cmdi | TP | Command::new(user_input) |
+| `cmdi_002_safe.rs` | cmdi | TN | Command from match allowlist |
+| `pathtraver_001_vulnerable.rs` | pathtraver | TP | fs::read_to_string(user_path) |
+| `pathtraver_002_safe.rs` | pathtraver | TN | canonicalize + starts_with |
+| `xss_001_vulnerable.rs` | xss | TP | Raw HTML interpolation |
+| `xss_002_safe.rs` | xss | TN | HTML entity escaping |
+| `crypto_001_vulnerable.rs` | crypto | TP | MD5-like weak hash |
+| `crypto_002_safe.rs` | crypto | TN | SHA-256/bcrypt-strength hash |
+
+### Scoring Updated
+- Scoring script now scans both `apps/` and `testcode/` for annotations
+- CSV updated with 10 new entries (5 TP + 5 TN)
+- YAML updated with 10 new entries
+
+### Inventory After M4
+- Total test cases: **129** (83 TP + 46 TN)
+- TP/TN ratio: **64/36** (was 65/35)
+- Sources: apps/ (119 test cases) + testcode/ (10 test cases)
+- All 129 annotations = 129 CSV entries = 129 YAML entries (triple-verified)
+
+---
+
+## 2026-03-19 — M5: Scale to 262 Test Cases (Phase 8)
+
+### 133 New Standalone Test Files
+Written in 5 batches across all 13 categories in `testcode/`:
+
+| Batch | Categories | New Files | Pattern Diversity |
+|-------|-----------|-----------|-------------------|
+| 1 | infodisclosure, inputval, redos | 28 | Stack traces, env dumps, regex bombs, validation patterns |
+| 2 | deser, intoverflow, weakrand | 29 | bincode, YAML bomb, truncating casts, CSPRNG vs timestamp |
+| 3 | crypto, xss | 19 | DES/RC4/ECB vs AES-GCM/ChaCha20, attribute/script context XSS |
+| 4 | cmdi, pathtraver | 26 | Env injection, piped cmds; symlinks, UUID filenames, chroot |
+| 5 | sqli, ssrf, memsafety | 31 | ORDER BY/LIKE injection; DNS rebinding; from_raw_parts |
+
+### Final Inventory
+| Category | CWE | TP | TN | Total | Balance |
+|----------|-----|----|----|-------|---------|
+| sqli | 89 | 24 | 26 | 50 | 48/52 |
+| cmdi | 78 | 14 | 16 | 30 | 47/53 |
+| pathtraver | 22 | 14 | 14 | 28 | 50/50 |
+| ssrf | 918 | 9 | 13 | 22 | 41/59 |
+| memsafety | 119 | 8 | 12 | 20 | 40/60 |
+| crypto | 327 | 9 | 11 | 20 | 45/55 |
+| weakrand | 330 | 7 | 9 | 16 | 44/56 |
+| xss | 79 | 5 | 11 | 16 | 31/69 |
+| infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
+| deser | 502 | 5 | 7 | 12 | 42/58 |
+| intoverflow | 190 | 5 | 7 | 12 | 42/58 |
+| redos | 1333 | 4 | 6 | 10 | 40/60 |
+| inputval | 20 | 4 | 6 | 10 | 40/60 |
+| **TOTAL** | | **116** | **146** | **262** | **44/56** |
+
+### Key Metrics
+- **262 test cases** (was 129) — 2x growth
+- **TP/TN ratio: 44/56** (Java gold standard: 52/48) — balanced
+- **All 13 categories** have both TP and TN — FPR measurable for 100%
+- **Every category >= 10 test cases** — statistically meaningful
+- **262 annotations = 262 CSV entries** — zero orphans
+- **Sources:** apps/ (119) + testcode/ (143)
+
+---
+
+## 2026-03-19 — M6: CI & Automation (Phase 9)
+
+### Validation Script Created
+`scripts/validate_rust.py` — standalone Python 3 script (no dependencies):
+- Parses CSV answer key
+- Scans all .rs files for vuln-code-snippet annotations
+- Checks 1:1 match between CSV keys and annotation keys
+- Detects: orphan CSV entries, orphan annotations, unclosed snippets, duplicates
+- Prints per-category TP/TN stats
+- Exit 0 on pass, 1 on fail
+
+**First run: PASS** — 262 CSV entries, 262 annotations, zero errors.
+
+### GitHub Actions Workflow
+`.github/workflows/validate.yml` — runs on push to main and PRs:
+- Matrix strategy ready for go/bash when their scripts exist
+- Uses Python 3.12, runs validate script, fails PR if validation errors
+
+### PR Template
+`.github/PULL_REQUEST_TEMPLATE.md` — checklist for contributors:
+- Test file + CSV entry required
+- TP/TN pair encouraged
+- No vulnerability hints in source
+- Local validation run required
+
+### Files Created
+- `scripts/validate_rust.py`
+- `.github/workflows/validate.yml`
+- `.github/PULL_REQUEST_TEMPLATE.md`
+
+---
+
+## 2026-03-19 — Pre-Flight Check (Phase 10)
+
+### Due Diligence Audit
+Read every shared file. Verified actual numbers against claims. Found and fixed:
+
+**README.md (shared):**
+- Rust section was stale (showed 129 test cases from Phase 2, actual: 262)
+- Updated Rust per-category table to verified numbers from validate_rust.py
+- Fixed directory structure: added `expectedresults-0.1.csv`, `testcode/`, `dev_roadmap.md`
+- Fixed "Combined Scale" table: Rust 129 -> 262, total 732 -> 865
+- Go team had already fixed Go numbers, added Project Status + Limitations sections
+
+**validate_go.py (new):**
+- Go uses filename-based identity (like Java), not annotations
+- First version used annotation scanning — failed (424 orphans)
+- Rewrote to match CSV key BenchmarkTestNNNNN -> file benchmark_test_nnnnn.go
+- Now passes: 424/424, 16 categories, 50/49 TP/TN
+
+**CI workflow updated:**
+- `.github/workflows/validate.yml` now runs both Rust and Go validation
+- Bash deferred until validate_bash.py exists
+
+### Validation Results (final)
+```
+Rust: PASS — 262 CSV, 262 annotations, 116 TP, 146 TN
+Go:   PASS — 424 CSV, 424 test files, 213 TP, 211 TN
+Bash: No validator yet (uses YAML, different approach needed)
+```

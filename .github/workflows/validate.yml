@@ -1,0 +1,27 @@
+name: Validate Benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [rust, go]
+        # Add bash when validate_bash.py exists
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate ${{ matrix.language }} benchmark
+        run: python3 scripts/validate_${{ matrix.language }}.py

@@ -1,5 +1,9 @@
+# NOTE: Scoring uses expectedresults-0.1.csv (flat CSV, matches Java/Go format).
+# This YAML is documentation only — descriptions, methodology, bias notes.
+# The CSV is the scoring authority. Keep both in sync.
+
 metadata:
-  version: "0.2"
+  version: "0.3"
   language: rust
   created: "2026-03-19"
   methodology: |
@@ -809,3 +813,67 @@ test_cases:
     cwe: 190
     vulnerable: false
     description: "checked_add/checked_mul instead of wrapping — NOT vulnerable"
+
+  # =========================================================================
+  # M4: STANDALONE TESTCODE/ TEST CASES (10)
+  # =========================================================================
+
+  - key: testcodeSqli001Vulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Standalone: format!() SQL with user id param"
+
+  - key: testcodeSqli002Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Standalone: parameterized query with ? placeholder"
+
+  - key: testcodeCmdi001Vulnerable
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Standalone: Command::new(user_cmd)"
+
+  - key: testcodeCmdi002Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Standalone: command from match allowlist"
+
+  - key: testcodePathtraver001Vulnerable
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "Standalone: fs::read_to_string(user_path) no validation"
+
+  - key: testcodePathtraver002Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "Standalone: canonicalize + starts_with base check"
+
+  - key: testcodeXss001Vulnerable
+    category: xss
+    cwe: 79
+    vulnerable: true
+    description: "Standalone: format!() HTML with user input"
+
+  - key: testcodeXss002Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+    description: "Standalone: HTML entity escaping before interpolation"
+
+  - key: testcodeCrypto001Vulnerable
+    category: crypto
+    cwe: 327
+    vulnerable: true
+    description: "Standalone: MD5-like hash for password"
+
+  - key: testcodeCrypto002Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+    description: "Standalone: SHA-256/bcrypt-strength hash"

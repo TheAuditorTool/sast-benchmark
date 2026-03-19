@@ -11,22 +11,22 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 | Category | CWE | TP | TN | Total | Balance |
 |----------|-----|----|----|-------|---------|
-| sqli | 89 | 20 | 15 | 35 | 57/43 |
-| cmdi | 78 | 11 | 5 | 16 | 69/31 |
-| pathtraver | 22 | 11 | 1 | 12 | 92/8 (GAP) |
-| ssrf | 918 | 7 | 5 | 12 | 58/42 |
-| memsafety | 119 | 7 | 4 | 11 | 64/36 |
-| crypto | 327/347 | 5 | 4 | 9 | 56/44 |
-| weakrand | 330 | 3 | 2 | 5 | 60/40 |
-| xss | 79 | 2 | 2 | 4 | 50/50 |
-| infodisclosure | 200+ | 5 | 0 | 5 | 100/0 (GAP) |
-| deser | 502 | 2 | 1 | 3 | 67/33 |
-| intoverflow | 190 | 2 | 1 | 3 | 67/33 |
-| redos | 1333 | 1 | 1 | 2 | 50/50 |
-| inputval | 20 | 1 | 0 | 1 | 100/0 (GAP) |
-| **TOTAL** | | **77** | **41** | **118** | **65/35** |
+| sqli | 89 | 24 | 26 | 50 | 48/52 |
+| cmdi | 78 | 14 | 16 | 30 | 47/53 |
+| pathtraver | 22 | 14 | 14 | 28 | 50/50 |
+| ssrf | 918 | 9 | 13 | 22 | 41/59 |
+| memsafety | 119 | 8 | 12 | 20 | 40/60 |
+| crypto | 327 | 9 | 11 | 20 | 45/55 |
+| weakrand | 330 | 7 | 9 | 16 | 44/56 |
+| xss | 79 | 5 | 11 | 16 | 31/69 |
+| infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
+| deser | 502 | 5 | 7 | 12 | 42/58 |
+| intoverflow | 190 | 5 | 7 | 12 | 42/58 |
+| redos | 1333 | 4 | 6 | 10 | 40/60 |
+| inputval | 20 | 4 | 6 | 10 | 40/60 |
+| **TOTAL** | | **116** | **146** | **262** | **44/56** |
 
-**TN coverage improved in M2**: 11 of 13 categories now have TN. Only infodisclosure and inputval remain 0 TN. FPR measurable for 94% of test cases (up from 31%).
+**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 44/56 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
 
 ### Frameworks Covered
 
@@ -148,41 +148,32 @@ from pathlib import Path
 BENCH = Path(r"C:\Users\santa\Desktop\open_tests\gorustbash_benchmark\rust")
 APPS = BENCH / "apps"
 DB = BENCH / ".pf" / "repo_index.db"
-GT_FILE = BENCH / "rust_ground_truth.yml"
+CSV_FILE = BENCH / "expectedresults-0.1.csv"
 
-# --- Parse ground truth YAML (simple parser, no pyyaml) ---
+# --- Parse CSV answer key (matches Java/Go format) ---
 gt = []
-current = None
-with open(GT_FILE, "r", encoding="utf-8") as f:
-    for raw_line in f:
-        line = raw_line.rstrip()
-        stripped = line.lstrip()
-        if stripped.startswith("#") or not stripped:
+with open(CSV_FILE, "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if line.startswith("#") or not line:
             continue
-        if stripped.startswith("- key:"):
-            if current:
-                gt.append(current)
-            current = {"key": stripped.split(":", 1)[1].strip()}
-        elif current is not None and ":" in stripped and len(line) - len(stripped) >= 4:
-            k, v = stripped.split(":", 1)
-            k = k.strip()
-            v = v.strip().strip("\"").strip(chr(39))
-            if k == "cwe":
-                v = int(v)
-            elif k == "vulnerable":
-                v = v.lower() == "true"
-            current[k] = v
-if current:
-    gt.append(current)
+        parts = line.split(",")
+        gt.append({
+            "key": parts[0],
+            "category": parts[1],
+            "vulnerable": parts[2].lower() == "true",
+            "cwe": int(parts[3]),
+        })
 
-print("Ground truth: %d test cases" % len(gt))
+print("Answer key: %d test cases" % len(gt))
 
 # --- Parse vuln-code-snippet annotations from source ---
 snippets = {}
 pat_s = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
 pat_e = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
 
-for root, dirs, files in os.walk(str(APPS)):
+for scan_dir in [str(APPS), str(BENCH / "testcode")]:
+  for root, dirs, files in os.walk(scan_dir):
     dirs[:] = [d for d in dirs if d != "target" and d != ".git"]
     for fn in files:
         if not fn.endswith(".rs"):
