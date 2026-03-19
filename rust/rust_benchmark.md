@@ -87,7 +87,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 ## Rule Coverage Matrix (verified against source code)
 
-Maps each benchmark category to the TheAuditor rule(s) that detect it. Gaps are documented in `/coverage_cve_gaps.md`.
+Maps each benchmark category to SAST rules that detect it.
 
 | Category | CWE | Rule File | Track | Coverage |
 |----------|-----|-----------|-------|----------|

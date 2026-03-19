@@ -255,7 +255,7 @@ M1 is the prerequisite for everything. M2, M3, M6 can run in parallel after M1. 
 
 ## Known Limitations (cannot be fixed by benchmark team)
 
-These require engine work, not benchmark work. Documented in `coverage_cve_gaps.md`.
+These require engine work, not benchmark work. Documented in the rule coverage matrix in `rust_benchmark.md`.
 
 | Gap | What's Missing | Owner |
 |-----|---------------|-------|

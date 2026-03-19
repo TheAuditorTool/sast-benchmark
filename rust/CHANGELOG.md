@@ -125,7 +125,7 @@ Mapped all 13 benchmark categories against actual engine rules. Verified each ga
 **Full gaps (7 categories, 19 test cases):** xss, weakrand, deser, redos, infodisclosure, inputval
 **Partial gaps (2 categories, 7 test cases):** crypto (dep-level only), intoverflow (crypto context only)
 
-Gap details written to `/coverage_cve_gaps.md` (shared with Go and Bash teams).
+Gap details documented in rule coverage matrix (see rust_benchmark.md).
 
 ### Rule Coverage Matrix
 Added to `rust_benchmark.md` — maps each benchmark category to the specific rule file, track type, and coverage status.
@@ -133,7 +133,7 @@ Added to `rust_benchmark.md` — maps each benchmark category to the specific ru
 ### Project-Level Documentation
 - Updated `README.md` (project root) — added Rust section with 98 test cases, 13 CWEs, 4 frameworks
 - Updated directory structure in README to match reality
-- `coverage_cve_gaps.md` created with Rust section (8 gaps prioritized by impact)
+- Rule coverage matrix added to rust_benchmark.md (8 gaps prioritized by impact)
 - LICENSE and CONTRIBUTING.md already created by other teams
 
 ### Rust Pattern Quality (from patterns_sop.md audit)
