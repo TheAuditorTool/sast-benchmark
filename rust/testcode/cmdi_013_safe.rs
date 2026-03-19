@@ -7,9 +7,14 @@ use std::process::{Command, Stdio};
 pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
     let tool = req.param("tool");
 
-    // SAFE: PATH restricted to only /usr/bin, preventing arbitrary binary execution
+    // SAFE: Reject absolute/relative paths to prevent bypassing PATH restriction
+    if tool.contains('/') || tool.contains('\\') { // vuln-code-snippet safe-line testcodeCmdi013Safe
+        return super::shared::BenchmarkResponse::bad_request("Absolute paths not allowed");
+    }
+
+    // PATH restricted to only /usr/bin, preventing arbitrary binary execution
     let output = Command::new(&tool)
-        .env("PATH", "/usr/bin") // vuln-code-snippet safe-line testcodeCmdi013Safe
+        .env("PATH", "/usr/bin")
         .env_clear()
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())

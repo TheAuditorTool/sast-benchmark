@@ -157,7 +157,7 @@ testcodeRedos002Vulnerable,redos,true,1333
 testcodeRedos003Vulnerable,redos,true,1333
 testcodeRedos004Safe,redos,false,1333
 testcodeRedos005Safe,redos,false,1333
-testcodeRedos006Safe,redos,false,1333
+testcodeRedos006Safe,redos,true,1333
 testcodeRedos007Safe,redos,false,1333
 testcodeRedos008Safe,redos,false,1333
 # M5 Batch 2: deser + intoverflow + weakrand (29)

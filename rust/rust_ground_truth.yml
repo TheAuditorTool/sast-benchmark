@@ -1250,7 +1250,7 @@ test_cases:
   - key: testcodeRedos006Safe
     category: redos
     cwe: 1333
-    vulnerable: false
+    vulnerable: true
   - key: testcodeRedos007Safe
     category: redos
     cwe: 1333

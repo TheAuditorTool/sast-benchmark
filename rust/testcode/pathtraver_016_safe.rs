@@ -6,9 +6,14 @@ pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::Benchmark
     let path = req.param("path");
     let base = "/var/data";
 
-    // SAFE: Enforce max path length
-    if path.len() > 128 { // vuln-code-snippet safe-line testcodePathtraver016Safe
+    // Enforce max path length
+    if path.len() > 128 {
         return super::shared::BenchmarkResponse::bad_request("Path too long");
+    }
+
+    // SAFE: Reject traversal and path separator characters
+    if path.contains("..") || path.contains('/') || path.contains('\\') { // vuln-code-snippet safe-line testcodePathtraver016Safe
+        return super::shared::BenchmarkResponse::forbidden("Path traversal characters blocked");
     }
 
     let full = format!("{}/{}", base, path);

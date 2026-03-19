@@ -9,13 +9,22 @@ pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::Benchmark
     let filepath = req.param("path");
     let path = Path::new(&filepath);
 
-    // SAFE: Validate path exists as a regular file before use
-    if !path.exists() || !path.is_file() { // vuln-code-snippet safe-line testcodeCmdi011Safe
+    // Validate path exists as a regular file before use
+    if !path.exists() || !path.is_file() {
         return super::shared::BenchmarkResponse::bad_request("Invalid file path");
     }
 
+    // SAFE: Canonicalize and jail path to allowed directory
+    let canonical = match path.canonicalize() { // vuln-code-snippet safe-line testcodeCmdi011Safe
+        Ok(p) => p,
+        Err(_) => return super::shared::BenchmarkResponse::error("Invalid path"),
+    };
+    if !canonical.starts_with("/allowed/dir") {
+        return super::shared::BenchmarkResponse::bad_request("Path outside allowed directory");
+    }
+
     let output = Command::new("cat")
-        .arg(&filepath)
+        .arg(canonical)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .output();

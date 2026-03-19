@@ -8,9 +8,14 @@ pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::Benchmark
 
     let allowed_dirs = ["/var/data/public", "/var/data/docs"];
 
-    // SAFE: Only allow access to allowlisted directories
-    if !allowed_dirs.contains(&dir.as_str()) { // vuln-code-snippet safe-line testcodePathtraver009Safe
+    // Only allow access to allowlisted directories
+    if !allowed_dirs.contains(&dir.as_str()) {
         return super::shared::BenchmarkResponse::forbidden("Directory not allowed");
+    }
+
+    // SAFE: Reject traversal and path separator characters in filename
+    if filename.contains("..") || filename.contains('/') || filename.contains('\\') { // vuln-code-snippet safe-line testcodePathtraver009Safe
+        return super::shared::BenchmarkResponse::forbidden("Invalid filename");
     }
 
     let full = format!("{}/{}", dir, filename);

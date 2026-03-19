@@ -1,7 +1,8 @@
-//! ReDoS True Negative — CWE-1333
-//! Regex execution wrapped with a timeout to prevent catastrophic backtracking.
+//! ReDoS True Positive — CWE-1333
+//! Timeout check runs AFTER regex execution, not during.
+//! If is_match() hangs from catastrophic backtracking, the timeout never fires.
+//! This is a common misconception — post-execution timeout does not prevent ReDoS.
 
-use regex::Regex;
 use std::time::{Duration, Instant};
 
 // vuln-code-snippet start testcodeRedos006Safe
@@ -9,16 +10,15 @@ pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::Benchmark
     let user_pattern = req.param("pattern");
     let text = req.param("text");
 
-    let re = match Regex::new(&user_pattern) {
+    let re = match regex::Regex::new(&user_pattern) {
         Ok(r) => r,
         Err(e) => return super::shared::BenchmarkResponse::bad_request(&e.to_string()),
     };
 
-    // SAFE: Timeout wrapper aborts regex execution after 2 seconds
-    let start = Instant::now(); // vuln-code-snippet safe-line testcodeRedos006Safe
-    let timeout = Duration::from_secs(2);
-    let found = re.is_match(&text);
-    if start.elapsed() > timeout {
+    // VULNERABLE: Timeout check occurs AFTER is_match() returns, not during
+    let start = Instant::now();
+    let found = re.is_match(&text); // vuln-code-snippet vuln-line testcodeRedos006Safe
+    if start.elapsed() > Duration::from_secs(2) {
         return super::shared::BenchmarkResponse::error("Regex execution timed out");
     }
 

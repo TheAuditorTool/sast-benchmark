@@ -1,15 +1,16 @@
 //! Command Injection True Positive — CWE-78
-//! User-controlled env var injected into Command via .env() call.
+//! User-controlled filename passed to shell command via format!().
+//! Attacker can inject shell metacharacters: filename="; rm -rf /"
 
 use std::process::{Command, Stdio};
 
 // vuln-code-snippet start testcodeCmdi003Vulnerable
 pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
-    let user_input = req.param("config");
+    let filename = req.param("filename");
 
-    // VULNERABLE: User-controlled value passed as environment variable
-    let output = Command::new("app")
-        .env("CONFIG", &user_input) // vuln-code-snippet vuln-line testcodeCmdi003Vulnerable
+    let shell_cmd = format!("wc -l {}", filename); // vuln-code-snippet vuln-line testcodeCmdi003Vulnerable
+    let output = Command::new("sh")
+        .args(["-c", &shell_cmd])
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .output();

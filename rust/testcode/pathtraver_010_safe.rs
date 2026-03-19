@@ -9,12 +9,16 @@ pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::Benchmark
     let base = Path::new("/var/data");
     let full = base.join(&user_path);
 
-    // SAFE: strip_prefix ensures the resolved path is under base
-    if full.strip_prefix(base).is_err() { // vuln-code-snippet safe-line testcodePathtraver010Safe
+    // SAFE: Canonicalize then verify path stays under base directory
+    let canonical = match full.canonicalize() { // vuln-code-snippet safe-line testcodePathtraver010Safe
+        Ok(p) => p,
+        Err(_) => return super::shared::BenchmarkResponse::error("Cannot resolve path"),
+    };
+    if canonical.strip_prefix(base).is_err() {
         return super::shared::BenchmarkResponse::forbidden("Path traversal blocked");
     }
 
-    match std::fs::read_to_string(&full) {
+    match std::fs::read_to_string(&canonical) {
         Ok(content) => super::shared::BenchmarkResponse::ok(&content),
         Err(e) => super::shared::BenchmarkResponse::error(&e.to_string()),
     }

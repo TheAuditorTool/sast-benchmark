@@ -22,9 +22,9 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 | infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
 | deser | 502 | 5 | 7 | 12 | 42/58 |
 | intoverflow | 190 | 5 | 7 | 12 | 42/58 |
-| redos | 1333 | 4 | 6 | 10 | 40/60 |
+| redos | 1333 | 5 | 5 | 10 | 50/50 |
 | inputval | 20 | 4 | 6 | 10 | 40/60 |
-| **TOTAL** | | **116** | **146** | **262** | **44/56** |
+| **TOTAL** | | **117** | **145** | **262** | **45/55** |
 
 **All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 44/56 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
 
