@@ -5,11 +5,11 @@
 237 test cases across 13 categories, 4 applications, 42 shell scripts, 7,716 lines.
 
 ### Applications
-- **original/** — DevOps CI/CD Pipeline Manager (10 scripts). SSH/SCP deployment, Docker, Kubernetes, SQLite tracking, webhook handlers, backup/restore, database migrations.
-- **deepflow-webhook/** — HTTP webhook server (8 files). socat/netcat listener, GitHub/GitLab/Slack webhook handling, deploy/notify/exec/query endpoints.
-- **deepflow-ops/** — Operations suite with SAFE_MODE toggle (7 files). Backup, cleanup, deploy, notify, webhook handler. Each script has safe + vulnerable code paths.
-- **dataforge/** — Data pipeline scripts (4 files). Backup, deploy, healthcheck, Terraform infrastructure setup.
-- **adversarial/** — 13 purpose-built CWE test files with TP/TN pairs.
+- **apps/pipeline-manager/** — DevOps CI/CD Pipeline Manager (10 scripts). SSH/SCP deployment, Docker, Kubernetes, SQLite tracking, webhook handlers, backup/restore, database migrations.
+- **apps/deepflow-webhook/** — HTTP webhook server (8 files). socat/netcat listener, GitHub/GitLab/Slack webhook handling, deploy/notify/exec/query endpoints.
+- **apps/deepflow-ops/** — Operations suite with SAFE_MODE toggle (7 files). Backup, cleanup, deploy, notify, webhook handler. Each script has safe + vulnerable code paths.
+- **apps/dataforge/** — Data pipeline scripts (4 files). Backup, deploy, healthcheck, Terraform infrastructure setup.
+- **testcode/** — 13 purpose-built CWE test files with TP/TN pairs.
 
 ### Test Case Summary
 - 161 vulnerable (TP), 76 safe (TN) — 68/32 split

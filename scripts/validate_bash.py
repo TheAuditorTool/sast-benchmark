@@ -23,11 +23,8 @@ BENCH_ROOT = os.path.dirname(SCRIPT_DIR)
 BASH_DIR = os.path.join(BENCH_ROOT, "bash")
 YAML_FILE = os.path.join(BASH_DIR, "bash_ground_truth.yml")
 SCAN_DIRS = [
-    os.path.join(BASH_DIR, "original"),
-    os.path.join(BASH_DIR, "adversarial"),
-    os.path.join(BASH_DIR, "deepflow-webhook"),
-    os.path.join(BASH_DIR, "deepflow-ops"),
-    os.path.join(BASH_DIR, "dataforge"),
+    os.path.join(BASH_DIR, "apps"),
+    os.path.join(BASH_DIR, "testcode"),
 ]
 
 PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")

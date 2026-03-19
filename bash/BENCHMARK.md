@@ -128,45 +128,16 @@ These patterns have NO rule. The benchmark includes them deliberately as FN-gene
 
 ```
 gorustbash_benchmark/bash/
-+-- original/              # Exact copy of Desktop/bash/ with annotations added
-|   +-- pipeline.sh        # CLI router (no test cases — orchestrator only)
-|   +-- lib/
-|   |   +-- config.sh      # 12 test cases (hardcoded creds, eval, source injection, IFS)
-|   |   +-- database.sh    # 9 test cases (SQL injection patterns + safe variants)
-|   |   +-- deploy.sh      # 7 test cases (SSH, docker, chmod, custom hooks)
-|   |   +-- network.sh     # 6 test cases (SSL bypass, curl|bash, safe download)
-|   |   +-- security.sh    # 11 test cases (read -r, printf, sudo, permissions)
-|   |   +-- utils.sh       # 8 test cases (temp files, unquoted, weak crypto)
-|   +-- scripts/
-|       +-- backup.sh      # 10 test cases (path traversal, SSRF, eval, unquoted)
-|       +-- migrate.sh     # 7 test cases (source injection, SQL injection)
-|       +-- webhook.sh     # 8 test cases (eval, SQL injection, SSRF, source)
-+-- adversarial/           # 13 NEW test case files, purpose-built for benchmark
-|   +-- cmdi_tests.sh      # 12 test cases (eval, nameref, arithmetic, sed, awk)
-|   +-- codeinj_tests.sh   # 10 test cases (source, bash -c, trap, heredoc)
-|   +-- sqli_tests.sh      # 6 test cases (multi-hop, table injection, mysql)
-|   +-- pathtraver_tests.sh # 6 test cases (symlink bypass, realpath check)
-|   +-- ssrf_tests.sh      # 5 test cases (allowlist, redirect follow)
-|   +-- infodisclosure_tests.sh   # 5 test cases (set -x, env dump, masking)
-|   +-- hardcoded_creds_tests.sh  # 6 test cases (literal, CLI args, vault)
-|   +-- weakcrypto_tests.sh       # 5 test cases (md5, des, sha1 vs sha256, aes)
-|   +-- insecure_temp_tests.sh    # 4 test cases (predictable vs mktemp)
-|   +-- insecure_perms_tests.sh   # 5 test cases (777, umask, a+rwx)
-|   +-- ssl_bypass_tests.sh       # 5 test cases (--insecure, GIT_SSL_NO_VERIFY)
-|   +-- unquoted_tests.sh         # 6 test cases (word splitting, quoting)
-|   +-- rce_tests.sh              # 5 test cases (curl|bash, process substitution)
-+-- deepflow-webhook/      # Webhook server (8 files, 28 test cases)
-|   +-- handlers/          # webhook.sh, deploy.sh, notify.sh
-|   +-- lib/               # http.sh, json.sh, validate.sh
-|   +-- server.sh, config.sh
-+-- deepflow-ops/          # DevOps operations with SAFE_MODE toggle (7 files, 20 test cases)
-|   +-- lib/               # common.sh, validate.sh
-|   +-- scripts/           # backup.sh, cleanup.sh, deploy.sh, notify.sh, webhook_handler.sh
-+-- dataforge/             # Data pipeline scripts (4 files, 10 test cases)
-|   +-- backup.sh, deploy.sh, healthcheck.sh, setup-infra.sh
-+-- bash_ground_truth.yml  # THE answer key (237 test cases)
-+-- bash_benchmark.py      # Scoring script
-+-- BENCHMARK.md           # This file
++-- apps/                          # 4 annotated applications (136 test cases)
+|   +-- pipeline-manager/          # DevOps CI/CD pipeline (10 scripts, 78 test cases)
+|   +-- deepflow-webhook/          # HTTP webhook server (8 files, 28 test cases)
+|   +-- deepflow-ops/              # Operations suite with SAFE_MODE (7 files, 20 test cases)
+|   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
++-- testcode/                      # 13 standalone CWE test files (101 test cases)
++-- bash_ground_truth.yml          # Answer key (237 test cases)
++-- bash_benchmark.py              # Scoring script
++-- BENCHMARK.md                   # This file
++-- CHANGELOG.md                   # Version history
 ```
 
 ---

@@ -65,12 +65,8 @@ gorustbash_benchmark/
     bash_benchmark.py        # Automated scoring script
     BENCHMARK.md             # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
-    scripts/validate_bash.py # CI validation
-    original/                # Pipeline manager (10 scripts)
-    deepflow-webhook/        # Webhook server (8 files)
-    deepflow-ops/            # Operations suite (7 files)
-    dataforge/               # Data pipeline (4 files)
-    adversarial/             # 13 CWE-specific test files
+    apps/                    # 4 annotated applications
+    testcode/                # 13 standalone CWE test files
 ```
 
 ## Language Benchmarks
