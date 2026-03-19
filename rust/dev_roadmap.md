@@ -1,7 +1,7 @@
 # Rust SAST Benchmark — Development Roadmap
 
 > **Version:** 0.1 (2026-03-19)
-> **Status:** ~25% complete. Foundation laid, structural gaps identified, path to publishable defined.
+> **Status:** v0.3 shipped. M1-M6 complete. Baseline scoring pending `aud full --offline`.
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---

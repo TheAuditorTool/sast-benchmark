@@ -4,7 +4,7 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `rust_ground_truth.yml` — external answer key independent of engine output.
+**Ground truth**: `expectedresults-0.1.csv` — CSV answer key (scoring authority). `rust_ground_truth.yml` provides descriptions.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
 ### Test Case Inventory

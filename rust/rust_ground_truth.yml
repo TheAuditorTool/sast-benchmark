@@ -877,3 +877,565 @@ test_cases:
     cwe: 327
     vulnerable: false
     description: "Standalone: SHA-256/bcrypt-strength hash"
+
+  # =========================================================================
+  # M5: STANDALONE TESTCODE BATCHES 1-5 (133 test cases)
+  # =========================================================================
+
+  # --- cmdi ---
+  - key: testcodeCmdi003Vulnerable
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+  - key: testcodeCmdi004Vulnerable
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+  - key: testcodeCmdi005Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi006Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi007Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi008Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi009Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi010Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi011Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi012Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi013Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+  - key: testcodeCmdi014Safe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+
+  # --- crypto ---
+  - key: testcodeCrypto003Vulnerable
+    category: crypto
+    cwe: 327
+    vulnerable: true
+  - key: testcodeCrypto004Vulnerable
+    category: crypto
+    cwe: 327
+    vulnerable: true
+  - key: testcodeCrypto005Vulnerable
+    category: crypto
+    cwe: 327
+    vulnerable: true
+  - key: testcodeCrypto006Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+  - key: testcodeCrypto007Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+  - key: testcodeCrypto008Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+  - key: testcodeCrypto009Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+  - key: testcodeCrypto010Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+  - key: testcodeCrypto011Safe
+    category: crypto
+    cwe: 327
+    vulnerable: false
+
+  # --- deser ---
+  - key: testcodeDeser001Vulnerable
+    category: deser
+    cwe: 502
+    vulnerable: true
+  - key: testcodeDeser002Vulnerable
+    category: deser
+    cwe: 502
+    vulnerable: true
+  - key: testcodeDeser003Vulnerable
+    category: deser
+    cwe: 502
+    vulnerable: true
+  - key: testcodeDeser004Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+  - key: testcodeDeser005Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+  - key: testcodeDeser006Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+  - key: testcodeDeser007Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+  - key: testcodeDeser008Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+  - key: testcodeDeser009Safe
+    category: deser
+    cwe: 502
+    vulnerable: false
+
+  # --- infodisclosure ---
+  - key: testcodeInfodisclosure001Vulnerable
+    category: infodisclosure
+    cwe: 209
+    vulnerable: true
+  - key: testcodeInfodisclosure002Vulnerable
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+  - key: testcodeInfodisclosure003Vulnerable
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+  - key: testcodeInfodisclosure004Safe
+    category: infodisclosure
+    cwe: 209
+    vulnerable: false
+  - key: testcodeInfodisclosure005Safe
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+  - key: testcodeInfodisclosure006Safe
+    category: infodisclosure
+    cwe: 209
+    vulnerable: false
+  - key: testcodeInfodisclosure007Safe
+    category: infodisclosure
+    cwe: 532
+    vulnerable: false
+  - key: testcodeInfodisclosure008Safe
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+  - key: testcodeInfodisclosure009Safe
+    category: infodisclosure
+    cwe: 209
+    vulnerable: false
+  - key: testcodeInfodisclosure010Safe
+    category: infodisclosure
+    cwe: 209
+    vulnerable: false
+  - key: testcodeInfodisclosure011Safe
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+
+  # --- inputval ---
+  - key: testcodeInputval001Vulnerable
+    category: inputval
+    cwe: 20
+    vulnerable: true
+  - key: testcodeInputval002Vulnerable
+    category: inputval
+    cwe: 20
+    vulnerable: true
+  - key: testcodeInputval003Vulnerable
+    category: inputval
+    cwe: 20
+    vulnerable: true
+  - key: testcodeInputval004Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+  - key: testcodeInputval005Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+  - key: testcodeInputval006Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+  - key: testcodeInputval007Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+  - key: testcodeInputval008Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+  - key: testcodeInputval009Safe
+    category: inputval
+    cwe: 20
+    vulnerable: false
+
+  # --- intoverflow ---
+  - key: testcodeIntoverflow001Vulnerable
+    category: intoverflow
+    cwe: 190
+    vulnerable: true
+  - key: testcodeIntoverflow002Vulnerable
+    category: intoverflow
+    cwe: 190
+    vulnerable: true
+  - key: testcodeIntoverflow003Vulnerable
+    category: intoverflow
+    cwe: 190
+    vulnerable: true
+  - key: testcodeIntoverflow004Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+  - key: testcodeIntoverflow005Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+  - key: testcodeIntoverflow006Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+  - key: testcodeIntoverflow007Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+  - key: testcodeIntoverflow008Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+  - key: testcodeIntoverflow009Safe
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+
+  # --- memsafety ---
+  - key: testcodeMemsafety001Vulnerable
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+  - key: testcodeMemsafety002Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety003Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety004Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety005Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety006Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety007Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety008Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+  - key: testcodeMemsafety009Safe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+
+  # --- pathtraver ---
+  - key: testcodePathtraver003Vulnerable
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+  - key: testcodePathtraver004Vulnerable
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+  - key: testcodePathtraver005Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver006Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver007Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver008Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver009Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver010Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver011Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver012Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver013Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver014Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver015Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+  - key: testcodePathtraver016Safe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+
+  # --- redos ---
+  - key: testcodeRedos001Vulnerable
+    category: redos
+    cwe: 1333
+    vulnerable: true
+  - key: testcodeRedos002Vulnerable
+    category: redos
+    cwe: 1333
+    vulnerable: true
+  - key: testcodeRedos003Vulnerable
+    category: redos
+    cwe: 1333
+    vulnerable: true
+  - key: testcodeRedos004Safe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+  - key: testcodeRedos005Safe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+  - key: testcodeRedos006Safe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+  - key: testcodeRedos007Safe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+  - key: testcodeRedos008Safe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+
+  # --- sqli ---
+  - key: testcodeSqli003Vulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+  - key: testcodeSqli004Vulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+  - key: testcodeSqli005Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli006Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli007Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli008Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli009Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli010Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli011Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli012Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli013Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+  - key: testcodeSqli014Safe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+
+  # --- ssrf ---
+  - key: testcodeSsrf001Vulnerable
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+  - key: testcodeSsrf002Vulnerable
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+  - key: testcodeSsrf003Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf004Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf005Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf006Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf007Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf008Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf009Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+  - key: testcodeSsrf010Safe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+
+  # --- weakrand ---
+  - key: testcodeWeakrand001Vulnerable
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+  - key: testcodeWeakrand002Vulnerable
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+  - key: testcodeWeakrand003Vulnerable
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+  - key: testcodeWeakrand004Vulnerable
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+  - key: testcodeWeakrand005Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand006Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand007Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand008Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand009Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand010Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+  - key: testcodeWeakrand011Safe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+
+  # --- xss ---
+  - key: testcodeXss003Vulnerable
+    category: xss
+    cwe: 79
+    vulnerable: true
+  - key: testcodeXss004Vulnerable
+    category: xss
+    cwe: 79
+    vulnerable: true
+  - key: testcodeXss005Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss006Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss007Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss008Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss009Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss010Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss011Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
+  - key: testcodeXss012Safe
+    category: xss
+    cwe: 79
+    vulnerable: false
