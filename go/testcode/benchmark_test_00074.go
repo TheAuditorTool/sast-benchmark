@@ -2,7 +2,6 @@ package testcode
 
 import (
 	"net/http"
-	"os/exec"
 )
 
 func BenchmarkTest00074(w http.ResponseWriter, r *http.Request) {
@@ -12,8 +11,4 @@ func BenchmarkTest00074(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	RespondJSON(w, http.StatusOK, map[string]string{"received": input})
-}
-
-func init() {
-	_ = exec.Command
 }

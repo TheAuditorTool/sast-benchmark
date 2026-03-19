@@ -1,0 +1,160 @@
+# function,file,start_line,end_line,category,vulnerable,CWE
+# ===== HANDLERS =====
+# -- meal_handler.go --
+ListMeals,internal/handlers/meal_handler.go,27,45,sqli,true,89
+CreateMeal,internal/handlers/meal_handler.go,50,70,sqli,false,89
+GetMeal,internal/handlers/meal_handler.go,74,95,sqli,false,89
+UpdateMeal,internal/handlers/meal_handler.go,99,124,sqli,false,89
+DeleteMeal,internal/handlers/meal_handler.go,128,147,sqli,false,89
+QuickLog,internal/handlers/meal_handler.go,151,171,sqli,false,89
+SearchMeals,internal/handlers/meal_handler.go,176,193,sqli,true,89
+GetDailyMeals,internal/handlers/meal_handler.go,197,208,sqli,false,89
+# -- food_handler.go --
+ListFoods,internal/handlers/food_handler.go,25,43,sqli,false,89
+CreateFood,internal/handlers/food_handler.go,48,66,sqli,false,89
+SearchFoods,internal/handlers/food_handler.go,71,87,sqli,true,89
+GetFood,internal/handlers/food_handler.go,91,105,sqli,false,89
+# -- workout_handler.go --
+ListWorkouts,internal/handlers/workout_handler.go,27,42,sqli,true,89
+CreateWorkout,internal/handlers/workout_handler.go,47,71,sqli,false,89
+GetWorkout,internal/handlers/workout_handler.go,75,96,sqli,false,89
+UpdateWorkout,internal/handlers/workout_handler.go,100,125,sqli,false,89
+DeleteWorkout,internal/handlers/workout_handler.go,129,148,sqli,false,89
+GetDailyWorkouts,internal/handlers/workout_handler.go,152,163,sqli,false,89
+ListExercises,internal/handlers/workout_handler.go,167,175,sqli,false,89
+# -- schedule_handler.go --
+ListSchedules,internal/handlers/schedule_handler.go,26,36,sqli,false,89
+CreateSchedule,internal/handlers/schedule_handler.go,41,61,sqli,false,89
+GetSchedule,internal/handlers/schedule_handler.go,65,86,sqli,false,89
+UpdateSchedule,internal/handlers/schedule_handler.go,90,115,sqli,false,89
+DeleteSchedule,internal/handlers/schedule_handler.go,119,138,sqli,false,89
+ToggleSchedule,internal/handlers/schedule_handler.go,142,161,sqli,false,89
+AddItem,internal/handlers/schedule_handler.go,165,202,sqli,false,89
+DeleteItem,internal/handlers/schedule_handler.go,206,225,sqli,false,89
+# -- auth_handler.go --
+Register,internal/handlers/auth_handler.go,27,53,sqli,false,89
+Login,internal/handlers/auth_handler.go,58,86,sqli,false,89
+GetProfile,internal/handlers/auth_handler.go,101,111,sqli,false,89
+UpdateProfile,internal/handlers/auth_handler.go,115,140,sqli,false,89
+# -- dashboard_handler.go --
+GetToday,internal/handlers/dashboard_handler.go,26,37,sqli,false,89
+GetDailySummary,internal/handlers/dashboard_handler.go,41,52,sqli,false,89
+GetWeeklySummary,internal/handlers/dashboard_handler.go,56,66,sqli,false,89
+GetProgress,internal/handlers/dashboard_handler.go,70,86,sqli,false,89
+LogWeight,internal/handlers/dashboard_handler.go,90,106,sqli,false,89
+LogWater,internal/handlers/dashboard_handler.go,110,126,sqli,false,89
+RawQuery,internal/handlers/dashboard_handler.go,131,150,sqli,true,89
+CustomReport,internal/handlers/dashboard_handler.go,155,185,sqli,true,89
+# ===== REPOSITORY =====
+# -- meal_repository.go --
+MealRepository.Create,internal/repository/meal_repository.go,22,24,sqli,false,89
+MealRepository.FindByID,internal/repository/meal_repository.go,27,33,sqli,false,89
+MealRepository.Update,internal/repository/meal_repository.go,36,38,sqli,false,89
+MealRepository.Delete,internal/repository/meal_repository.go,41,43,sqli,false,89
+MealRepository.ListForUser,internal/repository/meal_repository.go,48,61,sqli,true,89
+MealRepository.ListForUserWithDateRange,internal/repository/meal_repository.go,64,85,sqli,true,89
+MealRepository.GetDailyMeals,internal/repository/meal_repository.go,88,93,sqli,false,89
+MealRepository.GetDailySummary,internal/repository/meal_repository.go,96,123,sqli,false,89
+MealRepository.SearchVulnerable,internal/repository/meal_repository.go,127,136,sqli,true,89
+MealRepository.GetCaloriesForDateRange,internal/repository/meal_repository.go,139,161,sqli,false,89
+# -- food_repository.go --
+FoodRepository.Create,internal/repository/food_repository.go,21,24,sqli,false,89
+FoodRepository.FindByID,internal/repository/food_repository.go,27,33,sqli,false,89
+FoodRepository.ListAll,internal/repository/food_repository.go,36,40,sqli,false,89
+FoodRepository.ListByCategory,internal/repository/food_repository.go,43,47,sqli,false,89
+FoodRepository.SearchVulnerable,internal/repository/food_repository.go,52,61,sqli,true,89
+FoodRepository.Delete,internal/repository/food_repository.go,64,66,sqli,false,89
+# -- workout_repository.go --
+WorkoutRepository.Create,internal/repository/workout_repository.go,22,24,sqli,false,89
+WorkoutRepository.FindByID,internal/repository/workout_repository.go,27,33,sqli,false,89
+WorkoutRepository.Update,internal/repository/workout_repository.go,36,38,sqli,false,89
+WorkoutRepository.Delete,internal/repository/workout_repository.go,41,43,sqli,false,89
+WorkoutRepository.ListForUser,internal/repository/workout_repository.go,48,69,sqli,true,89
+WorkoutRepository.GetDailyWorkouts,internal/repository/workout_repository.go,72,87,sqli,false,89
+WorkoutRepository.GetDailySummary,internal/repository/workout_repository.go,90,108,sqli,false,89
+WorkoutRepository.GetCaloriesBurnedForDateRange,internal/repository/workout_repository.go,111,133,sqli,false,89
+WorkoutRepository.ListExercises,internal/repository/workout_repository.go,136,140,sqli,false,89
+WorkoutRepository.FindExerciseByID,internal/repository/workout_repository.go,143,150,sqli,false,89
+WorkoutRepository.SearchExercisesVulnerable,internal/repository/workout_repository.go,154,163,sqli,true,89
+# -- schedule_repository.go --
+ScheduleRepository.Create,internal/repository/schedule_repository.go,21,23,sqli,false,89
+ScheduleRepository.FindByID,internal/repository/schedule_repository.go,26,32,sqli,false,89
+ScheduleRepository.FindByIDWithItems,internal/repository/schedule_repository.go,35,53,sqli,false,89
+ScheduleRepository.Update,internal/repository/schedule_repository.go,56,58,sqli,false,89
+ScheduleRepository.Delete,internal/repository/schedule_repository.go,61,67,sqli,false,89
+ScheduleRepository.ListForUser,internal/repository/schedule_repository.go,70,74,sqli,false,89
+ScheduleRepository.ToggleActive,internal/repository/schedule_repository.go,77,89,sqli,false,89
+ScheduleRepository.CreateItem,internal/repository/schedule_repository.go,92,94,sqli,false,89
+ScheduleRepository.DeleteItem,internal/repository/schedule_repository.go,97,99,sqli,false,89
+ScheduleRepository.FindItemByID,internal/repository/schedule_repository.go,102,109,sqli,false,89
+ScheduleRepository.SearchVulnerable,internal/repository/schedule_repository.go,113,122,sqli,true,89
+# -- user_repository.go --
+UserRepository.Create,internal/repository/user_repository.go,21,23,sqli,false,89
+UserRepository.FindByID,internal/repository/user_repository.go,26,32,sqli,false,89
+UserRepository.FindByEmail,internal/repository/user_repository.go,35,41,sqli,false,89
+UserRepository.FindByUsername,internal/repository/user_repository.go,44,50,sqli,false,89
+UserRepository.Update,internal/repository/user_repository.go,53,55,sqli,false,89
+UserRepository.Delete,internal/repository/user_repository.go,58,60,sqli,false,89
+UserRepository.SearchVulnerable,internal/repository/user_repository.go,65,76,sqli,true,89
+UserRepository.ExistsWithEmail,internal/repository/user_repository.go,79,83,sqli,false,89
+UserRepository.ExistsWithUsername,internal/repository/user_repository.go,86,90,sqli,false,89
+# -- analytics_repository.go --
+AnalyticsRepository.GetOrCreateDailyLog,internal/repository/analytics_repository.go,22,37,sqli,false,89
+AnalyticsRepository.UpdateWaterLog,internal/repository/analytics_repository.go,40,52,sqli,false,89
+AnalyticsRepository.CreateWeightLog,internal/repository/analytics_repository.go,55,57,sqli,false,89
+AnalyticsRepository.GetWeightLogs,internal/repository/analytics_repository.go,60,67,sqli,false,89
+AnalyticsRepository.GetLatestWeight,internal/repository/analytics_repository.go,70,79,sqli,false,89
+AnalyticsRepository.GetWeightLogsInRange,internal/repository/analytics_repository.go,82,88,sqli,false,89
+AnalyticsRepository.CustomReportVulnerable,internal/repository/analytics_repository.go,92,134,sqli,true,89
+AnalyticsRepository.ExecuteRawQuery,internal/repository/analytics_repository.go,163,186,sqli,true,89
+# -- database.go --
+Database.ExecuteRaw,internal/repository/database.go,103,105,sqli,true,89
+Database.QueryRaw,internal/repository/database.go,109,132,sqli,true,89
+# ===== SERVICES =====
+# -- meal_service.go --
+MealService.Create,internal/services/meal_service.go,30,59,sqli,false,89
+MealService.FindByID,internal/services/meal_service.go,62,71,sqli,false,89
+MealService.Update,internal/services/meal_service.go,74,113,sqli,false,89
+MealService.Delete,internal/services/meal_service.go,116,128,sqli,false,89
+MealService.ListForUser,internal/services/meal_service.go,132,142,sqli,true,89
+MealService.GetDailySummary,internal/services/meal_service.go,145,147,sqli,false,89
+MealService.SearchMealsVulnerable,internal/services/meal_service.go,151,154,sqli,true,89
+MealService.QuickLog,internal/services/meal_service.go,157,171,sqli,false,89
+# -- food_service.go --
+FoodService.Create,internal/services/food_service.go,28,55,sqli,false,89
+FoodService.FindByID,internal/services/food_service.go,58,67,sqli,false,89
+FoodService.ListAll,internal/services/food_service.go,70,72,sqli,false,89
+FoodService.ListByCategory,internal/services/food_service.go,75,77,sqli,false,89
+FoodService.SearchVulnerable,internal/services/food_service.go,81,84,sqli,true,89
+# -- workout_service.go --
+WorkoutService.Create,internal/services/workout_service.go,31,68,sqli,false,89
+WorkoutService.FindByID,internal/services/workout_service.go,71,80,sqli,false,89
+WorkoutService.Update,internal/services/workout_service.go,83,122,sqli,false,89
+WorkoutService.Delete,internal/services/workout_service.go,125,137,sqli,false,89
+WorkoutService.ListForUser,internal/services/workout_service.go,141,147,sqli,true,89
+WorkoutService.GetDailySummary,internal/services/workout_service.go,150,152,sqli,false,89
+WorkoutService.ListExercises,internal/services/workout_service.go,155,157,sqli,false,89
+# -- schedule_service.go --
+ScheduleService.Create,internal/services/schedule_service.go,30,51,sqli,false,89
+ScheduleService.FindByID,internal/services/schedule_service.go,54,63,sqli,false,89
+ScheduleService.GetWithItems,internal/services/schedule_service.go,66,68,sqli,false,89
+ScheduleService.Update,internal/services/schedule_service.go,71,104,sqli,false,89
+ScheduleService.Delete,internal/services/schedule_service.go,107,119,sqli,false,89
+ScheduleService.ListForUser,internal/services/schedule_service.go,122,124,sqli,false,89
+ScheduleService.ToggleActive,internal/services/schedule_service.go,127,139,sqli,false,89
+ScheduleService.AddItem,internal/services/schedule_service.go,142,162,sqli,false,89
+ScheduleService.DeleteItem,internal/services/schedule_service.go,165,186,sqli,false,89
+# -- user_service.go --
+UserService.Register,internal/services/user_service.go,31,66,sqli,false,89
+UserService.Login,internal/services/user_service.go,70,98,sqli,false,89
+UserService.FindByID,internal/services/user_service.go,101,110,sqli,false,89
+UserService.Update,internal/services/user_service.go,113,147,sqli,false,89
+UserService.SearchUsersVulnerable,internal/services/user_service.go,151,154,sqli,true,89
+# -- analytics_service.go --
+AnalyticsService.GetDailySummary,internal/services/analytics_service.go,35,72,sqli,false,89
+AnalyticsService.GetWeeklySummary,internal/services/analytics_service.go,75,128,sqli,false,89
+AnalyticsService.GetProgress,internal/services/analytics_service.go,131,204,sqli,false,89
+AnalyticsService.LogWeight,internal/services/analytics_service.go,207,220,sqli,false,89
+AnalyticsService.LogWater,internal/services/analytics_service.go,223,226,sqli,false,89
+AnalyticsService.ExecuteRawQueryVulnerable,internal/services/analytics_service.go,230,233,sqli,true,89
+AnalyticsService.CustomReportVulnerable,internal/services/analytics_service.go,237,253,sqli,true,89

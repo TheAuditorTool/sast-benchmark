@@ -346,7 +346,7 @@ Each workstream becomes a separate plan-mode session:
 | 1 | Discrimination Patterns | COMPLETE | 36 | 0 |
 | 2 | Framework Diversity | COMPLETE | 33 | 0 |
 | 3 | Cross-File Flows | COMPLETE | 17 (+services.go) | 0 |
-| 4 | Quality Hardening | NOT STARTED | 0 | 0 |
-| 5 | Missing CWEs | NOT STARTED | 0 | 0 |
-| 6 | Scale Expansion | NOT STARTED | 0 | 0 |
-| 7 | App Integration | NOT STARTED | 0 | 0 |
+| 4 | Quality Hardening | COMPLETE | 0 | 1 (00074 init hack) |
+| 5 | Missing CWEs | COMPLETE | 32 (4 new categories) | 0 |
+| 6 | Scale Expansion | COMPLETE | 50 (GORM,sqlx,zip,syscall,WS,SSE) | 0 |
+| 7 | App Integration | COMPLETE | 395 functions across 5 apps | 0 |

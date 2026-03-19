@@ -1,0 +1,152 @@
+# Ground Truth CSV for vulnerable-api Go benchmark
+# Format: function,file,start_line,end_line,category,vulnerable,CWE
+# Categories: sqli=SQL Injection, cmdi=Command Injection, pathtraver=Path Traversal, xss=XSS, cors=CORS Reflection
+# vulnerable: true=unparameterized/unsanitized taint flow, false=parameterized/validated
+# Excluded: helper functions (scanRows, processInput, buildQuery, buildFilters, constructQuery,
+#   sanitizeTableName, sanitizeFieldName, buildInsertQuery, buildQueryFromInput, executeQuery,
+#   ProcessInput), model definitions, route setup, constructors (New*Handler/New*Service/New*Repository),
+#   logging/auth/ratelimit/recovery middleware without direct vulnerabilities.
+# Multi-hop handlers: the handler IS the taint source; the service function IS the sink.
+#   Both are listed separately (handler as the entry point, service as the sink function).
+function,file,start_line,end_line,category,vulnerable,CWE
+# ========================
+# gin_handlers.go
+# ========================
+GinHandler.GetUser,internal/handlers/gin_handlers.go,39,55,sqli,true,89
+GinHandler.GetUserByUsername,internal/handlers/gin_handlers.go,59,72,sqli,true,89
+GinHandler.SearchUsers,internal/handlers/gin_handlers.go,76,91,sqli,true,89
+GinHandler.CreateUser,internal/handlers/gin_handlers.go,99,126,sqli,true,89
+GinHandler.RunCommand,internal/handlers/gin_handlers.go,134,148,cmdi,true,78
+GinHandler.PingHost,internal/handlers/gin_handlers.go,152,164,cmdi,true,78
+GinHandler.RenderProfile,internal/handlers/gin_handlers.go,172,186,xss,true,79
+GinHandler.RenderJS,internal/handlers/gin_handlers.go,189,199,xss,true,79
+GinHandler.DownloadFile,internal/handlers/gin_handlers.go,207,224,pathtraver,true,22
+GinHandler.ReadConfig,internal/handlers/gin_handlers.go,228,240,pathtraver,true,22
+GinHandler.SaveFile,internal/handlers/gin_handlers.go,244,261,pathtraver,true,22
+GinHandler.ComplexFlow,internal/handlers/gin_handlers.go,269,287,sqli,true,89
+GinHandler.GetUserSecure,internal/handlers/gin_handlers.go,306,319,sqli,false,89
+GinHandler.RunCommandSecure,internal/handlers/gin_handlers.go,322,336,cmdi,false,78
+# ========================
+# echo_handlers.go
+# ========================
+EchoHandler.GetUser,internal/handlers/echo_handlers.go,36,51,sqli,true,89
+EchoHandler.GetUserByUsername,internal/handlers/echo_handlers.go,55,73,sqli,true,89
+EchoHandler.SearchUsers,internal/handlers/echo_handlers.go,77,91,sqli,true,89
+EchoHandler.CreateUser,internal/handlers/echo_handlers.go,99,124,sqli,true,89
+EchoHandler.UpdateUser,internal/handlers/echo_handlers.go,127,154,sqli,true,89
+EchoHandler.RunDiagnostic,internal/handlers/echo_handlers.go,162,175,cmdi,true,78
+EchoHandler.ExecShell,internal/handlers/echo_handlers.go,178,187,cmdi,true,78
+EchoHandler.ServeFile,internal/handlers/echo_handlers.go,195,209,pathtraver,true,22
+EchoHandler.DeleteFile,internal/handlers/echo_handlers.go,212,226,pathtraver,true,22
+EchoHandler.ProcessRequest,internal/handlers/echo_handlers.go,233,248,sqli,true,89
+EchoHandler.ReportEndpoint,internal/handlers/echo_handlers.go,255,272,sqli,true,89
+EchoHandler.GetUserSecure,internal/handlers/echo_handlers.go,291,303,sqli,false,89
+# ========================
+# chi_handlers.go
+# ========================
+ChiHandler.GetUser,internal/handlers/chi_handlers.go,38,55,sqli,true,89
+ChiHandler.GetUserByUsername,internal/handlers/chi_handlers.go,59,78,sqli,true,89
+ChiHandler.SearchUsers,internal/handlers/chi_handlers.go,82,103,sqli,true,89
+ChiHandler.CreateUser,internal/handlers/chi_handlers.go,112,140,sqli,true,89
+ChiHandler.UpdateUser,internal/handlers/chi_handlers.go,144,169,sqli,true,89
+ChiHandler.DeleteUser,internal/handlers/chi_handlers.go,172,187,sqli,true,89
+ChiHandler.RunCommand,internal/handlers/chi_handlers.go,195,210,cmdi,true,78
+ChiHandler.SystemInfo,internal/handlers/chi_handlers.go,213,225,cmdi,true,78
+ChiHandler.ServeFile,internal/handlers/chi_handlers.go,233,249,pathtraver,true,22
+ChiHandler.UploadFile,internal/handlers/chi_handlers.go,252,281,pathtraver,true,22
+ChiHandler.AuditLog,internal/handlers/chi_handlers.go,288,307,sqli,true,89
+ChiHandler.GetUserSecure,internal/handlers/chi_handlers.go,314,328,sqli,false,89
+ChiHandler.CreateUserSecure,internal/handlers/chi_handlers.go,331,357,sqli,false,89
+# ========================
+# fiber_handlers.go
+# ========================
+FiberHandler.GetUser,internal/handlers/fiber_handlers.go,35,52,sqli,true,89
+FiberHandler.GetUserByUsername,internal/handlers/fiber_handlers.go,56,74,sqli,true,89
+FiberHandler.SearchUsers,internal/handlers/fiber_handlers.go,78,95,sqli,true,89
+FiberHandler.CreateUser,internal/handlers/fiber_handlers.go,103,132,sqli,true,89
+FiberHandler.UpdateUser,internal/handlers/fiber_handlers.go,135,166,sqli,true,89
+FiberHandler.DeleteUser,internal/handlers/fiber_handlers.go,169,185,sqli,true,89
+FiberHandler.RunCommand,internal/handlers/fiber_handlers.go,193,208,cmdi,true,78
+FiberHandler.ExecShell,internal/handlers/fiber_handlers.go,211,220,cmdi,true,78
+FiberHandler.ServeFile,internal/handlers/fiber_handlers.go,228,244,pathtraver,true,22
+FiberHandler.DownloadFile,internal/handlers/fiber_handlers.go,247,256,pathtraver,true,22
+FiberHandler.ProcessHeaders,internal/handlers/fiber_handlers.go,263,283,sqli,true,89
+FiberHandler.ProcessCookies,internal/handlers/fiber_handlers.go,286,303,sqli,true,89
+FiberHandler.BatchOperation,internal/handlers/fiber_handlers.go,310,341,sqli,true,89
+FiberHandler.GetUserSecure,internal/handlers/fiber_handlers.go,348,362,sqli,false,89
+FiberHandler.CreateUserSecure,internal/handlers/fiber_handlers.go,365,394,sqli,false,89
+# ========================
+# nethttp_handlers.go
+# ========================
+NetHTTPHandler.GetUser,internal/handlers/nethttp_handlers.go,37,54,sqli,true,89
+NetHTTPHandler.SearchUsers,internal/handlers/nethttp_handlers.go,58,82,sqli,true,89
+NetHTTPHandler.CreateUser,internal/handlers/nethttp_handlers.go,86,110,sqli,true,89
+NetHTTPHandler.UpdateUser,internal/handlers/nethttp_handlers.go,114,139,sqli,true,89
+NetHTTPHandler.ProcessJSON,internal/handlers/nethttp_handlers.go,148,176,sqli,true,89
+NetHTTPHandler.RawBodyToSQL,internal/handlers/nethttp_handlers.go,179,198,sqli,true,89
+NetHTTPHandler.RunCommand,internal/handlers/nethttp_handlers.go,206,220,cmdi,true,78
+NetHTTPHandler.ShellExec,internal/handlers/nethttp_handlers.go,223,234,cmdi,true,78
+NetHTTPHandler.ProcessFile,internal/handlers/nethttp_handlers.go,237,249,cmdi,true,78
+NetHTTPHandler.ServeFile,internal/handlers/nethttp_handlers.go,257,273,pathtraver,true,22
+NetHTTPHandler.ReadFile,internal/handlers/nethttp_handlers.go,276,288,pathtraver,true,22
+NetHTTPHandler.WriteFile,internal/handlers/nethttp_handlers.go,291,306,pathtraver,true,22
+NetHTTPHandler.LogRequest,internal/handlers/nethttp_handlers.go,313,333,sqli,true,89
+NetHTTPHandler.ProcessCookie,internal/handlers/nethttp_handlers.go,336,356,sqli,true,89
+NetHTTPHandler.ComplexHandler,internal/handlers/nethttp_handlers.go,363,384,sqli,true,89
+NetHTTPHandler.GetUserSecure,internal/handlers/nethttp_handlers.go,409,423,sqli,false,89
+NetHTTPHandler.CreateUserSecure,internal/handlers/nethttp_handlers.go,426,446,sqli,false,89
+# ========================
+# multihop_handlers.go (handler entry points -- sinks are in data_service.go)
+# ========================
+MultiHopHandler.GinProcessQuery,internal/handlers/multihop_handlers.go,34,46,sqli,true,89
+MultiHopHandler.GinSearchWithFilters,internal/handlers/multihop_handlers.go,50,66,sqli,true,89
+MultiHopHandler.GinUpdateDynamic,internal/handlers/multihop_handlers.go,70,85,sqli,true,89
+MultiHopHandler.GinProcessComplex,internal/handlers/multihop_handlers.go,89,101,sqli,true,89
+MultiHopHandler.GinMultipleSinks,internal/handlers/multihop_handlers.go,105,117,sqli,true,89
+MultiHopHandler.GinProcessStruct,internal/handlers/multihop_handlers.go,121,137,sqli,true,89
+MultiHopHandler.GinProcessConditional,internal/handlers/multihop_handlers.go,141,154,sqli,true,89
+MultiHopHandler.GinProcessBatch,internal/handlers/multihop_handlers.go,158,174,sqli,true,89
+MultiHopHandler.GinReturnValueTaint,internal/handlers/multihop_handlers.go,178,190,sqli,true,89
+MultiHopHandler.EchoProcessQuery,internal/handlers/multihop_handlers.go,198,209,sqli,true,89
+MultiHopHandler.EchoSearchFilters,internal/handlers/multihop_handlers.go,212,226,sqli,true,89
+MultiHopHandler.EchoProcessStruct,internal/handlers/multihop_handlers.go,229,243,sqli,true,89
+MultiHopHandler.ChiProcessQuery,internal/handlers/multihop_handlers.go,251,264,sqli,true,89
+MultiHopHandler.ChiUpdateDynamic,internal/handlers/multihop_handlers.go,267,284,sqli,true,89
+MultiHopHandler.ChiProcessComplex,internal/handlers/multihop_handlers.go,287,300,sqli,true,89
+MultiHopHandler.ChiProcessStruct,internal/handlers/multihop_handlers.go,303,320,sqli,true,89
+MultiHopHandler.NetHTTPProcessQuery,internal/handlers/multihop_handlers.go,327,340,sqli,true,89
+MultiHopHandler.NetHTTPMultipleSinks,internal/handlers/multihop_handlers.go,343,356,sqli,true,89
+MultiHopHandler.NetHTTPReturnTaint,internal/handlers/multihop_handlers.go,359,372,sqli,true,89
+# ========================
+# middleware.go (only CORS reflection vulnerabilities included)
+# ========================
+EchoCORSMiddleware,internal/handlers/middleware.go,133,148,cors,true,346
+FiberCORSMiddleware,internal/handlers/middleware.go,260,273,cors,true,346
+# ========================
+# data_service.go (sink functions -- receive tainted data from handlers)
+# ========================
+DataService.ProcessUserQuery,internal/services/data_service.go,32,45,sqli,true,89
+DataService.SearchWithFilters,internal/services/data_service.go,49,64,sqli,true,89
+DataService.UpdateDynamicField,internal/services/data_service.go,68,79,sqli,true,89
+DataService.ProcessComplexQuery,internal/services/data_service.go,87,93,sqli,true,89
+DataService.ProcessWithExternalHelper,internal/services/data_service.go,122,131,sqli,true,89
+DataService.ProcessDataWithMultipleSinks,internal/services/data_service.go,139,156,sqli,true,89
+DataService.ProcessStructuredRequest,internal/services/data_service.go,172,195,sqli,true,89
+DataService.ProcessConditionally,internal/services/data_service.go,203,226,sqli,true,89
+DataService.ProcessBatch,internal/services/data_service.go,234,248,sqli,true,89
+DataService.FetchAndTransform,internal/services/data_service.go,256,267,sqli,true,89
+DataService.UseTransformedData,internal/services/data_service.go,271,282,sqli,true,89
+# ========================
+# user_repository.go (repository-layer sinks)
+# ========================
+UserRepository.FindByUsername,internal/repository/user_repository.go,33,39,sqli,true,89
+UserRepository.FindByEmail,internal/repository/user_repository.go,42,48,sqli,true,89
+UserRepository.SearchUsers,internal/repository/user_repository.go,51,57,sqli,true,89
+UserRepository.DeleteByID,internal/repository/user_repository.go,60,64,sqli,true,89
+UserRepository.UpdateRole,internal/repository/user_repository.go,67,71,sqli,true,89
+UserRepository.FindByIDRaw,internal/repository/user_repository.go,78,85,sqli,true,89
+UserRepository.GetUsersByRoleRaw,internal/repository/user_repository.go,88,106,sqli,true,89
+UserRepository.FindByUsernameSqlx,internal/repository/user_repository.go,113,119,sqli,true,89
+UserRepository.NamedQueryVulnerable,internal/repository/user_repository.go,122,127,sqli,true,89
+UserRepository.FindByIDSecure,internal/repository/user_repository.go,134,139,sqli,false,89
+UserRepository.FindByEmailSecure,internal/repository/user_repository.go,142,147,sqli,false,89

@@ -1,0 +1,97 @@
+# function,file,start_line,end_line,category,vulnerable,CWE
+# ===== GORILLA HANDLERS (gorilla_handlers.go) =====
+GetUser,internal/api/gorilla_handlers.go,40,57,sqli,true,89
+GetUserByUsername,internal/api/gorilla_handlers.go,62,81,sqli,true,89
+GetUserByEmail,internal/api/gorilla_handlers.go,85,95,sqli,true,89
+SearchUsers,internal/api/gorilla_handlers.go,100,125,sqli,true,89
+UpdateUser,internal/api/gorilla_handlers.go,130,154,sqli,true,89
+DeleteUser,internal/api/gorilla_handlers.go,158,168,sqli,true,89
+GetResource,internal/api/gorilla_handlers.go,177,188,sqli,true,89
+GetNestedResource,internal/api/gorilla_handlers.go,193,211,sqli,true,89
+ServeFile,internal/api/gorilla_handlers.go,220,234,pathtraver,true,22
+RunTool,internal/api/gorilla_handlers.go,243,260,cmdi,true,78
+PingHost,internal/api/gorilla_handlers.go,264,275,cmdi,true,78
+AuditAction,internal/api/gorilla_handlers.go,284,302,sqli,true,89
+GetUserSession,internal/api/gorilla_handlers.go,311,331,sqli,true,89
+UpdateResource,internal/api/gorilla_handlers.go,340,361,sqli,true,89
+ProcessUserData,internal/api/gorilla_handlers.go,369,386,sqli,true,89
+GetUserByPattern,internal/api/gorilla_handlers.go,400,411,sqli,true,89
+GetUserSecure,internal/api/gorilla_handlers.go,418,432,sqli,false,89
+UpdateUserSecure,internal/api/gorilla_handlers.go,435,449,sqli,false,89
+# ===== HANDLERS (handlers.go) =====
+SendNotification,internal/api/handlers.go,70,120,ssrf,true,918
+SendBatchNotification,internal/api/handlers.go,123,168,ssrf,true,918
+SendTemplatedNotification,internal/api/handlers.go,172,208,pathtraver,true,22
+ListNotifications,internal/api/handlers.go,212,228,sqli,true,89
+TestWebhook,internal/api/handlers.go,232,260,ssrf,true,918
+ExecuteHook,internal/api/handlers.go,264,311,cmdi,true,78
+ReadLogFile,internal/api/handlers.go,315,333,pathtraver,true,22
+ImportConfig,internal/api/handlers.go,337,363,pathtraver,true,22
+SearchNotifications,internal/api/handlers.go,367,378,sqli,true,89
+ExportNotifications,internal/api/handlers.go,382,406,pathtraver,true,22
+ProcessCallback,internal/api/handlers.go,410,443,cmdi,true,78
+ProcessCallback,internal/api/handlers.go,410,443,loginjection,true,117
+DebugRequest,internal/api/handlers.go,458,472,xss,false,79
+ProxyRequest,internal/api/handlers.go,476,495,ssrf,true,918
+LookupUser,internal/api/handlers.go,499,514,ssrf,true,918
+EnrichAndSendNotification,internal/api/handlers.go,537,581,ssrf,true,918
+# ===== STORAGE (db.go) =====
+SQLiteStore.SaveNotification,internal/storage/db.go,103,113,sqli,false,89
+SQLiteStore.UpdateStatus,internal/storage/db.go,116,127,sqli,false,89
+SQLiteStore.ListNotifications,internal/storage/db.go,131,174,sqli,true,89
+SQLiteStore.Search,internal/storage/db.go,178,196,sqli,true,89
+SQLiteStore.GetNotificationByID,internal/storage/db.go,199,211,sqli,true,89
+SQLiteStore.SaveJob,internal/storage/db.go,214,219,sqli,false,89
+SQLiteStore.LoadPendingJobs,internal/storage/db.go,222,245,sqli,false,89
+SQLiteStore.UpdateJobStatus,internal/storage/db.go,248,254,sqli,false,89
+SQLiteStore.GetJobStatus,internal/storage/db.go,257,261,sqli,false,89
+SQLiteStore.CreateUser,internal/storage/db.go,265,272,sqli,false,89
+SQLiteStore.AuthenticateUser,internal/storage/db.go,277,289,sqli,true,89
+SQLiteStore.GetUserByAPIKey,internal/storage/db.go,293,310,sqli,true,89
+SQLiteStore.SaveTemplate,internal/storage/db.go,314,319,sqli,false,89
+SQLiteStore.GetTemplate,internal/storage/db.go,322,329,sqli,true,89
+SQLiteStore.DeleteNotification,internal/storage/db.go,333,337,sqli,true,89
+SQLiteStore.BulkDelete,internal/storage/db.go,341,347,sqli,true,89
+SQLiteStore.ExecRawQuery,internal/storage/db.go,351,360,sqli,true,89
+SQLiteStore.Backup,internal/storage/db.go,364,369,cmdi,true,78
+SQLiteStore.Restore,internal/storage/db.go,373,377,cmdi,true,78
+# ===== CHANNELS - webhook.go =====
+WebhookChannel.Send,internal/channels/webhook.go,63,109,ssrf,true,918
+WebhookChannel.SendToURL,internal/channels/webhook.go,113,142,ssrf,true,918
+WebhookChannel.SendWithCurl,internal/channels/webhook.go,146,161,cmdi,true,78
+WebhookChannel.FetchURLContent,internal/channels/webhook.go,207,215,ssrf,true,918
+# ===== CHANNELS - file.go =====
+FileChannel.Send,internal/channels/file.go,42,76,pathtraver,true,22
+FileChannel.WriteJSON,internal/channels/file.go,80,95,pathtraver,true,22
+FileChannel.AppendToFile,internal/channels/file.go,99,109,pathtraver,true,22
+FileChannel.ReadLogFile,internal/channels/file.go,113,117,pathtraver,true,22
+FileChannel.DeleteLogFile,internal/channels/file.go,121,124,pathtraver,true,22
+FileChannel.CompressLogs,internal/channels/file.go,128,133,cmdi,true,78
+FileChannel.RotateLogs,internal/channels/file.go,137,141,cmdi,true,78
+FileChannel.SendToSyslog,internal/channels/file.go,145,150,cmdi,true,78
+FileChannel.WriteToNamedPipe,internal/channels/file.go,154,164,pathtraver,true,22
+FileChannel.CleanOldLogs,internal/channels/file.go,168,173,cmdi,true,78
+FileChannel.SyncToRemote,internal/channels/file.go,177,182,cmdi,true,78
+FileChannel.TailLogFile,internal/channels/file.go,186,192,cmdi,true,78
+FileChannel.GrepLogFile,internal/channels/file.go,196,202,cmdi,true,78
+# ===== CHANNELS - email.go =====
+EmailChannel.Send,internal/channels/email.go,40,89,xss,true,79
+EmailChannel.SendViaMailCommand,internal/channels/email.go,133,152,cmdi,true,78
+EmailChannel.SendViaSendmail,internal/channels/email.go,156,161,cmdi,true,78
+# ===== CHANNELS - slack.go =====
+SlackChannel.Send,internal/channels/slack.go,61,105,ssrf,true,918
+SlackChannel.SendWithTemplate,internal/channels/slack.go,109,129,xss,true,79
+SlackChannel.SendBlockKit,internal/channels/slack.go,133,159,ssrf,true,918
+SlackChannel.PostToChannel,internal/channels/slack.go,163,167,cmdi,true,78
+SlackChannel.UploadFile,internal/channels/slack.go,171,176,cmdi,true,78
+# ===== TEMPLATES (renderer.go) =====
+Renderer.Render,internal/templates/renderer.go,31,62,pathtraver,true,22
+Renderer.RenderString,internal/templates/renderer.go,66,80,xss,true,79
+Renderer.RenderText,internal/templates/renderer.go,84,97,xss,true,79
+Renderer.RenderWithIncludes,internal/templates/renderer.go,179,204,pathtraver,true,22
+Renderer.SaveTemplate,internal/templates/renderer.go,260,269,pathtraver,true,22
+Renderer.EvalExpression,internal/templates/renderer.go,292,302,xss,true,79
+# ===== MIDDLEWARE (middleware.go) =====
+LoggingMiddleware,internal/api/middleware.go,15,41,loginjection,true,117
+CORSMiddleware,internal/api/middleware.go,54,76,xss,true,79
+APIKeyMiddleware,internal/api/middleware.go,79,105,loginjection,true,117

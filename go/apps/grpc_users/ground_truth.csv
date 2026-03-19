@@ -1,0 +1,25 @@
+# function,file,start_line,end_line,category,vulnerable,CWE
+GetUser,server/user_server.go,42,65,sqli,TRUE,89
+SearchUsers,server/user_server.go,69,101,sqli,TRUE,89
+CreateUser,server/user_server.go,105,136,sqli,TRUE,89
+UpdateUser,server/user_server.go,140,160,sqli,TRUE,89
+DeleteUser,server/user_server.go,164,176,sqli,TRUE,89
+ExecuteQuery,server/user_server.go,184,222,sqli,TRUE,89
+RunCommand,server/user_server.go,226,245,cmdi,TRUE,78
+GetFile,server/user_server.go,249,267,pathtraver,TRUE,22
+GenerateReport,server/user_server.go,272,313,sqli,TRUE,89
+GenerateReport,server/user_server.go,272,313,pathtraver,TRUE,22
+GetUserViaRepo,server/user_server.go,321,337,sqli,TRUE,89
+SearchViaRepo,server/user_server.go,340,362,sqli,TRUE,89
+GetUserWithMetadata,server/user_server.go,370,379,sqli,TRUE,89
+FindByIDVulnerable,repository/user_repository.go,37,50,sqli,TRUE,89
+FindByUsernameVulnerable,repository/user_repository.go,54,67,sqli,TRUE,89
+SearchVulnerable,repository/user_repository.go,71,95,sqli,TRUE,89
+CreateVulnerable,repository/user_repository.go,99,114,sqli,TRUE,89
+UpdateVulnerable,repository/user_repository.go,118,128,sqli,TRUE,89
+DeleteVulnerable,repository/user_repository.go,132,137,sqli,TRUE,89
+UpdateFieldVulnerable,repository/user_repository.go,141,148,sqli,TRUE,89
+BulkDeleteVulnerable,repository/user_repository.go,152,160,sqli,TRUE,89
+FindByIDSecure,repository/user_repository.go,167,179,sqli,FALSE,89
+SearchSecure,repository/user_repository.go,182,202,sqli,FALSE,89
+CreateSecure,repository/user_repository.go,205,220,sqli,FALSE,89

@@ -1,12 +1,12 @@
-# Go SAST Benchmark v0.1
+# Go SAST Benchmark v0.3
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. 256 test cases across 12 CWE categories with ~50/50 vulnerable/safe split. Designed to measure True Positive Rate (TPR), False Positive Rate (FPR), and Youden's J score.
+OWASP-style SAST benchmark for Go. **424 test cases** across **16 CWE categories** with near-50/50 vulnerable/safe split (213/211). Plus 5 reference apps with 395 classified functions.
 
 **Design principle**: Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities. No vulnerability hints in source code. The CSV answer key is the ONLY ground truth.
 
-**Audit status**: All 256 test files audited 2026-03-19. All classifications verified correct.
+**Audit status**: All 424 test files verified 2026-03-19. Zero vulnerability hints. Zero duplicate types/functions.
 
 ---
 
@@ -15,10 +15,11 @@ OWASP-style SAST benchmark for Go. 256 test cases across 12 CWE categories with 
 ```
 gorustbash_benchmark/go/
   expectedresults-0.1.csv     # Answer key: test,category,vulnerable,CWE
-  go_benchmark.md             # This file (master documentation)
-  testcode/                   # 256 benchmark test files + shared.go
-  apps/                       # 6 reference Go apps (source material)
-  cmd/main.go                 # Entry point (handler registration TODO)
+  go_benchmark.md             # This file
+  CHANGELOG.md                # Every change documented
+  testcode/                   # 424 benchmark test files + shared.go + benchmark_services.go
+  apps/                       # 5 reference apps with ground_truth.csv each
+  cmd/main.go                 # Entry point
   go.mod
 ```
 
@@ -26,21 +27,25 @@ gorustbash_benchmark/go/
 
 ## Categories
 
-| # | Category | CWE | Vuln | Safe | Total | Range |
-|---|----------|-----|------|------|-------|-------|
-| 1 | sqli | 89 | 25 | 25 | 50 | 00001-00050 |
-| 2 | cmdi | 78 | 13 | 17 | 30 | 00051-00080 |
-| 3 | pathtraver | 22 | 16 | 14 | 30 | 00081-00110 |
-| 4 | xss | 79 | 10 | 10 | 20 | 00111-00130 |
-| 5 | ssrf | 918 | 10 | 10 | 20 | 00131-00150 |
-| 6 | weakrand | 330 | 10 | 10 | 20 | 00151-00170 |
-| 7 | weakhash | 328 | 10 | 10 | 20 | 00171-00190 |
-| 8 | weakcipher | 327 | 8 | 8 | 16 | 00191-00206 |
-| 9 | securecookie | 614 | 8 | 8 | 16 | 00207-00222 |
-| 10 | redirect | 601 | 8 | 8 | 16 | 00223-00238 |
-| 11 | tlsverify | 295 | 5 | 5 | 10 | 00239-00248 |
-| 12 | deserial | 502 | 4 | 4 | 8 | 00249-00256 |
-| | **TOTAL** | | **127** | **129** | **256** | |
+| # | Category | CWE | Vuln | Safe | Total |
+|---|----------|-----|------|------|-------|
+| 1 | sqli | 89 | 65 | 58 | 123 |
+| 2 | cmdi | 78 | 30 | 30 | 60 |
+| 3 | pathtraver | 22 | 25 | 30 | 55 |
+| 4 | xss | 79 | 14 | 14 | 28 |
+| 5 | ssrf | 918 | 10 | 10 | 20 |
+| 6 | weakrand | 330 | 10 | 10 | 20 |
+| 7 | weakhash | 328 | 10 | 10 | 20 |
+| 8 | weakcipher | 327 | 8 | 8 | 16 |
+| 9 | securecookie | 614 | 8 | 8 | 16 |
+| 10 | redirect | 601 | 8 | 8 | 16 |
+| 11 | tlsverify | 295 | 5 | 5 | 10 |
+| 12 | loginjection | 117 | 4 | 4 | 8 |
+| 13 | nosql | 943 | 4 | 4 | 8 |
+| 14 | ldapi | 90 | 4 | 4 | 8 |
+| 15 | trustbound | 501 | 4 | 4 | 8 |
+| 16 | deserial | 502 | 4 | 4 | 8 |
+| | **TOTAL** | | **213** | **211** | **424** |
 
 ---
 
@@ -333,8 +338,8 @@ OVERALL
 
 | Check | Result |
 |-------|--------|
-| Files exist | 256/256 |
-| Function names match file numbers | 256/256 PASS |
+| Files exist | 424/424 |
+| Function names match file numbers | 424/424 PASS |
 | No vulnerability hints in comments | PASS (all clean) |
 | CSV classifications match code | PASS (spot-checked 60+ files) |
 | Package declarations correct | PASS |
@@ -435,16 +440,6 @@ print("%-16s %-6s %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%" % (
 
 ## Changelog
 
-### v0.1.1 (2026-03-19) -- Documentation iteration
-- Full audit of all 256 test files: all classifications verified correct
-- Full security audit of 6 reference apps: 100+ vulnerabilities documented with file:line
-- Added complete test case registry by pattern type per category
-- Added reference app inventory with framework/vulnerability/safe pattern documentation
-- Documented known issues (cmd/main.go handler registration, go.mod dependencies)
+See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-### v0.1.0 (2026-03-19) -- Initial creation
-- 256 test cases across 12 CWE categories
-- Primary framework: net/http (standard library)
-- 6 reference apps copied from Desktop/go/
-- CSV answer key with 127 vulnerable, 129 safe
-- Scoring script mirroring OWASP Java benchmark pattern
+**Current: v0.3** -- 424 test cases, 16 CWE categories, 7 frameworks, 5 reference apps with 395 classified functions.

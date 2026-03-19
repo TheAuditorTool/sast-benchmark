@@ -17,4 +17,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/gorm v1.25.6
 	gorm.io/driver/sqlite v1.5.4
+	github.com/go-ldap/ldap/v3 v3.4.6
+	go.mongodb.org/mongo-driver v1.13.1
+	github.com/gorilla/sessions v1.2.2
+	github.com/gorilla/websocket v1.5.1
 )
