@@ -10,7 +10,7 @@ SAST tools need ground truth to measure accuracy. Without benchmarks, you can't 
 - **Does the tool cry wolf on safe code?** (False Positive Rate)
 - **Is the tool getting better or worse over time?** (Regression detection)
 
-The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/owasp/benchmark-python) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, or Bash. This project fills that gap.
+The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, or Bash. This project fills that gap.
 
 ## Project Status
 
@@ -164,7 +164,7 @@ We release this openly because imperfect ground truth that invites correction is
 ## Inspiration
 
 - [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) -- 2,740 test cases
-- [OWASP Benchmark for Python](https://github.com/owasp/benchmark-python) -- 1,230 test cases
+- [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) -- 1,230 test cases
 - [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/) -- Node.js intentionally vulnerable app
 
 ## Contributing
