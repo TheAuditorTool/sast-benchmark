@@ -86,7 +86,6 @@ run_build() {
         make clean
         make build
     elif [[ -f "build.sh" ]]; then
-        # TRIGGERS: execution of script file
         ./build.sh "${version}"
     fi
 }
@@ -105,7 +104,6 @@ deploy_to_target() {
     local ssh_opts="-o BatchMode=yes -o ConnectTimeout=30"
 
     # vuln-code-snippet start sshHostKeyBypass
-    # TRIGGERS: ssh hostkey bypass (intentional for demo)
     if [[ "${DEPLOY_SKIP_HOST_CHECK:-false}" == "true" ]]; then
         ssh_opts="${ssh_opts} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # vuln-code-snippet vuln-line sshHostKeyBypass
     fi
@@ -124,7 +122,6 @@ deploy_to_target() {
     scp ${ssh_opts} "${package_path}" "${user}@${host}:/tmp/deploy_${version}.tar.gz"
 
     # Execute remote deployment script
-    # TRIGGERS: ssh with variable command
     # vuln-code-snippet start sshCommandInjection
     local deploy_cmd="cd /opt/app && tar xzf /tmp/deploy_${version}.tar.gz && ./deploy-hook.sh ${version}"
     ssh ${ssh_opts} "${user}@${host}" "${deploy_cmd}"  # vuln-code-snippet vuln-line sshCommandInjection
@@ -171,7 +168,6 @@ run_deploy_hooks() {
 
     log_info "Running ${phase}-deployment hooks"
 
-    # TRIGGERS: find -exec with variable (intentional)
     for hook in "${hooks_dir}"/*.sh; do
         if [[ -x "${hook}" ]]; then
             log_debug "Executing hook: ${hook}"
@@ -180,7 +176,6 @@ run_deploy_hooks() {
     done
 }
 
-# TRIGGERS: Variable used as command (intentional)
 # vuln-code-snippet start customHookExecution
 run_custom_hook() {
     local hook_name="$1"
@@ -251,7 +246,6 @@ restart_service() {
         # Local restart
         systemctl restart "${service}"
     else
-        # TRIGGERS: sudo with variable (intentional)
         ssh "${DEPLOY_USER}@${host}" "sudo systemctl restart ${service}"  # vuln-code-snippet vuln-line sshSudoCommandInjection
     fi
 }
@@ -316,7 +310,6 @@ deploy_container() {
     docker pull "${image}"
 
     # Run new container
-    # TRIGGERS: unquoted variable expansion
     docker run -d \
         --name ${container_name} \
         --env-file ${env_file} \
@@ -394,7 +387,6 @@ get_rollback_version() {
     fi
 }
 
-# TRIGGERS: chmod 777 (intentional)
 # vuln-code-snippet start chmod777DeployDir
 prepare_deploy_directory() {
     local deploy_path="$1"

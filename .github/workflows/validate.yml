@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        language: [rust, go]
-        # Add bash when validate_bash.py exists
+        language: [rust, go, bash]
 
     steps:
       - name: Checkout

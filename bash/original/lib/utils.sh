@@ -72,7 +72,6 @@ to_upper() {
 
 # vuln-code-snippet start unquotedEscapeSed
 # Escape special characters for use in sed
-# TRIGGERS: bash-unquoted-expansion (intentional for demonstration)
 escape_sed() {
     local input=$1
     echo $input | sed 's/[&/\]/\\&/g'  # vuln-code-snippet vuln-line unquotedEscapeSed
@@ -81,7 +80,6 @@ escape_sed() {
 
 # vuln-code-snippet start readWithoutRUrlEncode
 # URL encode a string
-# TRIGGERS: bash-read-without-r (intentional)
 url_encode() {
     local string
     read string  # vuln-code-snippet vuln-line readWithoutRUrlEncode
@@ -109,7 +107,6 @@ url_encode() {
 # File Operations
 # ============================================================================
 # vuln-code-snippet start unsafeTempFile
-# TRIGGERS: bash-unsafe-temp
 create_temp_file() {
     local prefix="${1:-tmp}"
     local temp_file="/tmp/${prefix}_file.tmp"  # vuln-code-snippet vuln-line unsafeTempFile
@@ -127,7 +124,6 @@ create_temp_file_safe() {
 # vuln-code-snippet end safeTempFile
 
 # Read file into variable
-# TRIGGERS: backtick substitution with variable
 read_file() {
     local file_path="$1"
     local content
@@ -155,7 +151,6 @@ append_file() {
 # Array Operations
 # ============================================================================
 # vuln-code-snippet start unquotedArrayJoin
-# TRIGGERS: bash-unquoted-array (intentional)
 join_array() {
     local delimiter="$1"
     shift
@@ -296,7 +291,6 @@ retry() {
 
 # ============================================================================
 # Hashing
-# TRIGGERS: bash-weak-crypto (intentional demonstration)
 # ============================================================================
 # vuln-code-snippet start weakHashMd5
 hash_file_md5() {

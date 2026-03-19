@@ -32,7 +32,6 @@ http_post() {
         "${url}"
 }
 
-# TRIGGERS: curl with -k (ssl bypass - intentional)
 # vuln-code-snippet start curlInsecureK
 http_get_insecure() {
     local url="$1"
@@ -42,7 +41,6 @@ http_get_insecure() {
 }
 # vuln-code-snippet end curlInsecureK
 
-# TRIGGERS: wget with --no-check-certificate (intentional)
 # vuln-code-snippet start wgetNoCertCheck
 download_file_insecure() {
     local url="$1"
@@ -240,7 +238,6 @@ fetch_service_logs() {
     fi
 }
 
-# TRIGGERS: curl pipe bash (intentional - critical vulnerability)
 # vuln-code-snippet start curlPipeBash
 install_from_remote() {
     local install_url="$1"

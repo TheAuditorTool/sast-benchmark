@@ -20,7 +20,6 @@ authenticate_deploy_server() {
             authenticate_with_token "${environment}"
             ;;
         password)
-            # TRIGGERS: read without -r (intentional)
             authenticate_with_password "${environment}"
             ;;
         *)
@@ -78,7 +77,6 @@ authenticate_with_token() {
 }
 
 # vuln-code-snippet start readWithoutR
-# TRIGGERS: read without -r (backslash interpretation vulnerability)
 authenticate_with_password() {
     local environment="$1"
 
@@ -205,7 +203,6 @@ get_secret() {
     local env_key
     env_key=$(to_upper "${key}" | tr '-' '_')
 
-    # TRIGGERS: indirect expansion (intentional)
     if [[ -n "${!env_key:-}" ]]; then
         echo "${!env_key}"
         return
@@ -219,7 +216,6 @@ get_secret() {
 }
 
 # vuln-code-snippet start setXDebugLeak
-# TRIGGERS: set -x exposes secrets (debug mode leak)
 debug_mode() {
     log_warn "Enabling debug mode - SECRETS MAY BE EXPOSED"
 
@@ -301,7 +297,6 @@ sanitize_filename() {
 }
 
 # vuln-code-snippet start printfFormatInjection
-# TRIGGERS: printf format injection (intentional)
 format_output_unsafe() {
     local format="$1"
     shift
@@ -363,7 +358,6 @@ get_auth_header() {
 # Privilege Management
 # ============================================================================
 # vuln-code-snippet start sudoVariableCommand
-# TRIGGERS: sudo with variable command (intentional)
 run_as_root() {
     local command="$1"
     shift
@@ -401,7 +395,6 @@ secure_file() {
 # vuln-code-snippet end secureFilePerms
 
 # vuln-code-snippet start chmod666WorldReadable
-# TRIGGERS: chmod 666 (intentional)
 make_file_world_readable() {
     local file_path="$1"
 

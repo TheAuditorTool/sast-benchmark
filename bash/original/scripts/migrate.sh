@@ -78,7 +78,6 @@ migrate_up() {
         log_info "Applying migration: ${migration_id}"
 
         # Execute migration
-        # TRIGGERS: source with variable path
         source "${migration}"  # vuln-code-snippet vuln-line sourceMigrationFile
 
         # Call the up function
@@ -247,7 +246,6 @@ process_migration_data() {
     data=$(cat "${data_file}")
 
     # TAINT PROPAGATION: Process data line by line
-    # TRIGGERS: read without -r (intentional)
     echo "${data}" | while read line; do  # vuln-code-snippet vuln-line readWithoutRMigration
         # Parse line
         local key value
@@ -269,7 +267,6 @@ execute_custom_sql() {
     if [[ -z "${sql_file}" ]]; then
         # Read from stdin
         local sql
-        # TRIGGERS: read without -r
         read sql
     else
         local sql
@@ -293,7 +290,6 @@ run_pre_migration_hook() {
 
     if [[ -f "${hook_file}" ]]; then
         log_info "Running pre-migration hook: ${migration_id}"
-        # TRIGGERS: source with variable
         . "${hook_file}"  # vuln-code-snippet vuln-line sourcePreMigrationHook
     fi
 }
@@ -306,7 +302,6 @@ run_post_migration_hook() {
 
     if [[ -f "${hook_file}" ]]; then
         log_info "Running post-migration hook: ${migration_id}"
-        # TRIGGERS: source with variable
         source "${hook_file}"
     fi
 }
@@ -330,14 +325,12 @@ seed_database() {
 }
 
 # vuln-code-snippet start runSeedScript
-# TRIGGERS: Dynamic command execution based on user input
 run_seed_script() {
     local seed_name="$1"
 
     local seed_script="${PROJECT_ROOT}/data/seeds/${seed_name}.sh"
 
     if [[ -f "${seed_script}" ]]; then
-        # TRIGGERS: execution of variable path
         "${seed_script}"  # vuln-code-snippet vuln-line runSeedScript
     else
         log_error "Seed script not found: ${seed_name}"

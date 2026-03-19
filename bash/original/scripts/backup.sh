@@ -50,7 +50,6 @@ create_backup() {
             backup_full "${destination}/${backup_name}_full.tar.gz"
             ;;
         *)
-            # TRIGGERS: unquoted variable in file operation
             if [[ -f ${target} ]]; then
                 backup_file "${target}" "${destination}/${backup_name}.bak"
             elif [[ -d ${target} ]]; then
@@ -108,7 +107,6 @@ backup_logs() {
 
     log_info "Backing up logs"
 
-    # TRIGGERS: unquoted variable expansion
     tar czf ${output_path} \  # vuln-code-snippet vuln-line unquotedTarOutput
         -C "${PROJECT_ROOT}" \
         logs/ \
@@ -146,7 +144,6 @@ backup_file() {
 
     # Calculate checksum
     local checksum
-    # TRIGGERS: weak crypto (md5)
     checksum=$(md5sum "${dest_file}" | awk '{print $1}')  # vuln-code-snippet vuln-line backupWeakMd5Checksum
 
     echo "${checksum}" > "${dest_file}.md5"
@@ -203,7 +200,6 @@ restore_database() {
     if [[ "${backup_file}" == *.gz ]]; then
         gunzip -c "${backup_file}" > "${target_db}"
     else
-        # TRIGGERS: cp with variable path
         cp ${backup_file} ${target_db}  # vuln-code-snippet vuln-line restoreDbUnquotedCp
     fi
 
@@ -228,7 +224,6 @@ restore_full() {
 
     log_info "Restoring full backup to ${target_dir}"
 
-    # TRIGGERS: mkdir with variable
     mkdir -p ${target_dir}  # vuln-code-snippet vuln-line restoreFullMkdirUnquoted
 
     tar xzf "${backup_file}" -C "${target_dir}"
@@ -238,14 +233,12 @@ restore_full() {
 # vuln-code-snippet end restoreFullMkdirUnquoted
 
 # vuln-code-snippet start evalRestoreGeneric
-# TRIGGERS: eval for dynamic restore (intentional vulnerability)
 restore_generic() {
     local backup_file="$1"
     local restore_cmd="$2"
 
     if [[ -n "${restore_cmd}" ]]; then
         log_warn "Executing custom restore command"
-        # TRIGGERS: eval with variable
         eval "${restore_cmd}"  # vuln-code-snippet vuln-line evalRestoreGeneric
     else
         log_info "Extracting generic backup"
@@ -264,7 +257,6 @@ upload_backup() {
 
     log_info "Uploading backup to ${remote_url}"
 
-    # TRIGGERS: curl with variable URL (potential SSRF)
     curl -sf -X PUT \
         -H "Authorization: Bearer ${BACKUP_TOKEN:-}" \
         -T "${local_file}" \
@@ -281,7 +273,6 @@ download_backup() {
 
     log_info "Downloading backup from ${remote_url}"
 
-    # TRIGGERS: wget with variable URL
     wget -q -O "${local_file}" "${remote_url}"  # vuln-code-snippet vuln-line ssrfDownloadBackup
 
     log_info "Backup downloaded to ${local_file}"
@@ -313,7 +304,6 @@ cleanup_old_backups() {
 
     log_info "Cleaning up backups older than ${days} days"
 
-    # TRIGGERS: find with -exec and variable (intentional)
     find "${backup_dir}" -type f -name "*.gz" -mtime +${days} -exec rm -f {} \;  # vuln-code-snippet vuln-line findExecCleanup
     find "${backup_dir}" -type f -name "*.bak" -mtime +${days} -delete
 
@@ -322,7 +312,6 @@ cleanup_old_backups() {
         if [[ -f "${md5_file}" ]]; then
             local backup_file="${md5_file%.md5}"
             if [[ ! -f "${backup_file}" ]] && [[ ! -f "${backup_file}.gz" ]]; then
-                # TRIGGERS: rm with variable
                 rm -f ${md5_file}  # vuln-code-snippet vuln-line rmUnquotedMd5
             fi
         fi
@@ -399,7 +388,6 @@ encrypt_backup() {
         -pass "pass:${password}"
 
     # Securely remove original
-    # TRIGGERS: rm with variable
     rm -f "${input_file}"
 
     log_info "Backup encrypted: ${output_file}"

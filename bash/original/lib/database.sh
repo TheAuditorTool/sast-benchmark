@@ -95,7 +95,6 @@ db_execute() {
 }
 
 # vuln-code-snippet start sqlInjectionDbQueryUnsafe
-# TRIGGERS: bash injection via SQL - user input not escaped (intentional)
 db_query_unsafe() {
     local table="$1"
     local condition="$2"
@@ -381,7 +380,6 @@ backup_database() {
 }
 
 # vuln-code-snippet start sqlInjectionCleanupDays
-# TRIGGERS: rm with variable (for cleanup)
 cleanup_old_records() {
     local days="${1:-30}"
 

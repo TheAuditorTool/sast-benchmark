@@ -196,7 +196,7 @@ safe_echo_input() {
 # vuln-code-snippet end cmdi_printf_q_sanitizer_safe
 
 # [EXPECTED_FP] ${var@Q} is a bash 4.4+ quoting operator that produces single-quoted
-# output safe for eval. NOT in TheAuditor's sanitizer list (only printf %q is listed).
+# output safe for eval. Some SAST tools may not recognize ${var@Q} as a sanitizer.
 # Engine will likely flag the eval usage without recognizing @Q as a sanitizer.
 # vuln-code-snippet start cmdi_bash_qquote_sanitizer_safe
 safe_eval_with_qquote() {

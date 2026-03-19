@@ -2,12 +2,14 @@
 """
 Bash SAST Benchmark Scoring Script
 ===================================
-Scores TheAuditor's detection against bash_ground_truth.yml.
+Scores any SAST tool's findings against bash_ground_truth.yml.
 
-Usage (from WSL):
-    /mnt/c/Users/santa/Desktop/TheAuditorV2/.venv/Scripts/python.exe bash_benchmark.py
+Usage:
+    python3 bash_benchmark.py
 
-Requires: PyYAML (pip install pyyaml) or falls back to manual YAML parsing.
+The script reads findings from a .pf/repo_index.db database (produced by
+running a SAST tool on this directory) and compares against the ground truth.
+Adapt RULE_MAP and SINK_MAP for your tool's rule names and vulnerability types.
 
 Scoring: TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
 """
@@ -205,7 +207,7 @@ def main():
     # Load findings from DB
     if not DB_PATH.exists():
         print(f"\nERROR: Database not found at {DB_PATH}")
-        print("Run 'aud full --offline' on the benchmark directory first.")
+        print("Run your SAST tool on the benchmark directory first.")
         print("\nShowing ground truth summary instead:\n")
         show_ground_truth_summary(test_cases)
         return

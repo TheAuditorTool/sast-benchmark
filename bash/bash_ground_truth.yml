@@ -1,6 +1,6 @@
 # bash_ground_truth.yml
 # Answer Key for Bash SAST Benchmark
-# Created: 2026-03-19 | Updated: 2026-03-19 (iteration 2 — due diligence)
+# Version: 0.3 | Created: 2026-03-19
 #
 # Philosophy: This answer key was written BEFORE adversarial code, to prevent
 # unconscious bias toward what the engine already detects.
@@ -1248,7 +1248,7 @@ test_cases:
     description: "Whitelist validation on both inputs + direct systemctl call, no eval — NOT vulnerable"
 
   # VERIFIED: printf %q shell-escapes all special characters. eval with escaped
-  # input is safe. Pattern is in TheAuditor SANITIZERS["quote_escape"].
+  # input is safe — printf %q is a recognized shell-quoting sanitizer.
   - key: cmdi_printf_q_sanitizer_safe
     file: adversarial/cmdi_tests.sh
     category: cmdi
@@ -1391,3 +1391,468 @@ test_cases:
     cwe: 89
     vulnerable: false
     description: "ORDER BY with column whitelist validation — only known columns allowed — NOT vulnerable"
+
+  # ============================================================================
+  # DEEPFLOW-WEBHOOK APP (Phase 6A, 2026-03-19)
+  # Bash HTTP webhook server — 8 files, 1,347 lines
+  # New patterns: CGI query string eval, JSON field eval, email header injection,
+  # double eval templates, SSRF via git clone, path traversal via deploy target
+  # ============================================================================
+
+  # --- handlers/webhook.sh ---
+
+  - key: dfw_eval_query_string
+    file: deepflow-webhook/handlers/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "HTTP query string passed to parse_query_string_unsafe which evals it directly"
+
+  - key: dfw_eval_deployment_task
+    file: deepflow-webhook/handlers/webhook.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "JSON .deployment.task with custom: prefix stripped then evaled — disguised eval"
+
+  - key: dfw_exec_endpoint
+    file: deepflow-webhook/handlers/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "JSON .command field evaled directly — intentional RCE endpoint"
+
+  - key: dfw_sql_query_endpoint
+    file: deepflow-webhook/handlers/webhook.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "JSON .query field passed to mysql -e — direct SQL injection endpoint"
+
+  - key: dfw_push_branch_validated
+    file: deepflow-webhook/handlers/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Branch validated via validate_branch() before git clone — NOT vulnerable"
+
+  - key: dfw_health_check_safe
+    file: deepflow-webhook/handlers/webhook.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "Static OK response, no user input — NOT vulnerable"
+
+  # --- handlers/deploy.sh ---
+
+  - key: dfw_deploy_path_traversal
+    file: deepflow-webhook/handlers/deploy.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "JSON .target concatenated into path then rm -rf — path traversal via deploy target"
+
+  - key: dfw_deploy_bash_c
+    file: deepflow-webhook/handlers/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "JSON .script field passed to bash -c — command injection via deploy script"
+
+  - key: dfw_deploy_safe_validated
+    file: deepflow-webhook/handlers/deploy.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "validate_path() canonicalizes + prefix-checks path, script whitelisted — NOT vulnerable"
+
+  - key: dfw_rollback_path_traversal
+    file: deepflow-webhook/handlers/deploy.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "JSON .target in rollback context — cp -r with unvalidated path"
+
+  - key: dfw_git_clone_ssrf
+    file: deepflow-webhook/handlers/deploy.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "JSON repo_url passed directly to git clone — SSRF via git URL"
+
+  - key: dfw_curl_ssrf_deploy
+    file: deepflow-webhook/handlers/deploy.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "User URL passed to curl for package download — SSRF"
+
+  - key: dfw_post_deploy_eval
+    file: deepflow-webhook/handlers/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "hook_cmd parameter evaled directly — post-deploy command injection"
+
+  # --- handlers/notify.sh ---
+
+  - key: dfw_slack_ssrf
+    file: deepflow-webhook/handlers/notify.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "User-supplied webhook_url passed to curl — SSRF via Slack notification URL"
+
+  - key: dfw_email_header_injection
+    file: deepflow-webhook/handlers/notify.sh
+    category: cmdi
+    cwe: 93
+    vulnerable: true
+    description: "Message piped to mail command — email header injection via newlines in message body"
+
+  - key: dfw_email_validated_safe
+    file: deepflow-webhook/handlers/notify.sh
+    category: cmdi
+    cwe: 93
+    vulnerable: false
+    description: "Email recipient validated via validate_email() before use — NOT vulnerable"
+
+  - key: dfw_custom_eval_callback
+    file: deepflow-webhook/handlers/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "JSON .callback field evaled directly — command injection via notification callback"
+
+  - key: dfw_template_double_eval
+    file: deepflow-webhook/handlers/notify.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "DOUBLE eval — first on vars, then on template string — compound code injection"
+
+  - key: dfw_notify_script_path
+    file: deepflow-webhook/handlers/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "User script_path passed to bash + unquoted $args — path traversal + command injection"
+
+  - key: dfw_notify_safe_sanitized
+    file: deepflow-webhook/handlers/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "printf %q sanitizes message, hardcoded Slack URL, channel whitelist — NOT vulnerable"
+
+  # --- lib/http.sh ---
+
+  - key: dfw_parse_qs_eval
+    file: deepflow-webhook/lib/http.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Query string passed directly to eval — classic CGI command injection"
+
+  - key: dfw_parse_qs_safe
+    file: deepflow-webhook/lib/http.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Query string split on & with IFS, values stored via declare -g — no eval — NOT vulnerable"
+
+  - key: dfw_send_error_json_inject
+    file: deepflow-webhook/lib/http.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "Error message interpolated into JSON without escaping — JSON injection"
+
+  - key: dfw_send_response_safe
+    file: deepflow-webhook/lib/http.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "printf with format strings — safe HTTP response construction — NOT vulnerable"
+
+  # --- lib/json.sh ---
+
+  - key: dfw_json_get_unsafe_eval
+    file: deepflow-webhook/lib/json.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "JSON body processed via eval for field extraction — command injection"
+
+  - key: dfw_json_exec_command
+    file: deepflow-webhook/lib/json.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "JSON .command field extracted then evaled — intentional command execution"
+
+  - key: dfw_json_get_jq_safe
+    file: deepflow-webhook/lib/json.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "jq -r for JSON parsing — safe, no eval — NOT vulnerable"
+
+  - key: dfw_json_build_escaped
+    file: deepflow-webhook/lib/json.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "Escapes backslash, quotes, newlines before JSON insertion — NOT vulnerable"
+
+  # ============================================================================
+  # DEEPFLOW-OPS APP (Phase 6B, 2026-03-19)
+  # DevOps operations suite with SAFE_MODE toggle — 7 files, 792 lines
+  # Dual-path design: each script has safe + vulnerable code paths
+  # New patterns: env var as command, git branch injection, mail injection,
+  # JSON injection, stdin-fed eval/SQL, cross-service taint chain
+  # ============================================================================
+
+  # --- scripts/backup.sh ---
+
+  - key: dfo_backup_safe_validated
+    file: deepflow-ops/scripts/backup.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "SAFE_MODE path — validate_path on source+dest, basename sanitization, tar with quoted args"
+
+  - key: dfo_backup_unquoted_tar
+    file: deepflow-ops/scripts/backup.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "tar -czf with unquoted $SOURCE_PATH — path traversal via word splitting"
+
+  - key: dfo_backup_compression_cmd
+    file: deepflow-ops/scripts/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "$COMPRESSION env var used directly as command — arbitrary command execution"
+
+  - key: dfo_backup_eval_hook
+    file: deepflow-ops/scripts/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval $POST_BACKUP_CMD — post-backup hook command injection"
+
+  - key: dfo_backup_curl_ssrf
+    file: deepflow-ops/scripts/backup.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "curl to $BACKUP_UPLOAD_URL — SSRF via user-controlled upload URL"
+
+  # --- scripts/cleanup.sh ---
+
+  - key: dfo_cleanup_safe_validated
+    file: deepflow-ops/scripts/cleanup.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "SAFE_MODE path — validate_path + critical path blacklist (/etc, /var, /usr, etc.)"
+
+  - key: dfo_cleanup_unquoted_rm
+    file: deepflow-ops/scripts/cleanup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "rm -rf $TARGET_PATH unquoted — path traversal + glob expansion"
+
+  - key: dfo_cleanup_find_pattern
+    file: deepflow-ops/scripts/cleanup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "find -name with user-controlled $CLEANUP_PATTERN + -exec rm — pattern injection"
+
+  - key: dfo_cleanup_eval_log
+    file: deepflow-ops/scripts/cleanup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval in logging context — string concatenation into eval for log message"
+
+  # --- scripts/deploy.sh ---
+
+  - key: dfo_deploy_safe_validated
+    file: deepflow-ops/scripts/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "SAFE_MODE path — validate_identifier + validate_environment + validate_branch chain"
+
+  - key: dfo_deploy_git_branch_unquoted
+    file: deepflow-ops/scripts/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "git checkout $BRANCH unquoted — argument injection in git context"
+
+  - key: dfo_deploy_bash_c_hook
+    file: deepflow-ops/scripts/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "bash -c $POST_DEPLOY_SCRIPT — post-deploy command injection"
+
+  # --- scripts/notify.sh ---
+
+  - key: dfo_notify_safe_encoded
+    file: deepflow-ops/scripts/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "SAFE_MODE path — validate_message + validate_url + curl --data-urlencode"
+
+  - key: dfo_notify_json_injection
+    file: deepflow-ops/scripts/notify.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "Unescaped $MESSAGE interpolated into JSON string literal — JSON injection"
+
+  - key: dfo_notify_mail_unquoted
+    file: deepflow-ops/scripts/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "mail -s ... $EMAIL_TO unquoted — argument injection in mail command"
+
+  - key: dfo_notify_eval_callback
+    file: deepflow-ops/scripts/notify.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval $NOTIFY_CALLBACK — notification callback command injection"
+
+  # --- scripts/webhook_handler.sh ---
+
+  - key: dfo_wh_parse_qs_safe
+    file: deepflow-ops/scripts/webhook_handler.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Manual key validation + declare -g assignment — no eval, safe query string parsing"
+
+  - key: dfo_wh_eval_post_body
+    file: deepflow-ops/scripts/webhook_handler.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval $POST_DATA — stdin-fed eval of HTTP POST body"
+
+  - key: dfo_wh_mysql_stdin
+    file: deepflow-ops/scripts/webhook_handler.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "mysql -e from stdin read — SQL injection via POST body"
+
+  - key: dfo_wh_cross_service_callback
+    file: deepflow-ops/scripts/webhook_handler.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "User variables in curl JSON body to Python service — cross-service taint chain"
+
+  # ============================================================================
+  # DATAFORGE APP (Phase 6C, 2026-03-19)
+  # Data pipeline scripts — 4 files, 436 lines
+  # New patterns: JSON injection via curl, incomplete secret redaction (CWE-532),
+  # Terraform variable injection. healthcheck.sh provides 5 safe (TN) functions.
+  # Agent classifications CORRECTED: check_process and check_database are SAFE
+  # (pgrep -f with quoted pattern is safe; sqlite3 path is a filename, not SQL).
+  # ============================================================================
+
+  # --- backup.sh ---
+
+  - key: dfg_backup_unquoted_mysqldump
+    file: dataforge/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "mysqldump with unquoted $DATABASE_NAME — command injection via database name"
+
+  - key: dfg_backup_json_injection
+    file: dataforge/backup.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "$DATABASE_NAME interpolated into curl JSON payload without escaping — JSON injection"
+
+  # --- deploy.sh ---
+
+  - key: dfg_deploy_eval_extra_args
+    file: dataforge/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval $EXTRA_ARGS — explicit eval of second positional argument from Python subprocess"
+
+  - key: dfg_deploy_url_injection
+    file: dataforge/deploy.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "$ENVIRONMENT interpolated into curl URL and JSON body — URL parameter injection"
+
+  # --- healthcheck.sh (5 TN — CORRECTED from agent false positives) ---
+
+  - key: dfg_healthcheck_http_safe
+    file: dataforge/healthcheck.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "check_http() — hardcoded URL, quoted curl args, no user input — NOT vulnerable"
+
+  # CORRECTED: Agent said vulnerable (pgrep regex injection). WRONG.
+  # pgrep -f "$pattern" — double-quoted variable. Backticks in value are literal.
+  - key: dfg_healthcheck_process_safe
+    file: dataforge/healthcheck.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "check_process() — pgrep -f with properly quoted pattern, hardcoded inputs — NOT vulnerable"
+
+  - key: dfg_healthcheck_file_safe
+    file: dataforge/healthcheck.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "check_file() — properly quoted path in test and stat — NOT vulnerable"
+
+  # CORRECTED: Agent said vulnerable (SQL injection via path). WRONG.
+  # sqlite3 "$path" "SELECT 1" — path is a filename, not SQL. Hardcoded queries.
+  - key: dfg_healthcheck_database_safe
+    file: dataforge/healthcheck.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "check_database() — sqlite3 with hardcoded queries, path is filename not SQL — NOT vulnerable"
+
+  - key: dfg_healthcheck_disk_safe
+    file: dataforge/healthcheck.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "check_disk() — df with properly quoted path, hardcoded threshold — NOT vulnerable"
+
+  # --- setup-infra.sh ---
+
+  # NEW CWE: CWE-532 (Insertion of Sensitive Information into Log File)
+  # Redaction logic checks only *password* and *secret* in variable names.
+  # Variables like TF_VAR_api_key, TF_VAR_github_token are printed unredacted.
+  - key: dfg_infra_incomplete_redaction
+    file: dataforge/setup-infra.sh
+    category: infodisclosure
+    cwe: 532
+    vulnerable: true
+    description: "Incomplete keyword redaction — leaks TF_VAR_api_key/token (only *password*/*secret* masked)"

@@ -16,7 +16,6 @@ declare -g WEBHOOK_SECRET=""
 declare -g SLACK_WEBHOOK=""
 declare -g ENVIRONMENTS=()
 
-# TRIGGERS: bash-hardcoded-credential (intentional demonstration)
 # In real usage, these would come from environment or vault
 # vuln-code-snippet start hardcodedDbPassword
 declare -g DB_PASSWORD="changeme123"  # vuln-code-snippet vuln-line hardcodedDbPassword
@@ -38,7 +37,6 @@ load_config() {
 
     # vuln-code-snippet start sourceVariablePath
     if [[ -f "${config_path}" ]]; then
-        # TRIGGERS: source with variable path
         source "${config_path}"  # vuln-code-snippet vuln-line sourceVariablePath
     else
         log_warn "Config file not found, using defaults"
@@ -154,7 +152,6 @@ get_config_value() {
     esac
 }
 
-# TRIGGERS: eval with variable (intentional demonstration)
 # vuln-code-snippet start evalSetConfigValue
 set_config_value() {
     local key="$1"
@@ -226,7 +223,6 @@ get_env_config() {
     env_upper=$(to_upper "${environment}")
     local env_key="${env_upper}_${key}"
 
-    # TRIGGERS: indirect expansion (intentional)
     if [[ -n "${!env_key:-}" ]]; then
         echo "${!env_key}"
     else
@@ -237,7 +233,6 @@ get_env_config() {
 
 # ============================================================================
 # Dynamic Configuration Loading
-# TRIGGERS: bash-source-injection (with variable path - intentional)
 # ============================================================================
 # vuln-code-snippet start sourceEnvironmentConfig
 load_environment_config() {
@@ -259,7 +254,6 @@ load_plugin_config() {
     local plugin_name="$1"
     local plugin_config="${SCRIPT_DIR}/plugins/${plugin_name}/config.sh"
 
-    # TRIGGERS: source with variable (intentional)
     if [[ -f "${plugin_config}" ]]; then
         source $plugin_config  # vuln-code-snippet vuln-line sourcePluginUnquoted
         log_info "Loaded plugin config: ${plugin_name}"
@@ -269,7 +263,6 @@ load_plugin_config() {
 
 # ============================================================================
 # Path Manipulation (Intentionally Vulnerable)
-# TRIGGERS: bash-path-injection
 # ============================================================================
 # vuln-code-snippet start pathInjectionSetupPath
 setup_path() {
@@ -285,7 +278,6 @@ setup_path() {
 }
 # vuln-code-snippet end pathInjectionSetupPath
 
-# TRIGGERS: bash-environment-injection (intentional)
 # vuln-code-snippet start ldPreloadInjection
 setup_library_path() {
     local lib_dir="${SCRIPT_DIR}/lib"
@@ -300,7 +292,6 @@ setup_library_path() {
 
 # ============================================================================
 # IFS Manipulation (Intentionally Vulnerable)
-# TRIGGERS: bash-ifs-modified
 # ============================================================================
 # vuln-code-snippet start ifsModificationUnsafe
 parse_csv_line() {

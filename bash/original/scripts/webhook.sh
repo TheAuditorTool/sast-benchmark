@@ -122,7 +122,6 @@ read_request_body() {
 
     if [[ "${CONTENT_LENGTH}" -gt 0 ]]; then
         # TAINT SOURCE: Read from stdin (HTTP request body)
-        # TRIGGERS: read without -r (intentional vulnerability)
         read -n "${CONTENT_LENGTH}" body
     fi
 
@@ -272,7 +271,6 @@ handle_deploy_event() {
     log_info "Deploy request: ${environment} -> ${version}"
 
     # DEEP TAINT SINK: User-controlled deployment parameters
-    # TRIGGERS: command execution with user input
     "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${version}"  # vuln-code-snippet vuln-line deployFromWebhookPayload
 
     send_success_response "deploy_triggered"
@@ -359,7 +357,6 @@ handle_slack_webhook() {
     log_info "Slack command from ${user}: ${command} ${text}"
 
     # DEEP TAINT SINK: Execute slash command
-    # TRIGGERS: command execution with user input
     execute_slack_command "${command}" "${text}" "${user}"
 }
 
@@ -373,7 +370,6 @@ parse_form_field() {
 
 # vuln-code-snippet start evalSlackExec
 # vuln-code-snippet start slackDeployCommand
-# TRIGGERS: eval with user input (intentional critical vulnerability)
 execute_slack_command() {
     local command="$1"
     local args="$2"
@@ -394,7 +390,6 @@ execute_slack_command() {
             ;;
         /exec)
             # CRITICAL: Arbitrary command execution
-            # TRIGGERS: eval with user input
             eval "${args}"  # vuln-code-snippet vuln-line evalSlackExec
             ;;
         *)
@@ -420,7 +415,6 @@ handle_custom_webhook() {
 
         if [[ -f "${handler_script}" ]]; then
             # TAINT SINK: Execute user-specified handler
-            # TRIGGERS: source with variable path
             source "${handler_script}"  # vuln-code-snippet vuln-line sourceCustomWebhookHandler
 
             if declare -f handle_webhook > /dev/null; then

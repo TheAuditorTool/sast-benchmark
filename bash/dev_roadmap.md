@@ -16,7 +16,7 @@
 2. **3 annotation placement issues**: markers on wrong lines in 3 test cases
 3. **~25 missing attack patterns** that any serious bash SAST benchmark needs
 4. **TP/TN imbalance**: 70.9%/29.1% (target: ~55/45)
-5. **Zero baseline scores** — haven't run `aud full` against the benchmark yet
+5. **Zero baseline scores** — haven't run a SAST tool against the benchmark yet
 6. **No FN/FP root cause analysis** — can't do until baseline exists
 
 **What's good**:
@@ -83,7 +83,7 @@
 3. `sqli_table_name_injection` — Inline marker already existed. Audit agent missed it.
 4. `cmdi_backtick_injection` — Inline marker already existed. No change needed.
 
-**Lesson**: Audit agents can be wrong. Always verify against actual source code (Prime Directive).
+**Lesson**: Automated analysis can be wrong. Always verify classifications against actual bash behavior.
 
 ---
 
@@ -203,10 +203,10 @@ Each new test case follows the pattern: vulnerable function + safe variant, both
 
 ## Phase 5: Baseline Run + Analysis
 
-**Scope**: Run `aud full --offline`, establish baseline scorecard, analyze every FN/FP.
+**Scope**: Run `SAST tool scan`, establish baseline scorecard, analyze every FN/FP.
 **Effort**: 1 session, ~1 hour (depends on aud runtime).
 
-### 5.1 Run aud full --offline
+### 5.1 Run SAST tool scan
 Tell human to run on the benchmark directory.
 
 ### 5.2 Run Scoring Script
@@ -245,10 +245,15 @@ Document surprises — categories that scored better or worse than expected.
 | 2 | Tier 1 Coverage | DONE | 14 | See notes below |
 | 3 | Tier 2 Coverage | DONE | 7 | See notes below |
 | 4 | Polish + Docs | DONE | 0 (docs only) | All stats updated to 179 |
-| 5 | Baseline Run | PENDING | 0 (scoring only) | After Phase 4 |
+| 5 | Baseline Run | PENDING | 0 (scoring only) | Ready — all apps annotated |
+| 6A | deepflow-webhook app | DONE | 28 | 8 files, 1,347 lines — 17 TP, 11 TN |
+| 6B | deepflow-ops app | DONE | 20 | 7 files, 785 lines — 15 TP, 5 TN |
+| 6C | dataforge app | DONE | 10 | 4 files, 436 lines — 5 TP, 5 TN |
+| 6D | Phase 6 polish | DONE | 0 | All docs updated to 237 |
+| 7 | Pre-flight check | DONE | 0 | Hallucinated numbers fixed, CHANGELOG.md created, validate_bash.py created, CI updated, v0.3 |
 
-**Actual**: 179 test cases (122 TP / 57 TN = 68.2% / 31.8%). 14 expected FN, 3 expected FP.
-**Original target was ~190-200** but Prime Directive verification rejected ~11 proposed patterns that couldn't be confirmed exploitable with certainty. Quality over quantity.
+**Final state**: 237 test cases (161 TP / 76 TN = 67.9% / 32.1%). 42 files, 7,716 lines, 4 apps.
+**Agent classification corrections**: 2 false-positive corrections in dataforge healthcheck.sh (check_process and check_database are SAFE, not vulnerable — manual verification verification).
 
 ---
 
@@ -262,6 +267,6 @@ When this benchmark is published, a reviewer should be able to:
 4. **See every FN** documented with root cause (pipeline stage) and fix complexity
 5. **See every FP** documented with why the engine over-flagged
 6. **Trust the classifications** — every vulnerable=true is genuinely exploitable, every vulnerable=false is genuinely safe
-7. **Use it to improve their own tool** — the benchmark works for ANY bash SAST tool, not just TheAuditor
+7. **Use it to improve their own tool** — the benchmark works for ANY bash SAST tool, not just one tool
 
 This is the standard. We're not there yet, but the roadmap gets us there.

@@ -1,14 +1,15 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-03-19 (Phase 4 complete — 179 test cases)
+**Created:** 2026-03-19 | **Updated:** 2026-03-19 (Phase 6D — 237 test cases, 4 apps)
 **Team:** Bash (of 3: Go, Rust, Bash)
-**Status:** Ground truth + engine analysis complete. Awaiting first `aud full --offline` run.
+**Version:** v0.3
+**Status:** Ground truth complete. Awaiting first SAST tool baseline run.
 
 ---
 
 ## Purpose
 
-Build TP/FP/FN/TN ground truth for Bash shell scripts so TheAuditor's evolution is measurable. Without ground truth, we can't calculate TPR/FPR/Youden's J. We can't track regressions. We can't evolve.
+Build TP/FP/FN/TN ground truth for Bash shell scripts so any SAST tool's detection accuracy is measurable. Without ground truth, you can't calculate TPR/FPR/Youden's J. You can't track regressions. You can't evolve.
 
 The Java OWASP benchmark (2,740 test cases, independently written) forced 3 major engine overhauls because it exposed blind spots nobody anticipated. This benchmark attempts the same for Bash, with the honest caveat that **we're writing our own exam** — the bias risk is real and documented.
 
@@ -40,7 +41,7 @@ The original bash project (`C:\Users\santa\Desktop\bash\`) is a production-style
 
 ---
 
-## TheAuditor Bash Engine Capabilities
+## SAST Engine Capabilities (Reference Analysis)
 
 ### Pipeline Architecture (from correctness_sop.md)
 
@@ -154,7 +155,16 @@ gorustbash_benchmark/bash/
 |   +-- ssl_bypass_tests.sh       # 5 test cases (--insecure, GIT_SSL_NO_VERIFY)
 |   +-- unquoted_tests.sh         # 6 test cases (word splitting, quoting)
 |   +-- rce_tests.sh              # 5 test cases (curl|bash, process substitution)
-+-- bash_ground_truth.yml  # THE answer key (179 test cases)
++-- deepflow-webhook/      # Webhook server (8 files, 28 test cases)
+|   +-- handlers/          # webhook.sh, deploy.sh, notify.sh
+|   +-- lib/               # http.sh, json.sh, validate.sh
+|   +-- server.sh, config.sh
++-- deepflow-ops/          # DevOps operations with SAFE_MODE toggle (7 files, 20 test cases)
+|   +-- lib/               # common.sh, validate.sh
+|   +-- scripts/           # backup.sh, cleanup.sh, deploy.sh, notify.sh, webhook_handler.sh
++-- dataforge/             # Data pipeline scripts (4 files, 10 test cases)
+|   +-- backup.sh, deploy.sh, healthcheck.sh, setup-infra.sh
++-- bash_ground_truth.yml  # THE answer key (237 test cases)
 +-- bash_benchmark.py      # Scoring script
 +-- BENCHMARK.md           # This file
 ```
@@ -165,12 +175,12 @@ gorustbash_benchmark/bash/
 
 | Category | CWE | Total | Vulnerable (TP) | Safe (TN) |
 |----------|-----|-------|-----------------|-----------|
-| cmdi | 78 | 43 | 31 | 12 |
-| codeinj | 94 | 19 | 13 | 6 |
-| sqli | 89 | 24 | 19 | 5 |
-| pathtraver | 22 | 9 | 6 | 3 |
-| ssrf | 918 | 8 | 6 | 2 |
-| infodisclosure | 200 | 7 | 4 | 3 |
+| cmdi | 78 | 74 | 53 | 21 |
+| codeinj | 94 | 24 | 18 | 6 |
+| sqli | 89 | 27 | 21 | 6 |
+| pathtraver | 22 | 16 | 9 | 7 |
+| ssrf | 918 | 13 | 11 | 2 |
+| infodisclosure | 200 | 14 | 6 | 8 |
 | hardcoded_creds | 798 | 11 | 7 | 4 |
 | weakcrypto | 327 | 9 | 6 | 3 |
 | insecure_temp | 377 | 8 | 4 | 4 |
@@ -178,11 +188,11 @@ gorustbash_benchmark/bash/
 | ssl_bypass | 295 | 11 | 6 | 5 |
 | unquoted | 78v | 13 | 10 | 3 |
 | rce | 94v | 8 | 5 | 3 |
-| **TOTAL** | | **179** | **122** | **57** |
+| **TOTAL** | | **237** | **161** | **76** |
 
-**TP/TN split: 68.2% / 31.8%** — Skewed toward TP because original files are intentionally vulnerability-heavy code. Adversarial files have better balance (~50/50). Future iterations should add more safe (TN) variants.
+**TP/TN split: 67.9% / 32.1%** — Skewed toward TP because real applications are vulnerability-heavy by design. The deepflow-ops SAFE_MODE patterns and dataforge healthcheck functions provide natural TN coverage.
 
-**Expected outcomes**: 14 test cases tagged [EXPECTED_FN] (engine has no rule). 3 tagged [EXPECTED_FP] (engine may incorrectly flag safe code).
+**4 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck).
 
 For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%.
 
@@ -191,8 +201,8 @@ For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%.
 ## Scoring
 
 ```bash
-# After running aud full --offline on this directory:
-/mnt/c/Users/santa/Desktop/TheAuditorV2/.venv/Scripts/python.exe bash_benchmark.py
+# After running your SAST tool on this directory:
+python3 bash_benchmark.py
 ```
 
 Score formula: `Score = TPR - FPR` (Youden's J statistic)
@@ -217,8 +227,8 @@ Score formula: `Score = TPR - FPR` (Youden's J statistic)
 ## Known Bias Risks
 
 1. **Self-exam problem**: We wrote the test AND grade it. The Java benchmark worked because OWASP wrote it independently.
-2. **Pattern awareness**: The test writer has read TheAuditor source code. Unconscious bias toward detectable patterns is inevitable despite efforts to avoid it.
-3. **TP-heavy split**: 68.2% TP means the benchmark is easier to score on than a balanced one. A tool that flags everything gets 100% TPR but also 100% FPR.
+2. **Pattern awareness**: Test writers had access to the reference SAST tool's source code. Unconscious bias toward detectable patterns is possible despite efforts to avoid it.
+3. **TP-heavy split**: 67.9% TP means the benchmark is easier to score on than a balanced one. A tool that flags everything gets 100% TPR but also 100% FPR.
 4. **Bash-specific limitations**: Some vulnerability categories (SSRF, SQL injection) are less common in real bash scripts than in web applications.
 
 **Mitigation**: Document everything. Iterate. When the engine improves, add harder test cases. The benchmark is a living document, not a one-time test.
@@ -227,16 +237,16 @@ Score formula: `Score = TPR - FPR` (Youden's J statistic)
 
 ## Detection Coverage Matrix
 
-Maps each benchmark category to expected detection mechanism. See `coverage_cve_gaps.md` in TheAuditorV2 root for full gap analysis.
+Maps each benchmark category to expected detection mechanism. See `coverage_cve_gaps.md` in the repo root for detailed gap analysis.
 
-| Category | Expected Detection | Track A Available? | Expected FN Count | Key Gaps |
+| Category | Expected Detection | Taint Analysis Available? | Expected FN Count | Key Gaps |
 |----------|-------------------|--------------------|-------------------|----------|
-| cmdi (43) | bash-eval-injection, bash-command-injection-taint, +8 rules | YES (15 flows) | 3-5 | nameref, sed, awk, arg injection |
-| codeinj (19) | bash-source-injection, bash-curl-pipe-bash | Partial | 2-4 | trap, heredoc, eval+$(curl) |
-| sqli (24) | **NO bash rule consumes Track A** | YES (19 flows) but UNUSED | 15-19 | GAP-BASH-08: biggest gap |
-| pathtraver (9) | **NO bash rule** | YES (21 flows) but UNUSED | 4-6 | GAP-BASH-10, tar traversal |
-| ssrf (8) | **NO bash rule** | YES (26 flows) but UNUSED | 4-6 | GAP-BASH-09 |
-| infodisclosure (7) | bash-debug-mode-leak (set -x only) | YES (25 flows) but UNUSED | 2-4 | GAP-BASH-11 |
+| cmdi (74) | bash-eval-injection, bash-command-injection-taint, +8 rules | YES (15 flows) | 5-10 | nameref, sed, awk, arg injection, env var as cmd |
+| codeinj (24) | bash-source-injection, bash-curl-pipe-bash | Partial | 3-5 | trap, heredoc, eval+$(curl), JSON injection, double eval |
+| sqli (27) | **No rule consumes taint data** | YES (19 flows) but UNUSED | 16-21 | GAP-BASH-08: biggest gap |
+| pathtraver (16) | **NO bash rule** | YES (21 flows) but UNUSED | 5-9 | GAP-BASH-10, tar traversal, deploy path |
+| ssrf (13) | **NO bash rule** | YES (26 flows) but UNUSED | 7-11 | GAP-BASH-09, git clone, backup upload |
+| infodisclosure (14) | bash-debug-mode-leak (set -x only) | YES (25 flows) but UNUSED | 3-5 | GAP-BASH-11, incomplete redaction (CWE-532) |
 | hardcoded_creds (11) | bash-hardcoded-credential + secret-hardcoded-assignment | N/A (structural) | 1-2 | heredoc creds likely FN |
 | weakcrypto (9) | bash-weak-crypto (md5sum/sha1sum) | N/A (structural) | 2-3 | openssl not checked |
 | insecure_temp (8) | bash-unsafe-temp | N/A (structural) | 1-2 | timestamp, TOCTOU |
@@ -253,7 +263,7 @@ Maps each benchmark category to expected detection mechanism. See `coverage_cve_
 
 **Status: AWAITING FIRST RUN**
 
-Run `aud full --offline` on this directory, then execute the scoring script.
+Run your SAST tool on this directory, then execute the scoring script.
 
 ```
 Category             CWE    TP    FP    FN    TN      TPR     FPR   Score
@@ -274,5 +284,9 @@ OVERALL                     ?     ?     ?     ?      ?.?%    ?.?%   +?.?%
 - **2026-03-19**: Iteration 3 — full rules audit. Detection coverage matrix. 17 gaps in coverage_cve_gaps.md.
 - **2026-03-19**: Phase 1 — Fixed 1 annotation placement (heredoc marker). Verified 3 audit false alarms (arithmetic expansion IS vulnerable, other markers were already correct).
 - **2026-03-19**: Phase 2 — Added 14 Tier 1 test cases. find -exec injection, eval+$(curl), source+<(), argument injection, multi-step eval chain, printf %q sanitizer, TOCTOU race, credentials in heredoc. Each verified exploitable.
-- **2026-03-19**: Phase 3 — Added 7 Tier 2 test cases. ${var@Q} sanitizer, NODE_TLS_REJECT_UNAUTHORIZED, tar member traversal, ORDER BY injection. Quality over quantity — dropped patterns that failed Prime Directive verification.
-- **2026-03-19**: Phase 4 — Polish. Updated all stats (179 test cases, 122 TP, 57 TN, 68.2%/31.8%). 14 expected FN, 3 expected FP documented.
+- **2026-03-19**: Phase 3 — Added 7 Tier 2 test cases. ${var@Q} sanitizer, NODE_TLS_REJECT_UNAUTHORIZED, tar member traversal, ORDER BY injection. Quality over quantity — dropped patterns that failed manual source code verification.
+- **2026-03-19**: Phase 4 — Polish. Updated all stats to 179.
+- **2026-03-19**: Phase 6A — Added deepflow-webhook app (8 files, 28 test cases). CGI eval, JSON field eval, email header injection, double eval templates, SSRF via git clone.
+- **2026-03-19**: Phase 6B — Added deepflow-ops app (7 files, 20 test cases). SAFE_MODE toggle pattern, env var as command, git branch injection, mail injection, stdin-fed eval/SQL, cross-service taint.
+- **2026-03-19**: Phase 6C — Added dataforge app (4 files, 10 test cases). Incomplete keyword redaction (CWE-532), JSON injection, 5 safe healthcheck functions. Initial automated classifications corrected via manual verification.
+- **2026-03-19**: Phase 6D — Final polish. All stats updated to 237 test cases (161 TP / 76 TN). 4 apps, 42 files, 7,716 lines.

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  webhook:
+    build: .
+    container_name: deepflow-webhook
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - SAFE_MODE=false
+      - DEPLOY_DIR=/var/deployments
+      - LOG_FILE=/var/log/deepflow-webhook.log
+      - DB_HOST=mysql
+      - DB_USER=webhook
+      - DB_NAME=deployments
+    volumes:
+      - ./deployments:/var/deployments
+      - ./logs:/var/log
+    depends_on:
+      - mysql
+    networks:
+      - webhook-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: deepflow-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=deployments
+      - MYSQL_USER=webhook
+      - MYSQL_PASSWORD=webhookpass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - webhook-net
+
+networks:
+  webhook-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
