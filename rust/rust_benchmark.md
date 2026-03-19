@@ -105,7 +105,7 @@ Maps each benchmark category to the TheAuditor rule(s) that detect it. Gaps are 
 | infodisclosure | 200+ | NONE | - | **GAP** |
 | inputval | 20 | NONE | - | **GAP** |
 
-**21 of 97 test cases (22%) are in gap categories** -- expected to show as FN in baseline scoring.
+**22 of 262 test cases (8%) are in gap categories** -- expected to show as FN in baseline scoring.
 
 ---
 
@@ -149,6 +149,11 @@ BENCH = Path(r"C:\Users\santa\Desktop\open_tests\gorustbash_benchmark\rust")
 APPS = BENCH / "apps"
 DB = BENCH / ".pf" / "repo_index.db"
 CSV_FILE = BENCH / "expectedresults-0.1.csv"
+
+if not DB.exists():
+    print("ERROR: Database not found at %s" % DB)
+    print("Run your SAST tool on this directory first to generate the database.")
+    import sys; sys.exit(1)
 
 # --- Parse CSV answer key (matches Java/Go format) ---
 gt = []

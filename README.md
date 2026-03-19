@@ -47,13 +47,13 @@ gorustbash_benchmark/
   README.md               # This file
   LICENSE                  # Apache 2.0
   CONTRIBUTING.md          # How to contribute
-  go/                      # Go benchmark (427 tests, 16 CWEs)
+  go/                      # Go benchmark (424 tests, 16 CWEs)
     expectedresults-0.1.csv
     go_benchmark.md
     CHANGELOG.md
     testcode/
     apps/
-  rust/                    # Rust benchmark (270 tests, 13 CWEs)
+  rust/                    # Rust benchmark (262 tests, 13 CWEs)
     expectedresults-0.1.csv  # Answer key (scoring authority)
     rust_benchmark.md        # Scoring script + methodology
     CHANGELOG.md
@@ -75,14 +75,14 @@ gorustbash_benchmark/
 
 ## Language Benchmarks
 
-### Go v0.3 -- 427 test cases, 16 CWEs, 7 frameworks
+### Go v0.3 -- 424 test cases, 16 CWEs, 8 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
 | sqli | 89 | 65 | 58 | 123 |
 | cmdi | 78 | 30 | 30 | 60 |
 | pathtraver | 22 | 25 | 30 | 55 |
-| xss | 79 | 13 | 15 | 28 |
+| xss | 79 | 14 | 14 | 28 |
 | ssrf | 918 | 10 | 10 | 20 |
 | weakrand | 330 | 10 | 10 | 20 |
 | weakhash | 328 | 10 | 10 | 20 |
@@ -98,7 +98,7 @@ gorustbash_benchmark/
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3 -- 270 test cases, 13 CWEs, 4 frameworks
+### Rust v0.3 -- 262 test cases, 13 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -116,7 +116,7 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 | redos | 1333 | 4 | 6 | 10 |
 | inputval | 20 | 4 | 6 | 10 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 144 standalone test files in `testcode/`. TP/TN balance: 44/56. All 13 categories have both vulnerable and safe test cases.
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 44/56. All 13 categories have both vulnerable and safe test cases.
 
 ### Bash v0.3 -- 237 test cases, 13 CWEs
 
@@ -142,10 +142,10 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 144 sta
 
 | Language | Tests | CWEs | TP/TN Balance |
 |----------|-------|------|---------------|
-| Go | 427 | 16 | 50/50 |
-| Rust | 270 | 13 | 44/56 |
+| Go | 424 | 16 | 50/50 |
+| Rust | 262 | 13 | 44/56 |
 | Bash | 237 | 13 | 68/32 |
-| **Total** | **934** | **42 unique** | |
+| **Total** | **923** | **42 unique** | |
 
 ## How to Use
 
@@ -159,7 +159,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 144 sta
 This is v0.3. Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 732 across three languages. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 923 across three languages. Growing with each release.
 - **Safe variant coverage**: Some categories (especially Rust/Bash) have fewer safe test cases, limiting FPR measurement.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
 

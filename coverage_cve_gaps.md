@@ -1,8 +1,8 @@
 # SAST Coverage & CWE Gap Analysis
 
-Cross-team verified gap analysis: benchmark test cases vs actual TheAuditor rule coverage.
+Cross-team verified gap analysis: benchmark test cases vs SAST tool rule coverage.
 
-Every gap listed here was verified by reading the rule source code and confirming no rule produces findings for the test case category. Gaps are opportunities — each one, when fixed, makes the engine stronger.
+Every gap listed here was verified by reading the SAST tool's rule source code and confirming no rule produces findings for the test case category. Gaps are opportunities — each one, when fixed, makes the tool stronger.
 
 ---
 
@@ -13,7 +13,7 @@ Every gap listed here was verified by reading the rule source code and confirmin
 | Category | Benchmark scoring category |
 | CWE | Common Weakness Enumeration ID |
 | Test Cases | TP (true positive) + TN (true negative) count in benchmark |
-| Rule | TheAuditor rule file that covers this category (or NONE) |
+| Rule | SAST rule that covers this category (or NONE) |
 | Gap Type | NONE (covered), PARTIAL (some coverage), FULL (no coverage) |
 | Fix Complexity | LOW (add .rs to target_extensions), MEDIUM (new check in existing rule), HIGH (new rule needed) |
 
@@ -22,8 +22,8 @@ Every gap listed here was verified by reading the rule source code and confirmin
 ## Rust (Team Rust)
 
 **Engine rules audited:** 8 dedicated Rust rules + 3 polyglot rules covering `.rs`
-**Source:** `theauditor/rules/rust/*.py`, `theauditor/rules/security/{path_traversal,ssrf,rate_limit}_analyze.py`
-**Patterns:** `theauditor/taint/patterns/rust.py` — 190 sources, 232 sinks, 118 sanitizers
+**Rules audited:** 8 dedicated Rust rules + 3 polyglot rules covering `.rs` files
+**Taint patterns:** 190 source patterns, 232 sink patterns, 118 sanitizer patterns
 
 ### Covered Categories (no gaps)
 

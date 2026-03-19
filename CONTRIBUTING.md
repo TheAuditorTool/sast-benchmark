@@ -29,7 +29,7 @@ Each test case is a single source file with one function. The function does some
 
 Use existing categories where possible. If adding a new CWE category, update the language's benchmark documentation file with the new category, CWE number, and description.
 
-Current Go categories: sqli(89), cmdi(78), pathtraver(22), xss(79), ssrf(918), weakrand(330), weakhash(328), weakcipher(327), securecookie(614), redirect(601), tlsverify(295), deserial(502)
+Current Go categories: sqli(89), cmdi(78), pathtraver(22), xss(79), ssrf(918), weakrand(330), weakhash(328), weakcipher(327), securecookie(614), redirect(601), tlsverify(295), deserial(502), loginjection(117), nosql(943), ldapi(90), trustbound(501)
 
 ### Test Case Design Principles
 
