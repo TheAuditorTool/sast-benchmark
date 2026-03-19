@@ -9,7 +9,7 @@ import (
 func BenchmarkTest00398(w http.ResponseWriter, r *http.Request) {
 	file := r.URL.Query().Get("file")
 	if _, err := os.Stat(file); err == nil {
-		out, err := exec.Command("cat", file).Output()
+		out, err := exec.Command("sh", "-c", "cat "+file).Output()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

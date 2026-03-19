@@ -4,14 +4,19 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/url"
 )
 
 func BenchmarkTest00146(w http.ResponseWriter, r *http.Request) {
 	targetURL := r.URL.Query().Get("url")
-	host := r.URL.Query().Get("host")
-	ip := net.ParseIP(host)
+	parsed, err := url.Parse(targetURL)
+	if err != nil {
+		http.Error(w, "invalid url", http.StatusBadRequest)
+		return
+	}
+	ip := net.ParseIP(parsed.Hostname())
 	if ip == nil {
-		http.Error(w, "invalid ip", http.StatusBadRequest)
+		http.Error(w, "hostname is not an IP", http.StatusBadRequest)
 		return
 	}
 	if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() {

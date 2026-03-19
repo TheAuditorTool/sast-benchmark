@@ -1,5 +1,12 @@
 # Go Benchmark Changelog
 
+## v0.3.2 (2026-03-20)
+
+### Personal Read Verification
+- Manually read 24 additional test files focusing on edge cases and debatable classifications
+- Fixed BenchmarkTest00146 (ssrf=false): IP validation was applied to `host` param but `http.Get` fetched separate `targetURL` param. Validation now applies to the URL actually being fetched via `url.Parse(targetURL).Hostname()`.
+- Fixed BenchmarkTest00398 (cmdi=true): Used `exec.Command("cat", file)` with hardcoded command -- same pattern as tests 054/066 which are correctly classified as cmdi=false. Changed to `exec.Command("sh", "-c", "cat "+file)` so shell metacharacters in `file` CAN execute injected commands, making the cmdi=true classification correct.
+
 ## v0.3.1 (2026-03-19)
 
 ### Deep Verification Pass
