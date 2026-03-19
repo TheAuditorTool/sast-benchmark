@@ -2,7 +2,7 @@
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **424 test cases** across **16 CWE categories** with near-50/50 vulnerable/safe split (213/211). Plus 5 reference apps with 395 classified functions.
+OWASP-style SAST benchmark for Go. **424 test cases** across **16 CWE categories** with 50/50 vulnerable/safe split (212/212). Plus 5 reference apps with 395 classified functions.
 
 **Design principle**: Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities. No vulnerability hints in source code. The CSV answer key is the ONLY ground truth.
 
@@ -32,7 +32,7 @@ gorustbash_benchmark/go/
 | 1 | sqli | 89 | 65 | 58 | 123 |
 | 2 | cmdi | 78 | 30 | 30 | 60 |
 | 3 | pathtraver | 22 | 25 | 30 | 55 |
-| 4 | xss | 79 | 14 | 14 | 28 |
+| 4 | xss | 79 | 13 | 15 | 28 |
 | 5 | ssrf | 918 | 10 | 10 | 20 |
 | 6 | weakrand | 330 | 10 | 10 | 20 |
 | 7 | weakhash | 328 | 10 | 10 | 20 |
@@ -45,7 +45,7 @@ gorustbash_benchmark/go/
 | 14 | ldapi | 90 | 4 | 4 | 8 |
 | 15 | trustbound | 501 | 4 | 4 | 8 |
 | 16 | deserial | 502 | 4 | 4 | 8 |
-| | **TOTAL** | | **213** | **211** | **424** |
+| | **TOTAL** | | **212** | **212** | **424** |
 
 ---
 
@@ -183,9 +183,9 @@ OVERALL
 
 ### XSS (CWE-79) -- Tests 00111-00130
 
-**VULNERABLE (10):** template.HTML(111), template.JS(112), template.URL(113), template.CSS(114), fmt.Fprintf to HTML(115), raw w.Write concat(116), text/template(117), HTML content-type with json(118), script tag injection(119), header reflection to HTML(120)
+**VULNERABLE (9):** template.HTML(111), template.JS(112), template.URL(113), template.CSS(114), fmt.Fprintf to HTML(115), raw w.Write concat(116), text/template(117), script tag injection(119), header reflection to HTML(120)
 
-**SAFE (10):** html/template auto-escape(121), html.EscapeString(122), JSON content-type(123), html/template {{.}}(124), text/plain(125), url.QueryEscape(126), base64 encoding(127), int-only output(128), DB result not direct(129), static ServeFile(130)
+**SAFE (11):** Go json.Encoder HTML-escapes by default(118), html/template auto-escape(121), html.EscapeString(122), JSON content-type(123), html/template {{.}}(124), text/plain(125), url.QueryEscape(126), base64 encoding(127), int-only output(128), DB result not direct(129), static ServeFile(130)
 
 ### SSRF (CWE-918) -- Tests 00131-00150
 
@@ -341,7 +341,7 @@ OVERALL
 | Files exist | 424/424 |
 | Function names match file numbers | 424/424 PASS |
 | No vulnerability hints in comments | PASS (all clean) |
-| CSV classifications match code | PASS (spot-checked 60+ files) |
+| CSV classifications match code | PASS (all 424 verified via 3-agent full audit) |
 | Package declarations correct | PASS |
 | Imports valid | PASS |
 | Shared helpers used | PASS (DB, RespondJSON, ParseJSONBody) |

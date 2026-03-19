@@ -47,38 +47,42 @@ gorustbash_benchmark/
   README.md               # This file
   LICENSE                  # Apache 2.0
   CONTRIBUTING.md          # How to contribute
-  go/                      # Go benchmark (424 tests, 16 CWEs)
+  go/                      # Go benchmark (427 tests, 16 CWEs)
     expectedresults-0.1.csv
     go_benchmark.md
     CHANGELOG.md
     testcode/
     apps/
-  rust/                    # Rust benchmark (262 tests, 13 CWEs)
+  rust/                    # Rust benchmark (270 tests, 13 CWEs)
     expectedresults-0.1.csv  # Answer key (scoring authority)
     rust_benchmark.md        # Scoring script + methodology
-    rust_ground_truth.yml    # Documentation (descriptions, not scoring)
     CHANGELOG.md
     dev_roadmap.md
-    testcode/                # 143 standalone test files
+    testcode/                # 144 standalone test files
     apps/                    # 8 annotated applications
-  bash/                    # Bash benchmark (179 tests, 13 CWEs)
-    bash_ground_truth.yml
-    BENCHMARK.md
-    bash_benchmark.py
-    original/
-    adversarial/
+  bash/                    # Bash benchmark (237 tests, 13 CWEs)
+    bash_ground_truth.yml    # Answer key (237 test cases)
+    bash_benchmark.py        # Automated scoring script
+    BENCHMARK.md             # Methodology, engine analysis, scorecard
+    CHANGELOG.md             # Version history
+    scripts/validate_bash.py # CI validation
+    original/                # Pipeline manager (10 scripts)
+    deepflow-webhook/        # Webhook server (8 files)
+    deepflow-ops/            # Operations suite (7 files)
+    dataforge/               # Data pipeline (4 files)
+    adversarial/             # 13 CWE-specific test files
 ```
 
 ## Language Benchmarks
 
-### Go v0.3 -- 424 test cases, 16 CWEs, 7 frameworks
+### Go v0.3 -- 427 test cases, 16 CWEs, 7 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
 | sqli | 89 | 65 | 58 | 123 |
 | cmdi | 78 | 30 | 30 | 60 |
 | pathtraver | 22 | 25 | 30 | 55 |
-| xss | 79 | 14 | 14 | 28 |
+| xss | 79 | 13 | 15 | 28 |
 | ssrf | 918 | 10 | 10 | 20 |
 | weakrand | 330 | 10 | 10 | 20 |
 | weakhash | 328 | 10 | 10 | 20 |
@@ -94,7 +98,7 @@ gorustbash_benchmark/
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3 -- 262 test cases, 13 CWEs, 4 frameworks
+### Rust v0.3 -- 270 test cases, 13 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -112,36 +116,36 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 | redos | 1333 | 4 | 6 | 10 |
 | inputval | 20 | 4 | 6 | 10 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 44/56. All 13 categories have both vulnerable and safe test cases.
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 144 standalone test files in `testcode/`. TP/TN balance: 44/56. All 13 categories have both vulnerable and safe test cases.
 
-### Bash v0.3 -- 179 test cases, 13 CWEs
+### Bash v0.3 -- 237 test cases, 13 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
-| cmdi | 78 | 31 | 12 | 43 |
-| sqli | 89 | 19 | 5 | 24 |
-| codeinj | 94 | 13 | 6 | 19 |
+| cmdi | 78 | 53 | 21 | 74 |
+| sqli | 89 | 21 | 6 | 27 |
+| codeinj | 94 | 18 | 6 | 24 |
+| pathtraver | 22 | 9 | 7 | 16 |
+| infodisclosure | 200 | 6 | 8 | 14 |
 | unquoted | 78 | 10 | 3 | 13 |
+| ssrf | 918 | 11 | 2 | 13 |
 | ssl_bypass | 295 | 6 | 5 | 11 |
 | hardcoded_creds | 798 | 7 | 4 | 11 |
-| pathtraver | 22 | 6 | 3 | 9 |
 | insecure_perms | 732 | 5 | 4 | 9 |
 | weakcrypto | 327 | 6 | 3 | 9 |
 | insecure_temp | 377 | 4 | 4 | 8 |
-| ssrf | 918 | 6 | 2 | 8 |
 | rce | 94 | 5 | 3 | 8 |
-| infodisclosure | 200 | 4 | 3 | 7 |
 
-10 original scripts + 13 adversarial CWE test files. Known limitation: TP/TN split is 68/32.
+4 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files). Plus 13 adversarial CWE test files. TP/TN split: 68/32.
 
 ## Combined Scale
 
 | Language | Tests | CWEs | TP/TN Balance |
 |----------|-------|------|---------------|
-| Go | 424 | 16 | 53/47 |
-| Rust | 262 | 13 | 44/56 |
-| Bash | 179 | 13 | 68/32 |
-| **Total** | **865** | **42 unique** | |
+| Go | 427 | 16 | 50/50 |
+| Rust | 270 | 13 | 44/56 |
+| Bash | 237 | 13 | 68/32 |
+| **Total** | **934** | **42 unique** | |
 
 ## How to Use
 

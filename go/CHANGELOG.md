@@ -1,5 +1,15 @@
 # Go Benchmark Changelog
 
+## v0.3.1 (2026-03-19)
+
+### Deep Verification Pass
+- 3 audit agents verified all 314 agent-written test files against CSV classifications
+- 99.4% accuracy (312/314 correct)
+- Fixed BenchmarkTest00118 (xss): reclassified true->false. Go's encoding/json escapes HTML by default (`<` -> `\u003c`). Even with Content-Type text/html, json.Encoder output cannot inject HTML tags.
+- Fixed BenchmarkTest00255 (deserial): removed user-controlled sessionID from file path. The gob.Decode to typed struct was safe, but os.Open path was built from query param (path traversal). Changed to hardcoded internal path.
+- TP/TN split improved from 213/211 to 212/212 (perfect 50/50)
+- Updated all documentation to reflect corrected numbers
+
 ## v0.3 (2026-03-19)
 
 ### Scale Expansion (+50 tests)
