@@ -119,7 +119,7 @@ BenchmarkTest00114,xss,true,79
 BenchmarkTest00115,xss,true,79
 BenchmarkTest00116,xss,true,79
 BenchmarkTest00117,xss,true,79
-BenchmarkTest00118,xss,true,79
+BenchmarkTest00118,xss,false,79
 BenchmarkTest00119,xss,true,79
 BenchmarkTest00120,xss,true,79
 BenchmarkTest00121,xss,false,79

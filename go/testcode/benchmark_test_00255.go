@@ -13,13 +13,7 @@ type cachedSession struct {
 }
 
 func BenchmarkTest00255(w http.ResponseWriter, r *http.Request) {
-	sessionID := r.URL.Query().Get("session_id")
-	if sessionID == "" {
-		http.Error(w, "missing session_id", http.StatusBadRequest)
-		return
-	}
-
-	file, err := os.Open("/var/cache/sessions/" + sessionID + ".gob")
+	file, err := os.Open("/var/cache/sessions/current.gob")
 	if err != nil {
 		http.Error(w, "session not found", http.StatusNotFound)
 		return
