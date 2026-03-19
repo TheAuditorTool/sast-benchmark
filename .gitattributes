@@ -1,0 +1,2 @@
+# Force LF everywhere - WSL (Ubuntu) and Windows must agree on line endings.
+* text=auto eol=lf

@@ -1,0 +1,42 @@
+[package]
+name = "jobqueue-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "Command-line interface for JobQueue"
+
+[[bin]]
+name = "jq"
+path = "src/main.rs"
+
+[dependencies]
+jobqueue-core = { workspace = true }
+jobqueue-db = { workspace = true }
+jobqueue-worker = { workspace = true }
+jobqueue-api = { workspace = true }
+
+# CLI framework
+clap = { workspace = true }
+
+# Async runtime
+tokio = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+anyhow = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# Tracing
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# Colored output
+colored = "2.1"
+
+# Tables
+tabled = "0.15"

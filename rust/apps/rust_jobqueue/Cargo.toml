@@ -1,0 +1,65 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/jobqueue-core",
+    "crates/jobqueue-db",
+    "crates/jobqueue-worker",
+    "crates/jobqueue-api",
+    "crates/jobqueue-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Project Anarchy <test@projectanarchy.dev>"]
+license = "MIT"
+repository = "https://github.com/project-anarchy/rust-jobqueue"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full", "tracing"] }
+async-trait = "0.1"
+futures = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Database
+rusqlite = { version = "0.31", features = ["bundled"] }
+sqlx = { version = "0.7", features = ["runtime-tokio", "sqlite"] }
+
+# Web framework
+axum = { version = "0.7", features = ["macros"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# CLI
+clap = { version = "4.4", features = ["derive", "env"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Logging/Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Crypto (intentionally using weak)
+md5 = "0.7"
+sha2 = "0.10"
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json"] }
+
+# Internal crates
+jobqueue-core = { path = "crates/jobqueue-core" }
+jobqueue-db = { path = "crates/jobqueue-db" }
+jobqueue-worker = { path = "crates/jobqueue-worker" }
+jobqueue-api = { path = "crates/jobqueue-api" }

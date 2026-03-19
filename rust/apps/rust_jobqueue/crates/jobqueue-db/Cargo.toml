@@ -1,0 +1,34 @@
+[package]
+name = "jobqueue-db"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "Database layer for JobQueue with SQLite support"
+
+[dependencies]
+jobqueue-core = { workspace = true }
+
+# Database
+rusqlite = { workspace = true }
+sqlx = { workspace = true }
+
+# Async
+tokio = { workspace = true }
+async-trait = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# UUID
+uuid = { workspace = true }
+
+# Tracing
+tracing = { workspace = true }

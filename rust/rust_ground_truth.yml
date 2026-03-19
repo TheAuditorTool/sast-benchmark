@@ -1,0 +1,811 @@
+metadata:
+  version: "0.2"
+  language: rust
+  created: "2026-03-19"
+  methodology: |
+    Test cases identified by manual code review of 8 Rust applications.
+    Each test case is a function annotated with vuln-code-snippet start/end markers.
+    Line ranges are DERIVED from source annotations at scoring time (not hardcoded).
+    Categories map to CWEs following OWASP Benchmark conventions.
+    Ground truth is INDEPENDENT of TheAuditor engine output.
+  bias_notes: |
+    WARNING: This benchmark was created by the same team that builds TheAuditor.
+    To mitigate bias: (1) classifications based on code semantics, not engine behavior,
+    (2) real CVE patterns used for inspiration, (3) all decisions documented in CHANGELOG.md.
+  tn_gaps: |
+    Categories with insufficient TN (safe) test cases: cmdi, ssrf, xss, crypto,
+    weakrand, redos, infodisclosure. FPR cannot be measured for these until
+    safe variants are added.
+
+# Line ranges are NOT in this file — they come from vuln-code-snippet annotations
+# in the source files. The scoring script parses both this YAML and the source.
+# This file is the ANSWER KEY: key + category + cwe + vulnerable (true/false).
+
+test_cases:
+
+  # =========================================================================
+  # SQL INJECTION (CWE-89) — 15 TP, 10 TN
+  # =========================================================================
+
+  # --- TP ---
+  - key: sqliSearchUsersVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() in SQL WHERE/ORDER BY with user search params (sqlx)"
+
+  - key: sqliExecuteRawSql
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Arbitrary raw SQL execution via sqlx::query(user_sql)"
+
+  - key: sqliFindUserByEmailVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() email interpolation into SQL WHERE (sqlx)"
+
+  - key: sqliRusqliteDeleteVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() in DELETE via rusqlite"
+
+  - key: sqliRusqliteSearchVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() LIKE with user search term (rusqlite)"
+
+  - key: sqliRocketGetUserVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Path param concat into SQL (Rocket + rusqlite)"
+
+  - key: sqliRocketCookieProfile
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Cookie value in SQL via format!() (Rocket)"
+
+  - key: sqliWarpGetUserVulnerable
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Path param concat into SQL (Warp + rusqlite)"
+
+  - key: sqliWarpCookieProfile
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Cookie value in SQL via format!() (Warp)"
+
+  - key: sqliBackendRawSql
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "User query string directly used (actix-web)"
+
+  # --- TN ---
+  - key: sqliGetUserByIdSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized query with .bind(user_id) (sqlx)"
+
+  - key: sqliCreateUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized INSERT with .bind() (sqlx)"
+
+  - key: sqliRusqliteGetUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized query [user_id] (rusqlite)"
+
+  - key: sqliRocketGetUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized query with typed i64 (Rocket + rusqlite)"
+
+  - key: sqliRocketCreateUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Validated + parameterized INSERT (Rocket)"
+
+  - key: sqliWarpGetUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized query with typed i64 (Warp + rusqlite)"
+
+  - key: sqliWarpCreateUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Validated + parameterized INSERT (Warp)"
+
+  # =========================================================================
+  # COMMAND INJECTION (CWE-78) — 10 TP, 0 TN
+  # =========================================================================
+
+  - key: cmdiExecuteCommand
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Command::new(user_cmd) with user args (std)"
+
+  - key: cmdiExecuteShellCommand
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "sh -c with user command string (std)"
+
+  - key: cmdiExecuteInDirectory
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Command with user-controlled working directory (std)"
+
+  - key: cmdiRunCommandWithArg
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Command with user-controlled argument (std)"
+
+  - key: cmdiExecuteAllowedCommand
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Allowlisted cmd but user-controlled target arg — still injectable"
+
+  - key: cmdiRocketListFiles
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "ls with user filename from Rocket form (Rocket)"
+
+  - key: cmdiWarpSearchFiles
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "grep with user query from warp query param (Warp)"
+
+  - key: cmdiWarpExecuteCommand
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Command::new(user_cmd) from JSON body (Warp)"
+
+  - key: cmdiBackendShellExec
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "User shell + script via Command::new (actix-web)"
+
+  # =========================================================================
+  # PATH TRAVERSAL (CWE-22) — 9 TP, 1 TN
+  # =========================================================================
+
+  - key: pathtraverReadFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "fs::read_to_string(user_path) no validation (std)"
+
+  - key: pathtraverWriteFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "fs::write(user_path) no validation (std)"
+
+  - key: pathtraverDeleteFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "fs::remove_file(user_path) arbitrary deletion (std)"
+
+  - key: pathtraverProcessUpload
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "format!() path with user filename (std)"
+
+  - key: pathtraverRocketReadFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "fs::read_to_string from Rocket Form path (Rocket)"
+
+  - key: pathtraverWarpReadFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "fs::read_to_string from Warp JSON path (Warp)"
+
+  - key: pathtraverBackendUploadFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "User filename in path construction (actix-web)"
+
+  - key: pathtraverBackendIncludeFile
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "User module_path for arbitrary file read (actix-web)"
+
+  # --- TN ---
+  - key: pathtraverProcessUploadSafe
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "file_name() + canonicalize + starts_with check (std)"
+
+  # =========================================================================
+  # SSRF (CWE-918) — 7 TP, 0 TN
+  # =========================================================================
+
+  - key: ssrfFetchUrl
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "reqwest::get(user_url) no validation"
+
+  - key: ssrfPostToUrl
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "client.post(user_url) with user body"
+
+  - key: ssrfSendWebhook
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "Webhook URL from user config"
+
+  - key: ssrfConnectTcp
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "TcpStream::connect(user_host:port)"
+
+  - key: ssrfFetchExternalOnly
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "Insufficient URL validation — bypassable"
+
+  - key: ssrfRocketFetchUrl
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "reqwest from Rocket JSON body"
+
+  - key: ssrfWarpFetchUrl
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "reqwest from Warp JSON body"
+
+  # =========================================================================
+  # XSS (CWE-79) — 2 TP, 0 TN
+  # =========================================================================
+
+  - key: xssRocketGreetVulnerable
+    category: xss
+    cwe: 79
+    vulnerable: true
+    description: "RawHtml(format!(..., user_name)) (Rocket)"
+
+  - key: xssWarpEchoHeader
+    category: xss
+    cwe: 79
+    vulnerable: true
+    description: "reply::html with user header value (Warp)"
+
+  # =========================================================================
+  # WEAK CRYPTOGRAPHY (CWE-327) — 2 TP, 0 TN
+  # =========================================================================
+
+  - key: cryptoRocketMd5Login
+    category: crypto
+    cwe: 327
+    vulnerable: true
+    description: "MD5 for password hashing (Rocket)"
+
+  - key: cryptoWarpSha1Hash
+    category: crypto
+    cwe: 327
+    vulnerable: true
+    description: "SHA-1 for hashing (Warp)"
+
+  - key: cryptoBackendWeakCrypto
+    category: crypto
+    cwe: 327
+    vulnerable: true
+    description: "MD5 + XOR + hardcoded key (actix-web)"
+
+  # =========================================================================
+  # MEMORY SAFETY (CWE-119) — 7 TP, 4 TN
+  # =========================================================================
+
+  - key: memsafetyTransmute
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "transmute on user bytes (std)"
+
+  - key: memsafetyWriteToAddress
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "ptr::write to user-controlled address (std)"
+
+  - key: memsafetyUncheckedAccess
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "get_unchecked with user index (std)"
+
+  - key: memsafetySliceFromRawParts
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "from_raw_parts with user length (std)"
+
+  - key: memsafetyBackendBufferAlloc
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "User-controlled alloc + uninitialized memory (std)"
+
+  - key: memsafetyBackendBufferOverflow
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "Unchecked array index write (std)"
+
+  - key: memsafetyBackendMemoryCorruption
+    category: memsafety
+    cwe: 119
+    vulnerable: true
+    description: "get_unchecked with user offset (actix-web)"
+
+  # --- TN ---
+  - key: memsafetyWriteToBufferSafe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+    description: "Bounds check before ptr::copy (std)"
+
+  - key: memsafetyReadFromOffsetSafe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+    description: "Bounds check before ptr::read (std)"
+
+  - key: memsafetySecureZero
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+    description: "write_bytes on owned slice with known length (std)"
+
+  - key: memsafetyCopyMemorySafe
+    category: memsafety
+    cwe: 119
+    vulnerable: false
+    description: "Length validated vs both buffers before copy (std)"
+
+  # =========================================================================
+  # DESERIALIZATION (CWE-502) — 2 TP, 0 TN
+  # =========================================================================
+
+  - key: deserBackendUnsafeDeserialize
+    category: deser
+    cwe: 502
+    vulnerable: true
+    description: "from_slice on raw untrusted bytes (actix-web)"
+
+  - key: deserBackendDangerousDeserialize
+    category: deser
+    cwe: 502
+    vulnerable: true
+    description: "Unsafe deserialization of untrusted payload (std)"
+
+  # =========================================================================
+  # ReDoS (CWE-1333) — 1 TP, 0 TN
+  # =========================================================================
+
+  - key: redosBackendRegexDos
+    category: redos
+    cwe: 1333
+    vulnerable: true
+    description: "Regex::new with user pattern (actix-web)"
+
+  # =========================================================================
+  # INTEGER OVERFLOW (CWE-190) — 2 TP, 0 TN
+  # =========================================================================
+
+  - key: intoverflowBackendOverflow
+    category: intoverflow
+    cwe: 190
+    vulnerable: true
+    description: "User integers in arithmetic (actix-web)"
+
+  - key: intoverflowBackendUncheckedArithmetic
+    category: intoverflow
+    cwe: 190
+    vulnerable: true
+    description: "Wrapping arithmetic with user operands (std)"
+
+  # =========================================================================
+  # INFORMATION DISCLOSURE (CWE-200) — 1 TP, 0 TN
+  # =========================================================================
+
+  - key: infodisclosureBackendGetEnv
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "Exposes all env vars via HTTP (actix-web)"
+
+  # =========================================================================
+  # PHASE 2 ADDITIONS — rust_calorie_app (4 TP + 8 TN)
+  # =========================================================================
+
+  - key: sqliCalorieSearchWorkouts
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() with weak quote escaping in WHERE — real app (actix-web/sqlx)"
+
+  - key: sqliCalorieUpdateWorkout
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() with weak quote escaping in UPDATE SET — real app (actix-web/sqlx)"
+
+  - key: sqliCalorieUpdateSchedule
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format!() with weak quote escaping for planned_workouts/notes — real app"
+
+  - key: infodisclosureCalorieJwtSecret
+    category: infodisclosure
+    cwe: 798
+    vulnerable: true
+    description: "Hardcoded default JWT secret in config fallback"
+
+  - key: sqliCalorieCreateUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized INSERT with .bind() — real app safe pattern"
+
+  - key: sqliCalorieFindByEmailSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized SELECT with .bind(email) — real app"
+
+  - key: sqliCalorieUpdateUserSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Dynamic UPDATE with .bind() loop — real app safe dynamic SQL"
+
+  - key: sqliCalorieSearchMealsSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Dynamic SELECT with .bind() loop — real app safe dynamic SQL"
+
+  - key: sqliCalorieUpdateMealSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Dynamic UPDATE with .bind() loop — real app safe pattern"
+
+  - key: sqliCalorieCreateWorkoutSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized INSERT with .bind() — same repo as vulnerable search"
+
+  - key: sqliCalorieDeleteWorkoutSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized DELETE with .bind() — same repo as vulnerable functions"
+
+  - key: sqliCalorieUpsertScheduleSafe
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Parameterized UPSERT with .bind() — same repo as vulnerable update"
+
+  # =========================================================================
+  # PHASE 2 ADDITIONS — rust_jobqueue (20 TP)
+  # =========================================================================
+
+  - key: sqliJobqueueSearchJobs
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format! LIKE with unescaped search term (axum/rusqlite)"
+
+  - key: sqliJobqueueExecuteRaw
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Arbitrary SQL execution without parameterization (rusqlite)"
+
+  - key: sqliJobqueueGetJobsByTag
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format! LIKE with tag directly in SQL (rusqlite)"
+
+  - key: sqliJobqueueListOrdered
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format! ORDER BY with user-controlled column (rusqlite)"
+
+  - key: sqliJobqueueBuildSearch
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "format! LIKE query builder with unescaped input"
+
+  - key: sqliJobqueueHandlerSearch
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Handler passes user query.q directly to SQL search (axum)"
+
+  - key: sqliJobqueueHandlerExecuteSql
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Handler passes arbitrary user SQL to execute_raw (axum)"
+
+  - key: cmdiJobqueueExportSql
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Shell command with format! path — sh -c sqlite3 pipe (axum)"
+
+  - key: cmdiJobqueueImportSql
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Shell command with format! path — sh -c sqlite3 import (axum)"
+
+  - key: pathtraverJobqueueCreateBackup
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "User backup_name in path without validation (axum)"
+
+  - key: pathtraverJobqueueRestoreBackup
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "User backup_name for arbitrary file read (axum)"
+
+  - key: pathtraverJobqueueDeleteBackup
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "User backup_name for arbitrary file deletion (axum)"
+
+  - key: cryptoJobqueueMd5Password
+    category: crypto
+    cwe: 327
+    vulnerable: true
+    description: "MD5 for password hashing (axum)"
+
+  - key: cryptoJobqueueJwtNone
+    category: crypto
+    cwe: 347
+    vulnerable: true
+    description: "JWT with alg:none — no signature verification (axum)"
+
+  - key: weakrandJobqueueToken
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "Auth token from timestamp + user_id — predictable (axum)"
+
+  - key: weakrandJobqueueApiKey
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "API key from timestamp + name — predictable (axum)"
+
+  - key: weakrandJobqueueRequestId
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "Request ID from timestamp + thread_id — predictable (axum)"
+
+  - key: infodisclosureJobqueueErrorSql
+    category: infodisclosure
+    cwe: 209
+    vulnerable: true
+    description: "SQL query included in HTTP error response (axum)"
+
+  - key: infodisclosureJobqueueLogParams
+    category: infodisclosure
+    cwe: 532
+    vulnerable: true
+    description: "Query params (may contain secrets) logged to stdout (axum)"
+
+  # =========================================================================
+  # PHASE 2 ADDITIONS — anarchy_commerce (3 TP)
+  # =========================================================================
+
+  - key: infodisclosurePaymentsHardcodedKey
+    category: infodisclosure
+    cwe: 798
+    vulnerable: true
+    description: "Hardcoded Stripe secret key in source code"
+
+  - key: sqliSearchElasticsearchInjection
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "User search term interpolated into Elasticsearch JSON query"
+
+  - key: inputvalPaymentsMissingValidation
+    category: inputval
+    cwe: 20
+    vulnerable: true
+    description: "No validation on payment amount — negative values accepted"
+
+  # =========================================================================
+  # M2: ISOMORPHIC SAFE VARIANTS (21 TN test cases)
+  # =========================================================================
+
+  # --- cmdi safe (5) ---
+  - key: cmdiExecuteCommandSafe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Allowlisted command name via match — NOT vulnerable"
+
+  - key: cmdiExecuteShellCommandSafe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Allowlisted operations with shell escaping — NOT vulnerable"
+
+  - key: cmdiExecuteInDirectorySafe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Working dir canonicalized + starts_with base check — NOT vulnerable"
+
+  - key: cmdiRunCommandWithArgSafe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Arg validated for shell metacharacters + length limit — NOT vulnerable"
+
+  - key: cmdiExecuteAllowedCommandSafe
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Command allowlisted + target format validated — NOT vulnerable"
+
+  # --- ssrf safe (5) ---
+  - key: ssrfFetchUrlSafe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "URL parsed + domain allowlist check — NOT vulnerable"
+
+  - key: ssrfPostToUrlSafe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Domain allowlist + body size limit — NOT vulnerable"
+
+  - key: ssrfSendWebhookSafe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Trusted webhook URL list check — NOT vulnerable"
+
+  - key: ssrfConnectTcpSafe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Allowlisted host:port + private IP rejection — NOT vulnerable"
+
+  - key: ssrfFetchExternalOnlySafe
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Strict URL parse, no redirects, reject decimal/internal — NOT vulnerable"
+
+  # --- xss safe (2) ---
+  - key: xssRocketGreetSafe
+    category: xss
+    cwe: 79
+    vulnerable: false
+    description: "HTML-escaped output via entity encoding — NOT vulnerable"
+
+  - key: xssWarpEchoHeaderSafe
+    category: xss
+    cwe: 79
+    vulnerable: false
+    description: "HTML-escaped header value — NOT vulnerable"
+
+  # --- crypto safe (3) ---
+  - key: cryptoRocketArgon2Login
+    category: crypto
+    cwe: 327
+    vulnerable: false
+    description: "bcrypt-strength hashing instead of MD5 — NOT vulnerable"
+
+  - key: cryptoWarpSha256Hash
+    category: crypto
+    cwe: 327
+    vulnerable: false
+    description: "SHA-256 instead of SHA-1 — NOT vulnerable"
+
+  - key: cryptoJobqueueArgon2Password
+    category: crypto
+    cwe: 327
+    vulnerable: false
+    description: "Strong hash with cost factor instead of MD5-like — NOT vulnerable"
+
+  # --- weakrand safe (2) ---
+  - key: weakrandJobqueueTokenSafe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "Token from mixed entropy bytes instead of timestamp — NOT vulnerable"
+
+  - key: weakrandJobqueueApiKeySafe
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "API key from mixed entropy instead of timestamp+name — NOT vulnerable"
+
+  # --- crypto JWT safe (1) ---
+  - key: cryptoJobqueueJwtHs256
+    category: crypto
+    cwe: 347
+    vulnerable: false
+    description: "JWT with HS256 HMAC signing instead of alg:none — NOT vulnerable"
+
+  # --- redos safe (1) ---
+  - key: redosBackendRegexSafe
+    category: redos
+    cwe: 1333
+    vulnerable: false
+    description: "Pattern length + input length limits — NOT vulnerable"
+
+  # --- deser safe (1) ---
+  - key: deserBackendSafeDeserialize
+    category: deser
+    cwe: 502
+    vulnerable: false
+    description: "Typed struct deserialization with size limit — NOT vulnerable"
+
+  # --- intoverflow safe (1) ---
+  - key: intoverflowBackendCheckedArithmetic
+    category: intoverflow
+    cwe: 190
+    vulnerable: false
+    description: "checked_add/checked_mul instead of wrapping — NOT vulnerable"

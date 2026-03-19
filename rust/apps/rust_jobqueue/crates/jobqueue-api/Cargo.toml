@@ -1,0 +1,41 @@
+[package]
+name = "jobqueue-api"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "HTTP API server for JobQueue using Axum"
+
+[dependencies]
+jobqueue-core = { workspace = true }
+jobqueue-db = { workspace = true }
+jobqueue-worker = { workspace = true }
+
+# Web framework
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+
+# Async runtime
+tokio = { workspace = true }
+async-trait = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# UUID
+uuid = { workspace = true }
+
+# Tracing
+tracing = { workspace = true }
+
+# HTTP types
+http = "1.0"
+http-body-util = "0.1"

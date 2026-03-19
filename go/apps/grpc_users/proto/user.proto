@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/theauditor/grpc_users/proto";
+
+// UserService provides user management operations
+service UserService {
+    // GetUser retrieves a user by ID
+    rpc GetUser(GetUserRequest) returns (UserResponse);
+
+    // SearchUsers searches for users
+    rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
+
+    // CreateUser creates a new user
+    rpc CreateUser(CreateUserRequest) returns (UserResponse);
+
+    // UpdateUser updates an existing user
+    rpc UpdateUser(UpdateUserRequest) returns (UserResponse);
+
+    // DeleteUser deletes a user
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteResponse);
+
+    // ExecuteQuery executes a custom query (admin only)
+    rpc ExecuteQuery(QueryRequest) returns (QueryResponse);
+
+    // RunCommand runs a system command (admin only)
+    rpc RunCommand(CommandRequest) returns (CommandResponse);
+
+    // GetFile retrieves a file by path
+    rpc GetFile(FileRequest) returns (FileResponse);
+
+    // GenerateReport generates a report
+    rpc GenerateReport(ReportRequest) returns (ReportResponse);
+}
+
+// GetUserRequest contains user lookup parameters
+message GetUserRequest {
+    string id = 1;           // TAINT SOURCE: User-provided ID
+    string username = 2;     // Alternative lookup by username
+}
+
+// SearchUsersRequest contains search parameters
+message SearchUsersRequest {
+    string query = 1;        // TAINT SOURCE: Search term
+    string filter = 2;       // TAINT SOURCE: Filter expression
+    string sort_by = 3;      // TAINT SOURCE: Sort column
+    int32 limit = 4;         // Pagination limit
+    int32 offset = 5;        // Pagination offset
+}
+
+// CreateUserRequest contains new user data
+message CreateUserRequest {
+    string username = 1;     // TAINT SOURCE
+    string email = 2;        // TAINT SOURCE
+    string password = 3;     // TAINT SOURCE
+    string role = 4;         // TAINT SOURCE
+    map<string, string> metadata = 5; // TAINT SOURCE: Custom fields
+}
+
+// UpdateUserRequest contains update data
+message UpdateUserRequest {
+    string id = 1;           // TAINT SOURCE
+    string username = 2;     // TAINT SOURCE
+    string email = 3;        // TAINT SOURCE
+    string role = 4;         // TAINT SOURCE
+    map<string, string> metadata = 5;
+}
+
+// DeleteUserRequest contains delete parameters
+message DeleteUserRequest {
+    string id = 1;           // TAINT SOURCE
+    bool soft_delete = 2;
+}
+
+// QueryRequest contains custom SQL query
+message QueryRequest {
+    string query = 1;        // TAINT SOURCE: SQL query
+    repeated string params = 2;
+}
+
+// CommandRequest contains system command
+message CommandRequest {
+    string command = 1;      // TAINT SOURCE: Command name
+    repeated string args = 2; // TAINT SOURCE: Arguments
+    map<string, string> env = 3; // TAINT SOURCE: Environment
+}
+
+// FileRequest contains file path
+message FileRequest {
+    string path = 1;         // TAINT SOURCE: File path
+    string directory = 2;    // Base directory
+}
+
+// ReportRequest contains report generation parameters
+message ReportRequest {
+    string name = 1;         // TAINT SOURCE: Report name
+    string query = 2;        // TAINT SOURCE: SQL query for data
+    string output_path = 3;  // TAINT SOURCE: Output file path
+    string format = 4;       // Output format (json, csv, etc)
+}
+
+// User represents a user entity
+message User {
+    string id = 1;
+    string username = 2;
+    string email = 3;
+    string role = 4;
+    string created_at = 5;
+}
+
+// UserResponse contains a single user
+message UserResponse {
+    User user = 1;
+    string error = 2;
+}
+
+// SearchUsersResponse contains search results
+message SearchUsersResponse {
+    repeated User users = 1;
+    int32 total = 2;
+    string error = 3;
+}
+
+// DeleteResponse confirms deletion
+message DeleteResponse {
+    bool success = 1;
+    string error = 2;
+}
+
+// QueryResponse contains query results
+message QueryResponse {
+    repeated bytes rows = 1;  // JSON encoded rows
+    int32 affected = 2;
+    string error = 3;
+}
+
+// CommandResponse contains command output
+message CommandResponse {
+    string output = 1;
+    int32 exit_code = 2;
+    string error = 3;
+}
+
+// FileResponse contains file content
+message FileResponse {
+    bytes content = 1;
+    string mime_type = 2;
+    string error = 3;
+}
+
+// ReportResponse contains report generation result
+message ReportResponse {
+    string output_path = 1;
+    int32 records = 2;
+    string error = 3;
+}

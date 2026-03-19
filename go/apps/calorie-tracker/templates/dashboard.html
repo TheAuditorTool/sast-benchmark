@@ -1,0 +1,185 @@
+{{define "title"}}Dashboard - Calorie Tracker{{end}}
+
+{{define "content"}}
+<div class="dashboard">
+    <h1>Welcome, {{.username}}!</h1>
+    <p class="date-display">{{.today}}</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Calories Today</h3>
+            <div class="stat-value">{{if .daily}}{{.daily.CaloriesConsumed}}{{else}}0{{end}}</div>
+            <div class="stat-label">of {{if .daily}}{{.daily.CalorieGoal}}{{else}}2000{{end}} goal</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Calories Burned</h3>
+            <div class="stat-value">{{if .daily}}{{.daily.CaloriesBurned}}{{else}}0{{end}}</div>
+            <div class="stat-label">from workouts</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Net Calories</h3>
+            <div class="stat-value">{{if .daily}}{{.daily.NetCalories}}{{else}}0{{end}}</div>
+            <div class="stat-label">consumed - burned</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Water</h3>
+            <div class="stat-value">{{if .daily}}{{.daily.WaterMl}}{{else}}0{{end}} ml</div>
+            <div class="stat-label">of 2000ml goal</div>
+        </div>
+    </div>
+
+    <div class="macros-section">
+        <h2>Today's Macros</h2>
+        <div class="macros-grid">
+            <div class="macro-item">
+                <span class="macro-label">Protein</span>
+                <span class="macro-value">{{if .daily}}{{printf "%.1f" .daily.ProteinGrams}}{{else}}0{{end}}g</span>
+            </div>
+            <div class="macro-item">
+                <span class="macro-label">Carbs</span>
+                <span class="macro-value">{{if .daily}}{{printf "%.1f" .daily.CarbsGrams}}{{else}}0{{end}}g</span>
+            </div>
+            <div class="macro-item">
+                <span class="macro-label">Fat</span>
+                <span class="macro-value">{{if .daily}}{{printf "%.1f" .daily.FatGrams}}{{else}}0{{end}}g</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="showQuickMeal()">Log Meal</button>
+            <button class="btn btn-secondary" onclick="location.href='/workouts'">Log Workout</button>
+            <button class="btn btn-secondary" onclick="showWaterLog()">Log Water</button>
+            <button class="btn btn-secondary" onclick="showWeightLog()">Log Weight</button>
+        </div>
+    </div>
+
+    <div class="weekly-summary">
+        <h2>This Week</h2>
+        <div class="weekly-stats">
+            <div class="weekly-stat">
+                <span>Avg Calories:</span>
+                <strong>{{if .weekly}}{{printf "%.0f" .weekly.AvgCalories}}{{else}}0{{end}}</strong>
+            </div>
+            <div class="weekly-stat">
+                <span>Total Workouts:</span>
+                <strong>{{if .weekly}}{{.weekly.TotalWorkouts}}{{else}}0{{end}}</strong>
+            </div>
+            <div class="weekly-stat">
+                <span>Calories Burned:</span>
+                <strong>{{if .weekly}}{{.weekly.TotalCaloriesBurned}}{{else}}0{{end}}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="quick-meal-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('quick-meal-modal')">&times;</span>
+        <h2>Quick Log Meal</h2>
+        <form onsubmit="submitQuickMeal(event)">
+            <div class="form-group">
+                <label for="meal-name">What did you eat?</label>
+                <input type="text" id="meal-name" required>
+            </div>
+            <div class="form-group">
+                <label for="meal-calories">Calories</label>
+                <input type="number" id="meal-calories" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="meal-type">Meal Type</label>
+                <select id="meal-type">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snack">Snack</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Log Meal</button>
+        </form>
+    </div>
+</div>
+
+<div id="water-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('water-modal')">&times;</span>
+        <h2>Log Water</h2>
+        <form onsubmit="submitWater(event)">
+            <div class="form-group">
+                <label for="water-amount">Amount (ml)</label>
+                <input type="number" id="water-amount" min="1" value="250" required>
+            </div>
+            <div class="quick-water-buttons">
+                <button type="button" onclick="setWater(250)">250ml</button>
+                <button type="button" onclick="setWater(500)">500ml</button>
+                <button type="button" onclick="setWater(750)">750ml</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Log Water</button>
+        </form>
+    </div>
+</div>
+
+<div id="weight-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('weight-modal')">&times;</span>
+        <h2>Log Weight</h2>
+        <form onsubmit="submitWeight(event)">
+            <div class="form-group">
+                <label for="weight-value">Weight (kg)</label>
+                <input type="number" id="weight-value" step="0.1" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Log Weight</button>
+        </form>
+    </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+function showQuickMeal() { document.getElementById('quick-meal-modal').style.display = 'block'; }
+function showWaterLog() { document.getElementById('water-modal').style.display = 'block'; }
+function showWeightLog() { document.getElementById('weight-modal').style.display = 'block'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function setWater(amount) { document.getElementById('water-amount').value = amount; }
+
+async function submitQuickMeal(event) {
+    event.preventDefault();
+    await fetch('/api/meals/quick', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: document.getElementById('meal-name').value,
+            calories: parseInt(document.getElementById('meal-calories').value),
+            meal_type: document.getElementById('meal-type').value
+        })
+    });
+    location.reload();
+}
+
+async function submitWater(event) {
+    event.preventDefault();
+    await fetch('/api/dashboard/water', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount_ml: parseInt(document.getElementById('water-amount').value) })
+    });
+    location.reload();
+}
+
+async function submitWeight(event) {
+    event.preventDefault();
+    await fetch('/api/dashboard/weight', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weight_kg: parseFloat(document.getElementById('weight-value').value) })
+    });
+    location.reload();
+}
+</script>
+{{end}}

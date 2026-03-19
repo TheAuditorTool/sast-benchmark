@@ -1,0 +1,35 @@
+[package]
+name = "jobqueue-worker"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "Worker implementation for JobQueue with async job processing"
+
+[dependencies]
+jobqueue-core = { workspace = true }
+jobqueue-db = { workspace = true }
+
+# Async runtime
+tokio = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# UUID
+uuid = { workspace = true }
+
+# Tracing
+tracing = { workspace = true }
+
+# HTTP client for remote jobs
+reqwest = { workspace = true }

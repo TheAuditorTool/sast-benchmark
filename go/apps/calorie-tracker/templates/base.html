@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}Calorie Tracker{{end}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {{block "head" .}}{{end}}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="/">CalorieTracker</a>
+        </div>
+        <div class="nav-links">
+            {{if .username}}
+            <a href="/dashboard">Dashboard</a>
+            <a href="/meals">Meals</a>
+            <a href="/workouts">Workouts</a>
+            <a href="/schedule">Schedule</a>
+            <span class="nav-user">{{.username}}</span>
+            <a href="#" onclick="logout()">Logout</a>
+            {{else}}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+            {{end}}
+        </div>
+    </nav>
+
+    <main class="container">
+        {{block "content" .}}{{end}}
+    </main>
+
+    <footer class="footer">
+        <p>Calorie Tracker - Go Test Application for TheAuditor</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+    {{block "scripts" .}}{{end}}
+</body>
+</html>

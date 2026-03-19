@@ -1,0 +1,43 @@
+[package]
+name = "rust_taint_app"
+version = "0.1.0"
+edition = "2021"
+description = "Comprehensive Rust test app for TheAuditor taint analysis"
+
+[dependencies]
+# Web framework - Actix
+actix-web = "4"
+actix-rt = "2"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Database - SQLx (async)
+sqlx = { version = "0.7", features = ["runtime-tokio", "sqlite", "postgres"] }
+
+# Database - Diesel (sync)
+diesel = { version = "2", features = ["sqlite", "postgres"] }
+
+# Database - Rusqlite (sync)
+rusqlite = "0.31"
+
+# HTTP client for SSRF testing
+reqwest = { version = "0.11", features = ["json"] }
+hyper = "1"
+
+# URL parsing
+url = "2"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Environment and config
+dotenv = "0.15"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[dev-dependencies]
+tokio-test = "0.4"

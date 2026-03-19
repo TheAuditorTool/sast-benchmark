@@ -1,0 +1,199 @@
+{{define "title"}}Schedule - Calorie Tracker{{end}}
+
+{{define "content"}}
+<div class="page-header">
+    <h1>Schedules</h1>
+    <p>Plan your meals and workouts</p>
+</div>
+
+<div class="schedules-section">
+    <div class="section-header">
+        <h2>Your Schedules</h2>
+        <button class="btn btn-primary" onclick="showAddSchedule()">Create Schedule</button>
+    </div>
+
+    <div class="schedule-list">
+        {{range .schedules}}
+        <div class="schedule-card {{if .IsActive}}active{{end}}">
+            <div class="schedule-header">
+                <h3>{{.Name}}</h3>
+                <span class="schedule-type">{{.ScheduleType}}</span>
+                <button class="btn-toggle {{if .IsActive}}on{{end}}" onclick="toggleSchedule('{{.ID}}')">
+                    {{if .IsActive}}Active{{else}}Inactive{{end}}
+                </button>
+            </div>
+            {{if .Description}}<p class="schedule-description">{{.Description}}</p>{{end}}
+            <div class="schedule-meta">
+                <span>{{.DaysOfWeek}}</span>
+                {{if .TimeOfDay}}<span>at {{.TimeOfDay}}</span>{{end}}
+            </div>
+            <div class="schedule-actions">
+                <button class="btn btn-secondary" onclick="viewSchedule('{{.ID}}')">View Items</button>
+                <button class="btn-icon btn-danger" onclick="deleteSchedule('{{.ID}}')">Delete</button>
+            </div>
+        </div>
+        {{else}}
+        <p class="empty-state">No schedules yet. Create one to plan your meals and workouts!</p>
+        {{end}}
+    </div>
+</div>
+
+<div id="add-schedule-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('add-schedule-modal')">&times;</span>
+        <h2>Create Schedule</h2>
+        <form onsubmit="submitSchedule(event)">
+            <div class="form-group">
+                <label for="name">Schedule Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="schedule_type">Type</label>
+                <select id="schedule_type" required>
+                    <option value="meal_plan">Meal Plan</option>
+                    <option value="workout_plan">Workout Plan</option>
+                    <option value="combined">Combined</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Days of Week</label>
+                <div class="days-selector">
+                    <label><input type="checkbox" name="days" value="monday"> Mon</label>
+                    <label><input type="checkbox" name="days" value="tuesday"> Tue</label>
+                    <label><input type="checkbox" name="days" value="wednesday"> Wed</label>
+                    <label><input type="checkbox" name="days" value="thursday"> Thu</label>
+                    <label><input type="checkbox" name="days" value="friday"> Fri</label>
+                    <label><input type="checkbox" name="days" value="saturday"> Sat</label>
+                    <label><input type="checkbox" name="days" value="sunday"> Sun</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Schedule</button>
+        </form>
+    </div>
+</div>
+
+<div id="view-schedule-modal" class="modal">
+    <div class="modal-content modal-large">
+        <span class="close" onclick="closeModal('view-schedule-modal')">&times;</span>
+        <h2 id="view-schedule-title">Schedule Items</h2>
+        <div id="schedule-items-list"></div>
+        <div class="add-item-form">
+            <h3>Add Item</h3>
+            <form onsubmit="addScheduleItem(event)">
+                <input type="hidden" id="current-schedule-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item_type">Type</label>
+                        <select id="item_type" required>
+                            <option value="meal">Meal</option>
+                            <option value="workout">Workout</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_name">Name</label>
+                        <input type="text" id="item_name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item_time">Time</label>
+                        <input type="time" id="item_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_calories">Target Calories</label>
+                        <input type="number" id="item_calories" min="1">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Item</button>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+function showAddSchedule() { document.getElementById('add-schedule-modal').style.display = 'block'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+async function submitSchedule(event) {
+    event.preventDefault();
+    const days = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value).join(',');
+    const schedule = {
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value || null,
+        schedule_type: document.getElementById('schedule_type').value,
+        days_of_week: days || null
+    };
+
+    const response = await fetch('/api/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(schedule)
+    });
+
+    if (response.ok) location.reload();
+    else alert('Failed to create schedule');
+}
+
+async function toggleSchedule(id) {
+    await fetch('/api/schedules/' + id + '/toggle', { method: 'POST' });
+    location.reload();
+}
+
+async function deleteSchedule(id) {
+    if (!confirm('Delete this schedule?')) return;
+    await fetch('/api/schedules/' + id, { method: 'DELETE' });
+    location.reload();
+}
+
+async function viewSchedule(id) {
+    const response = await fetch('/api/schedules/' + id);
+    const data = await response.json();
+    if (data.success) {
+        const schedule = data.data;
+        document.getElementById('view-schedule-title').textContent = schedule.schedule.name;
+        document.getElementById('current-schedule-id').value = id;
+        const items = schedule.items || [];
+        const itemsHtml = items.length > 0
+            ? items.map(item => '<div class="schedule-item"><span class="item-time">' + item.time_of_day + '</span><span class="item-name">' + item.name + '</span><span class="item-type">' + item.item_type + '</span><button class="btn-icon btn-danger" onclick="deleteScheduleItem(\'' + item.id + '\')">X</button></div>').join('')
+            : '<p>No items yet. Add some below!</p>';
+        document.getElementById('schedule-items-list').innerHTML = itemsHtml;
+        document.getElementById('view-schedule-modal').style.display = 'block';
+    }
+}
+
+async function addScheduleItem(event) {
+    event.preventDefault();
+    const scheduleId = document.getElementById('current-schedule-id').value;
+    const item = {
+        item_type: document.getElementById('item_type').value,
+        name: document.getElementById('item_name').value,
+        time_of_day: document.getElementById('item_time').value,
+        target_calories: parseInt(document.getElementById('item_calories').value) || null
+    };
+
+    const response = await fetch('/api/schedules/' + scheduleId + '/items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item)
+    });
+
+    if (response.ok) {
+        viewSchedule(scheduleId);
+        document.getElementById('item_name').value = '';
+        document.getElementById('item_calories').value = '';
+    }
+}
+
+async function deleteScheduleItem(itemId) {
+    await fetch('/api/schedules/items/' + itemId, { method: 'DELETE' });
+    const scheduleId = document.getElementById('current-schedule-id').value;
+    viewSchedule(scheduleId);
+}
+</script>
+{{end}}

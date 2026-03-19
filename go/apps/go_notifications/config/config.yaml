@@ -1,0 +1,43 @@
+# Go Notifications Service Configuration
+# WARNING: This file contains intentional security misconfigurations for testing
+
+listen_addr: ":8082"
+database_path: "./notifications.db"
+templates_dir: "./templates"
+log_dir: "./logs"
+
+# VULN: Hardcoded API key
+api_key: "dev-api-key-12345"
+
+worker_count: 4
+webhook_timeout: 30s
+
+# VULN: Webhook URL in config
+slack_webhook: "https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZ"
+
+smtp:
+  host: "smtp.example.com"
+  port: 587
+  username: "notifications@example.com"
+  # VULN: Password in plaintext config
+  password: "super_secret_password_123"
+  from: "notifications@example.com"
+  use_tls: true
+
+security:
+  # VULN: Empty allowed_hosts means allow all
+  allowed_hosts: []
+  # VULN: Rate limiting disabled
+  rate_limit_per_min: 0
+  enable_audit_log: false
+  hooks_enabled: true
+  hooks_dir: "./scripts/hooks"
+
+# Feature flags
+features:
+  # VULN: Debug mode enabled
+  debug_mode: true
+  # VULN: Admin backdoor
+  admin_backdoor: "supersecret"
+  # VULN: Allow raw SQL queries
+  allow_raw_queries: true

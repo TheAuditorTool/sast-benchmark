@@ -1,0 +1,158 @@
+{{define "title"}}Meals - Calorie Tracker{{end}}
+
+{{define "content"}}
+<div class="page-header">
+    <h1>Meals</h1>
+    <p>{{.today}}</p>
+</div>
+
+<div class="daily-summary">
+    <h2>Today's Summary</h2>
+    <div class="summary-stats">
+        <div class="summary-stat">
+            <span class="stat-value">{{if .summary}}{{.summary.TotalCalories}}{{else}}0{{end}}</span>
+            <span class="stat-label">Calories</span>
+        </div>
+        <div class="summary-stat">
+            <span class="stat-value">{{if .summary}}{{printf "%.1f" .summary.TotalProtein}}{{else}}0{{end}}g</span>
+            <span class="stat-label">Protein</span>
+        </div>
+        <div class="summary-stat">
+            <span class="stat-value">{{if .summary}}{{printf "%.1f" .summary.TotalCarbs}}{{else}}0{{end}}g</span>
+            <span class="stat-label">Carbs</span>
+        </div>
+        <div class="summary-stat">
+            <span class="stat-value">{{if .summary}}{{printf "%.1f" .summary.TotalFat}}{{else}}0{{end}}g</span>
+            <span class="stat-label">Fat</span>
+        </div>
+    </div>
+</div>
+
+<div class="meals-section">
+    <div class="section-header">
+        <h2>Today's Meals</h2>
+        <button class="btn btn-primary" onclick="showAddMeal()">Add Meal</button>
+    </div>
+
+    <div class="meal-list">
+        {{if .summary}}{{range .summary.Meals}}
+        <div class="meal-card">
+            <div class="meal-info">
+                <h3>{{.Name}}</h3>
+                <span class="meal-type">{{.MealType}}</span>
+            </div>
+            <div class="meal-nutrition">
+                <span>{{.Calories}} cal</span>
+            </div>
+            <div class="meal-actions">
+                <button class="btn-icon btn-danger" onclick="deleteMeal('{{.ID}}')">Delete</button>
+            </div>
+        </div>
+        {{else}}
+        <p class="empty-state">No meals logged today. Start tracking your nutrition!</p>
+        {{end}}{{else}}
+        <p class="empty-state">No meals logged today. Start tracking your nutrition!</p>
+        {{end}}
+    </div>
+</div>
+
+<div class="search-section">
+    <h2>Search Meals</h2>
+    <div class="search-box">
+        <input type="text" id="meal-search" placeholder="Search meals...">
+        <button onclick="searchMeals()">Search</button>
+    </div>
+    <div id="search-results"></div>
+</div>
+
+<div id="add-meal-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('add-meal-modal')">&times;</span>
+        <h2>Add Meal</h2>
+        <form onsubmit="submitMeal(event)">
+            <div class="form-group">
+                <label for="name">Meal Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="meal_type">Type</label>
+                    <select id="meal_type" required>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="calories">Calories</label>
+                    <input type="number" id="calories" min="1" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="protein">Protein (g)</label>
+                    <input type="number" id="protein" min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="carbs">Carbs (g)</label>
+                    <input type="number" id="carbs" min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="fat">Fat (g)</label>
+                    <input type="number" id="fat" min="0" step="0.1">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Meal</button>
+        </form>
+    </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+function showAddMeal() { document.getElementById('add-meal-modal').style.display = 'block'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+async function submitMeal(event) {
+    event.preventDefault();
+    const meal = {
+        name: document.getElementById('name').value,
+        meal_type: document.getElementById('meal_type').value,
+        calories: parseInt(document.getElementById('calories').value),
+        protein_grams: parseFloat(document.getElementById('protein').value) || null,
+        carbs_grams: parseFloat(document.getElementById('carbs').value) || null,
+        fat_grams: parseFloat(document.getElementById('fat').value) || null,
+        consumed_at: new Date().toISOString()
+    };
+
+    const response = await fetch('/api/meals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(meal)
+    });
+
+    if (response.ok) location.reload();
+    else alert('Failed to add meal');
+}
+
+async function deleteMeal(id) {
+    if (!confirm('Delete this meal?')) return;
+    await fetch('/api/meals/' + id, { method: 'DELETE' });
+    location.reload();
+}
+
+async function searchMeals() {
+    const q = document.getElementById('meal-search').value;
+    if (!q) return;
+    const response = await fetch('/api/meals/search?q=' + encodeURIComponent(q));
+    const data = await response.json();
+    const results = document.getElementById('search-results');
+    if (data.success && data.data && data.data.length > 0) {
+        results.innerHTML = data.data.map(m => '<div class="search-result"><strong>' + m.name + '</strong> - ' + m.calories + ' cal</div>').join('');
+    } else {
+        results.innerHTML = '<p>No results found</p>';
+    }
+}
+</script>
+{{end}}

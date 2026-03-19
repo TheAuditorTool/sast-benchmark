@@ -1,0 +1,35 @@
+[package]
+name = "rocket_test"
+version = "0.1.0"
+edition = "2021"
+description = "Rocket framework test app for TheAuditor taint analysis"
+
+[dependencies]
+# Rocket web framework
+rocket = { version = "0.5", features = ["json"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Database (for SQL injection testing)
+sqlx = { version = "0.7", features = ["runtime-tokio", "sqlite"] }
+rusqlite = "0.31"
+
+# HTTP client (for SSRF testing)
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Validation
+validator = { version = "0.16", features = ["derive"] }
+
+# Environment
+dotenv = "0.15"
+
+# Weak crypto (intentionally vulnerable for testing)
+md5 = "0.7"
+
+[dev-dependencies]
+rocket = { version = "0.5", features = ["json"] }

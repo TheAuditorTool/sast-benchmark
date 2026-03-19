@@ -1,0 +1,67 @@
+{{define "title"}}Register - Calorie Tracker{{end}}
+
+{{define "content"}}
+<div class="auth-container">
+    <h2>Create Account</h2>
+    <form id="register-form" onsubmit="handleRegister(event)">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="8">
+            <small>Minimum 8 characters</small>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+        <div id="error-message" class="error-message"></div>
+    </form>
+    <p class="auth-link">Already have an account? <a href="/login">Login</a></p>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+async function handleRegister(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const errorDiv = document.getElementById('error-message');
+
+    if (password !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            window.location.href = '/login?registered=true';
+        } else {
+            errorDiv.textContent = data.error || (data.errors && data.errors.join(', ')) || 'Registration failed';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+    }
+}
+</script>
+{{end}}

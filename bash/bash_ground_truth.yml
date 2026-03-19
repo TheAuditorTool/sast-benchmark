@@ -1,0 +1,1393 @@
+# bash_ground_truth.yml
+# Answer Key for Bash SAST Benchmark
+# Created: 2026-03-19 | Updated: 2026-03-19 (iteration 2 — due diligence)
+#
+# Philosophy: This answer key was written BEFORE adversarial code, to prevent
+# unconscious bias toward what the engine already detects.
+#
+# Scoring: TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
+#
+# Each test case maps to exactly one vuln-code-snippet annotation in source.
+# "vulnerable: true" = TP if detected, FN if missed
+# "vulnerable: false" = TN if not detected, FP if incorrectly flagged
+#
+# EXPECTED OUTCOMES (verified against engine capabilities 2026-03-19):
+#   [EXPECTED_FN] = Engine has NO rule for this pattern. Will be FN until fixed.
+#                   These are the benchmark's primary VALUE — engine improvement targets.
+#   [EXPECTED_FP] = Engine flags this but ground truth says safe. Tests discrimination.
+#   (no tag)      = Engine SHOULD detect this. If FN, it's a regression or bug.
+
+test_cases:
+
+  # ============================================================================
+  # ORIGINAL FILES — annotated as-is, no modifications to source logic
+  # ============================================================================
+
+  # --- original/lib/config.sh ---
+
+  - key: hardcodedDbPassword
+    file: original/lib/config.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "DB_PASSWORD='changeme123' — hardcoded database credential"
+
+  - key: hardcodedApiSecret
+    file: original/lib/config.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "API_SECRET_KEY='sk_live_demo_key_12345' — hardcoded API key"
+
+  - key: hardcodedAdminToken
+    file: original/lib/config.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "ADMIN_TOKEN='admin_token_insecure' — hardcoded admin token"
+
+  - key: evalSetConfigValue
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "eval in set_config_value() with user-controlled key and value"
+
+  - key: sedConfigInjection
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "sed -i with unescaped user value in set_config_value() — delimiter injection"
+
+  - key: sourceVariablePath
+    file: original/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source with env-controlled config_path in load_config()"
+
+  - key: sourceEnvironmentConfig
+    file: original/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source with user-derived path in load_environment_config()"
+
+  - key: sourcePluginUnquoted
+    file: original/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source $plugin_config — unquoted variable path in load_plugin_config()"
+
+  - key: pathInjectionSetupPath
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "PATH='./bin:${PATH}' — relative path prepended, allows hijack"
+
+  - key: ldPreloadInjection
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "LD_PRELOAD set from variable path — library injection"
+
+  - key: ifsModificationUnsafe
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "parse_csv_line() modifies IFS without restoring"
+
+  - key: ifsModificationSafe
+    file: original/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "parse_csv_line_safe() saves and restores IFS — NOT vulnerable"
+
+  # --- original/lib/database.sh ---
+
+  - key: sqlInjectionDbQueryUnsafe
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "db_query_unsafe() — direct interpolation of table and condition into SQL"
+
+  - key: sqlInjectionRecordDeployment
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "record_deployment() — string interpolation of env/version/user into INSERT"
+
+  - key: sqlInjectionGetDeploymentStatus
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "get_deployment_status() — environment var interpolated into WHERE clause"
+
+  - key: sqlInjectionGetPreviousVersion
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "get_previous_version() — environment interpolated into query"
+
+  - key: sqlInjectionRecordHealthCheck
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "record_health_check() — service/status/details interpolated into INSERT"
+
+  - key: sqlInjectionRecordConfigChange
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "record_config_change() — key/old/new values interpolated into INSERT"
+
+  - key: sqlInjectionCleanupDays
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "cleanup_old_records() — days variable interpolated into DELETE"
+
+  - key: dbQuerySafeEscaped
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "db_query_safe() — uses printf %q escaping — NOT vulnerable"
+
+  - key: getAllDeploymentStatusNoInput
+    file: original/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "get_all_deployment_status() — no user input in query — NOT vulnerable"
+
+  # --- original/lib/deploy.sh ---
+
+  - key: sshHostKeyBypass
+    file: original/lib/deploy.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "StrictHostKeyChecking=no in deploy_to_target() — host key verification disabled"
+
+  - key: sshCommandInjection
+    file: original/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "ssh with variable command string in deploy_to_target() — command injection via version"
+
+  - key: customHookExecution
+    file: original/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "$hook_cmd in run_custom_hook() — variable used as command"
+
+  - key: sshSudoCommandInjection
+    file: original/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "ssh sudo systemctl restart ${service} — unquoted variable in remote command"
+
+  - key: dockerUnquotedVars
+    file: original/lib/deploy.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "docker run with unquoted ${container_name}, ${env_file}, ${image}"
+
+  - key: chmod777DeployDir
+    file: original/lib/deploy.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: true
+    description: "chmod 777 in prepare_deploy_directory() — world-writable"
+
+  - key: chmod755DeployDirSafe
+    file: original/lib/deploy.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "chmod 755 in prepare_deploy_directory_safe() — proper permissions"
+
+  # --- original/lib/network.sh ---
+
+  - key: curlInsecureK
+    file: original/lib/network.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "curl -k in http_get_insecure() — SSL verification disabled"
+
+  - key: wgetNoCertCheck
+    file: original/lib/network.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "wget --no-check-certificate in download_file_insecure()"
+
+  - key: downloadFileSafe
+    file: original/lib/network.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "download_file() uses curl with default SSL verification — NOT vulnerable"
+
+  - key: curlPipeBash
+    file: original/lib/network.sh
+    category: rce
+    cwe: 94
+    vulnerable: true
+    description: "curl -sSL | bash in install_from_remote() — remote code execution"
+
+  - key: wgetPipeBash
+    file: original/lib/network.sh
+    category: rce
+    cwe: 94
+    vulnerable: true
+    description: "wget -qO- | bash in install_from_remote_wget() — remote code execution"
+
+  - key: installFromRemoteSafe
+    file: original/lib/network.sh
+    category: rce
+    cwe: 94
+    vulnerable: false
+    description: "install_from_remote_safe() downloads, verifies checksum, then executes — NOT vulnerable"
+
+  # --- original/lib/security.sh ---
+
+  - key: readWithoutR
+    file: original/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "read without -r in authenticate_with_password() — backslash interpretation"
+
+  - key: readWithRSafe
+    file: original/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "read -r -s in authenticate_with_password_safe() — NOT vulnerable"
+
+  - key: sqlInjectionValidateToken
+    file: original/lib/security.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "validate_api_token() — token interpolated into SELECT WHERE clause"
+
+  - key: sqlInjectionCheckPermission
+    file: original/lib/security.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "check_permission() — user/action/resource interpolated into SELECT"
+
+  - key: setXDebugLeak
+    file: original/lib/security.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "debug_mode() enables set -x — exposes secrets in trace output"
+
+  - key: debugModeSafe
+    file: original/lib/security.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "debug_mode_safe() uses function tracing without set -x — NOT vulnerable"
+
+  - key: printfFormatInjection
+    file: original/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "format_output_unsafe() — user-controlled printf format string"
+
+  - key: printfSafeFormat
+    file: original/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "format_output_safe() — always uses %s — NOT vulnerable"
+
+  - key: sudoVariableCommand
+    file: original/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "run_as_root() — sudo with variable command argument"
+
+  - key: chmod666WorldReadable
+    file: original/lib/security.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: true
+    description: "make_file_world_readable() — chmod 666"
+
+  - key: secureFilePerms
+    file: original/lib/security.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "secure_file() — chmod 600 — NOT vulnerable"
+
+  # --- original/lib/utils.sh ---
+
+  - key: unquotedEscapeSed
+    file: original/lib/utils.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "escape_sed() — unquoted $input in echo and assignment"
+
+  - key: readWithoutRUrlEncode
+    file: original/lib/utils.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "url_encode() — read without -r"
+
+  - key: unsafeTempFile
+    file: original/lib/utils.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: true
+    description: "create_temp_file() — predictable /tmp path"
+
+  - key: safeTempFile
+    file: original/lib/utils.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: false
+    description: "create_temp_file_safe() — mktemp with XXXXXX — NOT vulnerable"
+
+  - key: unquotedArrayJoin
+    file: original/lib/utils.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "join_array() — ${arr[@]} unquoted in for loop"
+
+  - key: weakHashMd5
+    file: original/lib/utils.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "hash_file_md5() — MD5 for file integrity"
+
+  - key: weakHashSha1
+    file: original/lib/utils.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "hash_file_sha1() — SHA-1 for file integrity"
+
+  - key: strongHashSha256
+    file: original/lib/utils.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "hash_file_sha256() — SHA-256 — NOT vulnerable"
+
+  # --- original/scripts/backup.sh ---
+
+  - key: backupFilePathTraversal
+    file: original/scripts/backup.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "backup_file() — cp with user-provided source_file path"
+
+  - key: backupWeakMd5Checksum
+    file: original/scripts/backup.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "backup_file() — md5sum for integrity verification"
+
+  - key: unquotedTarOutput
+    file: original/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "backup_logs() — tar czf ${output_path} unquoted"
+
+  - key: restoreDbUnquotedCp
+    file: original/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "restore_database() — cp ${backup_file} ${target_db} both unquoted"
+
+  - key: evalRestoreGeneric
+    file: original/scripts/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "restore_generic() — eval on user-provided restore command"
+
+  - key: ssrfUploadBackup
+    file: original/scripts/backup.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "upload_backup() — curl PUT to user-controlled remote_url"
+
+  - key: ssrfDownloadBackup
+    file: original/scripts/backup.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "download_backup() — wget to user-controlled remote_url"
+
+  - key: findExecCleanup
+    file: original/scripts/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "cleanup_old_backups() — find -exec rm with variable days"
+
+  - key: rmUnquotedMd5
+    file: original/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "cleanup_old_backups() — rm -f ${md5_file} unquoted"
+
+  - key: restoreFullMkdirUnquoted
+    file: original/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "restore_full() — mkdir -p ${target_dir} unquoted"
+
+  # --- original/scripts/migrate.sh ---
+
+  - key: sourceMigrationFile
+    file: original/scripts/migrate.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "migrate_up() — source ${migration} from find results"
+
+  - key: sqlInjectionDeleteMigration
+    file: original/scripts/migrate.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "migrate_down() — migration_id interpolated into DELETE"
+
+  - key: sqlInjectionMigrationData
+    file: original/scripts/migrate.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "process_migration_data() — file data interpolated into INSERT"
+
+  - key: readWithoutRMigration
+    file: original/scripts/migrate.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "process_migration_data() — read without -r in while loop"
+
+  - key: executeCustomSqlFromStdin
+    file: original/scripts/migrate.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "execute_custom_sql() — executes user-provided SQL directly"
+
+  - key: sourcePreMigrationHook
+    file: original/scripts/migrate.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "run_pre_migration_hook() — source with migration_id in path"
+
+  - key: runSeedScript
+    file: original/scripts/migrate.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "run_seed_script() — executes user-named script"
+
+  # --- original/scripts/webhook.sh ---
+
+  - key: evalSlackExec
+    file: original/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "execute_slack_command() /exec — eval on user input from Slack"
+
+  - key: deployFromWebhookPayload
+    file: original/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "handle_deploy_event() — pipeline.sh deploy with user-controlled env/version"
+
+  - key: sqlInjectionPushEvent
+    file: original/scripts/webhook.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "handle_push_event() — branch/commit_sha interpolated into INSERT"
+
+  - key: sqlInjectionReleaseEvent
+    file: original/scripts/webhook.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "handle_release_event() — tag_name/release_name interpolated into INSERT"
+
+  - key: sourceCustomWebhookHandler
+    file: original/scripts/webhook.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "handle_custom_webhook() — source with handler from QUERY_STRING"
+
+  - key: kubectlNamespaceInjection
+    file: original/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "cleanup_pr_environment() — kubectl delete with pr_number from payload"
+
+  - key: ciCurlInjection
+    file: original/scripts/webhook.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "trigger_ci_build() — curl POST with user-controlled branch in JSON body"
+
+  - key: slackDeployCommand
+    file: original/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "execute_slack_command() /deploy — env/version from Slack user args"
+
+  # ============================================================================
+  # ADVERSARIAL FILES — designed to probe blind spots
+  # ============================================================================
+
+  # --- adversarial/cmdi_tests.sh ---
+
+  - key: cmdi_direct_eval
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Direct eval of function parameter"
+
+  - key: cmdi_eval_hardcoded_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "eval on hardcoded constant string — NOT vulnerable"
+
+  - key: cmdi_variable_as_command
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Variable used directly as command: $cmd arg1 arg2"
+
+  - key: cmdi_validated_command_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Variable in command position but validated against whitelist — NOT vulnerable"
+
+  - key: cmdi_backtick_injection
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Backtick substitution with tainted variable"
+
+  # [EXPECTED_FN] declare -n (nameref) not in any injection rule. Gap: injection_analyze.py
+  - key: cmdi_nameref_injection
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "declare -n nameref with user input — indirect variable injection"
+
+  # VERIFIED VULNERABLE: Bash arithmetic recursively evaluates variable names. If user_expr
+  # contains array subscripts with command substitution (e.g., 'x[$(whoami)]'), the command
+  # executes inside $(( )). This is a known bash attack vector. Do NOT reclassify as safe.
+  # [EXPECTED_FN] arithmetic injection rule exists but may not fire on adversarial file patterns
+  - key: cmdi_arithmetic_expansion
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "$(( user_var )) — arithmetic expansion recursively evaluates, enabling command injection via array subscripts"
+
+  - key: cmdi_arithmetic_validated_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Arithmetic on validated integer — NOT vulnerable"
+
+  - key: cmdi_xargs_tainted
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "echo user_input | xargs — command injection via xargs"
+
+  - key: cmdi_xargs_null_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "xargs -0 with null-delimited input — NOT vulnerable"
+
+  # [EXPECTED_FN] sed injection not in any rule. Gap: no sed-specific pattern detection.
+  - key: cmdi_sed_expression_injection
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "sed with user-controlled expression — delimiter/command injection"
+
+  # [EXPECTED_FN] awk injection not in any rule. Gap: no awk-specific pattern detection.
+  - key: cmdi_awk_program_injection
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "awk with user-controlled program string"
+
+  # --- adversarial/codeinj_tests.sh ---
+
+  - key: codeinj_source_user_path
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source with user-controlled full path"
+
+  - key: codeinj_source_constant_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "source with path built from SCRIPT_DIR constant only — NOT vulnerable"
+
+  - key: codeinj_source_partial_path
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source with user input as filename component in otherwise safe dir"
+
+  - key: codeinj_source_validated_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "source after whitelist validation of environment name — NOT vulnerable"
+
+  - key: codeinj_bash_c_injection
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "bash -c with user-controlled command string"
+
+  - key: codeinj_bash_c_literal_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "bash -c with single-quoted literal string — NOT vulnerable"
+
+  # [EXPECTED_FN] trap injection not in source-injection rule. Gap: no trap-specific detection.
+  - key: codeinj_trap_injection
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "trap with user-controlled string — code injection via signal handler"
+
+  - key: codeinj_trap_literal_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "trap with single-quoted literal function name — NOT vulnerable"
+
+  # [EXPECTED_FN] Heredoc content analysis not implemented. Gap: no heredoc expansion detection.
+  - key: codeinj_heredoc_expansion
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "Here-doc WITHOUT quotes on label — variables expanded, tainted cmd executes"
+
+  - key: codeinj_heredoc_noquote_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Here-doc with single-quoted label — no expansion — NOT vulnerable"
+
+  # --- adversarial/sqli_tests.sh ---
+
+  - key: sqli_direct_interpolation
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "sqlite3 with user input directly in WHERE clause"
+
+  - key: sqli_no_user_input_safe
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "sqlite3 query with only hardcoded constants — NOT vulnerable"
+
+  # [EXPECTED_FN] Multi-hop taint (3 functions) may exceed IFDS traversal depth.
+  - key: sqli_multihop_taint
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "Input flows through 3 functions before reaching SQL"
+
+  - key: sqli_validated_integer_safe
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Input validated as integer before SQL interpolation — NOT vulnerable"
+
+  # [EXPECTED_FN] mysql client — taint sinks include mysql but adversarial file has no taint source
+  - key: sqli_mysql_cli
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "mysql -e with user input in query — different DB client, same pattern"
+
+  # [EXPECTED_FN] Table name injection (identifier, not value) — no specific identifier injection rule
+  - key: sqli_table_name_injection
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "User controls table name in SELECT — SQL injection via identifier"
+
+  # --- adversarial/pathtraver_tests.sh ---
+
+  - key: pathtraver_cat_user_input
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "cat with user-controlled path component"
+
+  - key: pathtraver_basename_safe
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "basename strips directory — NOT vulnerable"
+
+  - key: pathtraver_tar_extract
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "tar extract to user-controlled directory"
+
+  - key: pathtraver_realpath_check_safe
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "realpath + prefix check before use — NOT vulnerable"
+
+  - key: pathtraver_symlink_bypass
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "Sanitizes .. but not symlinks — incomplete sanitization"
+
+  - key: pathtraver_rm_user_path
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "rm -rf with user-controlled path prefix"
+
+  # --- adversarial/ssrf_tests.sh ---
+
+  - key: ssrf_curl_user_url
+    file: adversarial/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "curl with fully user-controlled URL"
+
+  - key: ssrf_hardcoded_url_safe
+    file: adversarial/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "curl with hardcoded constant URL — NOT vulnerable"
+
+  - key: ssrf_url_path_injection
+    file: adversarial/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "curl with user-controlled path appended to base URL"
+
+  - key: ssrf_allowlist_validated_safe
+    file: adversarial/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "URL validated against regex allowlist before curl — NOT vulnerable"
+
+  - key: ssrf_wget_redirect_follow
+    file: adversarial/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: true
+    description: "wget with user URL that follows redirects to internal network"
+
+  # --- adversarial/infodisclosure_tests.sh ---
+
+  - key: infodisclosure_set_x_secrets
+    file: adversarial/infodisclosure_tests.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "set -x while API_TOKEN is in scope"
+
+  - key: infodisclosure_subshell_filtered_safe
+    file: adversarial/infodisclosure_tests.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "set -x in subshell with secrets unset first — NOT vulnerable"
+
+  - key: infodisclosure_env_dump
+    file: adversarial/infodisclosure_tests.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "env | tee debug.log — dumps all environment variables to file"
+
+  - key: infodisclosure_masked_log_safe
+    file: adversarial/infodisclosure_tests.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "Token masked in log output — only first 4 chars shown — NOT vulnerable"
+
+  - key: infodisclosure_error_msg_path
+    file: adversarial/infodisclosure_tests.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: true
+    description: "Error message reveals full file path with credentials"
+
+  # --- adversarial/hardcoded_creds_tests.sh ---
+
+  - key: hardcoded_password_literal
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "DB_PASSWORD='production_secret_123'"
+
+  - key: hardcoded_password_from_env_safe
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "DB_PASSWORD from environment variable — NOT vulnerable"
+
+  - key: hardcoded_curl_auth
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "curl -u admin:hardcoded_pass — inline credentials"
+
+  - key: hardcoded_empty_placeholder_safe
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "API_KEY='' — empty placeholder, not a real credential — NOT vulnerable"
+
+  - key: hardcoded_mysql_password_cli
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "mysql -u root -pHardcodedSecret — password in command line"
+
+  - key: hardcoded_vault_read_safe
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "Secret retrieved from vault — NOT vulnerable"
+
+  # --- adversarial/weakcrypto_tests.sh ---
+
+  - key: weakcrypto_md5_password
+    file: adversarial/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "echo password | md5sum — MD5 for password hashing"
+
+  - key: weakcrypto_sha256_safe
+    file: adversarial/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "sha256sum for file integrity — NOT vulnerable"
+
+  - key: weakcrypto_openssl_des
+    file: adversarial/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "openssl enc -des — weak cipher"
+
+  - key: weakcrypto_openssl_aes_safe
+    file: adversarial/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "openssl enc -aes-256-gcm — strong cipher — NOT vulnerable"
+
+  - key: weakcrypto_sha1_signature
+    file: adversarial/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: true
+    description: "openssl dgst -sha1 — weak digest for signature verification"
+
+  # --- adversarial/insecure_temp_tests.sh ---
+
+  - key: insecure_temp_predictable
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: true
+    description: "Hardcoded /tmp/myapp.tmp — predictable, race condition"
+
+  - key: insecure_temp_mktemp_safe
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: false
+    description: "mktemp with XXXXXX pattern — NOT vulnerable"
+
+  - key: insecure_temp_timestamp
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: true
+    description: "/tmp/backup_$(date +%s).tmp — predictable from timestamp"
+
+  - key: insecure_temp_mktemp_dir_safe
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 377
+    vulnerable: false
+    description: "mktemp -d — proper temp directory — NOT vulnerable"
+
+  # --- adversarial/insecure_perms_tests.sh ---
+
+  - key: perms_chmod_777
+    file: adversarial/insecure_perms_tests.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: true
+    description: "chmod 777 — world-writable directory"
+
+  - key: perms_chmod_700_safe
+    file: adversarial/insecure_perms_tests.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "chmod 700 — owner-only — NOT vulnerable"
+
+  # [EXPECTED_FN] umask not in permission rules. Only chmod 777/666 detected.
+  - key: perms_umask_000
+    file: adversarial/insecure_perms_tests.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: true
+    description: "umask 000 before file creation — no protection"
+
+  - key: perms_umask_077_safe
+    file: adversarial/insecure_perms_tests.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "umask 077 — restrictive — NOT vulnerable"
+
+  # [EXPECTED_FN] Symbolic chmod (a+rwx) not in rule — only numeric 777/666 matched.
+  - key: perms_chmod_arwx
+    file: adversarial/insecure_perms_tests.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: true
+    description: "chmod a+rwx — symbolic form of 777"
+
+  # --- adversarial/ssl_bypass_tests.sh ---
+
+  - key: ssl_curl_insecure_flag
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "curl --insecure — long form SSL bypass"
+
+  - key: ssl_curl_default_safe
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "curl with default SSL verification — NOT vulnerable"
+
+  # [EXPECTED_FN] GIT_SSL_NO_VERIFY not in ssl-bypass rule. Gap: env var SSL bypass.
+  - key: ssl_git_no_verify
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "GIT_SSL_NO_VERIFY=1 git clone — env var SSL bypass"
+
+  - key: ssl_curl_cacert_safe
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "curl --cacert /path/to/ca.pem — custom CA but verified — NOT vulnerable"
+
+  # [EXPECTED_FP] Engine's SSH rule flags accept-new alongside no. TOFU model is debatable.
+  - key: ssl_ssh_accept_new_safe
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "StrictHostKeyChecking=accept-new — accepts new, rejects changed — NOT vulnerable"
+
+  # --- adversarial/unquoted_tests.sh ---
+
+  - key: unquoted_for_loop
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "for f in $files — word splitting on spaces"
+
+  - key: unquoted_quoted_array_safe
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "for f in \"${files[@]}\" — properly quoted — NOT vulnerable"
+
+  - key: unquoted_test_bracket
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "[ -f $path ] — unquoted in test, globbing risk"
+
+  - key: unquoted_double_bracket_safe
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "[[ -f \"$path\" ]] — double-bracket + quoted — NOT vulnerable"
+
+  - key: unquoted_rm_variable
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: true
+    description: "rm -rf $dir — unquoted variable in rm"
+
+  - key: unquoted_rm_quoted_safe
+    file: adversarial/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "rm -rf \"$dir\" — properly quoted — NOT vulnerable"
+
+  # --- adversarial/rce_tests.sh ---
+
+  - key: rce_curl_pipe_bash
+    file: adversarial/rce_tests.sh
+    category: rce
+    cwe: 94
+    vulnerable: true
+    description: "curl | bash — classic remote code execution"
+
+  - key: rce_download_verify_safe
+    file: adversarial/rce_tests.sh
+    category: rce
+    cwe: 94
+    vulnerable: false
+    description: "Download, verify checksum, then execute — NOT vulnerable"
+
+  - key: rce_wget_pipe_sh
+    file: adversarial/rce_tests.sh
+    category: rce
+    cwe: 94
+    vulnerable: true
+    description: "wget -qO- | sh — wget variant of pipe-to-shell"
+
+  - key: rce_curl_save_only_safe
+    file: adversarial/rce_tests.sh
+    category: rce
+    cwe: 94
+    vulnerable: false
+    description: "curl -o file — download only, no execution — NOT vulnerable"
+
+  - key: rce_process_substitution
+    file: adversarial/rce_tests.sh
+    category: rce
+    cwe: 94
+    vulnerable: true
+    description: "bash <(curl -s url) — process substitution RCE"
+
+  # ============================================================================
+  # TIER 1 ADDITIONS (Phase 2, 2026-03-19) — Each verified exploitable
+  # ============================================================================
+
+  # --- cmdi_tests.sh additions ---
+
+  # VERIFIED: find -exec with unquoted $var splits into command + args.
+  # Attack: cleanup_cmd="rm -rf" → find executes rm -rf on every matched file.
+  - key: cmdi_find_exec_injection
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "find -exec with unquoted user-controlled command variable"
+
+  - key: cmdi_find_exec_hardcoded_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "find -exec with hardcoded gzip command — NOT vulnerable"
+
+  # VERIFIED: grep without -- treats user input starting with - as flags.
+  # Attack: user_pattern="-e . /etc/shadow" dumps /etc/shadow contents. CWE-88.
+  - key: cmdi_argument_injection_grep
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 88
+    vulnerable: true
+    description: "grep with user input as pattern — argument injection via leading dash"
+
+  - key: cmdi_argument_injection_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 88
+    vulnerable: false
+    description: "grep -F -- with double-dash protection — NOT vulnerable"
+
+  # VERIFIED: Taint flows through function call + string concat + eval.
+  # Multi-hop: $1/$2 → _build_deploy_cmd → echo → $cmd → eval.
+  - key: cmdi_multistep_eval_chain
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: true
+    description: "Multi-step taint chain through function call to eval"
+
+  - key: cmdi_multistep_validated_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Whitelist validation on both inputs + direct systemctl call, no eval — NOT vulnerable"
+
+  # VERIFIED: printf %q shell-escapes all special characters. eval with escaped
+  # input is safe. Pattern is in TheAuditor SANITIZERS["quote_escape"].
+  - key: cmdi_printf_q_sanitizer_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "printf %q sanitizer before eval — shell-escaped input is safe — NOT vulnerable"
+
+  # --- codeinj_tests.sh additions ---
+
+  # VERIFIED: eval "$(curl ...)" downloads + executes. Different from curl|bash pipe.
+  # No pipe in this pattern — uses command substitution + eval. Tests whether
+  # bash-eval-injection rule catches $(curl) expansion inside eval argument.
+  - key: codeinj_eval_cmd_substitution
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "eval with command substitution from curl — remote code execution without pipe"
+
+  - key: codeinj_eval_capture_only_safe
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "curl output captured to variable and echoed — no eval, no execution — NOT vulnerable"
+
+  # VERIFIED: source <(curl ...) creates fd via process substitution, sources as bash.
+  # Different mechanism than curl|bash pipe. Tests bash-source-injection with <() syntax.
+  - key: codeinj_source_process_sub
+    file: adversarial/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: true
+    description: "source with process substitution from curl — remote code via source <(curl)"
+
+  # --- hardcoded_creds_tests.sh additions ---
+
+  # [EXPECTED_FN] Credentials in heredoc body are NOT variable assignments.
+  # The hardcoded credential rule checks bash_assignments table. Heredoc content
+  # goes to bash_redirections, which the secrets rule does not scan.
+  - key: hardcoded_creds_in_heredoc
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: true
+    description: "Password literal in heredoc body — not a variable assignment, likely undetected"
+
+  - key: hardcoded_creds_heredoc_envvar_safe
+    file: adversarial/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "Environment variables in heredoc body — credentials externalized — NOT vulnerable"
+
+  # --- insecure_temp_tests.sh additions ---
+
+  # VERIFIED: TOCTOU race between [ ! -f ] check and echo > write.
+  # Attacker creates symlink at lockfile path during race window.
+  # Write follows symlink, overwrites arbitrary file. CWE-367.
+  - key: insecure_temp_toctou_race
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 367
+    vulnerable: true
+    description: "TOCTOU race — check-then-write without atomic create allows symlink attack"
+
+  - key: insecure_temp_noclobber_safe
+    file: adversarial/insecure_temp_tests.sh
+    category: insecure_temp
+    cwe: 367
+    vulnerable: false
+    description: "set -C (noclobber) makes redirect fail atomically if file exists — NOT vulnerable"
+
+  # ============================================================================
+  # TIER 2 ADDITIONS (Phase 3, 2026-03-19) — Each verified exploitable/safe
+  # ============================================================================
+
+  # --- cmdi_tests.sh addition ---
+
+  # [EXPECTED_FP] ${var@Q} is bash 4.4+ quoting operator, NOT in engine sanitizer list.
+  # Engine will flag the eval without recognizing @Q sanitization.
+  - key: cmdi_bash_qquote_sanitizer_safe
+    file: adversarial/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "bash ${var@Q} quoting operator before eval — all metacharacters literal — NOT vulnerable"
+
+  # --- ssl_bypass_tests.sh additions ---
+
+  # VERIFIED: NODE_TLS_REJECT_UNAUTHORIZED=0 is documented Node.js env var that
+  # disables all TLS certificate verification. Common in CI/CD bash scripts.
+  - key: ssl_node_tls_reject_disabled
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: true
+    description: "NODE_TLS_REJECT_UNAUTHORIZED=0 disables TLS verification for Node.js from bash"
+
+  - key: ssl_node_tls_default_safe
+    file: adversarial/ssl_bypass_tests.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "Node.js invoked without TLS override — default verification enabled — NOT vulnerable"
+
+  # --- pathtraver_tests.sh additions ---
+
+  # VERIFIED: tar archives can contain members with ../../ paths that write outside
+  # the extraction directory. GNU tar before 2.39 follows these by default.
+  # Well-documented CVE pattern (tar slip / zip slip).
+  - key: pathtraver_tar_member_traversal
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: true
+    description: "tar extraction of user archive — members with ../ can write outside target directory"
+
+  - key: pathtraver_tar_safe_extract
+    file: adversarial/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "Extract to temp dir, validate no traversal paths, then copy — NOT vulnerable"
+
+  # --- sqli_tests.sh additions ---
+
+  # VERIFIED: ORDER BY clause cannot be parameterized. User-controlled column allows
+  # SQL injection after the ORDER BY keyword. Attack: "1; DROP TABLE users--"
+  - key: sqli_order_by_injection
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: true
+    description: "ORDER BY with user-controlled column — SQL injection via clause manipulation"
+
+  - key: sqli_order_by_whitelist_safe
+    file: adversarial/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "ORDER BY with column whitelist validation — only known columns allowed — NOT vulnerable"

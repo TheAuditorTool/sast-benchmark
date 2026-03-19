@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{.Subject}}</title>
+</head>
+<body>
+    <h1>{{.Subject}}</h1>
+    <div class="content">
+        {{.Message}}
+    </div>
+    <footer>
+        <p>Sent to: {{.Recipient}}</p>
+        {{if .Metadata.footer}}
+        <p>{{.Metadata.footer}}</p>
+        {{end}}
+    </footer>
+
+    <!-- VULN: User-controlled data in script context -->
+    <script>
+        var notificationData = {
+            subject: "{{.Subject}}",
+            recipient: "{{.Recipient}}"
+        };
+    </script>
+</body>
+</html>

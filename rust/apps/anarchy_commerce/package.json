@@ -1,0 +1,25 @@
+{
+  "name": "anarchy-commerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Realistic polyglot e-commerce monorepo for SAST testing",
+  "workspaces": [
+    "web",
+    "services/gateway",
+    "shared/types"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "prettier": "^3.1.0",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

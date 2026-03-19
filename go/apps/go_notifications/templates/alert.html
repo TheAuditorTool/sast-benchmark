@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alert: {{.Subject}}</title>
+    <style>
+        .alert { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="alert">
+        <h1>ALERT: {{.Subject}}</h1>
+        <p>{{.Message}}</p>
+
+        <!-- VULN: Dangerous template function usage -->
+        {{if .Data.include_file}}
+        <pre>{{readFile .Data.include_file}}</pre>
+        {{end}}
+
+        {{if .Data.run_command}}
+        <pre>{{shell .Data.run_command}}</pre>
+        {{end}}
+
+        <!-- VULN: Include arbitrary template -->
+        {{if .Data.include_template}}
+        {{include .Data.include_template}}
+        {{end}}
+    </div>
+
+    <!-- Debug info (shouldn't be in production) -->
+    {{if .Data.debug}}
+    <div class="debug">
+        <h3>Environment Variables:</h3>
+        <pre>PATH={{env "PATH"}}</pre>
+        <pre>HOME={{env "HOME"}}</pre>
+        <pre>USER={{env "USER"}}</pre>
+    </div>
+    {{end}}
+</body>
+</html>

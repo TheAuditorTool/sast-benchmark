@@ -1,0 +1,420 @@
+#!/usr/bin/env python3
+"""
+Bash SAST Benchmark Scoring Script
+===================================
+Scores TheAuditor's detection against bash_ground_truth.yml.
+
+Usage (from WSL):
+    /mnt/c/Users/santa/Desktop/TheAuditorV2/.venv/Scripts/python.exe bash_benchmark.py
+
+Requires: PyYAML (pip install pyyaml) or falls back to manual YAML parsing.
+
+Scoring: TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
+"""
+import sqlite3
+import os
+import re
+from collections import defaultdict
+from pathlib import Path
+
+# ============================================================================
+# Configuration
+# ============================================================================
+BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "bash_ground_truth.yml"
+
+# Rule name -> benchmark category mapping
+# VERIFIED against actual Desktop/bash/.pf/repo_index.db (2026-03-19)
+# 27 distinct rules fire for bash. Each maps to a benchmark category.
+RULE_MAP = {
+    # Command injection (CWE-78) — 12 rules
+    "bash-eval-injection": "cmdi",              # eval/bash -c with variable expansion
+    "bash-exec-injection": "cmdi",              # exec with variable
+    "bash-command-injection-taint": "cmdi",     # IFDS-confirmed taint->command flows
+    "bash-read-without-r": "cmdi",              # read without -r flag (backslash interp)
+    "bash-ifs-modified": "cmdi",                # IFS manipulation without restore
+    "bash-printf-format-injection": "cmdi",     # printf with variable format string
+    "bash-sudo-variable": "cmdi",               # sudo $cmd
+    "bash-variable-as-command": "cmdi",         # $cmd arg1 arg2
+    "bash-variable-command": "cmdi",            # similar variant
+    "bash-backtick-injection": "cmdi",          # `$cmd` backtick substitution
+    "bash-indirect-expansion": "cmdi",          # ${!var} indirect expansion
+    "bash-environment-injection": "cmdi",       # LD_PRELOAD, LD_LIBRARY_PATH
+    "bash-path-modification": "cmdi",           # PATH=./bin:$PATH
+    # Code injection (CWE-94) — 1 rule
+    "bash-source-injection": "codeinj",         # source/dot with variable path
+    # Unquoted expansion (CWE-78 variant) — 2 rules
+    "bash-unquoted-expansion": "unquoted",      # unquoted vars in commands
+    "bash-unquoted-dangerous": "unquoted",      # unquoted + dangerous cmd (rm, cp, mv)
+    # Hardcoded credentials (CWE-798) — 2 rules
+    "bash-hardcoded-credential": "hardcoded_creds",   # PASSWORD/TOKEN/SECRET vars
+    "secret-hardcoded-assignment": "hardcoded_creds",  # language-agnostic secret rule
+    # Weak crypto (CWE-327) — 1 rule
+    "bash-weak-crypto": "weakcrypto",           # md5sum, sha1sum
+    # Insecure permissions (CWE-732) — 2 rules
+    "bash-chmod-777": "insecure_perms",         # chmod 777
+    "bash-chmod-666": "insecure_perms",         # chmod 666
+    # SSL/TLS bypass (CWE-295) — 1 rule
+    "bash-ssl-bypass": "ssl_bypass",            # curl -k, wget --no-check-certificate, ssh StrictHostKeyChecking
+    # Information disclosure (CWE-200) — 1 rule
+    "bash-debug-mode-leak": "infodisclosure",   # set -x / set -o xtrace
+    # RCE pipe-to-shell (CWE-94) — 1 rule
+    "bash-curl-pipe-bash": "rce",               # curl|bash, wget|bash
+    # Insecure temp files (CWE-377) — NOT YET VERIFIED if rule fires
+    "bash-unsafe-temp": "insecure_temp",        # predictable /tmp paths
+}
+
+# Rules to IGNORE in scoring (not security-relevant for benchmark categories)
+NOISE_RULES = {
+    "bash-missing-set-e",       # Missing errexit — code quality, not security
+    "bash-missing-set-u",       # Missing nounset — code quality, not security
+    "bash-relative-sensitive-cmd",  # Relative path for chmod/rm — fires 38x, different concern
+    "deadcode-function",
+    "api-missing-auth",
+}
+
+# Taint vulnerability_type -> benchmark category
+# VERIFIED against actual resolved_flow_audit.vulnerability_type values
+SINK_MAP = {
+    "Command Injection": "cmdi",
+    "SQL Injection": "sqli",
+    "Path Traversal": "pathtraver",
+    "Server-Side Request Forgery (SSRF)": "ssrf",  # exact string from DB
+    "Information Disclosure": "infodisclosure",
+    "Weak Cryptography": "weakcrypto",
+    "Remote Code Execution": "rce",
+    "Code Injection": "codeinj",
+}
+
+# ============================================================================
+# YAML Parser (minimal, no dependency needed)
+# ============================================================================
+def parse_ground_truth(path):
+    """Parse bash_ground_truth.yml without PyYAML dependency."""
+    test_cases = []
+    current = None
+
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            stripped = line.strip()
+
+            # Skip comments and empty lines
+            if not stripped or stripped.startswith("#"):
+                continue
+
+            # New test case
+            if stripped.startswith("- key:"):
+                if current:
+                    test_cases.append(current)
+                current = {"key": stripped.split(":", 1)[1].strip()}
+                continue
+
+            # Properties of current test case
+            if current and ":" in stripped and not stripped.startswith("-"):
+                key, _, value = stripped.partition(":")
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+
+                if key == "vulnerable":
+                    current[key] = value.lower() == "true"
+                elif key == "cwe":
+                    current[key] = int(value)
+                elif key in ("file", "category", "description"):
+                    current[key] = value
+
+    if current:
+        test_cases.append(current)
+
+    return test_cases
+
+
+# ============================================================================
+# Source File Scanner (vuln-code-snippet extraction)
+# ============================================================================
+def scan_annotations(root_dir):
+    """Scan source files for vuln-code-snippet start/end markers.
+    Returns dict: key -> [{file, start_line, end_line}, ...]
+    """
+    snippets = {}
+    pat_start = re.compile(r"vuln-code-snippet\s+start\s+(.+)")
+    pat_end = re.compile(r"vuln-code-snippet\s+end\s+(.+)")
+
+    for dirpath, _, filenames in os.walk(root_dir):
+        for fn in filenames:
+            if not fn.endswith(".sh"):
+                continue
+
+            fp = os.path.join(dirpath, fn)
+            rel = os.path.relpath(fp, root_dir).replace("\\", "/")
+
+            try:
+                with open(fp, "r", encoding="utf-8", errors="replace") as f:
+                    lines = f.readlines()
+            except OSError:
+                continue
+
+            opens = {}
+            for i, ln in enumerate(lines, 1):
+                m = pat_start.search(ln)
+                if m:
+                    for k in m.group(1).strip().split():
+                        opens[k.strip()] = i
+
+                m = pat_end.search(ln)
+                if m:
+                    for k in m.group(1).strip().split():
+                        k = k.strip()
+                        if k in opens:
+                            if k not in snippets:
+                                snippets[k] = []
+                            snippets[k].append({
+                                "file": rel,
+                                "start": opens.pop(k),
+                                "end": i,
+                            })
+
+    return snippets
+
+
+# ============================================================================
+# Scoring
+# ============================================================================
+def main():
+    # Parse ground truth
+    test_cases = parse_ground_truth(str(GROUND_TRUTH_PATH))
+    print(f"Loaded {len(test_cases)} test cases from ground truth")
+
+    # Scan annotations
+    snippets = scan_annotations(str(BENCHMARK_ROOT))
+    print(f"Found {len(snippets)} annotated snippets in source files")
+
+    # Verify coverage
+    missing_annotations = []
+    for tc in test_cases:
+        if tc["key"] not in snippets:
+            missing_annotations.append(tc["key"])
+    if missing_annotations:
+        print(f"\nWARNING: {len(missing_annotations)} test cases have no source annotation:")
+        for k in missing_annotations[:10]:
+            print(f"  - {k}")
+        if len(missing_annotations) > 10:
+            print(f"  ... and {len(missing_annotations) - 10} more")
+        print()
+
+    # Load findings from DB
+    if not DB_PATH.exists():
+        print(f"\nERROR: Database not found at {DB_PATH}")
+        print("Run 'aud full --offline' on the benchmark directory first.")
+        print("\nShowing ground truth summary instead:\n")
+        show_ground_truth_summary(test_cases)
+        return
+
+    conn = sqlite3.connect(str(DB_PATH))
+    c = conn.cursor()
+
+    # Collect findings: file -> set of (line, category)
+    findings = defaultdict(set)
+
+    # Track 1: pattern_findings (rule results)
+    c.execute("SELECT file, line, rule FROM pattern_findings")
+    for f, ln, r in c.fetchall():
+        if r not in NOISE_RULES:
+            cat = RULE_MAP.get(r)
+            if cat:
+                findings[f].add((ln, cat))
+
+    # Track 2: resolved_flow_audit (taint-confirmed)
+    c.execute(
+        "SELECT sink_file, sink_line, vulnerability_type "
+        "FROM resolved_flow_audit WHERE status = 'VULNERABLE'"
+    )
+    for f, ln, vt in c.fetchall():
+        cat = SINK_MAP.get(vt)
+        if cat:
+            findings[f].add((ln, cat))
+
+    conn.close()
+
+    # Score each test case
+    cats = sorted(set(tc["category"] for tc in test_cases))
+    results = {}
+
+    for cat in cats:
+        tp = fp = fn = tn = 0
+        cat_cases = [tc for tc in test_cases if tc["category"] == cat]
+
+        for tc in cat_cases:
+            key = tc["key"]
+            is_vulnerable = tc["vulnerable"]
+            detected = False
+
+            # Check if any finding falls within annotated line range
+            locs = snippets.get(key, [])
+            for loc in locs:
+                file_findings = findings.get(loc["file"], set())
+                for ln, found_cat in file_findings:
+                    if loc["start"] <= ln <= loc["end"]:
+                        detected = True
+                        break
+                if detected:
+                    break
+
+            if is_vulnerable:
+                if detected:
+                    tp += 1
+                else:
+                    fn += 1
+            else:
+                if detected:
+                    fp += 1
+                else:
+                    tn += 1
+
+        results[cat] = {"tp": tp, "fp": fp, "fn": fn, "tn": tn}
+        cwe = cat_cases[0].get("cwe", 0) if cat_cases else 0
+        results[cat]["cwe"] = cwe
+
+    # Print scorecard
+    print()
+    print(
+        "%-20s %-6s %-5s %-5s %-5s %-5s %7s %7s %7s"
+        % ("Category", "CWE", "TP", "FP", "FN", "TN", "TPR", "FPR", "Score")
+    )
+    print("-" * 78)
+
+    total_tp = total_fp = total_fn = total_tn = 0
+
+    for cat in cats:
+        r = results[cat]
+        tp, fp, fn, tn = r["tp"], r["fp"], r["fn"], r["tn"]
+        cwe = r["cwe"]
+        total_tp += tp
+        total_fp += fp
+        total_fn += fn
+        total_tn += tn
+
+        tr = tp + fn
+        ts = fp + tn
+        tpr = tp / tr if tr else 0
+        fpr = fp / ts if ts else 0
+        score = tpr - fpr
+
+        print(
+            "%-20s %-6d %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%"
+            % (cat, cwe, tp, fp, fn, tn, tpr * 100, fpr * 100, score * 100)
+        )
+
+    # Overall
+    overall_tpr = total_tp / (total_tp + total_fn) if (total_tp + total_fn) else 0
+    overall_fpr = total_fp / (total_fp + total_tn) if (total_fp + total_tn) else 0
+    overall_score = overall_tpr - overall_fpr
+
+    print("-" * 78)
+    print(
+        "%-20s %-6s %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%"
+        % (
+            "OVERALL",
+            "",
+            total_tp,
+            total_fp,
+            total_fn,
+            total_tn,
+            overall_tpr * 100,
+            overall_fpr * 100,
+            overall_score * 100,
+        )
+    )
+
+    # FN analysis
+    print("\n\n=== FALSE NEGATIVES (Missed Vulnerabilities) ===\n")
+    fn_count = 0
+    for tc in test_cases:
+        if not tc["vulnerable"]:
+            continue
+        key = tc["key"]
+        locs = snippets.get(key, [])
+        detected = False
+        for loc in locs:
+            file_findings = findings.get(loc["file"], set())
+            for ln, found_cat in file_findings:
+                if loc["start"] <= ln <= loc["end"]:
+                    detected = True
+                    break
+            if detected:
+                break
+        if not detected:
+            fn_count += 1
+            loc_info = locs[0] if locs else {"file": "?", "start": "?", "end": "?"}
+            print(
+                f"  FN: {key} [{tc['category']}] "
+                f"{loc_info['file']}:{loc_info['start']}-{loc_info['end']} "
+                f"-- {tc.get('description', '')}"
+            )
+
+    if fn_count == 0:
+        print("  None! All vulnerabilities detected.")
+
+    # FP analysis
+    print("\n\n=== FALSE POSITIVES (Incorrect Flags on Safe Code) ===\n")
+    fp_count = 0
+    for tc in test_cases:
+        if tc["vulnerable"]:
+            continue
+        key = tc["key"]
+        locs = snippets.get(key, [])
+        detected = False
+        for loc in locs:
+            file_findings = findings.get(loc["file"], set())
+            for ln, found_cat in file_findings:
+                if loc["start"] <= ln <= loc["end"]:
+                    detected = True
+                    break
+            if detected:
+                break
+        if detected:
+            fp_count += 1
+            loc_info = locs[0] if locs else {"file": "?", "start": "?", "end": "?"}
+            print(
+                f"  FP: {key} [{tc['category']}] "
+                f"{loc_info['file']}:{loc_info['start']}-{loc_info['end']} "
+                f"-- {tc.get('description', '')}"
+            )
+
+    if fp_count == 0:
+        print("  None! No false positives.")
+
+    print()
+
+
+def show_ground_truth_summary(test_cases):
+    """Show summary when DB doesn't exist yet."""
+    cats = sorted(set(tc["category"] for tc in test_cases))
+    print("%-20s %-6s %-8s %-8s %-8s" % ("Category", "CWE", "Total", "Vuln", "Safe"))
+    print("-" * 55)
+    total = vuln_total = safe_total = 0
+    for cat in cats:
+        cat_cases = [tc for tc in test_cases if tc["category"] == cat]
+        vuln = sum(1 for tc in cat_cases if tc["vulnerable"])
+        safe = sum(1 for tc in cat_cases if not tc["vulnerable"])
+        cwe = cat_cases[0].get("cwe", 0)
+        total += len(cat_cases)
+        vuln_total += vuln
+        safe_total += safe
+        print(
+            "%-20s %-6d %-8d %-8d %-8d"
+            % (cat, cwe, len(cat_cases), vuln, safe)
+        )
+    print("-" * 55)
+    print(
+        "%-20s %-6s %-8d %-8d %-8d"
+        % ("TOTAL", "", total, vuln_total, safe_total)
+    )
+    print(
+        f"\nTP/TN split: {vuln_total}/{safe_total} "
+        f"({vuln_total*100/total:.1f}% / {safe_total*100/total:.1f}%)"
+    )
+
+
+if __name__ == "__main__":
+    main()

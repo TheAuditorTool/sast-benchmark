@@ -1,0 +1,65 @@
+# TheAuditor scan artifacts
+.pf/
+**/.pf/
+*.db
+*.db-journal
+
+# Virtual environments
+.env
+.venv
+.auditor_venv
+env/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Go
+bin/
+vendor/
+
+# Rust
+target/
+Cargo.lock
+
+# Node
+node_modules/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+[Dd]esktop.ini
+.directory
+.Trash-*
+*.stackdump
+
+# Temp / logs
+*.tmp
+*.bak
+*.log
+tmp/
+temp/
+
+# Claude / AI
+.claude/
+.codex/

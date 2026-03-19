@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Counter App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .auth-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .auth-toggle a {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* Progress Summary */
+        .progress-card {
+            grid-column: span 2;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .progress-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .progress-item .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .progress-item .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        /* Lists */
+        .meal-list, .workout-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .list-item:hover {
+            background: #f0f0f0;
+        }
+
+        .list-item .info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .list-item .info span {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .list-item .stats {
+            text-align: right;
+        }
+
+        .list-item .stats .calories {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .list-item .stats .label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Quick Add Forms */
+        .quick-add {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .quick-add h4 {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .quick-add-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick-add-form input {
+            padding: 10px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+        }
+
+        .quick-add-form button {
+            grid-column: span 2;
+        }
+
+        /* Schedule */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .schedule-day {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .schedule-day:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .schedule-day.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .schedule-day .day-name {
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .schedule-day .target {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Hide sections by default */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-card {
+                grid-column: span 1;
+            }
+
+            .progress-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .schedule-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Auth Section (Login/Register) -->
+        <div id="auth-section" class="section active">
+            <div class="auth-container">
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form">
+                    <h2>Welcome Back</h2>
+                    <div id="login-alert"></div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" placeholder="Your password">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%" onclick="login()">Login</button>
+                    <p class="auth-toggle">Don't have an account? <a onclick="showRegister()">Register</a></p>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form" class="auth-form" style="display: none">
+                    <h2>Create Account</h2>
+                    <div id="register-alert"></div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="register-username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="register-email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="register-password" placeholder="Min 8 characters">
+                    </div>
+                    <div class="form-group">
+                        <label>Height (cm)</label>
+                        <input type="number" id="register-height" placeholder="170">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="register-weight" placeholder="70">
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="register-age" placeholder="25">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%" onclick="register()">Register</button>
+                    <p class="auth-toggle">Already have an account? <a onclick="showLogin()">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <header>
+                <h1>Calorie Counter</h1>
+                <div class="user-info">
+                    <span id="user-name">Loading...</span>
+                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="tab" onclick="showTab('meals')">Meals</button>
+                <button class="tab" onclick="showTab('workouts')">Workouts</button>
+                <button class="tab" onclick="showTab('schedule')">Schedule</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="tab-dashboard" class="tab-content">
+                <div class="dashboard">
+                    <!-- Today's Progress -->
+                    <div class="card progress-card">
+                        <h3>Today's Progress</h3>
+                        <div class="progress-grid">
+                            <div class="progress-item">
+                                <div class="value" id="calories-consumed">0</div>
+                                <div class="label">Calories Eaten</div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="value" id="calories-burned">0</div>
+                                <div class="label">Calories Burned</div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="value" id="net-calories">0</div>
+                                <div class="label">Net Calories</div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="value" id="calories-remaining">0</div>
+                                <div class="label">Remaining</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Meals -->
+                    <div class="card">
+                        <h3>Today's Meals</h3>
+                        <div class="meal-list" id="today-meals">
+                            <p style="color: #888; text-align: center; padding: 20px;">No meals logged today</p>
+                        </div>
+                        <div class="quick-add">
+                            <h4>Quick Add Meal</h4>
+                            <div class="quick-add-form">
+                                <input type="text" id="quick-meal-name" placeholder="Meal name">
+                                <input type="number" id="quick-meal-calories" placeholder="Calories">
+                                <select id="quick-meal-type">
+                                    <option value="breakfast">Breakfast</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="snack">Snack</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="quickAddMeal()">Add Meal</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Workouts -->
+                    <div class="card">
+                        <h3>Today's Workouts</h3>
+                        <div class="workout-list" id="today-workouts">
+                            <p style="color: #888; text-align: center; padding: 20px;">No workouts logged today</p>
+                        </div>
+                        <div class="quick-add">
+                            <h4>Quick Add Workout</h4>
+                            <div class="quick-add-form">
+                                <input type="text" id="quick-workout-name" placeholder="Exercise name">
+                                <input type="number" id="quick-workout-duration" placeholder="Duration (min)">
+                                <input type="number" id="quick-workout-calories" placeholder="Calories burned">
+                                <button class="btn btn-primary" onclick="quickAddWorkout()">Add Workout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meals Tab -->
+            <div id="tab-meals" class="tab-content" style="display: none">
+                <div class="card">
+                    <h3>All Meals</h3>
+                    <button class="btn btn-primary" onclick="openMealModal()" style="margin-bottom: 15px">+ Add New Meal</button>
+                    <div class="meal-list" id="all-meals">
+                        <p style="color: #888; text-align: center; padding: 20px;">Loading meals...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workouts Tab -->
+            <div id="tab-workouts" class="tab-content" style="display: none">
+                <div class="card">
+                    <h3>All Workouts</h3>
+                    <button class="btn btn-primary" onclick="openWorkoutModal()" style="margin-bottom: 15px">+ Add New Workout</button>
+                    <div class="workout-list" id="all-workouts">
+                        <p style="color: #888; text-align: center; padding: 20px;">Loading workouts...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Tab -->
+            <div id="tab-schedule" class="tab-content" style="display: none">
+                <div class="card">
+                    <h3>Weekly Schedule</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Set your daily calorie targets for each day of the week</p>
+                    <div class="schedule-grid" id="schedule-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="quick-add" style="margin-top: 20px">
+                        <h4>Set Target for Day</h4>
+                        <div class="quick-add-form">
+                            <select id="schedule-day">
+                                <option value="0">Sunday</option>
+                                <option value="1">Monday</option>
+                                <option value="2">Tuesday</option>
+                                <option value="3">Wednesday</option>
+                                <option value="4">Thursday</option>
+                                <option value="5">Friday</option>
+                                <option value="6">Saturday</option>
+                            </select>
+                            <input type="number" id="schedule-target" placeholder="Target calories">
+                            <button class="btn btn-primary" onclick="setSchedule()">Set Target</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meal Modal -->
+        <div id="meal-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Meal</h3>
+                    <button class="modal-close" onclick="closeMealModal()">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label>Meal Name</label>
+                    <input type="text" id="meal-name" placeholder="e.g., Chicken Salad">
+                </div>
+                <div class="form-group">
+                    <label>Calories</label>
+                    <input type="number" id="meal-calories" placeholder="e.g., 350">
+                </div>
+                <div class="form-group">
+                    <label>Protein (grams)</label>
+                    <input type="number" id="meal-protein" placeholder="e.g., 30">
+                </div>
+                <div class="form-group">
+                    <label>Carbs (grams)</label>
+                    <input type="number" id="meal-carbs" placeholder="e.g., 25">
+                </div>
+                <div class="form-group">
+                    <label>Fat (grams)</label>
+                    <input type="number" id="meal-fat" placeholder="e.g., 15">
+                </div>
+                <div class="form-group">
+                    <label>Meal Type</label>
+                    <select id="meal-type">
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width: 100%" onclick="addMeal()">Add Meal</button>
+            </div>
+        </div>
+
+        <!-- Workout Modal -->
+        <div id="workout-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Workout</h3>
+                    <button class="modal-close" onclick="closeWorkoutModal()">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label>Exercise Type</label>
+                    <select id="workout-type">
+                        <option value="">Custom Exercise</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Duration (minutes)</label>
+                    <input type="number" id="workout-duration" placeholder="e.g., 30">
+                </div>
+                <div class="form-group">
+                    <label>Calories Burned (optional)</label>
+                    <input type="number" id="workout-calories" placeholder="Auto-calculated if empty">
+                </div>
+                <div class="form-group">
+                    <label>Intensity (1-10)</label>
+                    <input type="number" id="workout-intensity" min="1" max="10" placeholder="e.g., 7">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" id="workout-notes" placeholder="Optional notes">
+                </div>
+                <button class="btn btn-primary" style="width: 100%" onclick="addWorkout()">Add Workout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_URL = '/api';
+
+        // Auth Token
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = null;
+
+        // Day names
+        const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (authToken) {
+                showDashboard();
+                loadDashboardData();
+            }
+        });
+
+        // API Helper
+        async function api(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (authToken) {
+                options.headers['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            const response = await fetch(`${API_URL}${endpoint}`, options);
+            const json = await response.json();
+
+            if (!response.ok) {
+                throw new Error(json.error?.message || json.error || 'API Error');
+            }
+
+            return json;
+        }
+
+        // Show/Hide Sections
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        function showAuth() {
+            document.getElementById('auth-section').classList.add('active');
+            document.getElementById('dashboard-section').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-section').classList.remove('active');
+            document.getElementById('dashboard-section').classList.add('active');
+        }
+
+        // Auth Functions
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const result = await api('/auth/login', 'POST', { email, password });
+                authToken = result.data.token;
+                currentUser = result.data.user;
+                localStorage.setItem('authToken', authToken);
+                showDashboard();
+                loadDashboardData();
+            } catch (error) {
+                showAlert('login-alert', error.message, 'error');
+            }
+        }
+
+        async function register() {
+            const data = {
+                username: document.getElementById('register-username').value,
+                email: document.getElementById('register-email').value,
+                password: document.getElementById('register-password').value,
+                height_cm: parseFloat(document.getElementById('register-height').value) || null,
+                weight_kg: parseFloat(document.getElementById('register-weight').value) || null,
+                age: parseInt(document.getElementById('register-age').value) || null
+            };
+
+            try {
+                await api('/auth/register', 'POST', data);
+                showAlert('register-alert', 'Registration successful! Please login.', 'success');
+                setTimeout(showLogin, 1500);
+            } catch (error) {
+                showAlert('register-alert', error.message, 'error');
+            }
+        }
+
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            showAuth();
+        }
+
+        // Dashboard Functions
+        async function loadDashboardData() {
+            try {
+                // Load user profile
+                const profileResult = await api('/auth/me');
+                currentUser = profileResult.data;
+                document.getElementById('user-name').textContent = currentUser.username;
+
+                // Load today's progress
+                const progressResult = await api('/reports/today');
+                updateProgressDisplay(progressResult.data);
+
+                // Load today's meals
+                const mealsResult = await api('/meals/today');
+                displayMeals(mealsResult.data, 'today-meals');
+
+                // Load today's workouts
+                const workoutsResult = await api('/workouts/today');
+                displayWorkouts(workoutsResult.data, 'today-workouts');
+
+                // Load schedule
+                loadSchedule();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function updateProgressDisplay(progress) {
+            const consumed = progress.total_calories_consumed || 0;
+            const burned = progress.total_calories_burned || 0;
+            const target = progress.target_calories || 2000;
+            const net = consumed - burned;
+            const remaining = target - net;
+            const percent = Math.min((net / target) * 100, 100);
+
+            document.getElementById('calories-consumed').textContent = consumed;
+            document.getElementById('calories-burned').textContent = burned;
+            document.getElementById('net-calories').textContent = net;
+            document.getElementById('calories-remaining').textContent = remaining;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+        }
+
+        function displayMeals(meals, containerId) {
+            const container = document.getElementById(containerId);
+
+            if (!meals || meals.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No meals logged</p>';
+                return;
+            }
+
+            container.innerHTML = meals.map(meal => `
+                <div class="list-item">
+                    <div class="info">
+                        <h4>${meal.name}</h4>
+                        <span>${meal.meal_type || 'Meal'} - ${meal.time || ''}</span>
+                    </div>
+                    <div class="stats">
+                        <div class="calories">${meal.calories || meal.total_calories || 0}</div>
+                        <div class="label">calories</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayWorkouts(workouts, containerId) {
+            const container = document.getElementById(containerId);
+
+            if (!workouts || workouts.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No workouts logged</p>';
+                return;
+            }
+
+            container.innerHTML = workouts.map(workout => `
+                <div class="list-item">
+                    <div class="info">
+                        <h4>${workout.exercise_name || 'Workout'}</h4>
+                        <span>${workout.duration_minutes} min - Intensity: ${workout.intensity || 'N/A'}</span>
+                    </div>
+                    <div class="stats">
+                        <div class="calories">${workout.calories_burned || workout.total_calories_burned || 0}</div>
+                        <div class="label">burned</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Quick Add Functions
+        async function quickAddMeal() {
+            const name = document.getElementById('quick-meal-name').value;
+            const calories = parseInt(document.getElementById('quick-meal-calories').value);
+            const meal_type = document.getElementById('quick-meal-type').value;
+
+            if (!name || !calories) {
+                alert('Please enter meal name and calories');
+                return;
+            }
+
+            try {
+                await api('/meals', 'POST', { name, calories, meal_type });
+                document.getElementById('quick-meal-name').value = '';
+                document.getElementById('quick-meal-calories').value = '';
+                loadDashboardData();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function quickAddWorkout() {
+            const duration_minutes = parseInt(document.getElementById('quick-workout-duration').value);
+            const calories_burned = parseInt(document.getElementById('quick-workout-calories').value) || null;
+
+            if (!duration_minutes) {
+                alert('Please enter workout duration');
+                return;
+            }
+
+            try {
+                await api('/workouts', 'POST', { duration_minutes, calories_burned });
+                document.getElementById('quick-workout-name').value = '';
+                document.getElementById('quick-workout-duration').value = '';
+                document.getElementById('quick-workout-calories').value = '';
+                loadDashboardData();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Tab Navigation
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            document.getElementById(`tab-${tabName}`).style.display = 'block';
+
+            // Load data for tab
+            if (tabName === 'meals') {
+                loadAllMeals();
+            } else if (tabName === 'workouts') {
+                loadAllWorkouts();
+            } else if (tabName === 'schedule') {
+                loadSchedule();
+            }
+        }
+
+        async function loadAllMeals() {
+            try {
+                const result = await api('/meals');
+                displayMeals(result.data, 'all-meals');
+            } catch (error) {
+                console.error('Error loading meals:', error);
+            }
+        }
+
+        async function loadAllWorkouts() {
+            try {
+                const result = await api('/workouts');
+                displayWorkouts(result.data, 'all-workouts');
+            } catch (error) {
+                console.error('Error loading workouts:', error);
+            }
+        }
+
+        async function loadSchedule() {
+            const container = document.getElementById('schedule-grid');
+
+            try {
+                const result = await api('/schedules');
+                const schedules = result.data.schedules || [];
+
+                container.innerHTML = DAYS.map((day, index) => {
+                    const schedule = schedules.find(s => s.day_of_week === index);
+                    const target = schedule ? schedule.schedule.target_calories : '--';
+                    return `
+                        <div class="schedule-day ${schedule ? 'active' : ''}" onclick="selectDay(${index})">
+                            <div class="day-name">${day}</div>
+                            <div class="target">${target}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                container.innerHTML = DAYS.map((day, index) => `
+                    <div class="schedule-day" onclick="selectDay(${index})">
+                        <div class="day-name">${day}</div>
+                        <div class="target">--</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function selectDay(day) {
+            document.getElementById('schedule-day').value = day;
+        }
+
+        async function setSchedule() {
+            const day_of_week = parseInt(document.getElementById('schedule-day').value);
+            const target_calories = parseInt(document.getElementById('schedule-target').value);
+
+            if (!target_calories) {
+                alert('Please enter target calories');
+                return;
+            }
+
+            try {
+                await api('/schedules', 'POST', { day_of_week, target_calories });
+                document.getElementById('schedule-target').value = '';
+                loadSchedule();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Modal Functions
+        function openMealModal() {
+            document.getElementById('meal-modal').classList.add('active');
+        }
+
+        function closeMealModal() {
+            document.getElementById('meal-modal').classList.remove('active');
+        }
+
+        function openWorkoutModal() {
+            document.getElementById('workout-modal').classList.add('active');
+        }
+
+        function closeWorkoutModal() {
+            document.getElementById('workout-modal').classList.remove('active');
+        }
+
+        async function addMeal() {
+            const data = {
+                name: document.getElementById('meal-name').value,
+                calories: parseInt(document.getElementById('meal-calories').value) || null,
+                protein_grams: parseFloat(document.getElementById('meal-protein').value) || null,
+                carbs_grams: parseFloat(document.getElementById('meal-carbs').value) || null,
+                fat_grams: parseFloat(document.getElementById('meal-fat').value) || null,
+                meal_type: document.getElementById('meal-type').value
+            };
+
+            if (!data.name) {
+                alert('Please enter meal name');
+                return;
+            }
+
+            try {
+                await api('/meals', 'POST', data);
+                closeMealModal();
+                loadDashboardData();
+                loadAllMeals();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function addWorkout() {
+            const data = {
+                duration_minutes: parseInt(document.getElementById('workout-duration').value),
+                calories_burned: parseInt(document.getElementById('workout-calories').value) || null,
+                intensity: parseInt(document.getElementById('workout-intensity').value) || null,
+                notes: document.getElementById('workout-notes').value || null
+            };
+
+            if (!data.duration_minutes) {
+                alert('Please enter workout duration');
+                return;
+            }
+
+            try {
+                await api('/workouts', 'POST', data);
+                closeWorkoutModal();
+                loadDashboardData();
+                loadAllWorkouts();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Utility Functions
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
