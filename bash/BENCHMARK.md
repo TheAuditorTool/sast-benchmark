@@ -1,6 +1,6 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-03-19 (iteration 2 — due diligence)
+**Created:** 2026-03-19 | **Updated:** 2026-03-19 (Phase 4 complete — 179 test cases)
 **Team:** Bash (of 3: Go, Rust, Bash)
 **Status:** Ground truth + engine analysis complete. Awaiting first `aud full --offline` run.
 
