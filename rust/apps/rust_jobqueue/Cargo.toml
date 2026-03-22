@@ -51,7 +51,7 @@ chrono = { version = "0.4", features = ["serde"] }
 # UUID
 uuid = { version = "1.6", features = ["v4", "serde"] }
 
-# Crypto (intentionally using weak)
+# Crypto
 md5 = "0.7"
 sha2 = "0.10"
 

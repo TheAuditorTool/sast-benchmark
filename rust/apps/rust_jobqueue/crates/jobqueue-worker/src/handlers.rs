@@ -1,11 +1,4 @@
-//! Built-in job handlers
-//!
-//! Common job handlers for typical use cases.
-//!
-//! INTENTIONAL VULNERABILITIES for SAST testing:
-//! - Command injection in ShellHandler
-//! - SSRF in HttpHandler
-//! - Path traversal in FileHandler
+//! Built-in job handlers for typical use cases.
 
 use async_trait::async_trait;
 use std::process::Command;
@@ -15,7 +8,7 @@ use jobqueue_core::{Job, JobExecutor, Result};
 
 /// HTTP request job handler
 ///
-/// VULNERABILITY: SSRF - makes requests to user-controlled URLs
+///SSRF - makes requests to user-controlled URLs
 pub struct HttpHandler {
     client: reqwest::Client,
     timeout: Duration,
@@ -90,7 +83,7 @@ struct HttpJobPayload {
 
 /// Shell command job handler
 ///
-/// VULNERABILITY: Command injection
+///Command injection
 pub struct ShellHandler {
     allowed_commands: Option<Vec<String>>,
 }
@@ -164,7 +157,7 @@ struct ShellJobPayload {
 
 /// File operation job handler
 ///
-/// VULNERABILITY: Path traversal
+///Path traversal
 pub struct FileHandler {
     base_dir: String,
 }
@@ -283,7 +276,7 @@ impl JobExecutor for EmailHandler {
             "Sending email (stub)"
         );
 
-        // VULNERABILITY: Logs email content which may be sensitive
+        //Logs email content which may be sensitive
         tracing::debug!(body = %payload.body, "Email body");
 
         Ok(serde_json::json!({
@@ -307,7 +300,7 @@ struct EmailJobPayload {
 
 /// Webhook job handler
 ///
-/// VULNERABILITY: SSRF via webhook URL
+///SSRF via webhook URL
 pub struct WebhookHandler {
     client: reqwest::Client,
 }

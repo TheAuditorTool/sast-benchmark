@@ -56,7 +56,7 @@ impl MiddlewareStack {
     /// Run after hooks (in reverse order)
     pub async fn run_after(&self, job: &Job, result: &Result<serde_json::Value>) -> Result<()> {
         for middleware in self.middlewares.iter().rev() {
-            // VULNERABILITY: Ignores errors from after hooks
+            //Ignores errors from after hooks
             let _ = middleware.after(job, result).await;
         }
         Ok(())
@@ -103,7 +103,7 @@ impl Middleware for LoggingMiddleware {
         );
 
         if self.log_payload {
-            // VULNERABILITY: Logs potentially sensitive payload data
+            //Logs potentially sensitive payload data
             tracing::debug!(
                 payload = ?job.payload.data,
                 "Job payload"
@@ -121,7 +121,7 @@ impl Middleware for LoggingMiddleware {
                     "Job completed successfully"
                 );
                 if self.log_payload {
-                    // VULNERABILITY: Logs result data
+                    //Logs result data
                     tracing::debug!(result = ?data, "Job result");
                 }
             }

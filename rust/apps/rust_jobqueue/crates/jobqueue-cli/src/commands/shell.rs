@@ -1,6 +1,4 @@
-//! Interactive shell command
-//!
-//! VULNERABILITY: Allows execution of arbitrary SQL via shell
+//! Interactive shell command for SQL execution.
 
 use std::io::{self, Write};
 
@@ -47,7 +45,7 @@ pub async fn run(database: &str) -> Result<()> {
             }
 
             cmd if cmd.starts_with("sql ") => {
-                // VULNERABILITY: Arbitrary SQL execution
+                //Arbitrary SQL execution
                 let sql = &cmd[4..];
                 println!("{}", "Executing SQL...".yellow());
 

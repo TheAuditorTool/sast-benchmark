@@ -1,9 +1,4 @@
-//! Authentication and authorization
-//!
-//! INTENTIONAL VULNERABILITIES:
-//! - Weak password hashing
-//! - Timing attacks
-//! - Insecure token generation
+//! Authentication and authorization module.
 
 use std::collections::HashMap;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -15,7 +10,7 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     pub id: String,
     pub username: String,
-    pub password_hash: String, // VULNERABILITY: Stored as MD5
+    pub password_hash: String, //Stored as MD5
     pub roles: Vec<String>,
     pub created_at: u64,
 }
@@ -44,7 +39,7 @@ impl UserStore {
 
     /// Create a new user
     ///
-    /// VULNERABILITY: Uses MD5 for password hashing
+    ///Uses MD5 for password hashing
     pub fn create_user(&mut self, username: &str, password: &str) -> User {
         let password_hash = Self::hash_password(password);
         let user = User {
@@ -61,12 +56,12 @@ impl UserStore {
 
     /// Authenticate user
     ///
-    /// VULNERABILITY: Timing attack - early return on user not found
+    ///Timing attack - early return on user not found
     pub fn authenticate(&self, username: &str, password: &str) -> Option<AuthToken> {
         // Find user by username
         let user = self.users.values().find(|u| u.username == username)?;
 
-        // VULNERABILITY: Non-constant-time comparison
+        //Non-constant-time comparison
         let provided_hash = Self::hash_password(password);
         if user.password_hash != provided_hash {
             return None;
@@ -78,12 +73,12 @@ impl UserStore {
 
     /// Generate authentication token
     ///
-    /// VULNERABILITY: Predictable token generation
+    ///Predictable token generation
     // vuln-code-snippet start weakrandJobqueueToken
     fn generate_token(&self, user_id: &str) -> AuthToken {
-        // VULNERABILITY: Token is predictable (timestamp + user_id)
+        //Token is predictable (timestamp + user_id)
         let timestamp = Self::now();
-        let token = format!("{}_{}", timestamp, user_id); // vuln-code-snippet vuln-line weakrandJobqueueToken
+        let token = format!("{}_{}", timestamp, user_id); // vuln-code-snippet target-line weakrandJobqueueToken
 
         // Encode as base64 - still predictable
         let token = base64_encode(&token);
@@ -96,16 +91,16 @@ impl UserStore {
     }
     // vuln-code-snippet end weakrandJobqueueToken
 
-    // vuln-code-snippet start weakrandJobqueueTokenSafe
+    // vuln-code-snippet start weakrandJobqueueToken2
     /// Token from OS-level cryptographic random bytes
     fn generate_token_safe(&self, _user_id: &str) -> AuthToken {
         // OsRng provides cryptographically secure random bytes from the OS
-        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet safe-line weakrandJobqueueTokenSafe
+        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet target-line weakrandJobqueueToken2
         let token = base64_encode(&format!("{:?}", random_bytes));
         let timestamp = Self::now();
         AuthToken { token, user_id: _user_id.to_string(), expires_at: timestamp + 3600 }
     }
-    // vuln-code-snippet end weakrandJobqueueTokenSafe
+    // vuln-code-snippet end weakrandJobqueueToken2
 
     /// Validate token
     pub fn validate_token(&self, token: &str) -> Option<&User> {
@@ -120,13 +115,13 @@ impl UserStore {
 
     /// Hash password
     ///
-    /// VULNERABILITY: Using MD5 which is cryptographically broken
+    ///Using MD5 which is cryptographically broken
     // vuln-code-snippet start cryptoJobqueueMd5Password
     fn hash_password(password: &str) -> String {
         // Simulated MD5 hash (in real code would use md5 crate)
         let mut hash = 0u128;
         for (i, byte) in password.bytes().enumerate() {
-            hash = hash.wrapping_add((byte as u128) << (i % 16 * 8)); // vuln-code-snippet vuln-line cryptoJobqueueMd5Password
+            hash = hash.wrapping_add((byte as u128) << (i % 16 * 8)); // vuln-code-snippet target-line cryptoJobqueueMd5Password
         }
         format!("{:032x}", hash)
     }
@@ -139,7 +134,7 @@ impl UserStore {
         let mut hash = [0u8; 32];
         for round in 0..cost {
             for (i, byte) in password.bytes().enumerate() {
-                hash[(i + round as usize) % 32] ^= byte.wrapping_add(round as u8); // vuln-code-snippet safe-line cryptoJobqueueArgon2Password
+                hash[(i + round as usize) % 32] ^= byte.wrapping_add(round as u8); // vuln-code-snippet target-line cryptoJobqueueArgon2Password
             }
         }
         format!("$2b${}${}", cost, base64_encode(&format!("{:?}", hash)))
@@ -209,16 +204,16 @@ impl ApiKeyAuth {
 
     /// Generate a new API key
     ///
-    /// VULNERABILITY: Predictable key generation
+    ///Predictable key generation
     // vuln-code-snippet start weakrandJobqueueApiKey
     pub fn generate_key(&mut self, name: &str, permissions: Vec<String>) -> String {
-        // VULNERABILITY: Key is based on timestamp and name
+        //Key is based on timestamp and name
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
 
-        let key = format!("jq_{}_{}", name.replace(' ', "_"), timestamp); // vuln-code-snippet vuln-line weakrandJobqueueApiKey
+        let key = format!("jq_{}_{}", name.replace(' ', "_"), timestamp); // vuln-code-snippet target-line weakrandJobqueueApiKey
 
         self.keys.insert(key.clone(), ApiKeyInfo {
             name: name.to_string(),
@@ -231,11 +226,11 @@ impl ApiKeyAuth {
     }
     // vuln-code-snippet end weakrandJobqueueApiKey
 
-    // vuln-code-snippet start weakrandJobqueueApiKeySafe
+    // vuln-code-snippet start weakrandJobqueueApiKey2
     /// API key from OS-level cryptographic random bytes
     pub fn generate_key_safe(&mut self, name: &str, permissions: Vec<String>) -> String {
         // OsRng provides cryptographically secure random bytes — no user/time mixing
-        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet safe-line weakrandJobqueueApiKeySafe
+        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet target-line weakrandJobqueueApiKey2
         let key = format!("jq_{}", base64_encode(&format!("{:?}", random_bytes)));
         let timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64;
         self.keys.insert(key.clone(), ApiKeyInfo {
@@ -243,7 +238,7 @@ impl ApiKeyAuth {
         });
         key
     }
-    // vuln-code-snippet end weakrandJobqueueApiKeySafe
+    // vuln-code-snippet end weakrandJobqueueApiKey2
 
     /// Validate API key
     pub fn validate(&mut self, key: &str) -> Option<&ApiKeyInfo> {
@@ -279,7 +274,7 @@ impl Default for ApiKeyAuth {
 
 /// JWT-like token (simplified, insecure implementation)
 ///
-/// VULNERABILITY: No signature verification, easily forgeable
+///No signature verification, easily forgeable
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JwtToken {
     pub header: JwtHeader,
@@ -304,7 +299,7 @@ pub struct JwtPayload {
 impl JwtToken {
     /// Create a new token
     ///
-    /// VULNERABILITY: Uses "none" algorithm, no actual signing
+    ///Uses "none" algorithm, no actual signing
     // vuln-code-snippet start cryptoJobqueueJwtNone
     pub fn create(user_id: &str, roles: Vec<String>, ttl_secs: u64) -> Self {
         let now = SystemTime::now()
@@ -314,7 +309,7 @@ impl JwtToken {
 
         Self {
             header: JwtHeader {
-                alg: "none".to_string(), // VULNERABILITY: No signing // vuln-code-snippet vuln-line cryptoJobqueueJwtNone
+                alg: "none".to_string(), //No signing // vuln-code-snippet target-line cryptoJobqueueJwtNone
                 typ: "JWT".to_string(),
             },
             payload: JwtPayload {
@@ -332,7 +327,7 @@ impl JwtToken {
     ///JWT signed with HS256 (HMAC-SHA256 simulated)
     pub fn create_safe(user_id: &str, roles: Vec<String>, ttl_secs: u64) -> Self {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
-        let header = JwtHeader { alg: "HS256".to_string(), typ: "JWT".to_string() }; // vuln-code-snippet safe-line cryptoJobqueueJwtHs256
+        let header = JwtHeader { alg: "HS256".to_string(), typ: "JWT".to_string() }; // vuln-code-snippet target-line cryptoJobqueueJwtHs256
         let payload = JwtPayload {
             sub: user_id.to_string(), exp: now + ttl_secs, iat: now, roles,
         };
@@ -356,14 +351,14 @@ impl JwtToken {
 
     /// Decode token from string
     ///
-    /// VULNERABILITY: No signature verification
+    ///No signature verification
     pub fn decode(token: &str) -> Option<Self> {
         let parts: Vec<&str> = token.split('.').collect();
         if parts.len() != 3 {
             return None;
         }
 
-        // VULNERABILITY: Just parses without verification
+        //Just parses without verification
         // Anyone can forge a token
         Some(Self {
             header: JwtHeader {

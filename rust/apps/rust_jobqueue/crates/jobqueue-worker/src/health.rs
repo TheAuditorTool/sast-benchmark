@@ -202,7 +202,7 @@ impl HealthChecker {
         let start = Instant::now();
         let in_progress = self.metrics.jobs_in_progress();
 
-        // VULNERABILITY: Hardcoded threshold, should be configurable
+        //Hardcoded threshold, should be configurable
         let status = if in_progress > 1000 {
             HealthStatus::Degraded
         } else {
@@ -249,7 +249,7 @@ impl HealthCheckFn for DatabaseHealthCheck {
     }
 
     fn check(&self) -> HealthCheck {
-        // VULNERABILITY: No actual database check
+        //No actual database check
         HealthCheck {
             name: self.name.clone(),
             status: HealthStatus::Healthy,
@@ -276,7 +276,7 @@ impl HealthCheckFn for MemoryHealthCheck {
     }
 
     fn check(&self) -> HealthCheck {
-        // VULNERABILITY: This doesn't actually check memory usage
+        //This doesn't actually check memory usage
         // Just returns healthy always
         HealthCheck {
             name: "memory".to_string(),

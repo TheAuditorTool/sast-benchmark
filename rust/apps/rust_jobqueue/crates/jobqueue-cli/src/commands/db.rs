@@ -1,6 +1,4 @@
-//! Database command implementations
-//!
-//! VULNERABILITY: execute_sql allows arbitrary SQL execution
+//! Database command implementations.
 
 use anyhow::Result;
 use colored::Colorize;
@@ -91,7 +89,7 @@ async fn cleanup(database: &str, days: i64, dry_run: bool) -> Result<()> {
 
 /// Execute raw SQL
 ///
-/// VULNERABILITY: Arbitrary SQL execution without authorization
+///Arbitrary SQL execution without authorization
 async fn execute_sql(database: &str, query: &str) -> Result<()> {
     println!("{}", "WARNING: Executing raw SQL!".red().bold());
     println!("Query: {}", query.yellow());

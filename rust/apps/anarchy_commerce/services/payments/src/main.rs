@@ -15,7 +15,7 @@ use std::sync::Mutex;
 
 // Config
 // vuln-code-snippet start infodisclosurePaymentsHardcodedKey
-const STRIPE_SECRET_KEY: &str = "sk_test_fake_key_for_testing";  //Hardcoded key // vuln-code-snippet vuln-line infodisclosurePaymentsHardcodedKey
+const STRIPE_SECRET_KEY: &str = "sk_test_fake_key_for_testing";  //Hardcoded key // vuln-code-snippet target-line infodisclosurePaymentsHardcodedKey
 // vuln-code-snippet end infodisclosurePaymentsHardcodedKey
 const PORT: u16 = 4002;
 
@@ -68,7 +68,7 @@ async fn create_intent(
     //No validation on currency (could be invalid)
     let payment = Payment {
         id: payment_id.clone(),
-        amount: req.amount, // vuln-code-snippet vuln-line inputvalPaymentsMissingValidation
+        amount: req.amount, // vuln-code-snippet target-line inputvalPaymentsMissingValidation
         currency: req.currency.clone(),
         status: "pending".to_string(),
         order_id: req.order_id.clone(),

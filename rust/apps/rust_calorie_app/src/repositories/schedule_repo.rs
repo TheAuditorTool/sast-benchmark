@@ -12,7 +12,7 @@ use uuid::Uuid;
 pub struct ScheduleRepository;
 
 impl ScheduleRepository {
-    // vuln-code-snippet start sqliCalorieUpsertScheduleSafe
+    // vuln-code-snippet start sqliCalorieUpsertSchedule
     /// Create or update a schedule for a day of week.
     ///
     /// TAINT SINK: CreateScheduleRequest fields flow to UPSERT
@@ -42,7 +42,7 @@ impl ScheduleRepository {
                 updated_at = datetime('now')
             "#,
         )
-        // vuln-code-snippet safe-line sqliCalorieUpsertScheduleSafe
+        // vuln-code-snippet target-line sqliCalorieUpsertSchedule
         .bind(&id)
         .bind(user_id)
         .bind(request.day_of_week)                   // TAINT: from HTTP
@@ -60,7 +60,7 @@ impl ScheduleRepository {
             .await?
             .ok_or(AppError::NotFound("Schedule not found".to_string()))
     }
-    // vuln-code-snippet end sqliCalorieUpsertScheduleSafe
+    // vuln-code-snippet end sqliCalorieUpsertSchedule
 
     /// Find schedule by day of week.
     pub async fn find_by_day(
@@ -123,7 +123,7 @@ impl ScheduleRepository {
             updates.push(format!("target_fat_grams = {}", fat));
         }
         if let Some(ref workouts) = request.planned_workouts {
-            // vuln-code-snippet vuln-line sqliCalorieUpdateSchedule
+            // vuln-code-snippet target-line sqliCalorieUpdateSchedule
             updates.push(format!("planned_workouts = '{}'", workouts.replace("'", "''")));
         }
         if let Some(ref notes) = request.notes {

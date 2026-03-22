@@ -1,7 +1,7 @@
 # Rust SAST Benchmark — Development Roadmap
 
-> **Version:** 0.3.1 (2026-03-22)
-> **Status:** v0.3.1 shipped. M1-M6 complete. 12 misclassification fixes + hint removal + YAML deletion applied post-OWASP review. CSV is sole ground truth. Baseline scoring done (see baseline_theauditor_tool_score.md).
+> **Version:** 0.3.2 (2026-03-23)
+> **Status:** v0.3.2 shipped. M1-M6 complete. Phase 1: 12 misclassification fixes. Phase 2: testcode/ hint removal + YAML deletion. Phase 2.5: apps/ hint purge (42 key renames, 313+ markers removed). SARIF scoring consolidated. CSV is sole ground truth.
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---

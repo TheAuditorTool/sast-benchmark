@@ -28,7 +28,7 @@ validator = { version = "0.16", features = ["derive"] }
 # Environment
 dotenv = "0.15"
 
-# Weak crypto (intentionally vulnerable for testing)
+# Crypto
 md5 = "0.7"
 
 [dev-dependencies]

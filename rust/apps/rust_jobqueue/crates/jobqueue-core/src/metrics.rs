@@ -330,7 +330,7 @@ impl LatencyHistogram {
 
     pub fn record(&mut self, duration: Duration) {
         if self.samples.len() >= self.max_samples {
-            // VULNERABILITY: No proper reservoir sampling
+            //No proper reservoir sampling
             // Just remove first element - biased towards recent values
             self.samples.remove(0);
         }

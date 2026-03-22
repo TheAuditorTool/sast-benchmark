@@ -8,13 +8,7 @@
 //! - PostgreSQL (planned)
 //! - MySQL (planned)
 //!
-//! # INTENTIONAL VULNERABILITIES FOR TESTING
-//!
-//! This crate contains intentional security vulnerabilities:
-//! - SQL Injection in search functions
-//! - Path traversal in backup functions
-//! - Weak transaction isolation
-//! - Race conditions in concurrent operations
+//! Includes SQL query, backup, and concurrent operation patterns.
 
 pub mod sqlite;
 pub mod migrations;

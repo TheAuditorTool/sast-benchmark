@@ -1,10 +1,4 @@
-//! SQLite implementation of JobStore
-//!
-//! INTENTIONAL VULNERABILITIES:
-//! - SQL injection in search_jobs()
-//! - SQL injection in get_jobs_by_tag()
-//! - Race condition in claim_next()
-//! - No input validation on queue names
+//! SQLite implementation of JobStore.
 
 use std::path::Path;
 use std::sync::Arc;
@@ -67,18 +61,18 @@ impl SqliteStore {
 
     /// Execute raw SQL (DANGEROUS - for admin use only)
     ///
-    /// VULNERABILITY: Allows arbitrary SQL execution
+    ///Allows arbitrary SQL execution
     // vuln-code-snippet start sqliJobqueueExecuteRaw
     pub async fn execute_raw(&self, sql: &str) -> DbResult<usize> {
         let conn = self.conn.lock().await;
-        let rows = conn.execute(sql, [])?; // vuln-code-snippet vuln-line sqliJobqueueExecuteRaw
+        let rows = conn.execute(sql, [])?; // vuln-code-snippet target-line sqliJobqueueExecuteRaw
         Ok(rows)
     }
     // vuln-code-snippet end sqliJobqueueExecuteRaw
 
     /// Search jobs with user-provided query
     ///
-    /// VULNERABILITY: SQL INJECTION
+    ///SQL INJECTION
     /// The search_term is directly interpolated into SQL without sanitization
     // vuln-code-snippet start sqliJobqueueSearchJobs
     pub async fn search_jobs(&self, search_term: &str, limit: usize) -> DbResult<Vec<Job>> {
@@ -87,7 +81,7 @@ impl SqliteStore {
         // TAINT SINK: User input directly in SQL query
         // Attacker payload: ' OR '1'='1' --
         let sql = format!(
-            "SELECT * FROM jobs WHERE payload LIKE '%{}%' OR queue LIKE '%{}%' LIMIT {}", // vuln-code-snippet vuln-line sqliJobqueueSearchJobs
+            "SELECT * FROM jobs WHERE payload LIKE '%{}%' OR queue LIKE '%{}%' LIMIT {}", // vuln-code-snippet target-line sqliJobqueueSearchJobs
             search_term, search_term, limit
         );
 
@@ -105,14 +99,14 @@ impl SqliteStore {
 
     /// Get jobs by tag
     ///
-    /// VULNERABILITY: SQL INJECTION via tag name
+    ///SQL INJECTION via tag name
     // vuln-code-snippet start sqliJobqueueGetJobsByTag
     pub async fn get_jobs_by_tag(&self, tag: &str) -> DbResult<Vec<Job>> {
         let conn = self.conn.lock().await;
 
         // TAINT SINK: Tag directly in SQL
         let sql = format!(
-            "SELECT * FROM jobs WHERE tags LIKE '%\"{}\",%' OR tags LIKE '%\"{}\"]%'", // vuln-code-snippet vuln-line sqliJobqueueGetJobsByTag
+            "SELECT * FROM jobs WHERE tags LIKE '%\"{}\",%' OR tags LIKE '%\"{}\"]%'", // vuln-code-snippet target-line sqliJobqueueGetJobsByTag
             tag, tag
         );
 
@@ -128,7 +122,7 @@ impl SqliteStore {
 
     /// Dynamic order by
     ///
-    /// VULNERABILITY: SQL injection via order_by parameter
+    ///SQL injection via order_by parameter
     // vuln-code-snippet start sqliJobqueueListOrdered
     pub async fn list_jobs_ordered(&self, order_by: &str, desc: bool) -> DbResult<Vec<Job>> {
         let conn = self.conn.lock().await;
@@ -136,7 +130,7 @@ impl SqliteStore {
         let direction = if desc { "DESC" } else { "ASC" };
         // TAINT SINK: order_by directly in SQL
         let sql = format!(
-            "SELECT * FROM jobs ORDER BY {} {} LIMIT 100", // vuln-code-snippet vuln-line sqliJobqueueListOrdered
+            "SELECT * FROM jobs ORDER BY {} {} LIMIT 100", // vuln-code-snippet target-line sqliJobqueueListOrdered
             order_by, direction
         );
 
@@ -447,11 +441,11 @@ impl JobStore for SqliteStore {
 
     /// Claim the next available job
     ///
-    /// VULNERABILITY: Race condition - no proper locking between SELECT and UPDATE
+    ///Race condition - no proper locking between SELECT and UPDATE
     async fn claim_next(&self, queue: &QueueName, worker: &WorkerId) -> Result<Option<Job>> {
         let conn = self.conn.lock().await;
 
-        // VULNERABILITY: TOCTOU race condition
+        //TOCTOU race condition
         // Another worker could claim the job between SELECT and UPDATE
         let job: Option<Job> = conn
             .query_row(

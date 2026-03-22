@@ -11,7 +11,7 @@ use std::path::Path;
 // vuln-code-snippet start pathtraverReadFile
 pub fn read_file(path: &str) -> io::Result<String> {
     // TAINT SINK: User-controlled file path
-    std::fs::read_to_string(path) // vuln-code-snippet vuln-line pathtraverReadFile
+    std::fs::read_to_string(path) // vuln-code-snippet target-line pathtraverReadFile
 }
 // vuln-code-snippet end pathtraverReadFile
 
@@ -20,7 +20,7 @@ pub fn read_file(path: &str) -> io::Result<String> {
 // vuln-code-snippet start pathtraverWriteFile
 pub fn write_file(path: &str, content: &str) -> io::Result<()> {
     // TAINT SINK: User-controlled file path
-    std::fs::write(path, content) // vuln-code-snippet vuln-line pathtraverWriteFile
+    std::fs::write(path, content) // vuln-code-snippet target-line pathtraverWriteFile
 }
 // vuln-code-snippet end pathtraverWriteFile
 
@@ -51,7 +51,7 @@ pub fn open_file_with_options(path: &str, append: bool) -> io::Result<File> {
 // vuln-code-snippet start pathtraverDeleteFile
 pub fn delete_file(path: &str) -> io::Result<()> {
     // TAINT SINK: User-controlled path to remove
-    fs::remove_file(path) // vuln-code-snippet vuln-line pathtraverDeleteFile
+    fs::remove_file(path) // vuln-code-snippet target-line pathtraverDeleteFile
 }
 // vuln-code-snippet end pathtraverDeleteFile
 
@@ -154,14 +154,14 @@ pub fn process_upload(filename: &str, content: &[u8], upload_dir: &str) -> io::R
     let path = format!("{}/{}", upload_dir, filename);
 
     // TAINT SINK: Writing to user-controlled path
-    fs::write(&path, content)?; // vuln-code-snippet vuln-line pathtraverProcessUpload
+    fs::write(&path, content)?; // vuln-code-snippet target-line pathtraverProcessUpload
 
     Ok(path)
 }
 // vuln-code-snippet end pathtraverProcessUpload
 
-/// Safe version with proper validation (for comparison)
-// vuln-code-snippet start pathtraverProcessUploadSafe
+/// Upload with path validation
+// vuln-code-snippet start pathtraverProcessUpload2
 pub fn process_upload_safe(
     filename: &str,
     content: &[u8],
@@ -187,7 +187,7 @@ pub fn process_upload_safe(
     let canonical_upload = Path::new(upload_dir).canonicalize()?;
     let canonical_path = path.canonicalize().unwrap_or_else(|_| path.clone());
 
-    if !canonical_path.starts_with(&canonical_upload) { // vuln-code-snippet safe-line pathtraverProcessUploadSafe
+    if !canonical_path.starts_with(&canonical_upload) { // vuln-code-snippet target-line pathtraverProcessUpload2
         return Err(io::Error::new(
             io::ErrorKind::PermissionDenied,
             "Path traversal detected",
@@ -197,4 +197,4 @@ pub fn process_upload_safe(
     fs::write(&path, content)?;
     Ok(path.display().to_string())
 }
-// vuln-code-snippet end pathtraverProcessUploadSafe
+// vuln-code-snippet end pathtraverProcessUpload2

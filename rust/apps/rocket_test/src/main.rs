@@ -1,7 +1,4 @@
-//! Rocket Framework Test App for TheAuditor
-//!
-//! This app demonstrates various Rocket features and intentionally
-//! vulnerable patterns to test taint analysis detection.
+//! Rocket Framework Test App with HTTP handler patterns.
 
 #[macro_use]
 extern crate rocket;
@@ -78,13 +75,13 @@ pub struct AppState {
 //SQL Injection via Path Parameter
 // =============================================================================
 
-// vuln-code-snippet start sqliRocketGetUserVulnerable
+// vuln-code-snippet start sqliRocketGetUser
 ///User ID directly concatenated into SQL query
 #[get("/users/<id>")]
 pub async fn get_user_vulnerable(id: String) -> Json<User> {
     //SQL injection - user input directly in query
     let conn = rusqlite::Connection::open("app.db").unwrap();
-    let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet vuln-line sqliRocketGetUserVulnerable
+    let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet target-line sqliRocketGetUser
 
     let mut stmt = conn.prepare(&query).unwrap();
     let user = stmt.query_row([], |row| {
@@ -97,7 +94,7 @@ pub async fn get_user_vulnerable(id: String) -> Json<User> {
 
     Json(user)
 }
-// vuln-code-snippet end sqliRocketGetUserVulnerable
+// vuln-code-snippet end sqliRocketGetUser
 
 // =============================================================================
 //Command Injection via Query Parameter
@@ -115,7 +112,7 @@ pub fn list_files_vulnerable(params: CommandParams) -> String {
     //Command injection via filename parameter
     let output = Command::new("ls")
         .arg("-la")
-        .arg(&params.filename) // vuln-code-snippet vuln-line cmdiRocketListFiles
+        .arg(&params.filename) // vuln-code-snippet target-line cmdiRocketListFiles
         .output()
         .expect("Failed to execute command");
 
@@ -138,7 +135,7 @@ pub struct FetchRequest {
 pub async fn fetch_url_vulnerable(request: Json<FetchRequest>) -> String {
     //SSRF - user-controlled URL
     let client = reqwest::Client::new();
-    let response = client.get(&request.url).send().await.unwrap(); // vuln-code-snippet vuln-line ssrfRocketFetchUrl
+    let response = client.get(&request.url).send().await.unwrap(); // vuln-code-snippet target-line ssrfRocketFetchUrl
     response.text().await.unwrap()
 }
 // vuln-code-snippet end ssrfRocketFetchUrl
@@ -157,7 +154,7 @@ pub struct FileReadForm {
 #[post("/read-file", data = "<form>")]
 pub fn read_file_vulnerable(form: Form<FileReadForm>) -> String {
     //Path traversal - user input in file path
-    std::fs::read_to_string(&form.path).unwrap_or_else(|_| "File not found".to_string()) // vuln-code-snippet vuln-line pathtraverRocketReadFile
+    std::fs::read_to_string(&form.path).unwrap_or_else(|_| "File not found".to_string()) // vuln-code-snippet target-line pathtraverRocketReadFile
 }
 // vuln-code-snippet end pathtraverRocketReadFile
 
@@ -165,23 +162,23 @@ pub fn read_file_vulnerable(form: Form<FileReadForm>) -> String {
 //XSS via Path Parameter
 // =============================================================================
 
-// vuln-code-snippet start xssRocketGreetVulnerable
+// vuln-code-snippet start xssRocketGreet
 ///User input reflected in HTML without escaping
 #[get("/greet/<name>")]
 pub fn greet_vulnerable(name: String) -> RawHtml<String> {
     //XSS - user input directly in HTML
-    RawHtml(format!("<html><body><h1>Hello, {}!</h1></body></html>", name)) // vuln-code-snippet vuln-line xssRocketGreetVulnerable
+    RawHtml(format!("<html><body><h1>Hello, {}!</h1></body></html>", name)) // vuln-code-snippet target-line xssRocketGreet
 }
-// vuln-code-snippet end xssRocketGreetVulnerable
+// vuln-code-snippet end xssRocketGreet
 
-// vuln-code-snippet start xssRocketGreetSafe
+// vuln-code-snippet start xssRocketGreet2
 ///HTML-escaped output prevents XSS
 #[get("/greet/safe/<name>")]
 pub fn greet_safe(name: String) -> RawHtml<String> {
-    let escaped = name.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;"); // vuln-code-snippet safe-line xssRocketGreetSafe
+    let escaped = name.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;"); // vuln-code-snippet target-line xssRocketGreet2
     RawHtml(format!("<html><body><h1>Hello, {}!</h1></body></html>", escaped))
 }
-// vuln-code-snippet end xssRocketGreetSafe
+// vuln-code-snippet end xssRocketGreet2
 
 // =============================================================================
 //Weak Crypto (MD5)
@@ -192,7 +189,7 @@ pub fn greet_safe(name: String) -> RawHtml<String> {
 #[post("/login", data = "<form>")]
 pub fn login_vulnerable(form: Form<LoginForm>) -> String {
     //MD5 is cryptographically broken
-    let digest = md5::compute(form.password.as_bytes()); // vuln-code-snippet vuln-line cryptoRocketMd5Login
+    let digest = md5::compute(form.password.as_bytes()); // vuln-code-snippet target-line cryptoRocketMd5Login
     format!("Password hash: {:x}", digest)
 }
 // vuln-code-snippet end cryptoRocketMd5Login
@@ -210,7 +207,7 @@ pub fn login_safe(form: Form<LoginForm>) -> String {
         hash[(i + 7) % 32] = hash[(i + 7) % 32].wrapping_add(b);
     }
     // In production: use bcrypt::hash(form.password, cost)
-    format!("Password hash (bcrypt-simulated, cost={}): {:x?}", cost, &hash[..]) // vuln-code-snippet safe-line cryptoRocketArgon2Login
+    format!("Password hash (bcrypt-simulated, cost={}): {:x?}", cost, &hash[..]) // vuln-code-snippet target-line cryptoRocketArgon2Login
 }
 // vuln-code-snippet end cryptoRocketArgon2Login
 
@@ -218,7 +215,7 @@ pub fn login_safe(form: Form<LoginForm>) -> String {
 //Parameterized Query
 // =============================================================================
 
-// vuln-code-snippet start sqliRocketGetUserSafe
+// vuln-code-snippet start sqliRocketGetUser2
 ///Using parameterized query with rusqlite
 #[get("/users/safe/<id>")]
 pub async fn get_user_safe(id: i64) -> Json<User> {
@@ -226,7 +223,7 @@ pub async fn get_user_safe(id: i64) -> Json<User> {
 
     //Parameterized query
     let mut stmt = conn.prepare("SELECT id, name, email FROM users WHERE id = ?").unwrap();
-    let user = stmt.query_row([id], |row| { // vuln-code-snippet safe-line sqliRocketGetUserSafe
+    let user = stmt.query_row([id], |row| { // vuln-code-snippet target-line sqliRocketGetUser2
         Ok(User {
             id: row.get(0)?,
             name: row.get(1)?,
@@ -236,13 +233,13 @@ pub async fn get_user_safe(id: i64) -> Json<User> {
 
     Json(user)
 }
-// vuln-code-snippet end sqliRocketGetUserSafe
+// vuln-code-snippet end sqliRocketGetUser2
 
 // =============================================================================
 //Validated Input
 // =============================================================================
 
-// vuln-code-snippet start sqliRocketCreateUserSafe
+// vuln-code-snippet start sqliRocketCreateUser
 ///Input validated before use
 #[post("/users", data = "<request>")]
 pub async fn create_user_safe(request: Json<CreateUserRequest>) -> Result<Json<User>, Status> {
@@ -252,7 +249,7 @@ pub async fn create_user_safe(request: Json<CreateUserRequest>) -> Result<Json<U
     }
 
     let conn = rusqlite::Connection::open("app.db").unwrap();
-    conn.execute( // vuln-code-snippet safe-line sqliRocketCreateUserSafe
+    conn.execute( // vuln-code-snippet target-line sqliRocketCreateUser
         "INSERT INTO users (name, email) VALUES (?, ?)",
         [&request.name, &request.email],
     ).unwrap();
@@ -263,7 +260,7 @@ pub async fn create_user_safe(request: Json<CreateUserRequest>) -> Result<Json<U
         email: request.email.clone(),
     }))
 }
-// vuln-code-snippet end sqliRocketCreateUserSafe
+// vuln-code-snippet end sqliRocketCreateUser
 
 // =============================================================================
 // Request Guard Usage (API Key)
@@ -287,7 +284,7 @@ pub fn get_profile(cookies: &CookieJar<'_>) -> String {
     if let Some(user_id) = cookies.get("user_id") {
         let conn = rusqlite::Connection::open("app.db").unwrap();
         //SQL injection via cookie
-        let query = format!("SELECT name FROM users WHERE id = {}", user_id.value()); // vuln-code-snippet vuln-line sqliRocketCookieProfile
+        let query = format!("SELECT name FROM users WHERE id = {}", user_id.value()); // vuln-code-snippet target-line sqliRocketCookieProfile
         let name: String = conn.query_row(&query, [], |row| row.get(0)).unwrap();
         format!("Welcome, {}", name)
     } else {

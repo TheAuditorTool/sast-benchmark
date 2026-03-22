@@ -184,7 +184,7 @@ impl ExecutorPool {
                     tokio::spawn(async move {
                         let _permit = permit;
 
-                        // VULNERABILITY: No actual execution - just simulates
+                        //No actual execution - just simulates
                         // Real implementation would call the executor here
                         let result = tokio::time::timeout(timeout, async {
                             // Simulate work
@@ -236,7 +236,7 @@ impl ThreadPool {
                     while let Ok(msg) = rx.recv() {
                         match msg {
                             ThreadPoolMessage::Job(job) => {
-                                // VULNERABILITY: No panic catching
+                                //No panic catching
                                 // A panicking job will kill the worker thread
                                 job();
                             }

@@ -4,6 +4,41 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-03-22 — v0.3.2: Apps Hint Purge (OWASP Gold Standard)
+
+### Context
+Phase 2 (v0.3.1) cleaned all 143 testcode/ files of classification hints. However, the 119 apps/ test cases across 7 reference applications still contained ~313 classification markers that violated the OWASP Benchmark principle: "CSV is the sole ground truth." This release purges all remaining hints from apps/.
+
+### Changes
+
+**Annotation markers neutralized (119 occurrences across 24 files):**
+- All `vuln-code-snippet vuln-line` → `vuln-code-snippet target-line` (78)
+- All `vuln-code-snippet safe-line` → `vuln-code-snippet target-line` (41)
+
+**42 annotation keys renamed to remove Vulnerable/Safe suffixes:**
+- 7 keys: stripped "Vulnerable" → base name (e.g., `sqliRocketGetUserVulnerable` → `sqliRocketGetUser`)
+- 18 keys: stripped "Safe" → base name, no collision (e.g., `sqliCalorieCreateUserSafe` → `sqliCalorieCreateUser`)
+- 17 keys: stripped "Safe" → collision with existing TP, appended "2" (e.g., `cmdiExecuteCommandSafe` → `cmdiExecuteCommand2`)
+
+**~191 VULNERABILITY comment markers removed from 27+ .rs files:**
+- `// VULNERABILITY:` and `/// VULNERABILITY:` prefixes stripped from all section headers, doc comments, and inline comments
+- Section headers rewritten to neutral descriptions (e.g., "VULNERABILITY: SQL Injection via raw query string" → "SQL query construction")
+
+**Module-level doc comments neutralized (5 files):**
+- Removed "intentionally vulnerable", "INTENTIONAL VULNERABILITIES:", "dangerous operations that should be flagged" from `//!` comments
+
+**Cargo.toml hint comments cleaned (3 files):**
+- Removed "intentionally vulnerable for testing" and "intentionally using weak" comments
+
+**CSV updated:** All 42 key renames applied. Header bumped to v0.3.2.
+
+### What was NOT changed
+- Function names (e.g., `unsafe_deserialize`, `greet_vulnerable`) — source code, not metadata. Renaming breaks compilation.
+- VulnResponse.vulnerability field — application logic.
+- Route paths, taint sink comments — describe code behavior, not TP/TN classification.
+
+---
+
 ## 2026-03-22 — SARIF Scoring Support
 
 ### Tool-Agnostic Scoring

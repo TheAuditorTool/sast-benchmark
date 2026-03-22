@@ -138,7 +138,7 @@ impl<S: JobStore + Send + Sync + 'static> Scheduler<S> {
         let mut queue = self.queue.lock().await;
 
         // Rebuild queue without the cancelled job
-        // VULNERABILITY: O(n) operation, inefficient for large queues
+        //O(n) operation, inefficient for large queues
         let entries: Vec<_> = queue.drain().filter(|e| &e.job_id != job_id).collect();
         let removed = queue.len() != entries.len();
 
@@ -237,7 +237,7 @@ impl<S: JobStore + Send + Sync + 'static> Scheduler<S> {
 
 /// Cron expression parser (simplified)
 ///
-/// VULNERABILITY: Parsing is incomplete and may panic on invalid input
+///Parsing is incomplete and may panic on invalid input
 pub struct CronExpression {
     pub minute: CronField,
     pub hour: CronField,
@@ -258,11 +258,11 @@ pub enum CronField {
 impl CronExpression {
     /// Parse a cron expression
     ///
-    /// VULNERABILITY: Panics on invalid input, no proper error handling
+    ///Panics on invalid input, no proper error handling
     pub fn parse(expr: &str) -> Self {
         let parts: Vec<&str> = expr.split_whitespace().collect();
 
-        // VULNERABILITY: No bounds checking - will panic if fewer than 5 parts
+        //No bounds checking - will panic if fewer than 5 parts
         Self {
             minute: Self::parse_field(parts[0]),
             hour: Self::parse_field(parts[1]),
@@ -277,7 +277,7 @@ impl CronExpression {
             CronField::Any
         } else if field.contains('/') {
             let parts: Vec<&str> = field.split('/').collect();
-            // VULNERABILITY: Will panic on parse failure
+            //Will panic on parse failure
             CronField::Step(parts[1].parse().unwrap())
         } else if field.contains('-') {
             let parts: Vec<&str> = field.split('-').collect();
@@ -288,17 +288,17 @@ impl CronExpression {
         } else if field.contains(',') {
             let values: Vec<u32> = field
                 .split(',')
-                .map(|v| v.parse().unwrap()) // VULNERABILITY: unwrap
+                .map(|v| v.parse().unwrap()) //unwrap
                 .collect();
             CronField::List(values)
         } else {
-            CronField::Value(field.parse().unwrap()) // VULNERABILITY: unwrap
+            CronField::Value(field.parse().unwrap()) //unwrap
         }
     }
 
     /// Get next run time (simplified - not accurate)
     pub fn next_run(&self, _from: DateTime<Utc>) -> DateTime<Utc> {
-        // VULNERABILITY: This is a stub - doesn't actually calculate correctly
+        //This is a stub - doesn't actually calculate correctly
         Utc::now() + chrono::Duration::minutes(1)
     }
 }

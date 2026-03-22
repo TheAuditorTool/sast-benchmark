@@ -1,9 +1,4 @@
-//! Database backup and restore functionality
-//!
-//! INTENTIONAL VULNERABILITIES:
-//! - Path traversal in backup/restore functions
-//! - Command injection in export functions
-//! - Arbitrary file read/write
+//! Database backup and restore functionality.
 
 use std::fs;
 use std::io::{Read, Write};
@@ -28,12 +23,12 @@ impl BackupManager {
 
     /// Create a backup with user-specified name
     ///
-    /// VULNERABILITY: Path traversal via backup_name
+    ///Path traversal via backup_name
     /// Attacker can use "../../../etc/passwd" to write anywhere
     // vuln-code-snippet start pathtraverJobqueueCreateBackup
     pub fn create_backup(&self, backup_name: &str) -> DbResult<String> {
         // TAINT SINK: backup_name directly used in path construction
-        let backup_path = format!("{}/{}.db", self.backup_dir, backup_name); // vuln-code-snippet vuln-line pathtraverJobqueueCreateBackup
+        let backup_path = format!("{}/{}.db", self.backup_dir, backup_name); // vuln-code-snippet target-line pathtraverJobqueueCreateBackup
 
         // No path validation - allows traversal!
         fs::copy(&self.database_path, &backup_path)?;
@@ -45,7 +40,7 @@ impl BackupManager {
 
     /// Restore from a backup file
     ///
-    /// VULNERABILITY: Path traversal via backup_name
+    ///Path traversal via backup_name
     /// Attacker can read arbitrary files
     // vuln-code-snippet start pathtraverJobqueueRestoreBackup
     pub fn restore_backup(&self, backup_name: &str) -> DbResult<()> {
@@ -53,7 +48,7 @@ impl BackupManager {
         let backup_path = format!("{}/{}.db", self.backup_dir, backup_name);
 
         // No validation - can read any file!
-        fs::copy(&backup_path, &self.database_path)?; // vuln-code-snippet vuln-line pathtraverJobqueueRestoreBackup
+        fs::copy(&backup_path, &self.database_path)?; // vuln-code-snippet target-line pathtraverJobqueueRestoreBackup
 
         tracing::info!("Restored from backup: {}", backup_path);
         Ok(())
@@ -62,7 +57,7 @@ impl BackupManager {
 
     /// List available backups
     ///
-    /// VULNERABILITY: Directory traversal via backup_dir
+    ///Directory traversal via backup_dir
     pub fn list_backups(&self) -> DbResult<Vec<String>> {
         let entries = fs::read_dir(&self.backup_dir)?;
 
@@ -77,13 +72,13 @@ impl BackupManager {
 
     /// Export database to SQL file
     ///
-    /// VULNERABILITY: Command injection via output_path
+    ///Command injection via output_path
     // vuln-code-snippet start cmdiJobqueueExportSql
     pub fn export_to_sql(&self, output_path: &str) -> DbResult<()> {
         // TAINT SINK: output_path used in shell command
         // Attacker payload: "/tmp/backup.sql; rm -rf /"
         let command = format!(
-            "sqlite3 {} .dump > {}", // vuln-code-snippet vuln-line cmdiJobqueueExportSql
+            "sqlite3 {} .dump > {}", // vuln-code-snippet target-line cmdiJobqueueExportSql
             self.database_path, output_path
         );
 
@@ -103,12 +98,12 @@ impl BackupManager {
 
     /// Import from SQL file
     ///
-    /// VULNERABILITY: Command injection via input_path
+    ///Command injection via input_path
     // vuln-code-snippet start cmdiJobqueueImportSql
     pub fn import_from_sql(&self, input_path: &str) -> DbResult<()> {
         // TAINT SINK: input_path in shell command
         let command = format!(
-            "sqlite3 {} < {}", // vuln-code-snippet vuln-line cmdiJobqueueImportSql
+            "sqlite3 {} < {}", // vuln-code-snippet target-line cmdiJobqueueImportSql
             self.database_path, input_path
         );
 
@@ -128,7 +123,7 @@ impl BackupManager {
 
     /// Read backup file contents
     ///
-    /// VULNERABILITY: Arbitrary file read
+    ///Arbitrary file read
     pub fn read_backup_contents(&self, backup_name: &str) -> DbResult<Vec<u8>> {
         // TAINT SINK: Arbitrary file read via path traversal
         let backup_path = format!("{}/{}", self.backup_dir, backup_name);
@@ -142,7 +137,7 @@ impl BackupManager {
 
     /// Write backup file
     ///
-    /// VULNERABILITY: Arbitrary file write
+    ///Arbitrary file write
     pub fn write_backup(&self, backup_name: &str, data: &[u8]) -> DbResult<()> {
         // TAINT SINK: Arbitrary file write via path traversal
         let backup_path = format!("{}/{}", self.backup_dir, backup_name);
@@ -155,7 +150,7 @@ impl BackupManager {
 
     /// Compress backup using system gzip
     ///
-    /// VULNERABILITY: Command injection
+    ///Command injection
     pub fn compress_backup(&self, backup_name: &str) -> DbResult<String> {
         let backup_path = format!("{}/{}.db", self.backup_dir, backup_name);
 
@@ -177,12 +172,12 @@ impl BackupManager {
 
     /// Delete a backup
     ///
-    /// VULNERABILITY: Arbitrary file deletion via path traversal
+    ///Arbitrary file deletion via path traversal
     // vuln-code-snippet start pathtraverJobqueueDeleteBackup
     pub fn delete_backup(&self, backup_name: &str) -> DbResult<()> {
         // TAINT SINK: Can delete any file
         let backup_path = format!("{}/{}", self.backup_dir, backup_name);
-        fs::remove_file(&backup_path)?; // vuln-code-snippet vuln-line pathtraverJobqueueDeleteBackup
+        fs::remove_file(&backup_path)?; // vuln-code-snippet target-line pathtraverJobqueueDeleteBackup
         Ok(())
     }
     // vuln-code-snippet end pathtraverJobqueueDeleteBackup
@@ -211,7 +206,7 @@ impl Default for BackupSchedule {
 
 /// Validate backup path (intentionally weak)
 ///
-/// VULNERABILITY: Incomplete path validation
+///Incomplete path validation
 pub fn validate_backup_path(path: &str) -> bool {
     // Only checks for null bytes - doesn't prevent ../
     !path.contains('\0')
@@ -219,7 +214,7 @@ pub fn validate_backup_path(path: &str) -> bool {
 
 /// Sanitize filename (intentionally incomplete)
 ///
-/// VULNERABILITY: Incomplete sanitization
+///Incomplete sanitization
 pub fn sanitize_filename(name: &str) -> String {
     // Only removes some characters, still allows ..
     name.chars()

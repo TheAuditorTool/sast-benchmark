@@ -13,7 +13,7 @@ use uuid::Uuid;
 pub struct UserRepository;
 
 impl UserRepository {
-    // vuln-code-snippet start sqliCalorieCreateUserSafe
+    // vuln-code-snippet start sqliCalorieCreateUser
     /// Create a new user.
     ///
     /// TAINT SINK: email, password_hash, username flow from HTTP request
@@ -33,7 +33,7 @@ impl UserRepository {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
             "#,
         )
-        // vuln-code-snippet safe-line sqliCalorieCreateUserSafe
+        // vuln-code-snippet target-line sqliCalorieCreateUser
         .bind(&id)
         .bind(&request.email)      // TAINT: from HTTP
         .bind(password_hash)        // TAINT: derived from HTTP password
@@ -54,7 +54,7 @@ impl UserRepository {
 
         Self::find_by_id(pool, &id).await?.ok_or(AppError::NotFound("User not found".to_string()))
     }
-    // vuln-code-snippet end sqliCalorieCreateUserSafe
+    // vuln-code-snippet end sqliCalorieCreateUser
 
     /// Find user by ID.
     pub async fn find_by_id(pool: &DbPool, id: &str) -> Result<Option<User>, AppError> {
@@ -70,7 +70,7 @@ impl UserRepository {
         Ok(user)
     }
 
-    // vuln-code-snippet start sqliCalorieFindByEmailSafe
+    // vuln-code-snippet start sqliCalorieFindByEmail
     /// Find user by email.
     ///
     /// TAINT SINK: email from login request flows to WHERE clause
@@ -79,7 +79,7 @@ impl UserRepository {
         let user = sqlx::query_as::<_, User>(
             "SELECT id, email, password_hash, username, height_cm, weight_kg, age, daily_calorie_goal, created_at, updated_at FROM users WHERE email = ?",
         )
-        // vuln-code-snippet safe-line sqliCalorieFindByEmailSafe
+        // vuln-code-snippet target-line sqliCalorieFindByEmail
         .bind(email)  // TAINT: from login form
         .fetch_optional(pool)
         .await
@@ -87,9 +87,9 @@ impl UserRepository {
 
         Ok(user)
     }
-    // vuln-code-snippet end sqliCalorieFindByEmailSafe
+    // vuln-code-snippet end sqliCalorieFindByEmail
 
-    // vuln-code-snippet start sqliCalorieUpdateUserSafe
+    // vuln-code-snippet start sqliCalorieUpdateUser
     /// Update user profile.
     ///
     /// TAINT SINK: UpdateUserRequest fields flow to UPDATE statement
@@ -134,7 +134,7 @@ impl UserRepository {
         let mut q = sqlx::query(&query);
 
         if let Some(ref username) = request.username {
-            // vuln-code-snippet safe-line sqliCalorieUpdateUserSafe
+            // vuln-code-snippet target-line sqliCalorieUpdateUser
             q = q.bind(username);  // TAINT: from HTTP
         }
         if let Some(height) = request.height_cm {
@@ -159,7 +159,7 @@ impl UserRepository {
             .await?
             .ok_or(AppError::NotFound("User not found".to_string()))
     }
-    // vuln-code-snippet end sqliCalorieUpdateUserSafe
+    // vuln-code-snippet end sqliCalorieUpdateUser
 
     /// Update user password.
     ///

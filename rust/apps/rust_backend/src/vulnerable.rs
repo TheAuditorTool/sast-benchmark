@@ -1,7 +1,4 @@
-//! Vulnerable Code Patterns Module
-//!
-//! This module demonstrates various vulnerable coding patterns in Rust
-//! that SAST tools should detect.
+//! Backend code patterns module for actix-web routes.
 
 use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
@@ -58,13 +55,13 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: SQL Injection via raw query string
+// SQL query construction
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start sqliBackendRawSql
 async fn raw_sql(req: web::Json<SqlRequest>) -> impl Responder {
     // TAINT SINK: User query directly used
     // Attacker payload: query="SELECT * FROM users; DROP TABLE users;--"
-    let query = &req.query; // vuln-code-snippet vuln-line sqliBackendRawSql
+    let query = &req.query; // vuln-code-snippet target-line sqliBackendRawSql
 
     // Simulating what would happen with raw SQL
     let simulated_result = format!(
@@ -85,7 +82,7 @@ async fn raw_sql(req: web::Json<SqlRequest>) -> impl Responder {
 // vuln-code-snippet end sqliBackendRawSql
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: ReDoS (Regular Expression Denial of Service)
+// Regex pattern compilation
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start redosBackendRegexDos
 async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
@@ -93,7 +90,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
 
     // TAINT SINK: User controlled regex pattern
     // Attacker payload: pattern="(a+)+$", input="aaaaaaaaaaaaaaaaaaaaaaaa!"
-    let pattern = match Regex::new(&req.pattern) { // vuln-code-snippet vuln-line redosBackendRegexDos
+    let pattern = match Regex::new(&req.pattern) { // vuln-code-snippet target-line redosBackendRegexDos
         Ok(p) => p,
         Err(e) => {
             return HttpResponse::BadRequest().json(VulnResponse {
@@ -119,7 +116,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
 }
 // vuln-code-snippet end redosBackendRegexDos
 
-// vuln-code-snippet start redosBackendRegexSafe
+// vuln-code-snippet start redosBackendRegex
 ///Regex pattern validated for length and dangerous patterns
 async fn regex_safe(req: web::Json<RegexRequest>) -> impl Responder {
     use regex::Regex;
@@ -129,7 +126,7 @@ async fn regex_safe(req: web::Json<RegexRequest>) -> impl Responder {
             vulnerability: "Pattern too long".to_string(),
         });
     }
-    if req.input.len() > 10_000 { // vuln-code-snippet safe-line redosBackendRegexSafe
+    if req.input.len() > 10_000 { // vuln-code-snippet target-line redosBackendRegex
         return HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
             vulnerability: "Input too long".to_string(),
@@ -149,20 +146,20 @@ async fn regex_safe(req: web::Json<RegexRequest>) -> impl Responder {
         vulnerability: "ReDoS protected".to_string(),
     })
 }
-// vuln-code-snippet end redosBackendRegexSafe
+// vuln-code-snippet end redosBackendRegex
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Weak Cryptography
+// Cryptographic operations
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start cryptoBackendWeakCrypto
 async fn weak_crypto(req: web::Json<CryptoRequest>) -> impl Responder {
-    // VULNERABILITY: Using weak/broken cryptographic practices
+    // MD5 + XOR cryptographic operations
 
     // 1. Hardcoded key
     let key = req.key.as_deref().unwrap_or("hardcoded_secret_key_123");
 
     // 2. Using MD5 for security (broken)
-    let md5_hash = format!("{:x}", md5::compute(&req.data)); // vuln-code-snippet vuln-line cryptoBackendWeakCrypto
+    let md5_hash = format!("{:x}", md5::compute(&req.data)); // vuln-code-snippet target-line cryptoBackendWeakCrypto
 
     // 3. XOR "encryption" (not encryption at all)
     let xor_encrypted: Vec<u8> = req.data
@@ -189,10 +186,10 @@ async fn weak_crypto(req: web::Json<CryptoRequest>) -> impl Responder {
 // vuln-code-snippet end cryptoBackendWeakCrypto
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Race Condition
+// Shared mutable state access
 // -----------------------------------------------------------------------------
 async fn race_condition() -> impl Responder {
-    // VULNERABILITY: Race condition with shared mutable state
+    // Race condition with shared mutable state
 
     let mut handles = vec![];
 
@@ -206,7 +203,7 @@ async fn race_condition() -> impl Responder {
             let value = format!("value_{}", i);
             guard.insert(key.clone(), value);
 
-            // VULNERABILITY: Check-then-act race
+            // Check-then-act pattern
             if guard.contains_key(&key) {
                 // Another thread could modify between check and use
                 guard.get(&key).cloned()
@@ -231,18 +228,18 @@ async fn race_condition() -> impl Responder {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Integer Overflow
+// Integer arithmetic operations
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start intoverflowBackendOverflow
 async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let a: i32 = query.get("a").and_then(|s| s.parse().ok()).unwrap_or(0);
     let b: i32 = query.get("b").and_then(|s| s.parse().ok()).unwrap_or(0);
 
-    // VULNERABILITY: Unchecked arithmetic can overflow
+    // Unchecked arithmetic operations
     // Attacker payload: a=2147483647&b=1 (i32::MAX + 1)
 
     // These will panic in debug mode, wrap in release
-    let add_result = a.wrapping_add(b); // vuln-code-snippet vuln-line intoverflowBackendOverflow
+    let add_result = a.wrapping_add(b); // vuln-code-snippet target-line intoverflowBackendOverflow
     let mul_result = a.wrapping_mul(b);
 
     // This one might actually overflow/panic without wrapping
@@ -269,7 +266,7 @@ async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Re
 async fn integer_safe(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let a: i32 = query.get("a").and_then(|s| s.parse().ok()).unwrap_or(0);
     let b: i32 = query.get("b").and_then(|s| s.parse().ok()).unwrap_or(0);
-    let checked_add = a.checked_add(b); // vuln-code-snippet safe-line intoverflowBackendCheckedArithmetic
+    let checked_add = a.checked_add(b); // vuln-code-snippet target-line intoverflowBackendCheckedArithmetic
     let checked_mul = a.checked_mul(b);
     HttpResponse::Ok().json(VulnResponse {
         success: true,
@@ -285,12 +282,12 @@ async fn integer_safe(query: web::Query<HashMap<String, String>>) -> impl Respon
 // vuln-code-snippet end intoverflowBackendCheckedArithmetic
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Format String (simulated)
+// Format string operations
 // -----------------------------------------------------------------------------
 async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let user_input = query.get("fmt").map(|s| s.as_str()).unwrap_or("default");
 
-    // VULNERABILITY: User input used in format-like operation
+    // User input used in format-like operation
     // While Rust's format! is safe, this simulates the vulnerability
     let result = user_input.replace("{}", "[REPLACED]")
         .replace("{:x}", "[HEX]")
@@ -307,14 +304,14 @@ async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Respo
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Unsafe Deserialization
+// Deserialization operations
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start deserBackendUnsafeDeserialize
 async fn unsafe_deserialize(body: web::Bytes) -> impl Responder {
-    // VULNERABILITY: Deserializing untrusted data
+    // Deserializing request body
 
     // Try to deserialize as JSON (relatively safe)
-    let json_result: Result<serde_json::Value, _> = serde_json::from_slice(&body); // vuln-code-snippet vuln-line deserBackendUnsafeDeserialize
+    let json_result: Result<serde_json::Value, _> = serde_json::from_slice(&body); // vuln-code-snippet target-line deserBackendUnsafeDeserialize
 
     // Simulating what would happen with unsafe deserialization
     HttpResponse::Ok().json(VulnResponse {
@@ -325,7 +322,7 @@ async fn unsafe_deserialize(body: web::Bytes) -> impl Responder {
 }
 // vuln-code-snippet end deserBackendUnsafeDeserialize
 
-// vuln-code-snippet start deserBackendSafeDeserialize
+// vuln-code-snippet start deserBackendDeserialize
 ///Typed deserialization with size limit
 async fn safe_deserialize(body: web::Bytes) -> impl Responder {
     #[derive(serde::Deserialize)]
@@ -336,7 +333,7 @@ async fn safe_deserialize(body: web::Bytes) -> impl Responder {
             vulnerability: "Payload too large".to_string(),
         });
     }
-    let result: Result<SafePayload, _> = serde_json::from_slice(&body); // vuln-code-snippet safe-line deserBackendSafeDeserialize
+    let result: Result<SafePayload, _> = serde_json::from_slice(&body); // vuln-code-snippet target-line deserBackendDeserialize
     match result {
         Ok(payload) => HttpResponse::Ok().json(VulnResponse {
             success: true,
@@ -349,10 +346,10 @@ async fn safe_deserialize(body: web::Bytes) -> impl Responder {
         }),
     }
 }
-// vuln-code-snippet end deserBackendSafeDeserialize
+// vuln-code-snippet end deserBackendDeserialize
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Memory Corruption (unsafe block)
+// Unsafe memory access
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start memsafetyBackendMemoryCorruption
 async fn memory_corruption(query: web::Query<HashMap<String, String>>) -> impl Responder {
@@ -360,11 +357,11 @@ async fn memory_corruption(query: web::Query<HashMap<String, String>>) -> impl R
         .and_then(|s| s.parse().ok())
         .unwrap_or(0);
 
-    // VULNERABILITY: Unsafe memory access with user-controlled offset
+    // Memory access with user-controlled offset
     let data = vec![1u8, 2, 3, 4, 5, 6, 7, 8];
     // No bounds check — out-of-bounds read when offset >= data.len()
     let result = unsafe {
-        Some(*data.get_unchecked(offset)) // vuln-code-snippet vuln-line memsafetyBackendMemoryCorruption
+        Some(*data.get_unchecked(offset)) // vuln-code-snippet target-line memsafetyBackendMemoryCorruption
     };
 
     HttpResponse::Ok().json(VulnResponse {

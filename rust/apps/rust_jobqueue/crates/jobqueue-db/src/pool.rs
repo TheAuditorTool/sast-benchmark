@@ -219,7 +219,7 @@ impl Drop for PoolGuard {
     fn drop(&mut self) {
         if let Some(pooled) = self.pooled.take() {
             // Return connection to pool
-            // VULNERABILITY: Uses blocking_lock in async context
+            //Uses blocking_lock in async context
             // This can cause deadlocks under high load
             let mut connections = self.pool.blocking_lock();
             connections.push_back(pooled);

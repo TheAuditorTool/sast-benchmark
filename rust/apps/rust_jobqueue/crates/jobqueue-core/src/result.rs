@@ -220,7 +220,7 @@ impl OutputCollector {
     pub fn push(&mut self, line: impl Into<String>) {
         if let Some(max) = self.max_lines {
             if self.lines.len() >= max {
-                // VULNERABILITY: Just drops old lines without warning
+                //Just drops old lines without warning
                 // Could lose important error messages
                 self.lines.remove(0);
             }

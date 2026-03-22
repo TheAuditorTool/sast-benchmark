@@ -17,16 +17,16 @@ pub fn dangerous_transmute(data: &[u8]) -> Result<String, &'static str> {
     unsafe {
         // SAFETY: THIS IS NOT SAFE - demonstrating vulnerability
         let ptr = data.as_ptr() as *const u64;
-        let value: u64 = std::mem::transmute(*ptr); // vuln-code-snippet vuln-line memsafetyTransmute
+        let value: u64 = std::mem::transmute(*ptr); // vuln-code-snippet target-line memsafetyTransmute
         Ok(format!("Transmuted value: {}", value))
     }
 }
 // vuln-code-snippet end memsafetyTransmute
 
 /// TAINT SINK: Raw pointer write with user data
-// vuln-code-snippet start memsafetyWriteToBufferSafe
+// vuln-code-snippet start memsafetyWriteToBuffer
 pub fn write_to_buffer(buffer: &mut [u8], data: &[u8], offset: usize) -> Result<(), &'static str> {
-    if offset + data.len() > buffer.len() { // vuln-code-snippet safe-line memsafetyWriteToBufferSafe
+    if offset + data.len() > buffer.len() { // vuln-code-snippet target-line memsafetyWriteToBuffer
         return Err("Buffer overflow prevented");
     }
 
@@ -39,12 +39,12 @@ pub fn write_to_buffer(buffer: &mut [u8], data: &[u8], offset: usize) -> Result<
 
     Ok(())
 }
-// vuln-code-snippet end memsafetyWriteToBufferSafe
+// vuln-code-snippet end memsafetyWriteToBuffer
 
 /// TAINT SINK: Raw pointer read at user-controlled offset
-// vuln-code-snippet start memsafetyReadFromOffsetSafe
+// vuln-code-snippet start memsafetyReadFromOffset
 pub fn read_from_offset(buffer: &[u8], offset: usize) -> Result<u8, &'static str> {
-    if offset >= buffer.len() { // vuln-code-snippet safe-line memsafetyReadFromOffsetSafe
+    if offset >= buffer.len() { // vuln-code-snippet target-line memsafetyReadFromOffset
         return Err("Out of bounds read prevented");
     }
 
@@ -55,7 +55,7 @@ pub fn read_from_offset(buffer: &[u8], offset: usize) -> Result<u8, &'static str
         Ok(ptr::read(ptr))
     }
 }
-// vuln-code-snippet end memsafetyReadFromOffsetSafe
+// vuln-code-snippet end memsafetyReadFromOffset
 
 /// TAINT SINK: Writing to arbitrary memory location
 /// This is extremely dangerous with user-controlled addresses
@@ -65,7 +65,7 @@ pub fn write_to_address(address: usize, value: u8) {
         // TAINT SINK: std::ptr::write to user-controlled address
         // SAFETY: NONE - this is demonstrating a vulnerability
         let ptr = address as *mut u8;
-        ptr::write(ptr, value); // vuln-code-snippet vuln-line memsafetyWriteToAddress
+        ptr::write(ptr, value); // vuln-code-snippet target-line memsafetyWriteToAddress
     }
 }
 // vuln-code-snippet end memsafetyWriteToAddress
@@ -101,9 +101,9 @@ pub fn volatile_read(address: usize) -> u8 {
 }
 
 /// TAINT SINK: Copy memory with user-controlled parameters
-// vuln-code-snippet start memsafetyCopyMemorySafe
+// vuln-code-snippet start memsafetyCopyMemory
 pub fn copy_memory(src: &[u8], dst: &mut [u8], len: usize) -> Result<(), &'static str> {
-    if len > src.len() || len > dst.len() { // vuln-code-snippet safe-line memsafetyCopyMemorySafe
+    if len > src.len() || len > dst.len() { // vuln-code-snippet target-line memsafetyCopyMemory
         return Err("Length exceeds buffer size");
     }
 
@@ -115,7 +115,7 @@ pub fn copy_memory(src: &[u8], dst: &mut [u8], len: usize) -> Result<(), &'stati
 
     Ok(())
 }
-// vuln-code-snippet end memsafetyCopyMemorySafe
+// vuln-code-snippet end memsafetyCopyMemory
 
 /// Unsafe block without SAFETY comment (should be flagged by auditor)
 pub fn unsafe_without_comment(data: &mut [u8]) {
@@ -175,7 +175,7 @@ pub fn unchecked_access(data: &[u8], index: usize) -> u8 {
     unsafe {
         // TAINT SINK: Unchecked array access with user index
         // SAFETY: NONE - index is not bounds-checked
-        *data.get_unchecked(index) // vuln-code-snippet vuln-line memsafetyUncheckedAccess
+        *data.get_unchecked(index) // vuln-code-snippet target-line memsafetyUncheckedAccess
     }
 }
 // vuln-code-snippet end memsafetyUncheckedAccess
@@ -195,7 +195,7 @@ pub fn slice_from_raw_parts(ptr: *const u8, len: usize) -> &'static [u8] {
     unsafe {
         // TAINT SINK: Creating slice with user-controlled length
         // SAFETY: NONE - ptr and len could be invalid
-        std::slice::from_raw_parts(ptr, len) // vuln-code-snippet vuln-line memsafetySliceFromRawParts
+        std::slice::from_raw_parts(ptr, len) // vuln-code-snippet target-line memsafetySliceFromRawParts
     }
 }
 // vuln-code-snippet end memsafetySliceFromRawParts
@@ -229,7 +229,7 @@ pub fn forget_value<T>(value: T) {
 pub fn secure_zero(data: &mut [u8]) {
     unsafe {
         // SAFETY: data is a valid mutable slice
-        ptr::write_bytes(data.as_mut_ptr(), 0, data.len()); // vuln-code-snippet safe-line memsafetySecureZero
+        ptr::write_bytes(data.as_mut_ptr(), 0, data.len()); // vuln-code-snippet target-line memsafetySecureZero
     }
     // Prevent optimizer from eliding the write
     std::sync::atomic::compiler_fence(std::sync::atomic::Ordering::SeqCst);

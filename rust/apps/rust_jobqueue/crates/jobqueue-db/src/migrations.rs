@@ -115,7 +115,7 @@ fn migrate_v1(conn: &Connection) -> DbResult<()> {
 
 /// Rollback a migration (dangerous!)
 ///
-/// VULNERABILITY: No authorization check for rollback
+///No authorization check for rollback
 pub fn rollback_migration(conn: &Connection, version: i32) -> DbResult<()> {
     match version {
         1 => {

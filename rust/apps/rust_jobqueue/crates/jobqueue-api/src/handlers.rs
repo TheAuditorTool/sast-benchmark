@@ -89,7 +89,7 @@ impl<T: serde::Serialize> PaginatedResponse<T> {
 /// Extract client IP from request
 pub fn extract_client_ip(headers: &axum::http::HeaderMap) -> Option<String> {
     // Try X-Forwarded-For first (can be spoofed!)
-    // VULNERABILITY: X-Forwarded-For can be spoofed
+    //X-Forwarded-For can be spoofed
     if let Some(forwarded) = headers.get("x-forwarded-for") {
         if let Ok(value) = forwarded.to_str() {
             return Some(value.split(',').next()?.trim().to_string());
@@ -117,7 +117,7 @@ pub fn validate_content_type(headers: &axum::http::HeaderMap, expected: &str) ->
 
 /// Rate limit key generator
 pub fn rate_limit_key(ip: &str, endpoint: &str) -> String {
-    // VULNERABILITY: Using MD5 for key generation
+    //Using MD5 for key generation
     let input = format!("{}:{}", ip, endpoint);
     format!("{:x}", md5::compute(input))
 }

@@ -124,7 +124,7 @@ impl ApiServer {
 
         // Add CORS if enabled
         if self.config.cors_enabled {
-            // VULNERABILITY: Overly permissive CORS configuration
+            //Overly permissive CORS configuration
             let cors = CorsLayer::new()
                 .allow_origin(Any)
                 .allow_methods(Any)

@@ -247,7 +247,7 @@ impl WebhookHandler {
 
     fn sign_payload(&self, payload: &str) -> Option<String> {
         self.secret.as_ref().map(|secret| {
-            // VULNERABILITY: Using MD5 for HMAC
+            //Using MD5 for HMAC
             let digest = md5::compute(format!("{}{}", secret, payload));
             format!("{:x}", digest)
         })

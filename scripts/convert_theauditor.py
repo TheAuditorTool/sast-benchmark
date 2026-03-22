@@ -83,6 +83,69 @@ RULE_MAP = {
     "bash-toctou-race": "race_condition",
     "bash-missing-auth-check": "auth_bypass",
     "bash-env-auth-bypass": "auth_bypass",
+    # --- Rust rules ---
+    # Taint injection (rust_injection_analyze.py)
+    "rust-command-injection-taint": "cmdi",
+    "rust-sql-injection-taint": "sqli",
+    "rust-path-traversal-taint": "pathtraver",
+    "rust-ssrf-taint": "ssrf",
+    # Structural injection (rust_injection_analyze.py)
+    "rust-command-injection": "cmdi",
+    "rust-sql-injection-format": "sqli",
+    # Polyglot taint rules
+    "path-traversal-taint": "pathtraver",
+    "ssrf-taint": "ssrf",
+    # Memory safety (memory_safety.py + unsafe_analysis.py + ffi_boundary.py)
+    "rust-dangerous-import": "memsafety",
+    "rust-unsafe-no-safety-comment": "memsafety",
+    "rust-unsafe-in-public-api": "memsafety",
+    "rust-unsafe-trait-impl": "memsafety",
+    "rust-unsafe-public-fn": "memsafety",
+    "rust-ffi-variadic": "memsafety",
+    "rust-ffi-raw-pointer-param": "memsafety",
+    "rust-ffi-raw-pointer-return": "memsafety",
+    "rust-ffi-extern-block": "memsafety",
+    "rust-ffi-panic-across-boundary": "memsafety",
+    # Panic paths (panic_paths.py)
+    "rust-panic-unwrap": "memsafety",
+    "rust-panic-expect": "memsafety",
+    "rust-panic-in-production": "memsafety",
+    "rust-todo-in-production": "memsafety",
+    "rust-unimplemented-in-production": "memsafety",
+    "rust-unreachable-in-production": "memsafety",
+    # Integer safety (integer_safety.py)
+    "rust-integer-high-risk-function": "intoverflow",
+    "rust-truncating-cast": "intoverflow",
+    "rust-wrapping-arithmetic-used": "intoverflow",
+    # Supply chain + crypto (supply_chain.py + crypto_weakness.py)
+    "rust-weak-crypto-dependency": "crypto",
+    "rust-deprecated-dependency": "crypto",
+    "rust-weak-crypto-call": "crypto",
+    "rust-weak-crypto-macro": "crypto",
+    "rust-weak-hash-output": "crypto",
+    "rust-jwt-algorithm-none": "crypto",
+    # Hardcoded secrets
+    "hardcoded-credential": "infodisclosure",
+    "hardcoded-secret": "infodisclosure",
+    # Info disclosure (info_disclosure_analyze.py)
+    "rust-error-details-exposed": "infodisclosure",
+    "rust-env-vars-dump": "infodisclosure",
+    "rust-sensitive-config-exposed": "infodisclosure",
+    "rust-hardcoded-secret-fallback": "infodisclosure",
+    "rust-sql-in-error-response": "infodisclosure",
+    "rust-sensitive-data-logged": "infodisclosure",
+    "rust-hardcoded-api-key": "infodisclosure",
+    # XSS (xss_analyze.py)
+    "xss-taint": "xss",
+    "xss-sink": "xss",
+    "xss-postmessage-origin": "xss",
+    # Deserialization (rust_insecure_deserialization.py)
+    "rust-insecure-deserialization": "deser",
+    # Input validation (input_validation_analyze.py)
+    "rust-missing-input-validation": "inputval",
+    # ReDoS (redos_analyze.py)
+    "redos-taint": "redos",
+    "redos-dynamic-regex": "redos",
 }
 
 SINK_MAP = {
@@ -104,6 +167,13 @@ SINK_MAP = {
     "Weak Randomness": "weakrand",
     "Race Condition": "race_condition",
     "Authentication Bypass": "auth_bypass",
+    # Rust-specific sink types
+    "Cross-Site Scripting": "xss",
+    "Server-Side Request Forgery": "ssrf",
+    "SSRF": "ssrf",
+    "Memory Safety": "memsafety",
+    "Insecure Deserialization": "deser",
+    "ReDoS": "redos",
 }
 
 NOISE_RULES = {
@@ -195,10 +265,10 @@ def detect_language(db_path):
 
     go_count = sum(1 for r in rules if r.startswith("go-"))
     bash_count = sum(1 for r in rules if r.startswith("bash-"))
+    rust_count = sum(1 for r in rules if r.startswith("rust-"))
 
-    if bash_count > go_count:
-        return "bash"
-    return "go"
+    counts = {"go": go_count, "bash": bash_count, "rust": rust_count}
+    return max(counts, key=counts.get)
 
 
 def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):

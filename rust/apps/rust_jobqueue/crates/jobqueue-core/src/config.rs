@@ -46,7 +46,7 @@ impl QueueConfig {
         let content = std::fs::read_to_string(path)
             .map_err(|e| ConfigError::IoError(e.to_string()))?;
 
-        // VULNERABILITY: Loading config from arbitrary path without validation
+        //Loading config from arbitrary path without validation
         // Could read sensitive files if path is user-controlled
         Self::from_str(&content)
     }
@@ -212,7 +212,7 @@ impl Default for ApiConfig {
             host: "127.0.0.1".to_string(),
             port: 8080,
             cors_enabled: true,
-            cors_origins: vec!["*".to_string()], // VULNERABILITY: Permissive CORS
+            cors_origins: vec!["*".to_string()], //Permissive CORS
             api_key: None,
             basic_auth: None,
             body_limit: ByteSize::mb(10),
@@ -225,7 +225,7 @@ impl Default for ApiConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BasicAuthConfig {
     pub username: String,
-    pub password: String, // VULNERABILITY: Plaintext password in config
+    pub password: String, //Plaintext password in config
 }
 
 /// Logging configuration
@@ -336,7 +336,7 @@ impl EnvConfig {
 
     /// Load API key
     pub fn api_key() -> Option<String> {
-        // VULNERABILITY: Reading secrets from env without masking in logs
+        //Reading secrets from env without masking in logs
         let key = Self::get("JOBQUEUE_API_KEY");
         if let Some(ref k) = key {
             tracing::debug!("Loaded API key: {}", k); // Logs secret!

@@ -189,7 +189,7 @@ impl MealRepository {
         Ok(meal)
     }
 
-    // vuln-code-snippet start sqliCalorieSearchMealsSafe
+    // vuln-code-snippet start sqliCalorieSearchMeals
     /// Search meals with filters.
     ///
     /// TAINT SINK: All MealSearchQuery fields flow to dynamic SQL
@@ -246,7 +246,7 @@ impl MealRepository {
         // Execute with bindings
         let mut q = sqlx::query_as::<_, Meal>(&query);
         for binding in &bindings {
-            // vuln-code-snippet safe-line sqliCalorieSearchMealsSafe
+            // vuln-code-snippet target-line sqliCalorieSearchMeals
             q = q.bind(binding.to_string());
         }
         q = q.bind(limit).bind(offset);
@@ -258,9 +258,9 @@ impl MealRepository {
 
         Ok(meals)
     }
-    // vuln-code-snippet end sqliCalorieSearchMealsSafe
+    // vuln-code-snippet end sqliCalorieSearchMeals
 
-    // vuln-code-snippet start sqliCalorieUpdateMealSafe
+    // vuln-code-snippet start sqliCalorieUpdateMeal
     /// Update a meal.
     ///
     /// TAINT SINK: UpdateMealRequest fields flow to UPDATE statement
@@ -324,7 +324,7 @@ impl MealRepository {
 
         let mut q = sqlx::query(&query);
         for value in &values {
-            // vuln-code-snippet safe-line sqliCalorieUpdateMealSafe
+            // vuln-code-snippet target-line sqliCalorieUpdateMeal
             q = q.bind(value);
         }
         q = q.bind(meal_id).bind(user_id);
@@ -342,7 +342,7 @@ impl MealRepository {
             .await?
             .ok_or(AppError::NotFound("Meal not found".to_string()))
     }
-    // vuln-code-snippet end sqliCalorieUpdateMealSafe
+    // vuln-code-snippet end sqliCalorieUpdateMeal
 
     /// Delete a meal.
     pub async fn delete_meal(

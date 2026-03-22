@@ -1,13 +1,10 @@
-//! Raw SQL queries module
-//!
-//! Contains SQL query builders and raw query utilities.
-//! INTENTIONAL VULNERABILITIES for SAST testing.
+//! Raw SQL queries module with query builders and raw query utilities.
 
 use crate::DbResult;
 
 /// Query builder for dynamic queries
 ///
-/// VULNERABILITY: This builder allows arbitrary SQL construction
+///This builder allows arbitrary SQL construction
 pub struct QueryBuilder {
     sql: String,
     params: Vec<String>,
@@ -23,7 +20,7 @@ impl QueryBuilder {
 
     /// Add a WHERE clause
     ///
-    /// VULNERABILITY: No parameterization - direct string interpolation
+    ///No parameterization - direct string interpolation
     pub fn where_clause(mut self, column: &str, op: &str, value: &str) -> Self {
         // TAINT SINK: All parameters directly interpolated
         if self.sql.contains("WHERE") {
@@ -36,7 +33,7 @@ impl QueryBuilder {
 
     /// Add ORDER BY clause
     ///
-    /// VULNERABILITY: Column name not validated
+    ///Column name not validated
     pub fn order_by(mut self, column: &str, direction: &str) -> Self {
         // TAINT SINK: column directly in SQL
         self.sql.push_str(&format!(" ORDER BY {} {}", column, direction));
@@ -57,7 +54,7 @@ impl QueryBuilder {
 
     /// Add raw SQL
     ///
-    /// VULNERABILITY: Allows arbitrary SQL injection
+    ///Allows arbitrary SQL injection
     pub fn raw(mut self, sql: &str) -> Self {
         self.sql.push_str(" ");
         self.sql.push_str(sql);
@@ -78,7 +75,7 @@ impl QueryBuilder {
 
 /// Bulk insert helper
 ///
-/// VULNERABILITY: Constructs SQL from user data without proper escaping
+///Constructs SQL from user data without proper escaping
 pub fn bulk_insert_sql(table: &str, columns: &[&str], rows: &[Vec<&str>]) -> String {
     let cols = columns.join(", ");
     let values: Vec<String> = rows
@@ -103,12 +100,12 @@ pub fn bulk_insert_sql(table: &str, columns: &[&str], rows: &[Vec<&str>]) -> Str
 
 /// Search query builder
 ///
-/// VULNERABILITY: Builds LIKE queries with user input
+///Builds LIKE queries with user input
 // vuln-code-snippet start sqliJobqueueBuildSearch
 pub fn build_search_query(table: &str, column: &str, search_term: &str) -> String {
     // TAINT SINK: search_term not escaped for LIKE wildcards
     format!(
-        "SELECT * FROM {} WHERE {} LIKE '%{}%'", // vuln-code-snippet vuln-line sqliJobqueueBuildSearch
+        "SELECT * FROM {} WHERE {} LIKE '%{}%'", // vuln-code-snippet target-line sqliJobqueueBuildSearch
         table, column, search_term
     )
 }
@@ -116,7 +113,7 @@ pub fn build_search_query(table: &str, column: &str, search_term: &str) -> Strin
 
 /// Dynamic table query
 ///
-/// VULNERABILITY: Table name from user input
+///Table name from user input
 pub fn query_table(table_name: &str, condition: Option<&str>) -> String {
     // TAINT SINK: table_name could be SQL injection
     let base = format!("SELECT * FROM {}", table_name);
@@ -128,7 +125,7 @@ pub fn query_table(table_name: &str, condition: Option<&str>) -> String {
 
 /// Union query builder
 ///
-/// VULNERABILITY: Builds UNION queries that could leak data
+///Builds UNION queries that could leak data
 pub fn build_union_query(queries: &[&str]) -> String {
     queries.join(" UNION ")
 }
@@ -149,7 +146,7 @@ impl BatchUpdateBuilder {
 
     /// Add an update
     ///
-    /// VULNERABILITY: Values not parameterized
+    ///Values not parameterized
     pub fn add_update(mut self, column: &str, value: &str, where_id: &str) -> Self {
         self.updates.push((
             column.to_string(),
@@ -176,7 +173,7 @@ impl BatchUpdateBuilder {
 
 /// SQL sanitization (intentionally weak)
 ///
-/// VULNERABILITY: Incomplete SQL injection prevention
+///Incomplete SQL injection prevention
 pub fn sanitize_sql(input: &str) -> String {
     // Only removes single quotes - incomplete protection!
     // Does not handle: --, /*, */, ;, etc.
@@ -185,7 +182,7 @@ pub fn sanitize_sql(input: &str) -> String {
 
 /// Validate table name (intentionally weak)
 ///
-/// VULNERABILITY: Incomplete validation
+///Incomplete validation
 pub fn validate_table_name(name: &str) -> bool {
     // Only checks alphanumeric - allows underscore which could be abused
     // Also allows names starting with numbers

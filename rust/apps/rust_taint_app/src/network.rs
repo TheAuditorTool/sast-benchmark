@@ -10,23 +10,23 @@ use std::net::TcpStream;
 // vuln-code-snippet start ssrfFetchUrl
 pub async fn fetch_url(url: &str) -> Result<String, reqwest::Error> {
     // TAINT SINK: User-controlled URL (SSRF vulnerability!)
-    let response = reqwest::get(url).await?; // vuln-code-snippet vuln-line ssrfFetchUrl
+    let response = reqwest::get(url).await?; // vuln-code-snippet target-line ssrfFetchUrl
     response.text().await
 }
 // vuln-code-snippet end ssrfFetchUrl
 
-// vuln-code-snippet start ssrfFetchUrlSafe
+// vuln-code-snippet start ssrfFetchUrl2
 ///Domain allowlist check before fetching
 pub async fn fetch_url_safe(url: &str, allowed_domains: &[&str]) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
     let host = parsed.host_str().ok_or("No host in URL")?;
-    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet safe-line ssrfFetchUrlSafe
+    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet target-line ssrfFetchUrl2
         return Err(format!("Domain '{}' not in allowlist", host).into());
     }
     let response = reqwest::get(url).await?;
     Ok(response.text().await?)
 }
-// vuln-code-snippet end ssrfFetchUrlSafe
+// vuln-code-snippet end ssrfFetchUrl2
 
 /// TAINT SINK: reqwest::Client::get with user-controlled URL (SSRF)
 pub async fn fetch_url_with_client(url: &str) -> Result<String, reqwest::Error> {
@@ -62,7 +62,7 @@ pub async fn post_to_url(url: &str, body: &str) -> Result<String, reqwest::Error
 
     // TAINT SINK: User-controlled URL and body
     let response = client
-        .post(url) // vuln-code-snippet vuln-line ssrfPostToUrl
+        .post(url) // vuln-code-snippet target-line ssrfPostToUrl
         .body(body.to_string())
         .send()
         .await?;
@@ -71,12 +71,12 @@ pub async fn post_to_url(url: &str, body: &str) -> Result<String, reqwest::Error
 }
 // vuln-code-snippet end ssrfPostToUrl
 
-// vuln-code-snippet start ssrfPostToUrlSafe
+// vuln-code-snippet start ssrfPostToUrl2
 ///Domain allowlist + body size limit before posting
 pub async fn post_to_url_safe(url: &str, body: &str, allowed_domains: &[&str], max_body_size: usize) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
     let host = parsed.host_str().ok_or("No host in URL")?;
-    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet safe-line ssrfPostToUrlSafe
+    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet target-line ssrfPostToUrl2
         return Err(format!("Domain '{}' not in allowlist", host).into());
     }
     if body.len() > max_body_size {
@@ -90,7 +90,7 @@ pub async fn post_to_url_safe(url: &str, body: &str, allowed_domains: &[&str], m
         .await?;
     Ok(response.text().await?)
 }
-// vuln-code-snippet end ssrfPostToUrlSafe
+// vuln-code-snippet end ssrfPostToUrl2
 
 /// TAINT SINK: TcpStream::connect with user-controlled address (SSRF)
 // vuln-code-snippet start ssrfConnectTcp
@@ -98,14 +98,14 @@ pub fn connect_tcp(host: &str, port: u16) -> io::Result<TcpStream> {
     let address = format!("{}:{}", host, port);
 
     // TAINT SINK: User-controlled network connection
-    TcpStream::connect(address) // vuln-code-snippet vuln-line ssrfConnectTcp
+    TcpStream::connect(address) // vuln-code-snippet target-line ssrfConnectTcp
 }
 // vuln-code-snippet end ssrfConnectTcp
 
-// vuln-code-snippet start ssrfConnectTcpSafe
+// vuln-code-snippet start ssrfConnectTcp2
 ///Allowlisted host:port pairs + reject private IPs
 pub fn connect_tcp_safe(host: &str, port: u16, allowed_endpoints: &[(&str, u16)]) -> io::Result<TcpStream> {
-    if !allowed_endpoints.iter().any(|(h, p)| *h == host && *p == port) { // vuln-code-snippet safe-line ssrfConnectTcpSafe
+    if !allowed_endpoints.iter().any(|(h, p)| *h == host && *p == port) { // vuln-code-snippet target-line ssrfConnectTcp2
         return Err(io::Error::new(io::ErrorKind::PermissionDenied, format!("Endpoint {}:{} not in allowlist", host, port)));
     }
     if let Ok(ip) = host.parse::<std::net::IpAddr>() {
@@ -120,7 +120,7 @@ pub fn connect_tcp_safe(host: &str, port: u16, allowed_endpoints: &[(&str, u16)]
     let address = format!("{}:{}", host, port);
     TcpStream::connect(address)
 }
-// vuln-code-snippet end ssrfConnectTcpSafe
+// vuln-code-snippet end ssrfConnectTcp2
 
 /// TAINT SINK: Direct socket connection
 pub fn connect_to_address(address: &str) -> io::Result<TcpStream> {
@@ -158,7 +158,7 @@ pub async fn send_webhook(webhook_url: &str, payload: &str) -> Result<u16, reqwe
 
     // TAINT SINK: User-configured webhook URL (SSRF!)
     let response = client
-        .post(webhook_url) // vuln-code-snippet vuln-line ssrfSendWebhook
+        .post(webhook_url) // vuln-code-snippet target-line ssrfSendWebhook
         .header("Content-Type", "application/json")
         .body(payload.to_string())
         .send()
@@ -168,10 +168,10 @@ pub async fn send_webhook(webhook_url: &str, payload: &str) -> Result<u16, reqwe
 }
 // vuln-code-snippet end ssrfSendWebhook
 
-// vuln-code-snippet start ssrfSendWebhookSafe
+// vuln-code-snippet start ssrfSendWebhook2
 ///Webhook URL checked against trusted webhook list
 pub async fn send_webhook_safe(webhook_url: &str, payload: &str, trusted_webhooks: &[&str]) -> Result<u16, Box<dyn std::error::Error>> {
-    if !trusted_webhooks.iter().any(|w| webhook_url == *w) { // vuln-code-snippet safe-line ssrfSendWebhookSafe
+    if !trusted_webhooks.iter().any(|w| webhook_url == *w) { // vuln-code-snippet target-line ssrfSendWebhook2
         return Err(format!("Webhook URL '{}' not in trusted list", webhook_url).into());
     }
     let client = reqwest::Client::new();
@@ -183,7 +183,7 @@ pub async fn send_webhook_safe(webhook_url: &str, payload: &str, trusted_webhook
         .await?;
     Ok(response.status().as_u16())
 }
-// vuln-code-snippet end ssrfSendWebhookSafe
+// vuln-code-snippet end ssrfSendWebhook2
 
 /// URL redirect follower (can lead to internal network access)
 pub async fn follow_redirect(url: &str, max_redirects: u8) -> Result<String, reqwest::Error> {
@@ -243,11 +243,11 @@ pub async fn fetch_external_only(url: &str) -> Result<String, String> {
     // - IPv6 addresses
     // - Decimal IP addresses (e.g., http://2130706433)
     // - URL redirects to internal resources
-    fetch_url(url).await.map_err(|e| e.to_string()) // vuln-code-snippet vuln-line ssrfFetchExternalOnly
+    fetch_url(url).await.map_err(|e| e.to_string()) // vuln-code-snippet target-line ssrfFetchExternalOnly
 }
 // vuln-code-snippet end ssrfFetchExternalOnly
 
-// vuln-code-snippet start ssrfFetchExternalOnlySafe
+// vuln-code-snippet start ssrfFetchExternalOnly2
 ///Strict URL parse, reject internal, no redirects, reject decimal IPs
 pub async fn fetch_external_only_safe(url: &str, allowed_domains: &[&str]) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
@@ -259,7 +259,7 @@ pub async fn fetch_external_only_safe(url: &str, allowed_domains: &[&str]) -> Re
     if host.chars().all(|c| c.is_ascii_digit() || c == '.') {
         return Err("Decimal/numeric IP addresses are rejected".into());
     }
-    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet safe-line ssrfFetchExternalOnlySafe
+    if !allowed_domains.iter().any(|d| host == *d) { // vuln-code-snippet target-line ssrfFetchExternalOnly2
         return Err(format!("Domain '{}' not in allowlist", host).into());
     }
     let client = reqwest::Client::builder()
@@ -268,4 +268,4 @@ pub async fn fetch_external_only_safe(url: &str, allowed_domains: &[&str]) -> Re
     let response = client.get(url).send().await?;
     Ok(response.text().await?)
 }
-// vuln-code-snippet end ssrfFetchExternalOnlySafe
+// vuln-code-snippet end ssrfFetchExternalOnly2

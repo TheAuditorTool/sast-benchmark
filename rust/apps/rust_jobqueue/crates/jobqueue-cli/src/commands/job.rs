@@ -249,7 +249,7 @@ async fn retry_job(store: &SqliteStore, id: &str, json_output: bool) -> Result<(
 }
 
 async fn search_jobs(store: &SqliteStore, query: &str, limit: usize, json_output: bool) -> Result<()> {
-    // VULNERABILITY: Search query passed to SQL without sanitization
+    //Search query passed to SQL without sanitization
     let jobs = store.search_jobs(query, limit).await?;
 
     if json_output {

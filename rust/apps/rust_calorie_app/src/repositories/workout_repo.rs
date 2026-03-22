@@ -97,7 +97,7 @@ impl WorkoutRepository {
 
     // ==================== Workouts ====================
 
-    // vuln-code-snippet start sqliCalorieCreateWorkoutSafe
+    // vuln-code-snippet start sqliCalorieCreateWorkout
     /// Create a workout entry.
     ///
     /// TAINT SINK: All CreateWorkoutRequest fields flow to INSERT
@@ -123,7 +123,7 @@ impl WorkoutRepository {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
             "#,
         )
-        // vuln-code-snippet safe-line sqliCalorieCreateWorkoutSafe
+        // vuln-code-snippet target-line sqliCalorieCreateWorkout
         .bind(&id)
         .bind(user_id)
         .bind(&request.exercise_type_id)          // TAINT: optional FK from HTTP
@@ -142,7 +142,7 @@ impl WorkoutRepository {
             .await?
             .ok_or(AppError::NotFound("Workout not found".to_string()))
     }
-    // vuln-code-snippet end sqliCalorieCreateWorkoutSafe
+    // vuln-code-snippet end sqliCalorieCreateWorkout
 
     /// Find workout by ID.
     pub async fn find_workout_by_id(pool: &DbPool, id: &str) -> Result<Option<Workout>, AppError> {
@@ -171,7 +171,7 @@ impl WorkoutRepository {
 
         // TAINT: intensity filter
         if let Some(ref intensity) = params.intensity {
-            // vuln-code-snippet vuln-line sqliCalorieSearchWorkouts
+            // vuln-code-snippet target-line sqliCalorieSearchWorkouts
             query.push_str(&format!(" AND intensity = '{}'", intensity.replace("'", "''")));
         }
 
@@ -229,7 +229,7 @@ impl WorkoutRepository {
 
         // Build SET clause dynamically - TAINT flows through all fields
         if let Some(ref name) = request.name {
-            // vuln-code-snippet vuln-line sqliCalorieUpdateWorkout
+            // vuln-code-snippet target-line sqliCalorieUpdateWorkout
             updates.push(format!("name = '{}'", name.replace("'", "''")));
         }
         if let Some(duration) = request.duration_minutes {
@@ -280,7 +280,7 @@ impl WorkoutRepository {
     }
     // vuln-code-snippet end sqliCalorieUpdateWorkout
 
-    // vuln-code-snippet start sqliCalorieDeleteWorkoutSafe
+    // vuln-code-snippet start sqliCalorieDeleteWorkout
     /// Delete a workout.
     pub async fn delete_workout(
         pool: &DbPool,
@@ -288,7 +288,7 @@ impl WorkoutRepository {
         user_id: &str,
     ) -> Result<bool, AppError> {
         let result = sqlx::query("DELETE FROM workouts WHERE id = ? AND user_id = ?")
-            // vuln-code-snippet safe-line sqliCalorieDeleteWorkoutSafe
+            // vuln-code-snippet target-line sqliCalorieDeleteWorkout
             .bind(workout_id)
             .bind(user_id)
             .execute(pool)
@@ -297,7 +297,7 @@ impl WorkoutRepository {
 
         Ok(result.rows_affected() > 0)
     }
-    // vuln-code-snippet end sqliCalorieDeleteWorkoutSafe
+    // vuln-code-snippet end sqliCalorieDeleteWorkout
 
     /// Get daily workout totals.
     ///

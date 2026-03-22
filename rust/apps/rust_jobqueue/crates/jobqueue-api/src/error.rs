@@ -1,6 +1,4 @@
-//! API error handling
-//!
-//! VULNERABILITY: Error messages may leak internal details
+//! API error handling module.
 
 use axum::{
     http::StatusCode,
@@ -82,7 +80,7 @@ struct ErrorBody {
 
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
-        // VULNERABILITY: May include sensitive details in response
+        //May include sensitive details in response
         // Also reflects user input which could lead to XSS if rendered in browser
         let body = ErrorResponse {
             success: false,
@@ -100,7 +98,7 @@ impl IntoResponse for ApiError {
 /// Convert from jobqueue_core errors
 impl From<jobqueue_core::JobQueueError> for ApiError {
     fn from(err: jobqueue_core::JobQueueError) -> Self {
-        // VULNERABILITY: Leaks internal error details
+        //Leaks internal error details
         match &err {
             jobqueue_core::JobQueueError::JobNotFound { job_id } => {
                 Self::not_found(format!("Job not found: {}", job_id))
@@ -110,8 +108,8 @@ impl From<jobqueue_core::JobQueueError> for ApiError {
             }
             // vuln-code-snippet start infodisclosureJobqueueErrorSql
             jobqueue_core::JobQueueError::DatabaseError { message, query } => {
-                // VULNERABILITY: Includes SQL query in error response
-                let details = query.as_ref().map(|q| format!("Query: {}", q)); // vuln-code-snippet vuln-line infodisclosureJobqueueErrorSql
+                //Includes SQL query in error response
+                let details = query.as_ref().map(|q| format!("Query: {}", q)); // vuln-code-snippet target-line infodisclosureJobqueueErrorSql
                 Self::internal(message.clone()).with_details(details.unwrap_or_default())
             }
             // vuln-code-snippet end infodisclosureJobqueueErrorSql
@@ -125,7 +123,7 @@ impl From<jobqueue_core::JobQueueError> for ApiError {
                 Self::rate_limited().with_details(format!("Limit: {}/s", limit))
             }
             _ => {
-                // VULNERABILITY: Includes full error string
+                //Includes full error string
                 Self::internal(err.to_string())
             }
         }
@@ -135,7 +133,7 @@ impl From<jobqueue_core::JobQueueError> for ApiError {
 /// Convert from database errors
 impl From<jobqueue_db::DbError> for ApiError {
     fn from(err: jobqueue_db::DbError) -> Self {
-        // VULNERABILITY: Exposes database errors
+        //Exposes database errors
         Self::internal(format!("Database error: {}", err))
     }
 }

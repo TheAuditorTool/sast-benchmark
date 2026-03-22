@@ -1,6 +1,4 @@
-//! HTTP Handlers Module
-//!
-//! Additional vulnerable HTTP handlers for SAST testing.
+//! HTTP Handlers Module for additional actix-web routes.
 
 use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
@@ -45,15 +43,13 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Path Traversal via file upload
-// Source: req.filename (user controlled)
-// Sink: File::create()
+// File upload handler
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start pathtraverBackendUploadFile
 async fn upload_file(req: web::Json<UploadRequest>) -> impl Responder {
     // TAINT SINK: User controlled filename
     // Attacker payload: filename="../../../etc/cron.d/evil"
-    let filepath = format!("/tmp/uploads/{}", req.filename); // vuln-code-snippet vuln-line pathtraverBackendUploadFile
+    let filepath = format!("/tmp/uploads/{}", req.filename); // vuln-code-snippet target-line pathtraverBackendUploadFile
 
     match File::create(&filepath) {
         Ok(mut file) => {
@@ -84,15 +80,13 @@ async fn upload_file(req: web::Json<UploadRequest>) -> impl Responder {
 // vuln-code-snippet end pathtraverBackendUploadFile
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Shell command injection via piped shell
-// Source: req.script (user controlled)
-// Sink: Command with stdin
+// Shell execution handler
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start cmdiBackendShellExec
 async fn shell_exec(req: web::Json<ShellRequest>) -> impl Responder {
     // TAINT SINK: User controlled shell and script
     // Attacker payload: shell="/bin/sh", script="cat /etc/passwd"
-    let child = Command::new(&req.shell) // vuln-code-snippet vuln-line cmdiBackendShellExec
+    let child = Command::new(&req.shell) // vuln-code-snippet target-line cmdiBackendShellExec
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -133,9 +127,7 @@ async fn shell_exec(req: web::Json<ShellRequest>) -> impl Responder {
 // vuln-code-snippet end cmdiBackendShellExec
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Local File Inclusion
-// Source: req.module_path (user controlled)
-// Sink: File::open() with read
+// File inclusion handler
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start pathtraverBackendIncludeFile
 async fn include_file(req: web::Json<IncludeRequest>) -> impl Responder {
@@ -143,7 +135,7 @@ async fn include_file(req: web::Json<IncludeRequest>) -> impl Responder {
     // Attacker payload: module_path="/etc/passwd"
     let mut content = String::new();
 
-    match File::open(&req.module_path) { // vuln-code-snippet vuln-line pathtraverBackendIncludeFile
+    match File::open(&req.module_path) { // vuln-code-snippet target-line pathtraverBackendIncludeFile
         Ok(mut file) => {
             if let Err(e) = file.read_to_string(&mut content) {
                 return HttpResponse::InternalServerError().json(GenericResponse {
@@ -173,12 +165,12 @@ async fn include_file(req: web::Json<IncludeRequest>) -> impl Responder {
 // vuln-code-snippet end pathtraverBackendIncludeFile
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Environment variable exposure
+// Environment variable handler
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start infodisclosureBackendGetEnv
 async fn get_env() -> impl Responder {
-    // VULNERABILITY: Exposing all environment variables
-    let env_vars: std::collections::HashMap<String, String> = std::env::vars().collect(); // vuln-code-snippet vuln-line infodisclosureBackendGetEnv
+    // Collecting all environment variables
+    let env_vars: std::collections::HashMap<String, String> = std::env::vars().collect(); // vuln-code-snippet target-line infodisclosureBackendGetEnv
 
     HttpResponse::Ok().json(GenericResponse {
         success: true,
@@ -189,10 +181,10 @@ async fn get_env() -> impl Responder {
 // vuln-code-snippet end infodisclosureBackendGetEnv
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY: Header reflection (potential XSS in logs/responses)
+// Header echo handler
 // -----------------------------------------------------------------------------
 async fn echo_headers(req: actix_web::HttpRequest) -> impl Responder {
-    // VULNERABILITY: Reflecting user-controlled headers
+    // Reflecting request headers
     let headers: std::collections::HashMap<String, String> = req
         .headers()
         .iter()

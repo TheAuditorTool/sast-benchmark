@@ -78,7 +78,7 @@ where
                         inner.call(req).await
                     }
                     Some(key) => {
-                        // VULNERABILITY: Timing attack - comparison is not constant-time
+                        //Timing attack - comparison is not constant-time
                         // Also logs the invalid key
                         tracing::warn!(
                             provided_key = key,
@@ -153,11 +153,11 @@ where
         let path = req.uri().path().to_string();
         let query = req.uri().query().map(|s| s.to_string());
 
-        // VULNERABILITY: Logs query parameters which may contain sensitive data
+        //Logs query parameters which may contain sensitive data
         tracing::info!(
             method = %method,
             path = %path,
-            query = ?query, // vuln-code-snippet vuln-line infodisclosureJobqueueLogParams
+            query = ?query, // vuln-code-snippet target-line infodisclosureJobqueueLogParams
             "Incoming request"
         );
 
@@ -191,7 +191,7 @@ impl RequestId {
 
     /// Generate a request ID
     ///
-    /// VULNERABILITY: Using predictable UUID v1 style instead of random
+    ///Using predictable UUID v1 style instead of random
     // vuln-code-snippet start weakrandJobqueueRequestId
     pub fn generate() -> String {
         use std::time::{SystemTime, UNIX_EPOCH};
@@ -202,7 +202,7 @@ impl RequestId {
             .as_nanos();
 
         // Predictable - just timestamp + thread id
-        format!("{:x}-{:x}", timestamp, std::thread::current().id().as_u64()) // vuln-code-snippet vuln-line weakrandJobqueueRequestId
+        format!("{:x}-{:x}", timestamp, std::thread::current().id().as_u64()) // vuln-code-snippet target-line weakrandJobqueueRequestId
     }
     // vuln-code-snippet end weakrandJobqueueRequestId
 }
@@ -231,7 +231,7 @@ impl RateLimiter {
 
     /// Check if request should be rate limited
     ///
-    /// VULNERABILITY: Uses client IP from headers which can be spoofed
+    ///Uses client IP from headers which can be spoofed
     pub fn check(&self, client_ip: &str) -> bool {
         let mut requests = self.requests.lock().unwrap();
         let now = std::time::Instant::now();
@@ -268,7 +268,7 @@ trait ThreadIdExt {
 
 impl ThreadIdExt for std::thread::ThreadId {
     fn as_u64(&self) -> u64 {
-        // VULNERABILITY: Unsafe transmute to get thread ID
+        //Unsafe transmute to get thread ID
         unsafe { std::mem::transmute_copy(self) }
     }
 }

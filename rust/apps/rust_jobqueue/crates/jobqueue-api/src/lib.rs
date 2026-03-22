@@ -13,12 +13,7 @@
 //! - `GET /health` - Health check
 //! - `GET /metrics` - Prometheus metrics
 //!
-//! # INTENTIONAL VULNERABILITIES
-//!
-//! - XSS in error messages
-//! - CORS misconfiguration
-//! - Missing authentication
-//! - SQL injection via query params
+//! Includes XSS, CORS, auth, and SQL patterns.
 
 pub mod server;
 pub mod routes;

@@ -85,7 +85,7 @@ async fn search_products(query: web::Query<SearchQuery>) -> impl Responder {
             }},
             "sort": [{{ "{}": "asc" }}]
         }}"#,
-        search_term,  // TAINT: User input in query // vuln-code-snippet vuln-line sqliSearchElasticsearchInjection
+        search_term,  // TAINT: User input in query // vuln-code-snippet target-line sqliSearchElasticsearchInjection
         query.sort_by.as_deref().unwrap_or("relevance")  // TAINT: User input in sort
     );
 

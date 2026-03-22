@@ -1,9 +1,4 @@
-//! API route handlers
-//!
-//! INTENTIONAL VULNERABILITIES for SAST testing:
-//! - SQL injection in search endpoint
-//! - XSS in error responses
-//! - Missing authorization checks
+//! API route handlers.
 
 use std::sync::Arc;
 
@@ -241,14 +236,14 @@ pub async fn resume_queue(
 
 /// Search jobs
 ///
-/// VULNERABILITY: SQL injection via search term
+///SQL injection via search term
 // vuln-code-snippet start sqliJobqueueHandlerSearch
 pub async fn search_jobs(
     Extension(state): Extension<Arc<AppState>>,
     Query(query): Query<SearchQuery>,
 ) -> Result<Json<Vec<JobResponse>>, ApiError> {
     // TAINT SINK: User input passed directly to SQL
-    let jobs = state.store.search_jobs(&query.q, query.limit.unwrap_or(100)).await // vuln-code-snippet vuln-line sqliJobqueueHandlerSearch
+    let jobs = state.store.search_jobs(&query.q, query.limit.unwrap_or(100)).await // vuln-code-snippet target-line sqliJobqueueHandlerSearch
         .map_err(|e| ApiError::internal(e.to_string()))?;
 
     Ok(Json(jobs.into_iter().map(JobResponse::from).collect()))
@@ -269,7 +264,7 @@ pub async fn cleanup_jobs(
 
 /// Execute raw SQL
 ///
-/// VULNERABILITY: Direct SQL execution without authorization
+///Direct SQL execution without authorization
 // vuln-code-snippet start sqliJobqueueHandlerExecuteSql
 pub async fn execute_sql(
     Extension(state): Extension<Arc<AppState>>,
@@ -277,12 +272,12 @@ pub async fn execute_sql(
 ) -> Result<Json<serde_json::Value>, ApiError> {
     // TAINT SINK: Arbitrary SQL execution
     // No authentication or authorization check!
-    let rows = state.store.execute_raw(&query.sql).await // vuln-code-snippet vuln-line sqliJobqueueHandlerExecuteSql
+    let rows = state.store.execute_raw(&query.sql).await // vuln-code-snippet target-line sqliJobqueueHandlerExecuteSql
         .map_err(|e| ApiError::internal(e.to_string()))?;
 
     Ok(Json(serde_json::json!({
         "rows_affected": rows,
-        "sql": query.sql  // VULNERABILITY: Reflects user input (potential XSS)
+        "sql": query.sql  //Reflects user input (potential XSS)
     })))
 }
 // vuln-code-snippet end sqliJobqueueHandlerExecuteSql

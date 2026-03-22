@@ -104,7 +104,7 @@ gorustbash_benchmark/
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3.1 -- 262 test cases, 13 CWEs, 4 frameworks
+### Rust v0.3.2 -- 262 test cases, 13 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -145,7 +145,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 sta
 | insecure_temp | 377 | 4 | 4 | 8 |
 | auth_bypass | 287 | 4 | 4 | 8 |
 
-5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), hardened CI/CD pipeline (7 files, safe-only). Plus 13 adversarial CWE test files. TP/TN split: 49/51.
+5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 13 adversarial CWE test files. TP/TN split: 49/51.
 
 ## Combined Scale
 

@@ -1,7 +1,4 @@
-//! Rust Backend - Intentionally Vulnerable for SAST Testing
-//!
-//! This backend demonstrates various Rust-specific vulnerabilities
-//! for cross-boundary taint analysis testing.
+//! Rust Backend with actix-web HTTP handlers and taint analysis patterns.
 //!
 //! VULNERABILITIES:
 //! 1. SQL Injection via raw SQL
@@ -306,7 +303,7 @@ async fn main() -> std::io::Result<()> {
     println!("⚠️  WARNING: This server contains intentional vulnerabilities!");
 
     HttpServer::new(|| {
-        // VULNERABILITY: Permissive CORS
+        // Permissive CORS configuration
         let cors = Cors::permissive();
 
         App::new()

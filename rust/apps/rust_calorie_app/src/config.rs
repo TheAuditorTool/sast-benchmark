@@ -48,7 +48,7 @@ impl AppConfig {
                 .unwrap_or_else(|_| {
                     // In development, use a default (NOT for production!)
                     eprintln!("WARNING: Using default JWT_SECRET. Set JWT_SECRET env var in production!");
-                    // vuln-code-snippet vuln-line infodisclosureCalorieJwtSecret
+                    // vuln-code-snippet target-line infodisclosureCalorieJwtSecret
                     "super-secret-jwt-key-change-in-production".to_string()
                 }),
             // vuln-code-snippet end infodisclosureCalorieJwtSecret
