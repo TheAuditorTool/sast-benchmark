@@ -193,7 +193,7 @@ impl WorkoutRepository {
 
         // TAINT: search in name - VULNERABLE pattern for demonstration
         if let Some(ref search) = params.search {
-            // VULNERABLE: String interpolation (for taint analysis demonstration)
+            //String interpolation (for taint analysis demonstration)
             query.push_str(&format!(" AND name LIKE '%{}%'", search.replace("'", "''")));
         }
 

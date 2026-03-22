@@ -62,7 +62,7 @@ fn process_stage_5(data: StageData, stages: Vec<String>) -> Result<String, Strin
 fn process_stage_6(data: StageData, stages: Vec<String>) -> Result<String, String> {
     // TAINT SINK: After 6 levels, data reaches command execution
     if stages.contains(&"execute".to_string()) {
-        // VULNERABLE: Tainted data flows to command execution after deep chain
+        //Tainted data flows to command execution after deep chain
         return sinks::execute_shell(&data.content);
     }
 
@@ -125,7 +125,7 @@ fn context_stage_4(ctx: ProcessingContext, config: PipelineConfig) -> Result<Str
     // TAINT SINK: Tainted data from struct field flows to database
     if let Some(format) = ctx.config.get("format") {
         if format == "sql" {
-            // VULNERABLE: ctx.input_data is tainted
+            //ctx.input_data is tainted
             let query = format!(
                 "INSERT INTO results (data) VALUES ('{}')",
                 ctx.input_data
@@ -138,7 +138,7 @@ fn context_stage_4(ctx: ProcessingContext, config: PipelineConfig) -> Result<Str
     if let Some(depth) = config.max_depth {
         if depth > 0 {
             let path = format!("/tmp/context_{}.dat", depth);
-            // VULNERABLE: output contains tainted data
+            //output contains tainted data
             sinks::write_to_file(&path, &output)?;
         }
     }
@@ -158,7 +158,7 @@ pub fn recursive_process(input: String, depth: usize) -> Result<String, String> 
 fn recursive_level(data: String, max_depth: usize, current: usize) -> Result<String, String> {
     if current >= max_depth {
         // TAINT SINK: At recursion bottom, data flows to network
-        // VULNERABLE: Tainted data used in URL
+        //Tainted data used in URL
         return sinks::fetch_url(&format!("http://internal/{}", data));
     }
 

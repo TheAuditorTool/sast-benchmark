@@ -15,7 +15,7 @@ use std::sync::Mutex;
 
 // Config
 // vuln-code-snippet start infodisclosurePaymentsHardcodedKey
-const STRIPE_SECRET_KEY: &str = "sk_test_fake_key_for_testing";  // VULN: Hardcoded key // vuln-code-snippet vuln-line infodisclosurePaymentsHardcodedKey
+const STRIPE_SECRET_KEY: &str = "sk_test_fake_key_for_testing";  //Hardcoded key // vuln-code-snippet vuln-line infodisclosurePaymentsHardcodedKey
 // vuln-code-snippet end infodisclosurePaymentsHardcodedKey
 const PORT: u16 = 4002;
 
@@ -64,8 +64,8 @@ async fn create_intent(
 ) -> impl Responder {
     let payment_id = format!("pi_{}", uuid::Uuid::new_v4());
 
-    // VULN: No validation on amount (could be negative)
-    // VULN: No validation on currency (could be invalid)
+    //No validation on amount (could be negative)
+    //No validation on currency (could be invalid)
     let payment = Payment {
         id: payment_id.clone(),
         amount: req.amount, // vuln-code-snippet vuln-line inputvalPaymentsMissingValidation
@@ -97,7 +97,7 @@ async fn process_payment(
 ) -> impl Responder {
     let mut payments = data.payments.lock().unwrap();
 
-    // VULN: No verification that this user owns this payment intent
+    //No verification that this user owns this payment intent
     if let Some(payment) = payments.get_mut(&req.payment_intent_id) {
         payment.status = "succeeded".to_string();
 
@@ -130,7 +130,7 @@ async fn refund_payment(
     if let Some(payment) = payments.get_mut(&payment_id) {
         payment.status = "refunded".to_string();
 
-        // VULN: Reason logged without sanitization (log injection)
+        //Reason logged without sanitization (log injection)
         tracing::info!(
             "Refunded payment {}: reason = {}",
             payment_id, req.reason

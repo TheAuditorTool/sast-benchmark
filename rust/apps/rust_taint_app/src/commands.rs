@@ -28,7 +28,7 @@ pub fn execute_command(cmd: &str, args: &[String]) -> io::Result<String> {
 // vuln-code-snippet end cmdiExecuteCommand
 
 // vuln-code-snippet start cmdiExecuteCommandSafe
-/// SAFE: Command name from allowlist only
+///Command name from allowlist only
 pub fn execute_command_safe(cmd_type: &str, args: &[String]) -> io::Result<String> {
     let command = match cmd_type {
         "ls" => "ls",
@@ -75,7 +75,7 @@ pub fn execute_shell_command(shell_cmd: &str) -> io::Result<String> {
 // vuln-code-snippet end cmdiExecuteShellCommand
 
 // vuln-code-snippet start cmdiExecuteShellCommandSafe
-/// SAFE: Only allowlisted operations, no raw shell string
+///Only allowlisted operations, no raw shell string
 pub fn execute_shell_command_safe(operation: &str, target: &str) -> io::Result<String> {
     let safe_cmd = match operation {
         "echo" => format!("echo {}", shell_escape(target)),
@@ -110,7 +110,7 @@ pub fn execute_in_directory(cmd: &str, working_dir: &str) -> io::Result<String> 
 // vuln-code-snippet end cmdiExecuteInDirectory
 
 // vuln-code-snippet start cmdiExecuteInDirectorySafe
-/// SAFE: Working directory validated against base directory
+///Working directory validated against base directory
 pub fn execute_in_directory_safe(cmd: &str, working_dir: &str, base_dir: &str) -> io::Result<String> {
     use std::path::Path;
     let canonical_base = Path::new(base_dir).canonicalize()?;
@@ -185,10 +185,10 @@ pub fn run_system_command(command_name: &str) -> io::Result<Output> {
         .output()
 }
 
-/// VULNERABLE: Command with argument injection
+///Command with argument injection
 // vuln-code-snippet start cmdiRunCommandWithArg
 pub fn run_command_with_arg(base_cmd: &str, user_arg: &str) -> io::Result<String> {
-    // VULNERABLE: User input directly passed as argument
+    //User input directly passed as argument
     // Could include shell metacharacters like ; | && etc.
     let output = Command::new(base_cmd)
         .arg(user_arg)  // TAINT SINK: User-controlled argument // vuln-code-snippet vuln-line cmdiRunCommandWithArg
@@ -199,7 +199,7 @@ pub fn run_command_with_arg(base_cmd: &str, user_arg: &str) -> io::Result<String
 // vuln-code-snippet end cmdiRunCommandWithArg
 
 // vuln-code-snippet start cmdiRunCommandWithArgSafe
-/// SAFE: Argument validated for shell metacharacters
+///Argument validated for shell metacharacters
 pub fn run_command_with_arg_safe(base_cmd: &str, user_arg: &str) -> io::Result<String> {
     if user_arg.contains(|c: char| matches!(c, ';' | '|' | '&' | '>' | '<' | '$' | '`' | '\\')) {
         return Err(io::Error::new(io::ErrorKind::InvalidInput, "Invalid characters in argument"));
@@ -236,7 +236,7 @@ pub fn execute_allowed_command(cmd_type: &str, target: &str) -> io::Result<Strin
 // vuln-code-snippet end cmdiExecuteAllowedCommand
 
 // vuln-code-snippet start cmdiExecuteAllowedCommandSafe
-/// SAFE: Both command and target validated
+///Both command and target validated
 pub fn execute_allowed_command_safe(cmd_type: &str, target: &str) -> io::Result<String> {
     let command = match cmd_type {
         "ping" => "ping",

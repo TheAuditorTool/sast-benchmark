@@ -69,13 +69,13 @@ fn with_state(
 }
 
 // =============================================================================
-// VULNERABLE: SQL Injection via Path Parameter
+//SQL Injection via Path Parameter
 // =============================================================================
 
 // vuln-code-snippet start sqliWarpGetUserVulnerable
-/// VULNERABLE: User ID directly concatenated into SQL query
+///User ID directly concatenated into SQL query
 async fn get_user_vulnerable(id: String) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: SQL injection - user input directly in query
+    //SQL injection - user input directly in query
     let conn = rusqlite::Connection::open("app.db").unwrap();
     let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet vuln-line sqliWarpGetUserVulnerable
 
@@ -95,13 +95,13 @@ async fn get_user_vulnerable(id: String) -> Result<impl warp::Reply, Infallible>
 // vuln-code-snippet end sqliWarpGetUserVulnerable
 
 // =============================================================================
-// VULNERABLE: Command Injection via Query Parameter
+//Command Injection via Query Parameter
 // =============================================================================
 
 // vuln-code-snippet start cmdiWarpSearchFiles
-/// VULNERABLE: Query parameter used in shell command
+///Query parameter used in shell command
 async fn search_files_vulnerable(query: SearchQuery) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: Command injection via search query
+    //Command injection via search query
     let output = Command::new("grep")
         .arg("-r")
         .arg(&query.q) // vuln-code-snippet vuln-line cmdiWarpSearchFiles
@@ -114,13 +114,13 @@ async fn search_files_vulnerable(query: SearchQuery) -> Result<impl warp::Reply,
 // vuln-code-snippet end cmdiWarpSearchFiles
 
 // =============================================================================
-// VULNERABLE: SSRF via JSON Body
+//SSRF via JSON Body
 // =============================================================================
 
 // vuln-code-snippet start ssrfWarpFetchUrl
-/// VULNERABLE: URL from request body used in HTTP request
+///URL from request body used in HTTP request
 async fn fetch_url_vulnerable(request: FetchRequest) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: SSRF - user-controlled URL
+    //SSRF - user-controlled URL
     let client = reqwest::Client::new();
     let response = client.get(&request.url).send().await; // vuln-code-snippet vuln-line ssrfWarpFetchUrl
 
@@ -135,13 +135,13 @@ async fn fetch_url_vulnerable(request: FetchRequest) -> Result<impl warp::Reply,
 // vuln-code-snippet end ssrfWarpFetchUrl
 
 // =============================================================================
-// VULNERABLE: Path Traversal via JSON Body
+//Path Traversal via JSON Body
 // =============================================================================
 
 // vuln-code-snippet start pathtraverWarpReadFile
-/// VULNERABLE: File path from JSON body used directly
+///File path from JSON body used directly
 async fn read_file_vulnerable(request: FileRequest) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: Path traversal - user input in file path
+    //Path traversal - user input in file path
     let content = std::fs::read_to_string(&request.path) // vuln-code-snippet vuln-line pathtraverWarpReadFile
         .unwrap_or_else(|_| "File not found".to_string());
 
@@ -150,13 +150,13 @@ async fn read_file_vulnerable(request: FileRequest) -> Result<impl warp::Reply, 
 // vuln-code-snippet end pathtraverWarpReadFile
 
 // =============================================================================
-// VULNERABLE: Command Execution via JSON Body
+//Command Execution via JSON Body
 // =============================================================================
 
 // vuln-code-snippet start cmdiWarpExecuteCommand
-/// VULNERABLE: Command and args from request body
+///Command and args from request body
 async fn execute_command_vulnerable(request: CommandRequest) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: Arbitrary command execution
+    //Arbitrary command execution
     let mut cmd = Command::new(&request.cmd); // vuln-code-snippet vuln-line cmdiWarpExecuteCommand
     for arg in &request.args {
         cmd.arg(arg);
@@ -168,15 +168,15 @@ async fn execute_command_vulnerable(request: CommandRequest) -> Result<impl warp
 // vuln-code-snippet end cmdiWarpExecuteCommand
 
 // =============================================================================
-// VULNERABLE: Weak Crypto (SHA-1)
+//Weak Crypto (SHA-1)
 // =============================================================================
 
 // vuln-code-snippet start cryptoWarpSha1Hash
-/// VULNERABLE: Using SHA-1 for hashing
+///Using SHA-1 for hashing
 async fn hash_vulnerable(data: bytes::Bytes) -> Result<impl warp::Reply, Infallible> {
     use sha1::{Digest, Sha1};
 
-    // VULNERABLE: SHA-1 is deprecated for security
+    //SHA-1 is deprecated for security
     let mut hasher = Sha1::new(); // vuln-code-snippet vuln-line cryptoWarpSha1Hash
     hasher.update(&data);
     let result = hasher.finalize();
@@ -186,7 +186,7 @@ async fn hash_vulnerable(data: bytes::Bytes) -> Result<impl warp::Reply, Infalli
 // vuln-code-snippet end cryptoWarpSha1Hash
 
 // vuln-code-snippet start cryptoWarpSha256Hash
-/// SAFE: Using SHA-256 instead of SHA-1
+///Using SHA-256 instead of SHA-1
 async fn hash_safe(data: bytes::Bytes) -> Result<impl warp::Reply, Infallible> {
     use sha2::{Digest, Sha256};
     let mut hasher = Sha256::new(); // vuln-code-snippet safe-line cryptoWarpSha256Hash
@@ -197,19 +197,19 @@ async fn hash_safe(data: bytes::Bytes) -> Result<impl warp::Reply, Infallible> {
 // vuln-code-snippet end cryptoWarpSha256Hash
 
 // =============================================================================
-// VULNERABLE: Header Injection
+//Header Injection
 // =============================================================================
 
 // vuln-code-snippet start xssWarpEchoHeader
-/// VULNERABLE: Header value used without validation
+///Header value used without validation
 async fn echo_header(header_value: String) -> Result<impl warp::Reply, Infallible> {
-    // VULNERABLE: Header value reflected in response
+    //Header value reflected in response
     Ok(warp::reply::html(format!("Header value: {}", header_value))) // vuln-code-snippet vuln-line xssWarpEchoHeader
 }
 // vuln-code-snippet end xssWarpEchoHeader
 
 // vuln-code-snippet start xssWarpEchoHeaderSafe
-/// SAFE: HTML-escaped header reflection
+///HTML-escaped header reflection
 async fn echo_header_safe(header_value: String) -> Result<impl warp::Reply, Infallible> {
     let escaped = header_value.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;"); // vuln-code-snippet safe-line xssWarpEchoHeaderSafe
     Ok(warp::reply::html(format!("Header value: {}", escaped)))
@@ -217,15 +217,15 @@ async fn echo_header_safe(header_value: String) -> Result<impl warp::Reply, Infa
 // vuln-code-snippet end xssWarpEchoHeaderSafe
 
 // =============================================================================
-// VULNERABLE: Cookie Value in SQL
+//Cookie Value in SQL
 // =============================================================================
 
 // vuln-code-snippet start sqliWarpCookieProfile
-/// VULNERABLE: Cookie value used in SQL query
+///Cookie value used in SQL query
 async fn profile_vulnerable(session: String) -> Result<impl warp::Reply, Infallible> {
     let conn = rusqlite::Connection::open("app.db").unwrap();
 
-    // VULNERABLE: SQL injection via cookie value
+    //SQL injection via cookie value
     let query = format!("SELECT name FROM users WHERE session = '{}'", session); // vuln-code-snippet vuln-line sqliWarpCookieProfile
     let name: Result<String, _> = conn.query_row(&query, [], |row| row.get(0));
 
@@ -237,15 +237,15 @@ async fn profile_vulnerable(session: String) -> Result<impl warp::Reply, Infalli
 // vuln-code-snippet end sqliWarpCookieProfile
 
 // =============================================================================
-// SAFE: Parameterized Query
+//Parameterized Query
 // =============================================================================
 
 // vuln-code-snippet start sqliWarpGetUserSafe
-/// SAFE: Using parameterized query
+///Using parameterized query
 async fn get_user_safe(id: i64) -> Result<impl warp::Reply, Infallible> {
     let conn = rusqlite::Connection::open("app.db").unwrap();
 
-    // SAFE: Parameterized query
+    //Parameterized query
     let result = conn.query_row(
         "SELECT id, name, email FROM users WHERE id = ?", // vuln-code-snippet safe-line sqliWarpGetUserSafe
         [id],
@@ -266,13 +266,13 @@ async fn get_user_safe(id: i64) -> Result<impl warp::Reply, Infallible> {
 // vuln-code-snippet end sqliWarpGetUserSafe
 
 // =============================================================================
-// SAFE: Validated Input
+//Validated Input
 // =============================================================================
 
 // vuln-code-snippet start sqliWarpCreateUserSafe
-/// SAFE: Input validated before use
+///Input validated before use
 async fn create_user_safe(request: CreateUserRequest) -> Result<impl warp::Reply, warp::Rejection> {
-    // SAFE: Validation via validator crate
+    //Validation via validator crate
     if let Err(_) = request.validate() {
         return Ok(warp::reply::with_status(
             warp::reply::json(&serde_json::json!({"error": "Invalid input"})),

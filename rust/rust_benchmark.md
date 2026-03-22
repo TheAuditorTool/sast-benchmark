@@ -4,7 +4,7 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.1.csv` — CSV answer key (scoring authority). `rust_ground_truth.yml` provides descriptions.
+**Ground truth**: `expectedresults-0.1.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
 ### Test Case Inventory
@@ -20,13 +20,13 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 | weakrand | 330 | 7 | 9 | 16 | 44/56 |
 | xss | 79 | 5 | 11 | 16 | 31/69 |
 | infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
-| deser | 502 | 5 | 7 | 12 | 42/58 |
+| deser | 502 | 6 | 6 | 12 | 50/50 |
 | intoverflow | 190 | 5 | 7 | 12 | 42/58 |
 | redos | 1333 | 5 | 5 | 10 | 50/50 |
 | inputval | 20 | 4 | 6 | 10 | 40/60 |
-| **TOTAL** | | **117** | **145** | **262** | **45/55** |
+| **TOTAL** | | **118** | **144** | **262** | **45/55** |
 
-**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 44/56 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
+**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 45/55 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
 
 ### Frameworks Covered
 
@@ -103,7 +103,7 @@ Maps each benchmark category to SAST rules that detect it.
 | redos | 1333 | `security/redos_analyze.py` (no .rs) | - | **GAP** (LOW fix: add .rs) |
 | intoverflow | 190 | `rust/integer_safety.py` | structural | **PARTIAL** (crypto/financial only) |
 | infodisclosure | 200+ | NONE | - | **GAP** |
-| inputval | 20 | NONE | - | **GAP** |
+| inputval | 20 | `security/input_validation_analyze.py` | structural | FULL |
 
 **22 of 262 test cases (8%) are in gap categories** -- expected to show as FN in baseline scoring.
 
@@ -256,9 +256,29 @@ RULE_MAP = {
     # Supply chain (supply_chain.py)
     "rust-weak-crypto-dependency": "crypto",
     "rust-deprecated-dependency": "crypto",
+    # Weak cryptography (crypto_weakness.py)
+    "rust-weak-crypto-call": "crypto",
+    "rust-weak-crypto-macro": "crypto",
+    "rust-weak-hash-output": "crypto",
+    "rust-jwt-algorithm-none": "crypto",
     # Hardcoded secrets
     "hardcoded-credential": "infodisclosure",
     "hardcoded-secret": "infodisclosure",
+    # Info disclosure (rust/info_disclosure_analyze.py)
+    "rust-error-details-exposed": "infodisclosure",
+    "rust-env-vars-dump": "infodisclosure",
+    "rust-sensitive-config-exposed": "infodisclosure",
+    "rust-hardcoded-secret-fallback": "infodisclosure",
+    "rust-sql-in-error-response": "infodisclosure",
+    "rust-sensitive-data-logged": "infodisclosure",
+    "rust-hardcoded-api-key": "infodisclosure",
+    # Deserialization (rust_insecure_deserialization.py)
+    "rust-insecure-deserialization": "deser",
+    # Input validation (input_validation_analyze.py)
+    "rust-missing-input-validation": "inputval",
+    # ReDoS (redos_analyze.py)
+    "redos-taint": "redos",
+    "redos-dynamic-regex": "redos",
 }
 SINK_MAP = {
     "SQL Injection": "sqli", "Command Injection": "cmdi",
@@ -267,6 +287,7 @@ SINK_MAP = {
     "Cross-Site Scripting": "xss", "Cross-Site Scripting (XSS)": "xss",
     "Weak Cryptography": "crypto", "Memory Safety": "memsafety",
     "Insecure Deserialization": "deser",
+    "ReDoS": "redos",
 }
 NOISE = {"deadcode-function", "api-missing-auth", "missing-middleware"}
 

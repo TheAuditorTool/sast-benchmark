@@ -5,9 +5,9 @@
 use crate::models::{User, UserInput, UserSearchQuery};
 use sqlx::{Row, SqlitePool};
 
-/// SAFE: Parameterized query using sqlx
+///Parameterized query using sqlx
 pub async fn get_all_users(pool: &SqlitePool) -> Result<Vec<User>, sqlx::Error> {
-    // SAFE: No user input in query
+    //No user input in query
     let rows = sqlx::query("SELECT id, username, email, password_hash, role, created_at FROM users")
         .fetch_all(pool)
         .await?;
@@ -28,9 +28,9 @@ pub async fn get_all_users(pool: &SqlitePool) -> Result<Vec<User>, sqlx::Error> 
 }
 
 // vuln-code-snippet start sqliGetUserByIdSafe
-/// SAFE: Parameterized query with bind parameter
+///Parameterized query with bind parameter
 pub async fn get_user_by_id(pool: &SqlitePool, user_id: i64) -> Result<Option<User>, sqlx::Error> {
-    // SAFE: Using bind parameter
+    //Using bind parameter
     let row = sqlx::query("SELECT id, username, email, password_hash, role, created_at FROM users WHERE id = ?")
         .bind(user_id) // vuln-code-snippet safe-line sqliGetUserByIdSafe
         .fetch_optional(pool)
@@ -48,9 +48,9 @@ pub async fn get_user_by_id(pool: &SqlitePool, user_id: i64) -> Result<Option<Us
 // vuln-code-snippet end sqliGetUserByIdSafe
 
 // vuln-code-snippet start sqliCreateUserSafe
-/// SAFE: Parameterized insert
+///Parameterized insert
 pub async fn create_user(pool: &SqlitePool, input: &UserInput) -> Result<User, sqlx::Error> {
-    // SAFE: Using bind parameters
+    //Using bind parameters
     let result = sqlx::query(
         "INSERT INTO users (username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, datetime('now'))"
     )
@@ -68,13 +68,13 @@ pub async fn create_user(pool: &SqlitePool, input: &UserInput) -> Result<User, s
 // vuln-code-snippet end sqliCreateUserSafe
 
 // vuln-code-snippet start sqliSearchUsersVulnerable
-/// VULNERABLE: SQL injection via string concatenation!
+///SQL injection via string concatenation!
 /// TAINT SINK: User input directly in SQL query
 pub async fn search_users_vulnerable(
     pool: &SqlitePool,
     params: &UserSearchQuery,
 ) -> Result<Vec<User>, sqlx::Error> {
-    // VULNERABLE: String concatenation with user input!
+    //String concatenation with user input!
     let mut query = String::from("SELECT id, username, email, password_hash, role, created_at FROM users WHERE 1=1");
 
     // TAINT FLOW: query param -> SQL query (SQL INJECTION!)
@@ -121,7 +121,7 @@ pub async fn search_users_vulnerable(
 // vuln-code-snippet end sqliSearchUsersVulnerable
 
 // vuln-code-snippet start sqliExecuteRawSql
-/// VULNERABLE: Execute arbitrary SQL
+///Execute arbitrary SQL
 /// TAINT SINK: sqlx::query with user-controlled query string
 pub async fn execute_raw_sql(pool: &SqlitePool, sql: &str) -> Result<u64, sqlx::Error> {
     // TAINT SINK: Direct SQL execution (CRITICAL!)
@@ -131,12 +131,12 @@ pub async fn execute_raw_sql(pool: &SqlitePool, sql: &str) -> Result<u64, sqlx::
 // vuln-code-snippet end sqliExecuteRawSql
 
 // vuln-code-snippet start sqliFindUserByEmailVulnerable
-/// VULNERABLE: Using query_as with string interpolation
+///Using query_as with string interpolation
 pub async fn find_user_by_email_vulnerable(
     pool: &SqlitePool,
     email: &str,
 ) -> Result<Option<User>, sqlx::Error> {
-    // VULNERABLE: String interpolation in query
+    //String interpolation in query
     let query = format!(
         "SELECT id, username, email, password_hash, role, created_at FROM users WHERE email = '{}'", // vuln-code-snippet vuln-line sqliFindUserByEmailVulnerable
         email
@@ -162,7 +162,7 @@ pub mod rusqlite_ops {
     use crate::models::UserRow;
 
     // vuln-code-snippet start sqliRusqliteGetUserSafe
-    /// SAFE: Parameterized query
+    ///Parameterized query
     pub fn get_user_safe(conn: &Connection, user_id: i64) -> Result<UserRow> {
         conn.query_row(
             "SELECT id, username, email FROM users WHERE id = ?",
@@ -179,10 +179,10 @@ pub mod rusqlite_ops {
     // vuln-code-snippet end sqliRusqliteGetUserSafe
 
     // vuln-code-snippet start sqliRusqliteDeleteVulnerable
-    /// VULNERABLE: SQL injection via string concatenation
+    ///SQL injection via string concatenation
     /// TAINT SINK: rusqlite::Connection::execute with user input
     pub fn delete_user_vulnerable(conn: &Connection, username: &str) -> Result<usize> {
-        // VULNERABLE: String interpolation
+        //String interpolation
         let sql = format!("DELETE FROM users WHERE username = '{}'", username); // vuln-code-snippet vuln-line sqliRusqliteDeleteVulnerable
 
         // TAINT SINK: Direct SQL execution
@@ -191,9 +191,9 @@ pub mod rusqlite_ops {
     // vuln-code-snippet end sqliRusqliteDeleteVulnerable
 
     // vuln-code-snippet start sqliRusqliteSearchVulnerable
-    /// VULNERABLE: Search with SQL injection
+    ///Search with SQL injection
     pub fn search_users_vulnerable(conn: &Connection, search_term: &str) -> Result<Vec<UserRow>> {
-        // VULNERABLE: String concatenation
+        //String concatenation
         let sql = format!(
             "SELECT id, username, email FROM users WHERE username LIKE '%{}%'", // vuln-code-snippet vuln-line sqliRusqliteSearchVulnerable
             search_term
@@ -218,7 +218,7 @@ pub mod diesel_ops {
     // Note: Diesel queries are typically safe due to query builder
     // But raw SQL is still possible
 
-    /// VULNERABLE: Using diesel::sql_query with raw SQL
+    ///Using diesel::sql_query with raw SQL
     pub fn execute_raw_diesel(sql: &str) {
         // This would be: diesel::sql_query(sql).execute(conn)
         // TAINT SINK: Raw SQL execution

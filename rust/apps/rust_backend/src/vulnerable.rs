@@ -89,7 +89,7 @@ async fn raw_sql(req: web::Json<SqlRequest>) -> impl Responder {
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start redosBackendRegexDos
 async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
-    use regex::Regex;
+    use fancy_regex::Regex;
 
     // TAINT SINK: User controlled regex pattern
     // Attacker payload: pattern="(a+)+$", input="aaaaaaaaaaaaaaaaaaaaaaaa!"
@@ -105,7 +105,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
     };
 
     // This could hang with catastrophic backtracking
-    let is_match = pattern.is_match(&req.input);
+    let is_match = pattern.is_match(&req.input).unwrap_or(false);
 
     HttpResponse::Ok().json(VulnResponse {
         success: true,
@@ -120,7 +120,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
 // vuln-code-snippet end redosBackendRegexDos
 
 // vuln-code-snippet start redosBackendRegexSafe
-/// SAFE: Regex pattern validated for length and dangerous patterns
+///Regex pattern validated for length and dangerous patterns
 async fn regex_safe(req: web::Json<RegexRequest>) -> impl Responder {
     use regex::Regex;
     if req.pattern.len() > 256 {
@@ -265,7 +265,7 @@ async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Re
 // vuln-code-snippet end intoverflowBackendOverflow
 
 // vuln-code-snippet start intoverflowBackendCheckedArithmetic
-/// SAFE: Checked arithmetic prevents overflow
+///Checked arithmetic prevents overflow
 async fn integer_safe(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let a: i32 = query.get("a").and_then(|s| s.parse().ok()).unwrap_or(0);
     let b: i32 = query.get("b").and_then(|s| s.parse().ok()).unwrap_or(0);
@@ -326,7 +326,7 @@ async fn unsafe_deserialize(body: web::Bytes) -> impl Responder {
 // vuln-code-snippet end deserBackendUnsafeDeserialize
 
 // vuln-code-snippet start deserBackendSafeDeserialize
-/// SAFE: Typed deserialization with size limit
+///Typed deserialization with size limit
 async fn safe_deserialize(body: web::Bytes) -> impl Responder {
     #[derive(serde::Deserialize)]
     struct SafePayload { data: Option<String>, action: Option<String> }
@@ -362,15 +362,9 @@ async fn memory_corruption(query: web::Query<HashMap<String, String>>) -> impl R
 
     // VULNERABILITY: Unsafe memory access with user-controlled offset
     let data = vec![1u8, 2, 3, 4, 5, 6, 7, 8];
+    // No bounds check — out-of-bounds read when offset >= data.len()
     let result = unsafe {
-        if offset < data.len() {
-            // Safe access
-            Some(*data.get_unchecked(offset)) // vuln-code-snippet vuln-line memsafetyBackendMemoryCorruption
-        } else {
-            // This would be out of bounds!
-            // Commenting out actual dangerous access, but showing the pattern
-            None
-        }
+        Some(*data.get_unchecked(offset)) // vuln-code-snippet vuln-line memsafetyBackendMemoryCorruption
     };
 
     HttpResponse::Ok().json(VulnResponse {

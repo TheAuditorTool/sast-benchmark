@@ -148,7 +148,7 @@ pub fn read_env_var(name: &str) -> Option<String> {
 /// Process uploaded file (common attack vector)
 // vuln-code-snippet start pathtraverProcessUpload
 pub fn process_upload(filename: &str, content: &[u8], upload_dir: &str) -> io::Result<String> {
-    // VULNERABLE: filename could contain path traversal sequences
+    //filename could contain path traversal sequences
     // e.g., "../../../etc/passwd" or "..\\..\\windows\\system32\\config"
 
     let path = format!("{}/{}", upload_dir, filename);

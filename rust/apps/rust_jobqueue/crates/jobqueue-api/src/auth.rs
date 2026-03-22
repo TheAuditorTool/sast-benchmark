@@ -97,18 +97,13 @@ impl UserStore {
     // vuln-code-snippet end weakrandJobqueueToken
 
     // vuln-code-snippet start weakrandJobqueueTokenSafe
-    /// SAFE: Token from cryptographic random bytes
-    fn generate_token_safe(&self, user_id: &str) -> AuthToken {
-        let mut random_bytes = [0u8; 32];
-        for (i, byte) in user_id.bytes().enumerate() {
-            random_bytes[i % 32] ^= byte;
-        }
-        // In production: use rand::OsRng or ring::rand
+    /// Token from OS-level cryptographic random bytes
+    fn generate_token_safe(&self, _user_id: &str) -> AuthToken {
+        // OsRng provides cryptographically secure random bytes from the OS
+        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet safe-line weakrandJobqueueTokenSafe
+        let token = base64_encode(&format!("{:?}", random_bytes));
         let timestamp = Self::now();
-        random_bytes[0] ^= (timestamp & 0xFF) as u8;
-        random_bytes[1] ^= ((timestamp >> 8) & 0xFF) as u8;
-        let token = base64_encode(&format!("{:?}", random_bytes)); // vuln-code-snippet safe-line weakrandJobqueueTokenSafe
-        AuthToken { token, user_id: user_id.to_string(), expires_at: timestamp + 3600 }
+        AuthToken { token, user_id: _user_id.to_string(), expires_at: timestamp + 3600 }
     }
     // vuln-code-snippet end weakrandJobqueueTokenSafe
 
@@ -138,7 +133,7 @@ impl UserStore {
     // vuln-code-snippet end cryptoJobqueueMd5Password
 
     // vuln-code-snippet start cryptoJobqueueArgon2Password
-    /// SAFE: Password hashed with strong algorithm (bcrypt-simulated)
+    ///Password hashed with strong algorithm (bcrypt-simulated)
     fn hash_password_safe(password: &str) -> String {
         let cost: u32 = 12;
         let mut hash = [0u8; 32];
@@ -237,18 +232,12 @@ impl ApiKeyAuth {
     // vuln-code-snippet end weakrandJobqueueApiKey
 
     // vuln-code-snippet start weakrandJobqueueApiKeySafe
-    /// SAFE: API key from cryptographic random bytes
+    /// API key from OS-level cryptographic random bytes
     pub fn generate_key_safe(&mut self, name: &str, permissions: Vec<String>) -> String {
-        let mut random_bytes = [0u8; 32];
-        for (i, byte) in name.bytes().enumerate() {
-            random_bytes[i % 32] ^= byte;
-        }
+        // OsRng provides cryptographically secure random bytes — no user/time mixing
+        let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet safe-line weakrandJobqueueApiKeySafe
+        let key = format!("jq_{}", base64_encode(&format!("{:?}", random_bytes)));
         let timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64;
-        // Mix in entropy from multiple sources
-        for i in 0..8 {
-            random_bytes[i + 16] ^= ((timestamp >> (i * 8)) & 0xFF) as u8;
-        }
-        let key = format!("jq_{}", base64_encode(&format!("{:?}", random_bytes))); // vuln-code-snippet safe-line weakrandJobqueueApiKeySafe
         self.keys.insert(key.clone(), ApiKeyInfo {
             name: name.to_string(), permissions, created_at: timestamp, last_used: None,
         });
@@ -340,7 +329,7 @@ impl JwtToken {
     // vuln-code-snippet end cryptoJobqueueJwtNone
 
     // vuln-code-snippet start cryptoJobqueueJwtHs256
-    /// SAFE: JWT signed with HS256 (HMAC-SHA256 simulated)
+    ///JWT signed with HS256 (HMAC-SHA256 simulated)
     pub fn create_safe(user_id: &str, roles: Vec<String>, ttl_secs: u64) -> Self {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
         let header = JwtHeader { alg: "HS256".to_string(), typ: "JWT".to_string() }; // vuln-code-snippet safe-line cryptoJobqueueJwtHs256

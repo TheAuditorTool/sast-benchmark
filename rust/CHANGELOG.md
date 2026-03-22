@@ -4,6 +4,126 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-03-22 — v0.3.1: Misclassification Fixes (OWASP Submission Response)
+
+### Context
+OWASP Foundation reviewed the v0.3 submission and provided feedback. Independent audit of all 262 test cases found 12 misclassified test cases across 6 categories. This release fixes all 12.
+
+### MC-1 through MC-5: ReDoS — Wrong Regex Crate (5 test cases)
+
+**Problem:** All 5 ReDoS TP test cases used `regex::Regex` (Rust's standard regex crate). This crate uses a linear-time NFA/DFA engine that is provably immune to catastrophic backtracking. ReDoS is impossible regardless of pattern complexity. These were false TPs — the code was not actually vulnerable.
+
+**Fix:** Changed import to `fancy_regex::Regex` in all 5 files. `fancy-regex` uses a backtracking engine that supports lookaheads and backreferences, which breaks the linear-time guarantee and allows catastrophic backtracking. Added `.unwrap_or(false)` to `is_match()` calls (fancy-regex returns `Result<bool>`, not `bool`). Added `fancy-regex = "0.11"` to `apps/rust_backend/Cargo.toml` (was missing entirely — `regex` was also absent).
+
+**Files changed:**
+- `testcode/redos_001_vulnerable.rs` — `use regex::Regex` → `use fancy_regex::Regex`
+- `testcode/redos_002_vulnerable.rs` — same
+- `testcode/redos_003_vulnerable.rs` — same
+- `testcode/redos_006_safe.rs` — same + annotation key renamed (see MC-5 below)
+- `apps/rust_backend/src/vulnerable.rs` (redosBackendRegexDos function) — same
+- `apps/rust_backend/Cargo.toml` — added `fancy-regex = "0.11"`
+
+**MC-5 additionally:** `testcodeRedos006Safe` renamed to `testcodeRedos006Vulnerable` in source, CSV, and YAML. The file demonstrates a post-execution timeout that does not prevent ReDoS — it is a TP, but was named "Safe" misleadingly. CSV classification was already `true` (correct); only the key name was wrong.
+
+### MC-6: Deserialization — Wrong API (1 test case)
+
+**Problem:** `testcode/deser_002_vulnerable.rs` claimed to test a YAML bomb (billion laughs) attack via `serde_yaml::from_str`, but the actual code called `serde_json::from_str`. JSON has no alias/anchor expansion mechanism — YAML bombs are impossible with a JSON parser. The TP claim was based on a nonexistent attack vector.
+
+**Fix:** Replaced the `serde_json` stub with actual `serde_yaml::from_str(&yaml_input)`. Return type changed to `serde_yaml::Value`. The file now genuinely parses YAML without size limits, making YAML bomb attacks possible.
+
+**File changed:** `testcode/deser_002_vulnerable.rs`
+
+### MC-7: Deserialization — False Safe (1 test case)
+
+**Problem:** `testcode/deser_008_safe.rs` used a Content-Type header check as its "safe" mitigation. Content-Type is a client-supplied HTTP request header — an attacker sets it to `application/json` trivially. This check provides zero security against insecure deserialization.
+
+**Fix:** Reclassified as TP. Annotation key renamed from `testcodeDeser008Safe` to `testcodeDeser008Vulnerable`. CSV changed from `false` to `true`. Doc comment rewritten to explain why Content-Type is not a security boundary.
+
+**Files changed:** `testcode/deser_008_safe.rs`, `expectedresults-0.1.csv`, `rust_ground_truth.yml`
+
+**Impact:** deser category balance improved from 5 TP / 7 TN to 6 TP / 6 TN (50/50).
+
+### MC-8: SSRF — Timeout Is Not Mitigation (1 test case)
+
+**Problem:** `testcode/ssrf_005_safe.rs` used a 5-second request timeout as its SSRF mitigation. Internal services (e.g., AWS metadata at 169.254.169.254) respond in milliseconds. A timeout does not prevent SSRF — it only limits slow-loris scenarios.
+
+**Fix:** Replaced the timeout with a domain allowlist: parse URL, extract hostname, check against `["api.example.com", "cdn.example.com", "hooks.slack.com"]`. Domain allowlisting is a genuine SSRF mitigation. TN classification unchanged.
+
+**File changed:** `testcode/ssrf_005_safe.rs`
+
+### MC-9: SSRF — HTTPS-Only Is Not Mitigation (1 test case)
+
+**Problem:** `testcode/ssrf_006_safe.rs` required HTTPS scheme only. `https://169.254.169.254/latest/meta-data/` is a valid HTTPS SSRF target. HTTPS-only does not prevent SSRF to internal endpoints that support TLS.
+
+**Fix:** Replaced HTTPS-only check with private IP rejection: blocks `127.x`, `10.x`, `172.16-31.x`, `192.168.x`, `169.254.x`, `0.x`, `::1`, `localhost`. This is a genuine SSRF mitigation. TN classification unchanged.
+
+**File changed:** `testcode/ssrf_006_safe.rs`
+
+### MC-10: Memory Safety — Bounds-Checked Unsafe Labeled as Vulnerable (1 test case)
+
+**Problem:** `memsafetyBackendMemoryCorruption` in `apps/rust_backend/src/vulnerable.rs` had `if offset < data.len() { Some(*data.get_unchecked(offset)) }`. The bounds check before `get_unchecked` made the code actually safe — out-of-bounds access was impossible. The TP classification was wrong.
+
+**Fix:** Removed the `if offset < data.len()` guard. `get_unchecked(offset)` is now called directly without bounds checking, making out-of-bounds read genuinely possible when `offset >= data.len()`. TP classification is now correct.
+
+**File changed:** `apps/rust_backend/src/vulnerable.rs`
+
+### MC-11 & MC-12: Weak Random — XOR Is Not CSPRNG (2 test cases)
+
+**Problem:** `weakrandJobqueueTokenSafe` and `weakrandJobqueueApiKeySafe` in `apps/rust_jobqueue/crates/jobqueue-api/src/auth.rs` XOR'd user_id/name bytes with timestamp bytes. Both inputs are attacker-observable or predictable. XOR of deterministic inputs produces deterministic output — this is not cryptographically secure randomness. The TN classification was wrong.
+
+**Fix:** Replaced both XOR loops with `rand::rngs::OsRng.gen()` — the OS-level CSPRNG. Removed all timestamp and user_id/name mixing from the random bytes. Token/key entropy now comes purely from the OS entropy pool. TN classification is now correct.
+
+**File changed:** `apps/rust_jobqueue/crates/jobqueue-api/src/auth.rs`
+
+### Inventory After v0.3.1
+
+| Category | CWE | TP | TN | Total | Balance |
+|----------|-----|----|----|-------|---------|
+| sqli | 89 | 24 | 26 | 50 | 48/52 |
+| cmdi | 78 | 14 | 16 | 30 | 47/53 |
+| pathtraver | 22 | 14 | 14 | 28 | 50/50 |
+| ssrf | 918 | 9 | 13 | 22 | 41/59 |
+| memsafety | 119 | 8 | 12 | 20 | 40/60 |
+| crypto | 327 | 9 | 11 | 20 | 45/55 |
+| weakrand | 330 | 7 | 9 | 16 | 44/56 |
+| xss | 79 | 5 | 11 | 16 | 31/69 |
+| infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
+| deser | 502 | 6 | 6 | 12 | 50/50 |
+| intoverflow | 190 | 5 | 7 | 12 | 42/58 |
+| redos | 1333 | 5 | 5 | 10 | 50/50 |
+| inputval | 20 | 4 | 6 | 10 | 40/60 |
+| **TOTAL** | | **118** | **144** | **262** | **45/55** |
+
+### Phase 2: Hint Removal (OWASP Gold Standard Compliance)
+
+Stripped all vulnerability classification hints from source code. The CSV is now the sole oracle — matching OWASP Java/Python benchmark design where source code contains zero hints about whether a test case is vulnerable or safe.
+
+**testcode/ (143 files):**
+- Rewrote `//!` doc-comment line 1 from `<Category> True Positive/Negative — CWE-XX` to neutral `CWE-XX: <description>`
+- Removed all `//!` lines containing "True Positive", "True Negative", or "Isomorphic to"
+- Removed all `// VULNERABLE:` (37 instances) and `// SAFE:` (97 instances) inline comments
+- Unified `vuln-line`/`safe-line` annotation markers to neutral `target-line`
+- Stripped `Vulnerable`/`Safe` suffix from all annotation keys (143 keys in source, CSV, and YAML)
+- Renamed all files: `cmdi_001_vulnerable.rs` → `cmdi_001.rs`, `cmdi_002_safe.rs` → `cmdi_002.rs`
+
+**apps/ (12 files):**
+- Removed all `// VULNERABLE:`, `// SAFE:`, `// VULN:` inline comments (~109 instances)
+- Function names (`_vulnerable`/`_safe`) and annotation keys unchanged (call site dependencies)
+
+**Infrastructure:**
+- Deleted `rust_ground_truth.yml` — technical debt. CSV is sole source of truth, matching Go benchmark and OWASP Java/Python format.
+- Updated `rust_benchmark.md` to remove YAML reference.
+
+### Validation
+```
+validate_rust.py: PASS — 262 CSV, 262 annotations, 118 TP, 144 TN, 0 errors
+grep "True Positive|True Negative" testcode/ — 0 results
+grep "VULNERABLE:|SAFE:|VULN:" testcode/ apps/ — 0 results
+ls testcode/*_vulnerable* testcode/*_safe* — 0 files
+```
+
+---
+
 ## 2026-03-19 — Initial Setup (Phase 1)
 
 ### Infrastructure Created

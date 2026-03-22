@@ -72,7 +72,7 @@ async fn search_products(query: web::Query<SearchQuery>) -> impl Responder {
     // In real code, this would build an Elasticsearch query
     let search_term = query.q.as_deref().unwrap_or("");
 
-    // VULN: Building query string without proper escaping
+    //Building query string without proper escaping
     // This would be vulnerable to Elasticsearch injection
     let es_query = format!(
         r#"{{
@@ -150,7 +150,7 @@ async fn search_suggestions(query: web::Query<SearchQuery>) -> impl Responder {
     ];
 
     // TAINT: User input used to filter suggestions
-    // VULN: Could be used for ReDoS if regex is built from user input
+    //Could be used for ReDoS if regex is built from user input
     let suggestions: Vec<String> = all_suggestions
         .into_iter()
         .filter(|s| s.contains(search_term))

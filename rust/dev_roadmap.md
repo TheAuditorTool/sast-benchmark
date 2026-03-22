@@ -1,7 +1,7 @@
 # Rust SAST Benchmark — Development Roadmap
 
-> **Version:** 0.1 (2026-03-19)
-> **Status:** v0.3 shipped. M1-M6 complete. Baseline scoring pending `aud full --offline`.
+> **Version:** 0.3.1 (2026-03-22)
+> **Status:** v0.3.1 shipped. M1-M6 complete. 12 misclassification fixes + hint removal + YAML deletion applied post-OWASP review. CSV is sole ground truth. Baseline scoring done (see baseline_theauditor_tool_score.md).
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---
@@ -110,7 +110,7 @@ For each category with 0 TN, create **isomorphic safe variants** — functions t
 
 **Files changed:**
 - 10-15 `.rs` files (new safe functions added)
-- `rust_ground_truth.yml` — 50+ new entries
+- `rust_ground_truth.yml` — 50+ new entries (file deleted in v0.3.1 — CSV is sole ground truth)
 - `rust_benchmark.md` — updated inventory table
 
 **Verification:**
@@ -148,7 +148,7 @@ cmdiExecuteCommand,cmdi,true,78
 **Files changed:**
 - NEW: `expectedresults-0.1.csv`
 - `rust_benchmark.md` — updated scoring script
-- `rust_ground_truth.yml` — marked as "documentation, not scoring authority"
+- `rust_ground_truth.yml` — marked as "documentation, not scoring authority" (file deleted in v0.3.1)
 
 **Verification:**
 - CSV has exactly as many lines as ground truth YAML entries

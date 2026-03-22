@@ -16,7 +16,7 @@ pub async fn fetch_url(url: &str) -> Result<String, reqwest::Error> {
 // vuln-code-snippet end ssrfFetchUrl
 
 // vuln-code-snippet start ssrfFetchUrlSafe
-/// SAFE: Domain allowlist check before fetching
+///Domain allowlist check before fetching
 pub async fn fetch_url_safe(url: &str, allowed_domains: &[&str]) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
     let host = parsed.host_str().ok_or("No host in URL")?;
@@ -72,7 +72,7 @@ pub async fn post_to_url(url: &str, body: &str) -> Result<String, reqwest::Error
 // vuln-code-snippet end ssrfPostToUrl
 
 // vuln-code-snippet start ssrfPostToUrlSafe
-/// SAFE: Domain allowlist + body size limit before posting
+///Domain allowlist + body size limit before posting
 pub async fn post_to_url_safe(url: &str, body: &str, allowed_domains: &[&str], max_body_size: usize) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
     let host = parsed.host_str().ok_or("No host in URL")?;
@@ -103,7 +103,7 @@ pub fn connect_tcp(host: &str, port: u16) -> io::Result<TcpStream> {
 // vuln-code-snippet end ssrfConnectTcp
 
 // vuln-code-snippet start ssrfConnectTcpSafe
-/// SAFE: Allowlisted host:port pairs + reject private IPs
+///Allowlisted host:port pairs + reject private IPs
 pub fn connect_tcp_safe(host: &str, port: u16, allowed_endpoints: &[(&str, u16)]) -> io::Result<TcpStream> {
     if !allowed_endpoints.iter().any(|(h, p)| *h == host && *p == port) { // vuln-code-snippet safe-line ssrfConnectTcpSafe
         return Err(io::Error::new(io::ErrorKind::PermissionDenied, format!("Endpoint {}:{} not in allowlist", host, port)));
@@ -169,7 +169,7 @@ pub async fn send_webhook(webhook_url: &str, payload: &str) -> Result<u16, reqwe
 // vuln-code-snippet end ssrfSendWebhook
 
 // vuln-code-snippet start ssrfSendWebhookSafe
-/// SAFE: Webhook URL checked against trusted webhook list
+///Webhook URL checked against trusted webhook list
 pub async fn send_webhook_safe(webhook_url: &str, payload: &str, trusted_webhooks: &[&str]) -> Result<u16, Box<dyn std::error::Error>> {
     if !trusted_webhooks.iter().any(|w| webhook_url == *w) { // vuln-code-snippet safe-line ssrfSendWebhookSafe
         return Err(format!("Webhook URL '{}' not in trusted list", webhook_url).into());
@@ -248,7 +248,7 @@ pub async fn fetch_external_only(url: &str) -> Result<String, String> {
 // vuln-code-snippet end ssrfFetchExternalOnly
 
 // vuln-code-snippet start ssrfFetchExternalOnlySafe
-/// SAFE: Strict URL parse, reject internal, no redirects, reject decimal IPs
+///Strict URL parse, reject internal, no redirects, reject decimal IPs
 pub async fn fetch_external_only_safe(url: &str, allowed_domains: &[&str]) -> Result<String, Box<dyn std::error::Error>> {
     let parsed = url::Url::parse(url)?;
     let scheme = parsed.scheme();

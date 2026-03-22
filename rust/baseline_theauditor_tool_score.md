@@ -1,4 +1,4 @@
-# Baseline Score: TheAuditor v3.5 against Rust Benchmark v0.3
+# Baseline Score: TheAuditor v3.5 against Rust Benchmark v0.3.1
 
 **Tool:** TheAuditor v3.5
 **Date:** 2026-03-20
@@ -84,3 +84,5 @@ Every FN is a ticket. Every FP is a precision fix. The benchmark exists to make 
 | Date | Tool Version | Score | TP | FP | FN | TN | Notes |
 |------|-------------|-------|----|----|----|----|-------|
 | 2026-03-20 | v3.5 | +6.1% | 16 | 11 | 101 | 134 | Baseline, untuned |
+
+**Note (2026-03-22):** Ground truth updated to v0.3.1 — 12 misclassified test cases fixed (see CHANGELOG.md). Baseline score above was computed against v0.3 ground truth. Re-scoring against v0.3.1 ground truth pending.
