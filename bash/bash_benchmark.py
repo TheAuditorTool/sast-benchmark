@@ -2,7 +2,7 @@
 """
 Bash SAST Benchmark Scoring Script
 ===================================
-Scores any SAST tool's findings against bash_ground_truth.yml.
+Scores any SAST tool's findings against expectedresults-0.3.1.csv.
 
 Usage:
     python3 bash_benchmark.py
@@ -24,7 +24,7 @@ from pathlib import Path
 # ============================================================================
 BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
-GROUND_TRUTH_PATH = BENCHMARK_ROOT / "bash_ground_truth.yml"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.3.1.csv"
 
 # Rule name -> benchmark category mapping
 # VERIFIED against actual Desktop/bash/.pf/repo_index.db (2026-03-19)
@@ -101,43 +101,28 @@ SINK_MAP = {
 }
 
 # ============================================================================
-# YAML Parser (minimal, no dependency needed)
+# CSV Parser (OWASP standard format — matches Go/Java/Python benchmarks)
 # ============================================================================
 def parse_ground_truth(path):
-    """Parse bash_ground_truth.yml without PyYAML dependency."""
+    """Parse expectedresults CSV. Format: test name,category,real vulnerability,CWE"""
     test_cases = []
-    current = None
 
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             stripped = line.strip()
-
-            # Skip comments and empty lines
             if not stripped or stripped.startswith("#"):
                 continue
 
-            # New test case
-            if stripped.startswith("- key:"):
-                if current:
-                    test_cases.append(current)
-                current = {"key": stripped.split(":", 1)[1].strip()}
+            parts = stripped.split(",")
+            if len(parts) < 4:
                 continue
 
-            # Properties of current test case
-            if current and ":" in stripped and not stripped.startswith("-"):
-                key, _, value = stripped.partition(":")
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-
-                if key == "vulnerable":
-                    current[key] = value.lower() == "true"
-                elif key == "cwe":
-                    current[key] = int(value)
-                elif key in ("file", "category", "description"):
-                    current[key] = value
-
-    if current:
-        test_cases.append(current)
+            test_cases.append({
+                "key": parts[0].strip(),
+                "category": parts[1].strip(),
+                "vulnerable": parts[2].strip().lower() == "true",
+                "cwe": int(parts[3].strip()),
+            })
 
     return test_cases
 

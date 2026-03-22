@@ -66,7 +66,7 @@ gorustbash_benchmark/
     testcode/                # 144 standalone test files
     apps/                    # 8 annotated applications
   bash/                    # Bash benchmark (356 tests, 16 CWEs)
-    bash_ground_truth.yml    # Answer key (356 test cases)
+    expectedresults-0.3.1.csv  # Answer key (356 test cases, OWASP CSV format)
     bash_benchmark.py        # Automated scoring script
     BENCHMARK.md             # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
@@ -122,7 +122,7 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 | redos | 1333 | 5 | 5 | 10 |
 | inputval | 20 | 4 | 6 | 10 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 45/55. All 13 categories have both vulnerable and safe test cases. v0.3.1 fixed 12 misclassified test cases identified during OWASP Foundation review.
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 45/55. All 13 categories have both vulnerable and safe test cases. v0.3.1 fixed 12 misclassified test cases and stripped all source code hints to match OWASP gold standard (CSV is sole oracle).
 
 ### Bash v0.3.1 -- 356 test cases, 16 CWEs
 

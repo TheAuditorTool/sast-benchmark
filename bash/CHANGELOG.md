@@ -4,6 +4,13 @@
 
 356 test cases across 16 categories, 5 applications, 52 shell scripts. **OWASP rebalancing release.**
 
+### Ground Truth Migration (YAML -> CSV)
+- Migrated from `bash_ground_truth.yml` to `expectedresults-0.3.1.csv` (OWASP standard format)
+- CSV format matches Go/Java/Python benchmarks: `test name,category,real vulnerability,CWE`
+- Deleted `bash_ground_truth.yml` — single source of truth is now the CSV
+- Rewrote `bash_benchmark.py` parser and `scripts/validate_bash.py` for CSV input
+- All L1-L5 fidelity checks pass on CSV
+
 ### OWASP Foundation Feedback Response
 
 The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "biggest methodological weakness" — a tool that blindly flags everything scores 68% TPR for free. This release addresses that feedback directly.

@@ -46,7 +46,7 @@
 
 **Decision**: Rewrite the test code to show the ACTUAL exploitable pattern (recursive arithmetic variable expansion), not the non-exploitable pattern currently written. Keep vulnerable=true but fix the code.
 
-**Files**: `adversarial/cmdi_tests.sh`, `bash_ground_truth.yml`
+**Files**: `adversarial/cmdi_tests.sh`, `expectedresults-0.3.1.csv`
 
 ### 1.2 Fix `codeinj_heredoc_expansion` Annotation
 
@@ -147,7 +147,7 @@ Each new test case follows the pattern: vulnerable function + safe variant, both
 # Safe: source /etc/app/static-config.sh  (hardcoded path)
 ```
 
-**Files to modify**: New additions to existing adversarial files (add to cmdi_tests.sh, codeinj_tests.sh, sqli_tests.sh, etc.) + `bash_ground_truth.yml` updates.
+**Files to modify**: New additions to existing adversarial files (add to cmdi_tests.sh, codeinj_tests.sh, sqli_tests.sh, etc.) + `expectedresults-0.3.1.csv` updates.
 
 ---
 
@@ -269,7 +269,7 @@ Document surprises — categories that scored better or worse than expected.
 When this benchmark is published, a reviewer should be able to:
 
 1. **Read BENCHMARK.md** and understand the entire benchmark: what it tests, how scoring works, what the engine detects, what it misses, and why
-2. **Read bash_ground_truth.yml** and for every test case understand: what's being tested, whether it's vulnerable or safe, which CWE applies, and whether the engine is expected to catch it
+2. **Read expectedresults-0.3.1.csv** and for every test case understand: what's being tested, whether it's vulnerable or safe, which CWE applies, and whether the engine is expected to catch it
 3. **Run the scoring script** and get a reproducible scorecard
 4. **See every FN** documented with root cause (pipeline stage) and fix complexity
 5. **See every FP** documented with why the engine over-flagged

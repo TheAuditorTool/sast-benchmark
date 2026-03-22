@@ -135,7 +135,7 @@ gorustbash_benchmark/bash/
 |   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
 |   +-- securepipeline/            # Hardened CI/CD pipeline (7 files, 55 TN-only safe cases)
 +-- testcode/                      # 16 standalone CWE test files (165 test cases)
-+-- bash_ground_truth.yml          # Answer key (356 test cases)
++-- expectedresults-0.3.1.csv      # Answer key (356 test cases, OWASP CSV format)
 +-- bash_benchmark.py              # Scoring script
 +-- BENCHMARK.md                   # This file
 +-- CHANGELOG.md                   # Version history

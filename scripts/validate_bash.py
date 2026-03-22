@@ -24,7 +24,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 BASH_DIR = BENCH_ROOT / "bash"
-YAML_FILE = BASH_DIR / "bash_ground_truth.yml"
+CSV_FILE = BASH_DIR / "expectedresults-0.3.1.csv"
 BENCHMARK_PY = BASH_DIR / "bash_benchmark.py"
 SCAN_DIRS = [BASH_DIR / "apps", BASH_DIR / "testcode"]
 
@@ -33,7 +33,7 @@ PAT_END = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
 PAT_VULN_LINE = re.compile(r"vuln-code-snippet\s+vuln-line\s+(\S+)")
 PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
 
-REQUIRED_FIELDS = {"key", "file", "category", "cwe", "vulnerable"}
+REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
     20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 117, 119, 190, 200, 269, 276,
     287, 295, 306, 327, 328, 330, 352, 362, 367, 377, 434, 494, 501, 502,
@@ -47,53 +47,47 @@ warnings = []
 # ============================================================================
 # L1: Structural Integrity
 # ============================================================================
-def parse_yaml():
-    """Parse bash_ground_truth.yml. Returns dict of {key: {fields...}}."""
+def parse_csv():
+    """Parse expectedresults CSV. Format: test name,category,real vulnerability,CWE"""
     entries = {}
-    current = None
     seen_keys = {}
 
-    with open(YAML_FILE, "r", encoding="utf-8") as f:
+    with open(CSV_FILE, "r", encoding="utf-8") as f:
         for line_num, line in enumerate(f, 1):
             stripped = line.strip()
             if not stripped or stripped.startswith("#"):
                 continue
-            if stripped == "test_cases:":
+
+            parts = stripped.split(",")
+            if len(parts) < 4:
+                errors.append(f"L1 CSV line {line_num}: expected 4 columns, got {len(parts)}")
                 continue
 
-            if stripped.startswith("- key:"):
-                if current:
-                    entries[current["key"]] = current
-                key = stripped.split(":", 1)[1].strip()
-                if key in seen_keys:
-                    errors.append(
-                        f"L1 YAML duplicate key '{key}' at line {line_num} "
-                        f"(first at line {seen_keys[key]})"
-                    )
-                seen_keys[key] = line_num
-                current = {"key": key, "_yaml_line": line_num}
-                continue
+            key = parts[0].strip()
+            category = parts[1].strip()
+            vulnerable_str = parts[2].strip().lower()
+            cwe_str = parts[3].strip()
 
-            if current and ":" in stripped and not stripped.startswith("-"):
-                k, _, v = stripped.partition(":")
-                k = k.strip()
-                v = v.strip().strip('"').strip("'")
-                if k == "vulnerable":
-                    current[k] = v.lower() == "true"
-                elif k == "cwe":
-                    try:
-                        current[k] = int(v)
-                    except ValueError:
-                        errors.append(
-                            f"L3 Invalid CWE value '{v}' for key '{current['key']}' "
-                            f"at YAML line {line_num}"
-                        )
-                        current[k] = -1
-                elif k in ("file", "category", "description"):
-                    current[k] = v
+            if key in seen_keys:
+                errors.append(
+                    f"L1 CSV duplicate key '{key}' at line {line_num} "
+                    f"(first at line {seen_keys[key]})"
+                )
+            seen_keys[key] = line_num
 
-    if current:
-        entries[current["key"]] = current
+            try:
+                cwe = int(cwe_str)
+            except ValueError:
+                errors.append(f"L3 Invalid CWE value '{cwe_str}' for key '{key}' at CSV line {line_num}")
+                cwe = -1
+
+            entries[key] = {
+                "key": key,
+                "category": category,
+                "vulnerable": vulnerable_str == "true",
+                "cwe": cwe,
+                "_csv_line": line_num,
+            }
 
     return entries
 
@@ -169,29 +163,21 @@ def scan_annotations():
 # ============================================================================
 # L2: Roundtrip Fidelity
 # ============================================================================
-def check_roundtrip(yaml_entries, annotations, file_lines):
-    """Verify YAML file paths match annotation file paths, and files exist."""
-    for key, info in yaml_entries.items():
+def check_roundtrip(csv_entries, annotations, file_lines):
+    """Verify annotation files exist on disk and snippets are non-empty."""
+    for key, info in csv_entries.items():
         if key not in annotations:
             continue  # already caught by L1 orphan check
 
-        yaml_file = info.get("file", "")
-        ann_file = annotations[key]["file"]
-
-        # File path mismatch
-        if yaml_file != ann_file:
-            errors.append(
-                f"L2 File mismatch for '{key}': YAML says '{yaml_file}', "
-                f"annotation is in '{ann_file}'"
-            )
+        ann = annotations[key]
+        ann_file = ann["file"]
 
         # File exists on disk
-        full_path = BASH_DIR / yaml_file
+        full_path = BASH_DIR / ann_file
         if not full_path.exists():
-            errors.append(f"L2 File not found on disk: '{yaml_file}' (key '{key}')")
+            errors.append(f"L2 File not found on disk: '{ann_file}' (key '{key}')")
 
         # Empty snippet (start and end on adjacent lines, no code between)
-        ann = annotations[key]
         if ann["end"] - ann["start"] <= 1:
             warnings.append(
                 f"L2 Empty snippet for '{key}' in {ann_file}:{ann['start']}-{ann['end']} "
@@ -202,17 +188,17 @@ def check_roundtrip(yaml_entries, annotations, file_lines):
 # ============================================================================
 # L3: Schema Validation
 # ============================================================================
-def check_schema(yaml_entries):
+def check_schema(csv_entries):
     """Validate required fields, CWE values, and category consistency."""
     all_categories = set()
 
-    for key, info in yaml_entries.items():
+    for key, info in csv_entries.items():
         # Required fields
         missing = REQUIRED_FIELDS - set(info.keys())
         if missing:
             errors.append(
                 f"L3 Missing required fields for '{key}': {sorted(missing)} "
-                f"(YAML line {info.get('_yaml_line', '?')})"
+                f"(CSV line {info.get('_csv_line', '?')})"
             )
 
         # CWE validity
@@ -227,11 +213,6 @@ def check_schema(yaml_entries):
         cat = info.get("category")
         if cat:
             all_categories.add(cat)
-
-        # Description should not be empty
-        desc = info.get("description", "")
-        if not desc:
-            warnings.append(f"L3 Empty description for key '{key}'")
 
     return all_categories
 
@@ -333,11 +314,11 @@ def check_scoring_pipeline(all_categories):
 # ============================================================================
 # Report
 # ============================================================================
-def print_report(yaml_entries, annotations):
+def print_report(csv_entries, annotations):
     """Print the full fidelity report."""
 
     categories = defaultdict(lambda: {"tp": 0, "tn": 0})
-    for key, info in yaml_entries.items():
+    for key, info in csv_entries.items():
         cat = info.get("category", "unknown")
         if info.get("vulnerable", False):
             categories[cat]["tp"] += 1
@@ -348,9 +329,9 @@ def print_report(yaml_entries, annotations):
     total_tn = sum(c["tn"] for c in categories.values())
     total = total_tp + total_tn
 
-    print(f"YAML entries:   {len(yaml_entries)}")
+    print(f"CSV entries:    {len(csv_entries)}")
     print(f"Annotations:    {len(annotations)}")
-    print(f"Match:          {'YES' if len(yaml_entries) == len(annotations) else 'NO - MISMATCH'}")
+    print(f"Match:          {'YES' if len(csv_entries) == len(annotations) else 'NO - MISMATCH'}")
     print(f"Total TP:       {total_tp}")
     print(f"Total TN:       {total_tn}")
     if total > 0:
@@ -362,7 +343,7 @@ def print_report(yaml_entries, annotations):
 
     # Collect CWE per category
     cat_cwes = {}
-    for key, info in yaml_entries.items():
+    for key, info in csv_entries.items():
         cat = info.get("category")
         cwe = info.get("cwe")
         if cat and cwe:
@@ -393,17 +374,17 @@ def main():
     print()
 
     # --- L1: Structural Integrity ---
-    print("[L1] Structural Integrity (YAML <-> annotation cross-reference)")
-    yaml_entries = parse_yaml()
+    print("[L1] Structural Integrity (CSV <-> annotation cross-reference)")
+    csv_entries = parse_csv()
     annotations, vuln_lines, safe_lines, file_lines = scan_annotations()
 
-    yaml_keys = set(yaml_entries.keys())
+    csv_keys = set(csv_entries.keys())
     ann_keys = set(annotations.keys())
 
-    for key in sorted(yaml_keys - ann_keys):
-        errors.append(f"L1 Orphan YAML: '{key}' in ground truth but no annotation in source")
-    for key in sorted(ann_keys - yaml_keys):
-        errors.append(f"L1 Orphan annotation: '{key}' in source but no YAML entry")
+    for key in sorted(csv_keys - ann_keys):
+        errors.append(f"L1 Orphan CSV: '{key}' in ground truth but no annotation in source")
+    for key in sorted(ann_keys - csv_keys):
+        errors.append(f"L1 Orphan annotation: '{key}' in source but no CSV entry")
 
     l1_errors = len(errors)
     print(f"  Checks: duplicate keys, orphans, balanced start/end, unclosed snippets")
@@ -411,25 +392,25 @@ def main():
     print()
 
     # --- L2: Roundtrip Fidelity ---
-    print("[L2] Roundtrip Fidelity (file path match, file existence, empty snippets)")
-    check_roundtrip(yaml_entries, annotations, file_lines)
+    print("[L2] Roundtrip Fidelity (file existence, empty snippets)")
+    check_roundtrip(csv_entries, annotations, file_lines)
     l2_errors = len(errors) - l1_errors
-    print(f"  Checks: YAML file field matches annotation file, files exist on disk")
+    print(f"  Checks: annotation source files exist on disk, snippets non-empty")
     print(f"  Result: {l2_errors} errors found")
     print()
 
     # --- L3: Schema Validation ---
-    print("[L3] Schema Validation (required fields, valid CWEs, descriptions)")
-    all_categories = check_schema(yaml_entries)
+    print("[L3] Schema Validation (required fields, valid CWEs)")
+    all_categories = check_schema(csv_entries)
     l3_errors = len(errors) - l1_errors - l2_errors
-    print(f"  Checks: required fields present, CWE in valid set, non-empty descriptions")
+    print(f"  Checks: 4 CSV columns present, CWE in valid set")
     print(f"  Categories found: {len(all_categories)} ({', '.join(sorted(all_categories))})")
     print(f"  Result: {l3_errors} errors found")
     print()
 
     # --- L4: Semantic Fidelity ---
     print("[L4] Semantic Fidelity (vuln-line/safe-line correctness, overlap detection)")
-    check_semantics(yaml_entries, annotations, vuln_lines, safe_lines)
+    check_semantics(csv_entries, annotations, vuln_lines, safe_lines)
     l4_errors = len(errors) - l1_errors - l2_errors - l3_errors
     print(f"  Checks: TP has vuln-line, TN has safe-line, markers inside snippet, no overlaps")
     print(f"  Result: {l4_errors} errors found")
@@ -449,7 +430,7 @@ def main():
     print("=" * 64)
     print()
 
-    print_report(yaml_entries, annotations)
+    print_report(csv_entries, annotations)
 
     if errors:
         print(f"ERRORS: {len(errors)}")
