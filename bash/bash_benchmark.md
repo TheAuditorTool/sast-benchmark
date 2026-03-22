@@ -175,10 +175,27 @@ For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 49/51 is within 
 
 ## Scoring
 
+Two scoring paths are supported:
+
+### Path 1: Tool-Agnostic SARIF (recommended for external tools)
+
 ```bash
-# After running your SAST tool on this directory:
-python3 bash_benchmark.py
+# Any SAST tool that produces SARIF 2.1.0 output:
+python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.3.1.csv
 ```
+
+### Path 2: TheAuditor Database-First (for TheAuditor users)
+
+```bash
+# Option A: Direct DB scoring
+python3 bash_benchmark.py
+
+# Option B: Convert to SARIF first, then use the standard scorer
+python3 ../scripts/convert_theauditor.py .pf/repo_index.db --language bash --benchmark-dir . > results.sarif
+python3 ../scripts/score_sarif.py results.sarif expectedresults-0.3.1.csv
+```
+
+Both paths produce identical scoring. The SARIF path is the OWASP standard.
 
 Score formula: `Score = TPR - FPR` (Youden's J statistic)
 - **TPR** = TP / (TP + FN) — sensitivity, recall

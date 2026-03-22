@@ -4,6 +4,12 @@
 
 356 test cases across 16 categories, 5 applications, 52 shell scripts. **OWASP rebalancing release.**
 
+### SARIF Scoring Pipeline
+- `scripts/convert_theauditor.py` now supports all 3 languages (Go, Bash, Rust) via combined RULE_MAP
+- For Bash/Rust: converter scans vuln-code-snippet annotations to resolve (file, line) findings to test case keys
+- `scripts/score_sarif.py` now supports key-based matching via `properties.testCaseKey` (Bash/Rust) in addition to filename matching (Go)
+- Bash benchmark now has two scoring paths: direct DB (`bash_benchmark.py`) and SARIF pipeline (`convert_theauditor.py` -> `score_sarif.py`)
+
 ### Ground Truth Migration (YAML -> CSV)
 - Migrated from `bash_ground_truth.yml` to `expectedresults-0.3.1.csv` (OWASP standard format)
 - CSV format matches Go/Java/Python benchmarks: `test name,category,real vulnerability,CWE`
