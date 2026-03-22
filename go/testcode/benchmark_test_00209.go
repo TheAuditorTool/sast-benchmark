@@ -39,8 +39,8 @@ func BenchmarkTest00209(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",
 		Value:    token,
-		HttpOnly: false,
-		Secure:   true,
+		HttpOnly: true,
+		Secure:   false,
 		Path:     "/",
 		Expires:  time.Now().Add(24 * time.Hour),
 	})

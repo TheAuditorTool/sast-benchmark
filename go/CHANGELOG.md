@@ -1,15 +1,57 @@
 # Go Benchmark Changelog
 
-## v0.3.2 (2026-03-20)
+## v0.3.1 (2026-03-22)
 
-### Personal Read Verification
+### OWASP Feedback Response
+
+This release addresses feedback from the OWASP Foundation review.
+
+### Tool-Agnostic SARIF Scoring
+- Created `scripts/score_sarif.py` -- universal SARIF 2.1.0 scorer (stdlib-only Python, zero dependencies)
+- Created `scripts/convert_theauditor.py` -- bridge from TheAuditor DB to standard SARIF
+- Created `go/SCORING.md` -- full scoring documentation with commands for Semgrep, Gosec, CodeQL, SonarQube
+- Scoring supports both flat aggregate and category-averaged (OWASP standard) methods
+- Replaced hardcoded TheAuditor-specific scoring script in go_benchmark.md with tool-agnostic instructions
+
+### Classification Fixes
+- Fixed BenchmarkTest00209 (securecookie=true): Changed `Secure: true, HttpOnly: false` to `Secure: false, HttpOnly: true` so the code actually demonstrates CWE-614 (missing Secure attribute) rather than CWE-1004
+- Fixed BenchmarkTest00340 (sqli=true): Split `BenchSvcProcessAll` (which had sqli+cmdi+pathtraver sinks) into `BenchSvcProcessSQL` (sqli only) so the test is single-concern
+- Reclassified BenchmarkTest00354 (nosql): true->false. `$ne` with user string is standard comparison, not structural injection
+- Reclassified BenchmarkTest00346 (loginjection): true->false. `slog.Info("request", "input", data)` uses structured key-value logging; values are escaped by slog handlers
+- Added BenchmarkTest00425 (nosql=true): `$where` JavaScript injection to compensate reclassification
+- Added BenchmarkTest00426 (loginjection=true): `slog.Info("msg: " + data)` message concatenation to compensate reclassification
+
+### New CWE Categories (+50 tests)
+- **CWE-798 Hardcoded Credentials** (00429-00440): Hardcoded DSN, JWT secret, API key, SSH key, admin password vs environment variables, config files, file-based keys
+- **CWE-287 Authentication Failures** (00441-00452): JWT ParseUnverified, empty HMAC secret, algorithm confusion, error ignored vs algorithm assertion, claims validation, session DB lookup
+- **CWE-862 Authorization Failures** (00453-00461): IDOR, missing role check, client-supplied role header vs ownership check, DB-enforced authz, JWT claims
+- **CWE-352 CSRF** (00462-00470): State-changing POST without CSRF token vs form field validation, X-CSRF-Token header, double-submit cookie
+- **CWE-94 Code/Template Injection** (00471-00478): User-controlled text/template string, FuncMap with exec, template file path injection vs hardcoded templates, allowlisted paths
+
+### Quality
+- All 50 new test files personally verified (read every file, fixed naming collisions, removed incidental SQLi)
+- 7 package-level identifier naming collisions fixed to prevent Go compile errors
+- Fixed incidental SQLi in BenchmarkTest00438 (hardcodedcreds=false test had `"SELECT...FROM "+table`)
+- go.mod updated with `golang-jwt/jwt/v5` and `gorilla/csrf` dependencies
+
+### Scoring Methodology
+- Added category-averaged scoring (OWASP standard): each category weighted equally regardless of test count
+- TheAuditor baseline: +24.9% category-averaged (vs +29.2% flat)
+
+### Final State
+- 476 test cases (was 424)
+- 21 CWE categories (was 16)
+- 238/238 TP/TN balance (exact 50/50)
+- Tool-agnostic SARIF-based scoring
+
+## v0.3 (2026-03-20)
+
+### v0.3-rc3: Personal Read Verification
 - Manually read 24 additional test files focusing on edge cases and debatable classifications
 - Fixed BenchmarkTest00146 (ssrf=false): IP validation was applied to `host` param but `http.Get` fetched separate `targetURL` param. Validation now applies to the URL actually being fetched via `url.Parse(targetURL).Hostname()`.
 - Fixed BenchmarkTest00398 (cmdi=true): Used `exec.Command("cat", file)` with hardcoded command -- same pattern as tests 054/066 which are correctly classified as cmdi=false. Changed to `exec.Command("sh", "-c", "cat "+file)` so shell metacharacters in `file` CAN execute injected commands, making the cmdi=true classification correct.
 
-## v0.3.1 (2026-03-19)
-
-### Deep Verification Pass
+### v0.3-rc2: Deep Verification Pass (2026-03-19)
 - 3 audit agents verified all 314 agent-written test files against CSV classifications
 - 99.4% accuracy (312/314 correct)
 - Fixed BenchmarkTest00118 (xss): reclassified true->false. Go's encoding/json escapes HTML by default (`<` -> `\u003c`). Even with Content-Type text/html, json.Encoder output cannot inject HTML tags.
@@ -17,9 +59,7 @@
 - TP/TN split improved from 213/211 to 212/212 (perfect 50/50)
 - Updated all documentation to reflect corrected numbers
 
-## v0.3 (2026-03-19)
-
-### Scale Expansion (+50 tests)
+### v0.3-rc1: Scale Expansion (2026-03-19)
 - GORM `db.Raw()` vs `db.Where()` discrimination (375-376)
 - sqlx `NamedExec` vs `Get` with `$1` placeholder (377-378)
 - Error path taint: `err.Error()` reused in query (379-380)

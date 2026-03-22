@@ -63,6 +63,16 @@ func BenchSvcTransform(input string) string {
 	return "processed_" + input
 }
 
+func BenchSvcProcessSQL(input string) error {
+	mainQuery := fmt.Sprintf("SELECT * FROM users WHERE name = '%s'", input)
+	rows, err := DB.Query(mainQuery)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	return nil
+}
+
 func BenchSvcProcessAll(input string) error {
 	logQuery := fmt.Sprintf("INSERT INTO audit_log (action) VALUES ('%s')", input)
 	DB.Exec(logQuery)

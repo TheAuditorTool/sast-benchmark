@@ -1,12 +1,17 @@
-# Go SAST Benchmark v0.3
+# Go SAST Benchmark v0.3.1
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **424 test cases** across **16 CWE categories** with 50/50 vulnerable/safe split (212/212). Plus 5 reference apps with 395 classified functions.
+OWASP-style SAST benchmark for Go. **476 test cases** across **21 CWE categories** with 50/50 vulnerable/safe split (238/238). Plus 5 reference apps with 395 classified functions.
 
-**Design principle**: Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities. No vulnerability hints in source code. The CSV answer key is the ONLY ground truth.
+**Design principles**:
+- Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities
+- No vulnerability hints in source code -- the CSV answer key is the ONLY ground truth
+- 50/50 TP/TN balance prevents classifier gaming (flag-everything scores 0%, not 100%)
+- Category-averaged scoring prevents large categories from dominating small ones
+- Tool-agnostic SARIF-based scoring -- any SAST tool can be scored
 
-**Audit status**: All 424 test files verified 2026-03-19. Zero vulnerability hints. Zero duplicate types/functions.
+**Audit status**: All 476 test files verified 2026-03-22. Zero vulnerability hints. Zero duplicate types/functions.
 
 ---
 
@@ -16,8 +21,9 @@ OWASP-style SAST benchmark for Go. **424 test cases** across **16 CWE categories
 gorustbash_benchmark/go/
   expectedresults-0.1.csv     # Answer key: test,category,vulnerable,CWE
   go_benchmark.md             # This file
+  SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
-  testcode/                   # 424 benchmark test files + shared.go + benchmark_services.go
+  testcode/                   # 476 benchmark test files + shared.go + benchmark_services.go
   apps/                       # 5 reference apps with ground_truth.csv each
   cmd/main.go                 # Entry point
   go.mod
@@ -39,13 +45,18 @@ gorustbash_benchmark/go/
 | 8 | weakcipher | 327 | 8 | 8 | 16 |
 | 9 | securecookie | 614 | 8 | 8 | 16 |
 | 10 | redirect | 601 | 8 | 8 | 16 |
-| 11 | tlsverify | 295 | 5 | 5 | 10 |
-| 12 | loginjection | 117 | 4 | 4 | 8 |
-| 13 | nosql | 943 | 4 | 4 | 8 |
-| 14 | ldapi | 90 | 4 | 4 | 8 |
-| 15 | trustbound | 501 | 4 | 4 | 8 |
-| 16 | deserial | 502 | 4 | 4 | 8 |
-| | **TOTAL** | | **212** | **212** | **424** |
+| 11 | hardcodedcreds | 798 | 6 | 6 | 12 |
+| 12 | authnfailure | 287 | 6 | 6 | 12 |
+| 13 | tlsverify | 295 | 5 | 5 | 10 |
+| 14 | loginjection | 117 | 4 | 5 | 9 |
+| 15 | nosql | 943 | 4 | 5 | 9 |
+| 16 | authzfailure | 862 | 5 | 4 | 9 |
+| 17 | csrf | 352 | 5 | 4 | 9 |
+| 18 | codeinj | 94 | 4 | 4 | 8 |
+| 19 | ldapi | 90 | 4 | 4 | 8 |
+| 20 | trustbound | 501 | 4 | 4 | 8 |
+| 21 | deserial | 502 | 4 | 4 | 8 |
+| | **TOTAL** | | **238** | **238** | **476** |
 
 ---
 
@@ -235,6 +246,36 @@ OVERALL
 
 **SAFE (4):** json to typed struct(253), yaml to typed struct(254), gob from internal file(255), json.Decoder to typed struct(256)
 
+### Hardcoded Credentials (CWE-798) -- Tests 00429-00440
+
+**VULNERABLE (6):** hardcoded DSN password(429), hardcoded JWT signing secret(430), hardcoded API key constant(431), hardcoded config struct password(432), SSH private key as string literal(433), hardcoded admin password in comparison(434)
+
+**SAFE (6):** credential from os.Getenv(435), JWT key from file(436), API key from environment(437), password from JSON config file(438), SSH key path from env(439), hardcoded non-sensitive username constant(440)
+
+### Authentication Failures (CWE-287) -- Tests 00441-00452
+
+**VULNERABLE (6):** jwt.ParseUnverified(441), empty HMAC secret(442), no algorithm type assertion(443), parse error ignored(444), algorithm confusion RSA-as-HMAC(445), session cookie value used as identity without validation(446)
+
+**SAFE (6):** explicit HMAC method assertion(447), env-sourced non-empty secret with assertion(448), explicit alg:none rejection(449), full claims validation exp+iss+sub(450), RS256 with RSA key type assertion(451), session validated against DB with expiry check(452)
+
+### Authorization Failures (CWE-862) -- Tests 00453-00461
+
+**VULNERABLE (5):** IDOR user_id from query param without ownership check(453), admin action without role check(454), client-supplied X-User-Role header trusted(455), delete without ownership check(456), file download without access control(457)
+
+**SAFE (4):** ownership check authUserID vs requestedID(458), role from verified JWT claims(459), role from database lookup(460), SQL-enforced ownership DELETE...AND owner_id=?(461)
+
+### CSRF (CWE-352) -- Tests 00462-00470
+
+**VULNERABLE (5):** money transfer without CSRF token(462), account deletion without CSRF(463), password change without CSRF(464), settings update without CSRF(465), JSON API with cookie auth no CSRF(466)
+
+**SAFE (4):** CSRF token in hidden form field validated against session(467), X-CSRF-Token header validated(468), double-submit cookie pattern(469), read-only GET handler(470)
+
+### Code/Template Injection (CWE-94) -- Tests 00471-00478
+
+**VULNERABLE (4):** user-controlled text/template string parsed and executed(471), user template accesses DBPassword/APIKey struct fields(472), template.ParseFiles with user-controlled path(473), FuncMap with exec.Command wrapper callable from user template(474)
+
+**SAFE (4):** hardcoded template with user as data only(475), constant template string with user in .Content field(476), template from allowlisted file path map(477), pre-compiled templates selected by validated name(478)
+
 ---
 
 ## Reference App Inventory (apps/)
@@ -372,68 +413,31 @@ Score range: -100% to +100%. 0% = random guessing.
 
 ---
 
-## Scoring Script
+## Scoring
 
-After running `aud full --offline` on this benchmark project, score with:
+Run any SAST tool, export SARIF 2.1.0, then score:
 
 ```bash
-/mnt/c/Users/santa/Desktop/TheAuditorV2/.venv/Scripts/python.exe -c '
-import sqlite3
-from collections import defaultdict
+# Run your tool and export SARIF
+your-tool scan ./testcode/ --output results.sarif
 
-expected = {}
-with open(r"C:\Users\santa\Desktop\open_tests\gorustbash_benchmark\go\expectedresults-0.1.csv") as f:
-    for line in f:
-        line = line.strip()
-        if line.startswith("#") or not line: continue
-        p = line.split(",")
-        expected[p[0]] = {"cat": p[1], "real": p[2].lower() == "true", "cwe": int(p[3])}
+# Score against ground truth
+python ../scripts/score_sarif.py results.sarif expectedresults-0.1.csv
+```
 
-NOISE = {"deadcode-function", "api-missing-auth"}
-FILE_PREFIX = "testcode/benchmark_test_"
+The scorer computes both **category-averaged** (OWASP standard) and **flat aggregate** scores.
 
-conn = sqlite3.connect(r"C:\Users\santa\Desktop\open_tests\gorustbash_benchmark\go\.pf\repo_index.db")
-c = conn.cursor()
-det = defaultdict(set)
+See [SCORING.md](SCORING.md) for full instructions, tool-specific SARIF export commands (Semgrep, Gosec, CodeQL, SonarQube), and scoring methodology details.
 
-c.execute("SELECT file, rule FROM pattern_findings WHERE file LIKE ? || ?", (FILE_PREFIX, "%"))
-for f, r in c.fetchall():
-    if r not in NOISE:
-        name = f.split("/")[-1].replace(".go", "")
-        name = name.replace("benchmark_test_", "BenchmarkTest")
-        det[name].add(r)
+### TheAuditor Users
 
-c.execute("SELECT sink_file, vulnerability_type FROM resolved_flow_audit WHERE status = ? AND sink_file LIKE ? || ?", ("VULNERABLE", FILE_PREFIX, "%"))
-for f, vt in c.fetchall():
-    name = f.split("/")[-1].replace(".go", "")
-    name = name.replace("benchmark_test_", "BenchmarkTest")
-    det[name].add("taint:" + vt)
+```bash
+# Run TheAuditor
+aud full --offline
 
-conn.close()
-
-cats = sorted(set(e["cat"] for e in expected.values()))
-print("%-16s %-6s %-5s %-5s %-5s %-5s %7s %7s %7s" % ("Category","CWE","TP","FP","FN","TN","TPR","FPR","Score"))
-print("-" * 75)
-ttp=tfp=tfn=ttn=0
-for cat in cats:
-    tests = {k:v for k,v in expected.items() if v["cat"]==cat}
-    tp=fp=fn=tn=0
-    for t,i in tests.items():
-        d = len(det.get(t, set())) > 0
-        if i["real"] and d: tp+=1
-        elif i["real"]: fn+=1
-        elif d: fp+=1
-        else: tn+=1
-    tr=tp+fn; ts=fp+tn
-    tpr=tp/tr if tr else 0; fpr=fp/ts if ts else 0
-    ttp+=tp;tfp+=fp;tfn+=fn;ttn+=tn
-    print("%-16s %-6d %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%" % (
-        cat,list(tests.values())[0]["cwe"],tp,fp,fn,tn,tpr*100,fpr*100,(tpr-fpr)*100))
-otpr=ttp/(ttp+tfn) if (ttp+tfn) else 0; ofpr=tfp/(tfp+ttn) if (tfp+ttn) else 0
-print("-" * 75)
-print("%-16s %-6s %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%" % (
-    "OVERALL","",ttp,tfp,tfn,ttn,otpr*100,ofpr*100,(otpr-ofpr)*100))
-'
+# Convert proprietary DB to SARIF, then score
+python ../scripts/convert_theauditor.py .pf/repo_index.db > theauditor.sarif
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv
 ```
 
 ---
@@ -442,4 +446,4 @@ print("%-16s %-6s %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%" % (
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-**Current: v0.3** -- 424 test cases, 16 CWE categories, 7 frameworks, 5 reference apps with 395 classified functions.
+**Current: v0.3.1** -- 476 test cases, 21 CWE categories, 8 frameworks, 5 reference apps with 395 classified functions. Tool-agnostic SARIF scoring.

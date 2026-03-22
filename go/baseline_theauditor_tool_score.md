@@ -37,7 +37,11 @@ xss              79     6     1     7     14      46.2%    6.7%  +39.5%
 OVERALL                 135   73    77    139     63.7%   34.4%  +29.2%
 ```
 
-**Score: +29.2%** (Youden's J = TPR - FPR)
+**Flat Score: +29.2%** (Youden's J = TPR - FPR)
+
+**Category-Averaged Score: +24.9%** (OWASP standard -- each category weighted equally)
+
+Note: The category-averaged score is lower because categories where TheAuditor has 0% detection (redirect, securecookie, ssrf, trustbound) each count as a full 0% TPR in the average rather than being diluted by larger categories. This is a more honest representation of tool capability across all vulnerability classes. The v0.3.1 benchmark adds 5 new CWE categories (hardcodedcreds, authnfailure, authzfailure, csrf, codeinj) which are not reflected in this baseline -- a re-run is needed for a complete v0.3.1 scorecard.
 
 ## What the Scores Mean
 

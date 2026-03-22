@@ -229,7 +229,7 @@ Focus on SQLi (from 50 to 150) and CmdI/PathTrav (from 30 to 80 each). Each new 
 
 **Goal**: Make reference apps scoreable with vuln-code-snippet annotations and app-specific ground truth files.
 
-This is the most complex workstream -- each app needs its own expectedresults.csv with every vulnerability classified. Deferred to v0.3+.
+This is the most complex workstream -- each app needs its own expectedresults.csv with every vulnerability classified. Deferred to v0.3.1+.
 
 ---
 

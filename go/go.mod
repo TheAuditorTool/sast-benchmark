@@ -21,4 +21,5 @@ require (
 	go.mongodb.org/mongo-driver v1.13.1
 	github.com/gorilla/sessions v1.2.2
 	github.com/gorilla/websocket v1.5.1
+	github.com/golang-jwt/jwt/v5 v5.2.1
 )
