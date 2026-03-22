@@ -1,7 +1,7 @@
 # test name,category,real vulnerability,CWE
-# Go SAST Benchmark v0.1
-# Generated for TheAuditor evaluation
-# Categories: sqli, cmdi, pathtraver, xss, ssrf, weakrand, weakhash, weakcipher, securecookie, redirect, tlsverify, deserial
+# Go SAST Benchmark v0.3.2
+# 534 test cases, 24 CWE categories, 267/267 TP/TN
+# Categories: sqli, cmdi, pathtraver, xss, ssrf, weakrand, weakhash, weakcipher, securecookie, redirect, hardcodedcreds, authnfailure, tlsverify, loginjection, nosql, authzfailure, csrf, codeinj, ldapi, trustbound, deserial, race_condition, fileupload, inputval
 BenchmarkTest00001,sqli,true,89
 BenchmarkTest00002,sqli,false,89
 BenchmarkTest00003,sqli,true,89
@@ -478,3 +478,61 @@ BenchmarkTest00475,codeinj,false,94
 BenchmarkTest00476,codeinj,false,94
 BenchmarkTest00477,codeinj,false,94
 BenchmarkTest00478,codeinj,false,94
+BenchmarkTest00479,trustbound,true,501
+BenchmarkTest00480,trustbound,true,501
+BenchmarkTest00481,trustbound,false,501
+BenchmarkTest00482,trustbound,false,501
+BenchmarkTest00483,ldapi,true,90
+BenchmarkTest00484,ldapi,true,90
+BenchmarkTest00485,ldapi,false,90
+BenchmarkTest00486,ldapi,false,90
+BenchmarkTest00487,deserial,true,502
+BenchmarkTest00488,deserial,true,502
+BenchmarkTest00489,deserial,false,502
+BenchmarkTest00490,deserial,false,502
+BenchmarkTest00491,codeinj,true,94
+BenchmarkTest00492,codeinj,true,94
+BenchmarkTest00493,codeinj,false,94
+BenchmarkTest00494,codeinj,false,94
+BenchmarkTest00495,loginjection,true,117
+BenchmarkTest00496,loginjection,true,117
+BenchmarkTest00497,loginjection,false,117
+BenchmarkTest00498,nosql,true,943
+BenchmarkTest00499,nosql,true,943
+BenchmarkTest00500,nosql,false,943
+BenchmarkTest00501,csrf,true,352
+BenchmarkTest00502,csrf,true,352
+BenchmarkTest00503,csrf,false,352
+BenchmarkTest00504,authzfailure,true,862
+BenchmarkTest00505,authzfailure,true,862
+BenchmarkTest00506,authzfailure,false,862
+BenchmarkTest00507,race_condition,true,362
+BenchmarkTest00508,race_condition,true,362
+BenchmarkTest00509,race_condition,true,362
+BenchmarkTest00510,race_condition,true,362
+BenchmarkTest00511,race_condition,true,362
+BenchmarkTest00512,race_condition,false,362
+BenchmarkTest00513,race_condition,false,362
+BenchmarkTest00514,race_condition,false,362
+BenchmarkTest00515,race_condition,false,362
+BenchmarkTest00516,race_condition,false,362
+BenchmarkTest00517,fileupload,true,434
+BenchmarkTest00518,fileupload,true,434
+BenchmarkTest00519,fileupload,true,434
+BenchmarkTest00520,fileupload,true,434
+BenchmarkTest00521,fileupload,false,434
+BenchmarkTest00522,fileupload,false,434
+BenchmarkTest00523,fileupload,false,434
+BenchmarkTest00524,fileupload,false,434
+BenchmarkTest00525,inputval,true,20
+BenchmarkTest00526,inputval,true,20
+BenchmarkTest00527,inputval,true,20
+BenchmarkTest00528,inputval,true,20
+BenchmarkTest00529,inputval,false,20
+BenchmarkTest00530,inputval,false,20
+BenchmarkTest00531,inputval,false,20
+BenchmarkTest00532,inputval,false,20
+BenchmarkTest00533,loginjection,false,117
+BenchmarkTest00534,nosql,false,943
+BenchmarkTest00535,csrf,false,352
+BenchmarkTest00536,authzfailure,false,862

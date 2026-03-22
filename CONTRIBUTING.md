@@ -14,7 +14,7 @@ Each test case is a single source file with one function. The function does some
 
 2. **No vulnerability hints.** Do not add comments like "VULNERABLE", "TAINT SINK", "INSECURE", or "SAFE". The code should look like normal production code a developer would write. The CSV is the only ground truth.
 
-3. **CSV entry required.** Every test file must have a corresponding entry in `expectedresults-0.1.csv`:
+3. **CSV entry required.** Every test file must have a corresponding entry in the language's `expectedresults-<version>.csv`:
    ```
    BenchmarkTestNNNNN,category,true/false,CWE
    ```
@@ -94,7 +94,7 @@ To score a SAST tool against the benchmark:
 your-tool scan go/testcode/ --output results.sarif
 
 # Score
-python scripts/score_sarif.py results.sarif go/expectedresults-0.1.csv
+python scripts/score_sarif.py results.sarif go/expectedresults-0.3.2.csv
 ```
 
 See `go/SCORING.md` for tool-specific SARIF export commands.

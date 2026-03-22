@@ -22,4 +22,5 @@ require (
 	github.com/gorilla/sessions v1.2.2
 	github.com/gorilla/websocket v1.5.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/rs/zerolog v1.31.0
 )

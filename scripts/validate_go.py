@@ -23,7 +23,7 @@ from collections import defaultdict
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BENCH_ROOT = os.path.dirname(SCRIPT_DIR)
 GO_DIR = os.path.join(BENCH_ROOT, "go")
-CSV_FILE = os.path.join(GO_DIR, "expectedresults-0.1.csv")
+CSV_FILE = os.path.join(GO_DIR, "expectedresults-0.3.2.csv")
 TESTCODE_DIR = os.path.join(GO_DIR, "testcode")
 
 errors = []

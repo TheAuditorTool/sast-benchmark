@@ -1,8 +1,8 @@
-# Go SAST Benchmark v0.3.1
+# Go SAST Benchmark v0.3.2
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **476 test cases** across **21 CWE categories** with 50/50 vulnerable/safe split (238/238). Plus 5 reference apps with 395 classified functions.
+OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories** with 50/50 vulnerable/safe split (267/267). Plus 5 reference apps with 395 classified functions.
 
 **Design principles**:
 - Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities
@@ -11,7 +11,7 @@ OWASP-style SAST benchmark for Go. **476 test cases** across **21 CWE categories
 - Category-averaged scoring prevents large categories from dominating small ones
 - Tool-agnostic SARIF-based scoring -- any SAST tool can be scored
 
-**Audit status**: All 476 test files verified 2026-03-22. Zero vulnerability hints. Zero duplicate types/functions.
+**Audit status**: All 534 test files verified 2026-03-23. Zero vulnerability hints. Zero duplicate types/functions.
 
 ---
 
@@ -19,11 +19,11 @@ OWASP-style SAST benchmark for Go. **476 test cases** across **21 CWE categories
 
 ```
 gorustbash_benchmark/go/
-  expectedresults-0.1.csv     # Answer key: test,category,vulnerable,CWE
+  expectedresults-0.3.2.csv     # Answer key: test,category,vulnerable,CWE
   go_benchmark.md             # This file
   SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
-  testcode/                   # 476 benchmark test files + shared.go + benchmark_services.go
+  testcode/                   # 534 benchmark test files + shared.go + benchmark_services.go
   apps/                       # 5 reference apps with ground_truth.csv each
   cmd/main.go                 # Entry point
   go.mod
@@ -47,16 +47,19 @@ gorustbash_benchmark/go/
 | 10 | redirect | 601 | 8 | 8 | 16 |
 | 11 | hardcodedcreds | 798 | 6 | 6 | 12 |
 | 12 | authnfailure | 287 | 6 | 6 | 12 |
-| 13 | tlsverify | 295 | 5 | 5 | 10 |
-| 14 | loginjection | 117 | 4 | 5 | 9 |
-| 15 | nosql | 943 | 4 | 5 | 9 |
-| 16 | authzfailure | 862 | 5 | 4 | 9 |
-| 17 | csrf | 352 | 5 | 4 | 9 |
-| 18 | codeinj | 94 | 4 | 4 | 8 |
-| 19 | ldapi | 90 | 4 | 4 | 8 |
-| 20 | trustbound | 501 | 4 | 4 | 8 |
-| 21 | deserial | 502 | 4 | 4 | 8 |
-| | **TOTAL** | | **238** | **238** | **476** |
+| 13 | trustbound | 501 | 6 | 6 | 12 |
+| 14 | ldapi | 90 | 6 | 6 | 12 |
+| 15 | deserial | 502 | 6 | 6 | 12 |
+| 16 | codeinj | 94 | 6 | 6 | 12 |
+| 17 | loginjection | 117 | 6 | 7 | 13 |
+| 18 | nosql | 943 | 6 | 7 | 13 |
+| 19 | authzfailure | 862 | 7 | 6 | 13 |
+| 20 | csrf | 352 | 7 | 6 | 13 |
+| 21 | tlsverify | 295 | 5 | 5 | 10 |
+| 22 | race_condition | 362 | 5 | 5 | 10 |
+| 23 | fileupload | 434 | 4 | 4 | 8 |
+| 24 | inputval | 20 | 4 | 4 | 8 |
+| | **TOTAL** | | **267** | **267** | **534** |
 
 ---
 
@@ -373,16 +376,16 @@ OVERALL
 
 ---
 
-## Audit Results (2026-03-22)
+## Audit Results (2026-03-23)
 
 ### Test File Quality
 
 | Check | Result |
 |-------|--------|
-| Files exist | 476/476 |
-| Function names match file numbers | 476/476 PASS |
+| Files exist | 534/534 |
+| Function names match file numbers | 534/534 PASS |
 | No vulnerability hints in comments | PASS (all clean -- testcode and apps) |
-| CSV classifications match code | PASS (all 476 verified) |
+| CSV classifications match code | PASS (all 534 verified) |
 | Package declarations correct | PASS |
 | Imports valid | PASS |
 | Shared helpers used | PASS (DB, RespondJSON, ParseJSONBody) |
@@ -422,7 +425,7 @@ Run any SAST tool, export SARIF 2.1.0, then score:
 your-tool scan ./testcode/ --output results.sarif
 
 # Score against ground truth
-python ../scripts/score_sarif.py results.sarif expectedresults-0.1.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
 ```
 
 The scorer computes both **category-averaged** (OWASP standard) and **flat aggregate** scores.
@@ -437,7 +440,7 @@ aud full --offline
 
 # Convert proprietary DB to SARIF, then score
 python ../scripts/convert_theauditor.py .pf/repo_index.db > theauditor.sarif
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 
 ---

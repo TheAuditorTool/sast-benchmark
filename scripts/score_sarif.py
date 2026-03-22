@@ -369,10 +369,10 @@ def main():
         print()
         print("Examples:")
         print("  # Go (filename-based matching)")
-        print("  python score_sarif.py results.sarif go/expectedresults-0.1.csv")
+        print("  python score_sarif.py results.sarif go/expectedresults-0.3.2.csv")
         print()
         print("  # Rust (annotation-based matching)")
-        print("  python score_sarif.py results.sarif rust/expectedresults-0.1.csv \\")
+        print("  python score_sarif.py results.sarif rust/expectedresults-0.3.2.csv \\")
         print("      --annotations-dir rust/apps --annotations-dir rust/testcode")
         sys.exit(1)
 
@@ -382,7 +382,7 @@ def main():
         csv_path = positional[1]
     else:
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_path = os.path.join(script_dir, "..", "go", "expectedresults-0.1.csv")
+        csv_path = os.path.join(script_dir, "..", "go", "expectedresults-0.3.2.csv")
 
     if not os.path.isfile(sarif_path):
         print("Error: SARIF file not found: %s" % sarif_path, file=sys.stderr)

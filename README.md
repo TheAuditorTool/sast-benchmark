@@ -51,8 +51,8 @@ gorustbash_benchmark/
     score_sarif.py           # SARIF scorer (any SAST tool)
     convert_theauditor.py    # TheAuditor DB to SARIF bridge
     validate_go.py           # Go CSV/file consistency checker
-  go/                      # Go benchmark (476 tests, 21 CWEs)
-    expectedresults-0.1.csv
+  go/                      # Go benchmark (534 tests, 24 CWEs)
+    expectedresults-0.3.2.csv
     go_benchmark.md
     SCORING.md               # Scoring methodology and tool instructions
     CHANGELOG.md
@@ -76,7 +76,7 @@ gorustbash_benchmark/
 
 ## Language Benchmarks
 
-### Go v0.3.1 -- 476 test cases, 21 CWEs, 8 frameworks
+### Go v0.3.2 -- 534 test cases, 24 CWEs, 8 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -92,15 +92,18 @@ gorustbash_benchmark/
 | redirect | 601 | 8 | 8 | 16 |
 | hardcodedcreds | 798 | 6 | 6 | 12 |
 | authnfailure | 287 | 6 | 6 | 12 |
+| trustbound | 501 | 6 | 6 | 12 |
+| ldapi | 90 | 6 | 6 | 12 |
+| deserial | 502 | 6 | 6 | 12 |
+| codeinj | 94 | 6 | 6 | 12 |
+| loginjection | 117 | 6 | 7 | 13 |
+| nosql | 943 | 6 | 7 | 13 |
+| authzfailure | 862 | 7 | 6 | 13 |
+| csrf | 352 | 7 | 6 | 13 |
 | tlsverify | 295 | 5 | 5 | 10 |
-| loginjection | 117 | 4 | 5 | 9 |
-| nosql | 943 | 4 | 5 | 9 |
-| authzfailure | 862 | 5 | 4 | 9 |
-| csrf | 352 | 5 | 4 | 9 |
-| codeinj | 94 | 4 | 4 | 8 |
-| ldapi | 90 | 4 | 4 | 8 |
-| trustbound | 501 | 4 | 4 | 8 |
-| deserial | 502 | 4 | 4 | 8 |
+| race_condition | 362 | 5 | 5 | 10 |
+| fileupload | 434 | 4 | 4 | 8 |
+| inputval | 20 | 4 | 4 | 8 |
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
@@ -151,10 +154,10 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 | Language | Tests | CWEs | TP/TN Balance |
 |----------|-------|------|---------------|
-| Go | 476 | 21 | 50/50 |
+| Go | 534 | 24 | 50/50 |
 | Bash | 356 | 16 | 49/51 |
 | Rust | 268 | 13 | 46/54 |
-| **Total** | **1,066** | **47 unique** | |
+| **Total** | **1,158** | **50 unique** | |
 
 ## How to Use
 

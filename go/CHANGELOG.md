@@ -1,5 +1,35 @@
 # Go Benchmark Changelog
 
+## v0.3.2 (2026-03-23)
+
+### Thin Category Expansion (+32 tests)
+- Expanded 8 categories from <10 tests to 12+ minimum
+- trustbound CWE-501 (00479-00482): gorilla/sessions user role injection, context.WithValue
+- ldapi CWE-90 (00483-00486): LDAP filter concatenation, BaseDN injection, EscapeFilter
+- deserial CWE-502 (00487-00490): gob.Decode to interface{}, typed struct decode
+- codeinj CWE-94 (00491-00494): template FuncMap with exec, plugin.Open with user path
+- loginjection CWE-117 (00495-00497, 00533): log.Printf newline injection, zerolog structured
+- nosql CWE-943 (00498-00500, 00534): operator injection via user field name, regex pattern
+- csrf CWE-352 (00501-00503, 00535): PUT/POST without CSRF token, SameSite+token validation
+- authzfailure CWE-862 (00504-00506, 00536): IDOR, X-Role header trust, DB role lookup
+
+### New OWASP Top 25 Categories (+26 tests)
+- **CWE-362 Race Condition** (00507-00516): concurrent map write, TOCTOU, closure capture race, shared counter vs sync.Mutex, atomic, channels, sync.Once
+- **CWE-434 Unrestricted File Upload** (00517-00524): original filename, Content-Type spoofing, extension blocklist vs UUID rename, magic bytes, size limit, out-of-root storage
+- **CWE-20 Improper Input Validation** (00525-00532): array bounds, ReDoS regex, URL scheme, negative quantity vs bounds check, net/mail, allowlist, range validation
+
+### Quality
+- All 58 new test files use benchmarkTestNNNNN prefix for package-level identifiers
+- Zero vulnerability hints in any new file
+- go.mod updated with zerolog dependency
+
+### Final State
+- 534 test cases (was 476)
+- 24 CWE categories (was 21)
+- 267/267 TP/TN balance (exact 50/50)
+- Zero thin categories (all 24 have 8+ tests, 20 have 12+)
+- OWASP Top 25 coverage: 14/25 (was 11/25)
+
 ## v0.3.1 (2026-03-22)
 
 ### OWASP Feedback Response
