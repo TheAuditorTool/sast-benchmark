@@ -51,14 +51,12 @@ def load_expected_results(csv_path):
 
 
 def extract_test_name_from_uri(uri):
-    """Extract BenchmarkTestNNNNN from a SARIF URI.
+    """Extract BenchmarkTestNNNNN from a SARIF URI (Go filename mode).
 
     Handles:
       testcode/benchmark_test_00001.go
       /abs/path/testcode/benchmark_test_00001.go
       C:\\Users\\...\\benchmark_test_00001.go
-      benchmark_test_00001.rs
-      benchmark_test_00001.sh
     """
     m = re.search(r"benchmark_test_(\d{5})\.\w+", uri)
     if m:
@@ -66,8 +64,13 @@ def extract_test_name_from_uri(uri):
     return None
 
 
-def load_sarif_detections(sarif_path):
-    """Parse SARIF and return set of detected test names."""
+def load_sarif_detections_filename(sarif_path):
+    """Parse SARIF and return set of detected test names.
+
+    Two matching modes (both checked for every result):
+      1. URI-based: extracts BenchmarkTestNNNNN from file paths (Go)
+      2. Key-based: reads properties.testCaseKey from result (Bash/Rust)
+    """
     with open(sarif_path, "r", encoding="utf-8") as f:
         sarif = json.load(f)
 
@@ -75,6 +78,7 @@ def load_sarif_detections(sarif_path):
 
     for run in sarif.get("runs", []):
         for result in run.get("results", []):
+            # Mode 1: URI-based matching (Go — one file per test case)
             locations = result.get("locations", [])
             for loc in locations:
                 phys = loc.get("physicalLocation", {})
@@ -84,6 +88,116 @@ def load_sarif_detections(sarif_path):
                     name = extract_test_name_from_uri(uri)
                     if name:
                         detected.add(name)
+
+            # Mode 2: Key-based matching (Bash/Rust — annotation-resolved)
+            props = result.get("properties", {})
+            tc_key = props.get("testCaseKey")
+            if tc_key:
+                detected.add(tc_key)
+
+    return detected
+
+
+def load_sarif_findings(sarif_path):
+    """Parse SARIF and return list of (file, line) tuples for all findings."""
+    with open(sarif_path, "r", encoding="utf-8") as f:
+        sarif = json.load(f)
+
+    findings = []
+    for run in sarif.get("runs", []):
+        for result in run.get("results", []):
+            locations = result.get("locations", [])
+            for loc in locations:
+                phys = loc.get("physicalLocation", {})
+                artifact = phys.get("artifactLocation", {})
+                uri = artifact.get("uri", "").replace("\\", "/")
+                region = phys.get("region", {})
+                line = region.get("startLine", 0)
+                if uri and line:
+                    findings.append((uri, line))
+
+    return findings
+
+
+def scan_annotations(source_dirs):
+    """Scan source files for vuln-code-snippet annotations.
+
+    Returns dict of {key: {"file": relative_path, "start": line, "end": line}}.
+    Works for Rust (.rs) and Bash (.sh) annotation-based benchmarks.
+    """
+    pat_start = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
+    pat_end = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
+
+    annotations = {}
+    for source_dir in source_dirs:
+        for root, dirs, files in os.walk(source_dir):
+            dirs[:] = [d for d in dirs if d not in ("target", ".git", "node_modules", ".auditor_venv")]
+            for fn in files:
+                if not (fn.endswith(".rs") or fn.endswith(".sh")):
+                    continue
+                fpath = os.path.join(root, fn)
+                try:
+                    with open(fpath, "r", encoding="utf-8", errors="replace") as f:
+                        lines = f.readlines()
+                except Exception:
+                    continue
+
+                rel = os.path.relpath(fpath, os.path.dirname(source_dir)).replace("\\", "/")
+                opens = {}
+                for i, line in enumerate(lines, 1):
+                    m = pat_start.search(line)
+                    if m:
+                        opens[m.group(1)] = i
+                    m = pat_end.search(line)
+                    if m:
+                        key = m.group(1)
+                        if key in opens:
+                            annotations[key] = {"file": rel, "start": opens.pop(key), "end": i}
+
+    return annotations
+
+
+def detect_annotation_mode(expected):
+    """Return True if CSV keys use annotation-based identity (not filename-based)."""
+    for name in expected:
+        if re.match(r"BenchmarkTest\d{5}$", name):
+            return False
+    return True
+
+
+def compute_detections_annotation(expected, findings, annotations):
+    """Match SARIF findings against annotation line ranges.
+
+    A test case is "detected" if any SARIF finding's (file, line) falls
+    within the annotation's (file, start_line, end_line) range.
+    """
+    detected = set()
+
+    # Build lookup: normalized_file -> set of (line, ...)
+    finding_map = defaultdict(set)
+    for uri, line in findings:
+        # Normalize: strip leading paths to get relative
+        normalized = uri.replace("\\", "/")
+        finding_map[normalized].add(line)
+
+    for key, info in expected.items():
+        ann = annotations.get(key)
+        if not ann:
+            continue
+
+        ann_file = ann["file"]
+        ann_start = ann["start"]
+        ann_end = ann["end"]
+
+        # Check all path variants for the annotation file
+        for fpath, lines_set in finding_map.items():
+            if fpath.endswith(ann_file) or ann_file.endswith(fpath) or fpath == ann_file:
+                for line in lines_set:
+                    if ann_start <= line <= ann_end:
+                        detected.add(key)
+                        break
+                if key in detected:
+                    break
 
     return detected
 
@@ -228,18 +342,44 @@ def print_summary(expected, detected, flat_score, avg_score):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python score_sarif.py <tool_output.sarif> [expectedresults.csv]")
+    # Parse args: score_sarif.py <sarif> [csv] [--annotations-dir <dir> ...]
+    args = sys.argv[1:]
+    annotations_dirs = []
+    positional = []
+
+    i = 0
+    while i < len(args):
+        if args[i] == "--annotations-dir" and i + 1 < len(args):
+            annotations_dirs.append(args[i + 1])
+            i += 2
+        elif args[i].startswith("--"):
+            i += 1
+        else:
+            positional.append(args[i])
+            i += 1
+
+    if len(positional) < 1:
+        print("Usage: python score_sarif.py <tool_output.sarif> [expectedresults.csv] [--annotations-dir <dir>]")
         print()
         print("Arguments:")
-        print("  tool_output.sarif    SARIF 2.1.0 file from any SAST tool")
-        print("  expectedresults.csv  Ground truth CSV (default: ../go/expectedresults-0.1.csv)")
+        print("  tool_output.sarif      SARIF 2.1.0 file from any SAST tool")
+        print("  expectedresults.csv    Ground truth CSV (default: auto-detect)")
+        print("  --annotations-dir DIR  Source directory with vuln-code-snippet annotations")
+        print("                         (required for Rust/Bash; Go uses filename matching)")
+        print()
+        print("Examples:")
+        print("  # Go (filename-based matching)")
+        print("  python score_sarif.py results.sarif go/expectedresults-0.1.csv")
+        print()
+        print("  # Rust (annotation-based matching)")
+        print("  python score_sarif.py results.sarif rust/expectedresults-0.1.csv \\")
+        print("      --annotations-dir rust/apps --annotations-dir rust/testcode")
         sys.exit(1)
 
-    sarif_path = sys.argv[1]
+    sarif_path = positional[0]
 
-    if len(sys.argv) >= 3:
-        csv_path = sys.argv[2]
+    if len(positional) >= 2:
+        csv_path = positional[1]
     else:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         csv_path = os.path.join(script_dir, "..", "go", "expectedresults-0.1.csv")
@@ -253,7 +393,28 @@ def main():
         sys.exit(1)
 
     expected = load_expected_results(csv_path)
-    detected = load_sarif_detections(sarif_path)
+
+    # Determine matching mode
+    use_annotations = annotations_dirs or detect_annotation_mode(expected)
+
+    if use_annotations and not annotations_dirs:
+        # Auto-detect: look for apps/ and testcode/ next to CSV
+        csv_dir = os.path.dirname(os.path.abspath(csv_path))
+        for subdir in ["apps", "testcode"]:
+            candidate = os.path.join(csv_dir, subdir)
+            if os.path.isdir(candidate):
+                annotations_dirs.append(candidate)
+
+    if use_annotations:
+        print("Mode: annotation-based matching (Rust/Bash)")
+        annotations = scan_annotations(annotations_dirs)
+        print("  Annotations found: %d" % len(annotations))
+        findings = load_sarif_findings(sarif_path)
+        print("  SARIF findings: %d" % len(findings))
+        detected = compute_detections_annotation(expected, findings, annotations)
+    else:
+        print("Mode: filename-based matching (Go)")
+        detected = load_sarif_detections_filename(sarif_path)
 
     print()
     per_cat = compute_scores(expected, detected)

@@ -4,6 +4,17 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-03-22 — SARIF Scoring Support
+
+### Tool-Agnostic Scoring
+- Created `rust/SCORING.md` — mirrors Go's SCORING.md with Rust-specific annotation-based matching
+- Extended `scripts/score_sarif.py` with `--annotations-dir` flag for annotation-based matching (Rust/Bash)
+- Extended `scripts/convert_theauditor.py` with Rust RULE_MAP (40+ rules) and SINK_MAP entries
+- Updated `rust_benchmark.md` to reference SCORING.md and show both SARIF and legacy TheAuditor paths
+- Any SAST tool that outputs SARIF 2.1.0 can now be scored against the Rust benchmark
+
+---
+
 ## 2026-03-22 — v0.3.1: Misclassification Fixes (OWASP Submission Response)
 
 ### Context

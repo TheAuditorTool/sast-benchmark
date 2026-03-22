@@ -135,7 +135,32 @@ OVERALL                 ?     ?     ?     ?     ?.?%    ?.?%  +?.?%
 
 ---
 
-## Scoring Script
+## Scoring
+
+See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-based, works with any SAST tool).
+
+### Quick Start (any tool)
+
+```bash
+# Export SARIF from your tool, then:
+python ../scripts/score_sarif.py results.sarif expectedresults-0.1.csv \
+    --annotations-dir apps --annotations-dir testcode
+```
+
+### TheAuditor (database-first path)
+
+```bash
+aud full --offline
+python ../scripts/convert_theauditor.py .pf/repo_index.db \
+    --language rust --benchmark-dir . > theauditor.sarif
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv \
+    --annotations-dir apps --annotations-dir testcode
+```
+
+### Legacy: TheAuditor Direct DB Scoring (development only)
+
+The embedded script below queries TheAuditor's database directly without SARIF conversion.
+It is kept for internal development use. For tool-agnostic scoring, use SCORING.md.
 
 After running `aud full --offline` on the benchmark directory, score with:
 
