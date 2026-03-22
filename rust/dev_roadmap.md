@@ -1,7 +1,7 @@
 # Rust SAST Benchmark — Development Roadmap
 
 > **Version:** 0.3.2 (2026-03-23)
-> **Status:** v0.3.2 shipped. M1-M6 complete. Phase 1: 12 misclassification fixes. Phase 2: testcode/ hint removal + YAML deletion. Phase 2.5: apps/ hint purge (42 key renames, 313+ markers removed). SARIF scoring consolidated. CSV is sole ground truth.
+> **Status:** v0.3.2 shipped. Phase 1: 12 misclassification fixes. Phase 2: testcode/ hint removal. Phase 2.5: apps/ hint purge. Phase 3: XSS rebalance (31/69 → 50/50, +6 TPs). SARIF scoring consolidated. CSV is sole ground truth. 268 test cases, all categories within 40-60 balance.
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---

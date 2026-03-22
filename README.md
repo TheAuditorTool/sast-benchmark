@@ -58,7 +58,7 @@ gorustbash_benchmark/
     CHANGELOG.md
     testcode/
     apps/
-  rust/                    # Rust benchmark (262 tests, 13 CWEs)
+  rust/                    # Rust benchmark (268 tests, 13 CWEs)
     expectedresults-0.1.csv  # Answer key (scoring authority)
     rust_benchmark.md        # Scoring script + methodology
     CHANGELOG.md
@@ -104,7 +104,7 @@ gorustbash_benchmark/
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3.2 -- 262 test cases, 13 CWEs, 4 frameworks
+### Rust v0.3.2 -- 268 test cases, 13 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -115,14 +115,14 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 | memsafety | 119 | 8 | 12 | 20 |
 | crypto | 327 | 9 | 11 | 20 |
 | weakrand | 330 | 7 | 9 | 16 |
-| xss | 79 | 5 | 11 | 16 |
+| xss | 79 | 11 | 11 | 22 |
 | infodisclosure | 200 | 8 | 8 | 16 |
 | deser | 502 | 6 | 6 | 12 |
 | intoverflow | 190 | 5 | 7 | 12 |
 | redos | 1333 | 5 | 5 | 10 |
 | inputval | 20 | 4 | 6 | 10 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 45/55. All 13 categories have both vulnerable and safe test cases. v0.3.1 fixed 12 misclassified test cases and stripped all source code hints to match OWASP gold standard (CSV is sole oracle).
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 standalone test files in `testcode/`. TP/TN balance: 46/54. All 13 categories have both vulnerable and safe test cases. v0.3.2: XSS rebalanced to 50/50, all source code hints stripped, SARIF scoring consolidated.
 
 ### Bash v0.3.1 -- 356 test cases, 16 CWEs
 
@@ -153,7 +153,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 sta
 |----------|-------|------|---------------|
 | Go | 476 | 21 | 50/50 |
 | Bash | 356 | 16 | 49/51 |
-| Rust | 262 | 13 | 44/56 |
+| Rust | 268 | 13 | 46/54 |
 | **Total** | **1,066** | **47 unique** | |
 
 ## How to Use

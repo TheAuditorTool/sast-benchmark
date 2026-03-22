@@ -4,6 +4,27 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-03-23 — v0.3.2: XSS Category Rebalance
+
+### Context
+Due diligence audit found XSS was the worst-balanced category in the entire benchmark: 5 TP vs 11 TN (31/69). OWASP standard is 50/50. Every other Rust category was within 40-60 range.
+
+### Changes
+Added 6 new XSS True Positive test cases, each a genuinely distinct CWE-79 variant:
+
+| File | Key | Pattern | What It Tests |
+|------|-----|---------|---------------|
+| xss_013.rs | testcodeXss013 | Event handler injection (onclick) | Nested context awareness |
+| xss_014.rs | testcodeXss014 | javascript: protocol in href | URL scheme validation |
+| xss_015.rs | testcodeXss015 | Stored XSS via in-memory HashMap | Cross-function taint tracking |
+| xss_016.rs | testcodeXss016 | HTML comment injection | Comment context breakout |
+| xss_017.rs | testcodeXss017 | data: URI in iframe src | URI scheme + iframe context |
+| xss_018.rs | testcodeXss018 | Error path reflection | Error branch taint flow |
+
+**Result:** XSS now 11 TP + 11 TN = 50/50. Total benchmark: 268 test cases (124 TP, 144 TN).
+
+---
+
 ## 2026-03-22 — v0.3.2: Apps Hint Purge (OWASP Gold Standard)
 
 ### Context
