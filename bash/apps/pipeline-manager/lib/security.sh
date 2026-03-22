@@ -76,34 +76,34 @@ authenticate_with_token() {
     log_info "Token authentication successful"
 }
 
-# vuln-code-snippet start readWithoutR
+# vuln-code-snippet start read_without_r
 authenticate_with_password() {
     local environment="$1"
 
     echo -n "Enter deployment password: "
-    read password  # vuln-code-snippet vuln-line readWithoutR
+    read password  # vuln-code-snippet vuln-line read_without_r
 
     # Store password in environment
     export DEPLOY_PASSWORD="${password}"
 
     log_info "Password authentication set up"
 }
-# vuln-code-snippet end readWithoutR
+# vuln-code-snippet end read_without_r
 
-# vuln-code-snippet start readWithRSafe
+# vuln-code-snippet start read_with_r
 # Safe password reading
-authenticate_with_password_safe() {
+authenticate_with_password() {
     local environment="$1"
 
     echo -n "Enter deployment password: "
-    read -r -s password  # vuln-code-snippet safe-line readWithRSafe
+    read -r -s password  # vuln-code-snippet safe-line read_with_r
     echo
 
     export DEPLOY_PASSWORD="${password}"
 
     log_info "Password authentication set up"
 }
-# vuln-code-snippet end readWithRSafe
+# vuln-code-snippet end read_with_r
 
 # ============================================================================
 # Token Management
@@ -127,7 +127,7 @@ generate_api_token() {
     echo "${token}"
 }
 
-# vuln-code-snippet start sqlInjectionValidateToken
+# vuln-code-snippet start sql_injection_validate_token
 validate_api_token() {
     local token="$1"
 
@@ -137,7 +137,7 @@ validate_api_token() {
         FROM api_tokens
         WHERE token = '${token}'
           AND expires_at > datetime('now')
-    ")  # vuln-code-snippet vuln-line sqlInjectionValidateToken
+    ")  # vuln-code-snippet vuln-line sql_injection_validate_token
 
     if [[ -n "${result}" ]]; then
         echo "${result}"
@@ -146,7 +146,7 @@ validate_api_token() {
 
     return 1
 }
-# vuln-code-snippet end sqlInjectionValidateToken
+# vuln-code-snippet end sql_injection_validate_token
 
 revoke_api_token() {
     local token="$1"
@@ -162,7 +162,7 @@ revoke_api_token() {
 # ============================================================================
 # Authorization
 # ============================================================================
-# vuln-code-snippet start sqlInjectionCheckPermission
+# vuln-code-snippet start sql_injection_check_permission
 check_permission() {
     local user="$1"
     local action="$2"
@@ -175,11 +175,11 @@ check_permission() {
         WHERE user = '${user}'
           AND action = '${action}'
           AND resource = '${resource}'
-    ")  # vuln-code-snippet vuln-line sqlInjectionCheckPermission
+    ")  # vuln-code-snippet vuln-line sql_injection_check_permission
 
     [[ "${result}" -gt 0 ]]
 }
-# vuln-code-snippet end sqlInjectionCheckPermission
+# vuln-code-snippet end sql_injection_check_permission
 
 require_permission() {
     local action="$1"
@@ -215,24 +215,24 @@ get_secret() {
     fi
 }
 
-# vuln-code-snippet start setXDebugLeak
+# vuln-code-snippet start set_x_debug_leak
 debug_mode() {
     log_warn "Enabling debug mode - SECRETS MAY BE EXPOSED"
 
-    set -x  # vuln-code-snippet vuln-line setXDebugLeak
+    set -x  # vuln-code-snippet vuln-line set_x_debug_leak
 }
-# vuln-code-snippet end setXDebugLeak
+# vuln-code-snippet end set_x_debug_leak
 
-# vuln-code-snippet start debugModeSafe
+# vuln-code-snippet start debug_mode_filtered
 # Safe debug mode
-debug_mode_safe() {
+debug_mode_filtered() {
     # Filter sensitive variables before enabling trace
     log_info "Debug mode enabled (filtered)"
 
     # Use function tracing instead
-    trap 'log_debug "LINE $LINENO: $BASH_COMMAND"' DEBUG  # vuln-code-snippet safe-line debugModeSafe
+    trap 'log_debug "LINE $LINENO: $BASH_COMMAND"' DEBUG  # vuln-code-snippet safe-line debug_mode_filtered
 }
-# vuln-code-snippet end debugModeSafe
+# vuln-code-snippet end debug_mode_filtered
 
 # ============================================================================
 # Encryption/Decryption
@@ -295,26 +295,26 @@ sanitize_filename() {
     echo "${filename}"
 }
 
-# vuln-code-snippet start printfFormatInjection
-format_output_unsafe() {
+# vuln-code-snippet start printf_format_injection
+format_output_dynamic() {
     local format="$1"
     shift
     local args=("$@")
 
-    printf "${format}" "${args[@]}"  # vuln-code-snippet vuln-line printfFormatInjection
+    printf "${format}" "${args[@]}"  # vuln-code-snippet vuln-line printf_format_injection
 }
-# vuln-code-snippet end printfFormatInjection
+# vuln-code-snippet end printf_format_injection
 
-# vuln-code-snippet start printfSafeFormat
+# vuln-code-snippet start printf_literal_format
 # Safe formatting
-format_output_safe() {
+format_output_literal() {
     local format="$1"
     shift
 
     # Always use %s for user data
-    printf '%s' "$@"  # vuln-code-snippet safe-line printfSafeFormat
+    printf '%s' "$@"  # vuln-code-snippet safe-line printf_literal_format
 }
-# vuln-code-snippet end printfSafeFormat
+# vuln-code-snippet end printf_literal_format
 
 # ============================================================================
 # Audit Logging
@@ -355,7 +355,7 @@ get_auth_header() {
 # ============================================================================
 # Privilege Management
 # ============================================================================
-# vuln-code-snippet start sudoVariableCommand
+# vuln-code-snippet start sudo_variable_command
 run_as_root() {
     local command="$1"
     shift
@@ -363,9 +363,9 @@ run_as_root() {
 
     log_info "Running with elevated privileges: ${command}"
 
-    sudo ${command} "${args[@]}"  # vuln-code-snippet vuln-line sudoVariableCommand
+    sudo ${command} "${args[@]}"  # vuln-code-snippet vuln-line sudo_variable_command
 }
-# vuln-code-snippet end sudoVariableCommand
+# vuln-code-snippet end sudo_variable_command
 
 drop_privileges() {
     local target_user="${1:-nobody}"
@@ -379,25 +379,25 @@ drop_privileges() {
 # ============================================================================
 # File Security
 # ============================================================================
-# vuln-code-snippet start secureFilePerms
+# vuln-code-snippet start secure_file_perms
 secure_file() {
     local file_path="$1"
 
     # Set restrictive permissions
-    chmod 600 "${file_path}"  # vuln-code-snippet safe-line secureFilePerms
+    chmod 600 "${file_path}"  # vuln-code-snippet safe-line secure_file_perms
 
     # Set ownership
     chown "${USER}:${USER}" "${file_path}" 2>/dev/null || true
 }
-# vuln-code-snippet end secureFilePerms
+# vuln-code-snippet end secure_file_perms
 
-# vuln-code-snippet start chmod666WorldReadable
+# vuln-code-snippet start chmod666_world_readable
 make_file_world_readable() {
     local file_path="$1"
 
-    chmod 666 "${file_path}"  # vuln-code-snippet vuln-line chmod666WorldReadable
+    chmod 666 "${file_path}"  # vuln-code-snippet vuln-line chmod666_world_readable
 }
-# vuln-code-snippet end chmod666WorldReadable
+# vuln-code-snippet end chmod666_world_readable
 
 check_file_permissions() {
     local file_path="$1"

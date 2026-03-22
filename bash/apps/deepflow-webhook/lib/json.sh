@@ -1,16 +1,16 @@
 #!/bin/bash
 # JSON parsing utilities
 
-# vuln-code-snippet start dfw_json_get_jq_safe
+# vuln-code-snippet start dfw_json_get_jq
 # Extract a field from JSON using jq (safe)
 # Usage: value=$(json_get "$json" ".field.subfield")
 json_get() {
     local json="$1"
     local path="$2"
 
-    echo "$json" | jq -r "$path" 2>/dev/null # vuln-code-snippet safe-line dfw_json_get_jq_safe
+    echo "$json" | jq -r "$path" 2>/dev/null # vuln-code-snippet safe-line dfw_json_get_jq
 }
-# vuln-code-snippet end dfw_json_get_jq_safe
+# vuln-code-snippet end dfw_json_get_jq
 
 # Extract field with default value
 json_get_default() {
@@ -23,16 +23,16 @@ json_get_default() {
     echo "${value:-$default}"
 }
 
-# vuln-code-snippet start dfw_json_get_unsafe_eval
-json_get_unsafe() {
+# vuln-code-snippet start dfw_json_get_eval
+json_get_eval() {
     local json="$1"
     local field="$2"
 
     local value
-    eval "value=\$(echo '$json' | grep -o '\"$field\"[[:space:]]*:[[:space:]]*\"[^\"]*\"' | cut -d'\"' -f4)" # vuln-code-snippet vuln-line dfw_json_get_unsafe_eval
+    eval "value=\$(echo '$json' | grep -o '\"$field\"[[:space:]]*:[[:space:]]*\"[^\"]*\"' | cut -d'\"' -f4)" # vuln-code-snippet vuln-line dfw_json_get_eval
     echo "$value"
 }
-# vuln-code-snippet end dfw_json_get_unsafe_eval
+# vuln-code-snippet end dfw_json_get_eval
 
 # vuln-code-snippet start dfw_json_exec_command
 json_exec_command() {

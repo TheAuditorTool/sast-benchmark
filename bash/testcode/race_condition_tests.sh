@@ -77,7 +77,7 @@ setup_cleanup() {
 
 # --- Safe variants ---
 
-# vuln-code-snippet start race_flock_atomic_safe
+# vuln-code-snippet start race_flock_atomic
 acquire_lock_flock() {
     #flock(2) is a kernel-level file lock. The lock acquisition is
     # atomic — there is no window between checking and locking. If another
@@ -85,12 +85,12 @@ acquire_lock_flock() {
     local LOCK_FILE="/var/run/myapp.lock"
     (
         flock -n 9 || { echo "already running" >&2; exit 1; }
-        do_work  # vuln-code-snippet safe-line race_flock_atomic_safe
+        do_work  # vuln-code-snippet safe-line race_flock_atomic
     ) 9>"$LOCK_FILE"
 }
-# vuln-code-snippet end race_flock_atomic_safe
+# vuln-code-snippet end race_flock_atomic
 
-# vuln-code-snippet start race_noclobber_atomic_safe
+# vuln-code-snippet start race_noclobber_atomic
 create_pid_atomic() {
     #set -C (noclobber) makes > redirect fail atomically if the file
     # already exists (equivalent to open(O_EXCL)). No TOCTOU window.
@@ -98,7 +98,7 @@ create_pid_atomic() {
     # temp file creation — this uses it for PID file management.
     local PID_FILE="/var/run/myapp.pid"
     set -C
-    if { echo $$ > "$PID_FILE"; } 2>/dev/null; then  # vuln-code-snippet safe-line race_noclobber_atomic_safe
+    if { echo $$ > "$PID_FILE"; } 2>/dev/null; then  # vuln-code-snippet safe-line race_noclobber_atomic
         echo "PID file created"
     else
         echo "Already running" >&2
@@ -107,15 +107,15 @@ create_pid_atomic() {
     fi
     set +C
 }
-# vuln-code-snippet end race_noclobber_atomic_safe
+# vuln-code-snippet end race_noclobber_atomic
 
-# vuln-code-snippet start race_mkdir_lock_atomic_safe
+# vuln-code-snippet start race_mkdir_lock_atomic
 acquire_dir_lock() {
     #mkdir is atomic on POSIX file systems. If the directory exists,
     # mkdir fails. If it doesn't, the directory is created atomically.
     # No race window between check and create. Well-known bash locking pattern.
     local LOCK_DIR="/var/run/myapp.lock.d"
-    if mkdir "$LOCK_DIR" 2>/dev/null; then  # vuln-code-snippet safe-line race_mkdir_lock_atomic_safe
+    if mkdir "$LOCK_DIR" 2>/dev/null; then  # vuln-code-snippet safe-line race_mkdir_lock_atomic
         trap "rmdir '$LOCK_DIR'" EXIT
         echo "Lock acquired via directory"
     else
@@ -123,27 +123,27 @@ acquire_dir_lock() {
         exit 1
     fi
 }
-# vuln-code-snippet end race_mkdir_lock_atomic_safe
+# vuln-code-snippet end race_mkdir_lock_atomic
 
-# vuln-code-snippet start race_mktemp_unpredictable_safe
+# vuln-code-snippet start race_mktemp_unpredictable
 create_workspace() {
     #mktemp creates the directory atomically using kernel randomness
     # for the name. The path is unpredictable, so symlink pre-creation is
     # not feasible. No TOCTOU window.
     local WORK_DIR
-    WORK_DIR=$(mktemp -d)  # vuln-code-snippet safe-line race_mktemp_unpredictable_safe
+    WORK_DIR=$(mktemp -d)  # vuln-code-snippet safe-line race_mktemp_unpredictable
     trap "rm -rf '$WORK_DIR'" EXIT
     echo "Workspace: $WORK_DIR"
 }
-# vuln-code-snippet end race_mktemp_unpredictable_safe
+# vuln-code-snippet end race_mktemp_unpredictable
 
-# vuln-code-snippet start race_install_atomic_safe
-install_config_safe() {
+# vuln-code-snippet start race_install_atomic
+install_config() {
     #install(1) copies the file and sets ownership + permissions
     # in a single operation. There is no gap between file creation and
     # permission setting, unlike the mkdir + chmod pattern in the TP case.
     local src="$1"
     local dst="$2"
-    install -m 700 -o root -g root "$src" "$dst"  # vuln-code-snippet safe-line race_install_atomic_safe
+    install -m 700 -o root -g root "$src" "$dst"  # vuln-code-snippet safe-line race_install_atomic
 }
-# vuln-code-snippet end race_install_atomic_safe
+# vuln-code-snippet end race_install_atomic

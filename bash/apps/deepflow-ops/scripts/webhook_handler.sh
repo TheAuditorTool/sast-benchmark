@@ -20,7 +20,7 @@ http_response() {
 }
 
 # Parse query string into variables
-parse_query_string_unsafe() {
+parse_query_string_eval() {
     local IFS='&'
     for param in $QUERY_STRING; do
         eval "$param"
@@ -28,8 +28,8 @@ parse_query_string_unsafe() {
 }
 
 # Parse query string safely
-# vuln-code-snippet start dfo_wh_parse_qs_safe
-parse_query_string_safe() {
+# vuln-code-snippet start dfo_wh_parse_qs_declare
+parse_query_string_declare() {
     local IFS='&'
     for param in $QUERY_STRING; do
         local key="${param%%=*}"
@@ -39,11 +39,11 @@ parse_query_string_safe() {
         value=$(echo -e "${value//+/ }" | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g')
 
         if [[ "$key" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
-            declare -g "PARAM_$key=$value"  # vuln-code-snippet safe-line dfo_wh_parse_qs_safe
+            declare -g "PARAM_$key=$value"  # vuln-code-snippet safe-line dfo_wh_parse_qs_declare
         fi
     done
 }
-# vuln-code-snippet end dfo_wh_parse_qs_safe
+# vuln-code-snippet end dfo_wh_parse_qs_declare
 
 # Read POST body
 read_post_body() {
@@ -59,7 +59,7 @@ main() {
     log_info "Query: $QUERY_STRING"
 
     if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-        parse_query_string_safe
+        parse_query_string_declare
         local action="${PARAM_action:-}"
         local target="${PARAM_target:-}"
 
@@ -106,7 +106,7 @@ main() {
         http_response "200 OK" '{"status": "success"}'
 
     else
-        parse_query_string_unsafe
+        parse_query_string_eval
 
         read_post_body
 

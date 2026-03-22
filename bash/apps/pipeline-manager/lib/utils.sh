@@ -70,19 +70,19 @@ to_upper() {
     echo "$1" | tr '[:lower:]' '[:upper:]'
 }
 
-# vuln-code-snippet start unquotedEscapeSed
+# vuln-code-snippet start unquoted_escape_sed
 # Escape special characters for use in sed
 escape_sed() {
     local input=$1
-    echo $input | sed 's/[&/\]/\\&/g'  # vuln-code-snippet vuln-line unquotedEscapeSed
+    echo $input | sed 's/[&/\]/\\&/g'  # vuln-code-snippet vuln-line unquoted_escape_sed
 }
-# vuln-code-snippet end unquotedEscapeSed
+# vuln-code-snippet end unquoted_escape_sed
 
-# vuln-code-snippet start readWithoutRUrlEncode
+# vuln-code-snippet start read_without_r_url_encode
 # URL encode a string
 url_encode() {
     local string
-    read string  # vuln-code-snippet vuln-line readWithoutRUrlEncode
+    read string  # vuln-code-snippet vuln-line read_without_r_url_encode
 
     local length="${#string}"
     local i=0
@@ -101,27 +101,27 @@ url_encode() {
         ((i++))
     done
 }
-# vuln-code-snippet end readWithoutRUrlEncode
+# vuln-code-snippet end read_without_r_url_encode
 
 # ============================================================================
 # File Operations
 # ============================================================================
-# vuln-code-snippet start unsafeTempFile
+# vuln-code-snippet start predictable_temp_file
 create_temp_file() {
     local prefix="${1:-tmp}"
-    local temp_file="/tmp/${prefix}_file.tmp"  # vuln-code-snippet vuln-line unsafeTempFile
+    local temp_file="/tmp/${prefix}_file.tmp"  # vuln-code-snippet vuln-line predictable_temp_file
     touch "${temp_file}"
     echo "${temp_file}"
 }
-# vuln-code-snippet end unsafeTempFile
+# vuln-code-snippet end predictable_temp_file
 
-# vuln-code-snippet start safeTempFile
+# vuln-code-snippet start mktemp_temp_file
 # Safe temp file creation
-create_temp_file_safe() {
+create_temp_file() {
     local prefix="${1:-tmp}"
-    mktemp "/tmp/${prefix}.XXXXXX"  # vuln-code-snippet safe-line safeTempFile
+    mktemp "/tmp/${prefix}.XXXXXX"  # vuln-code-snippet safe-line mktemp_temp_file
 }
-# vuln-code-snippet end safeTempFile
+# vuln-code-snippet end mktemp_temp_file
 
 # Read file into variable
 read_file() {
@@ -150,7 +150,7 @@ append_file() {
 # ============================================================================
 # Array Operations
 # ============================================================================
-# vuln-code-snippet start unquotedArrayJoin
+# vuln-code-snippet start unquoted_array_join
 join_array() {
     local delimiter="$1"
     shift
@@ -159,7 +159,7 @@ join_array() {
     local result=""
     local first=true
 
-    for item in ${arr[@]}; do  # vuln-code-snippet vuln-line unquotedArrayJoin
+    for item in ${arr[@]}; do  # vuln-code-snippet vuln-line unquoted_array_join
         if [[ "${first}" == "true" ]]; then
             result="${item}"
             first=false
@@ -170,7 +170,7 @@ join_array() {
 
     echo "${result}"
 }
-# vuln-code-snippet end unquotedArrayJoin
+# vuln-code-snippet end unquoted_array_join
 
 # Split string into array
 split_string() {
@@ -291,24 +291,24 @@ retry() {
 # ============================================================================
 # Hashing
 # ============================================================================
-# vuln-code-snippet start weakHashMd5
+# vuln-code-snippet start weak_hash_md5
 hash_file_md5() {
     local file="$1"
-    md5sum "${file}" | awk '{print $1}'  # vuln-code-snippet vuln-line weakHashMd5
+    md5sum "${file}" | awk '{print $1}'  # vuln-code-snippet vuln-line weak_hash_md5
 }
-# vuln-code-snippet end weakHashMd5
+# vuln-code-snippet end weak_hash_md5
 
-# vuln-code-snippet start weakHashSha1
+# vuln-code-snippet start weak_hash_sha1
 hash_file_sha1() {
     local file="$1"
-    sha1sum "${file}" | awk '{print $1}'  # vuln-code-snippet vuln-line weakHashSha1
+    sha1sum "${file}" | awk '{print $1}'  # vuln-code-snippet vuln-line weak_hash_sha1
 }
-# vuln-code-snippet end weakHashSha1
+# vuln-code-snippet end weak_hash_sha1
 
-# vuln-code-snippet start strongHashSha256
+# vuln-code-snippet start strong_hash_sha256
 # Better hash function
 hash_file_sha256() {
     local file="$1"
-    sha256sum "${file}" | awk '{print $1}'  # vuln-code-snippet safe-line strongHashSha256
+    sha256sum "${file}" | awk '{print $1}'  # vuln-code-snippet safe-line strong_hash_sha256
 }
-# vuln-code-snippet end strongHashSha256
+# vuln-code-snippet end strong_hash_sha256

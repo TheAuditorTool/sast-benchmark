@@ -60,6 +60,15 @@ The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "
 - All vuln-code-snippet annotations (start/end/vuln-line/safe-line) preserved
 - Verified: 0 hint matches remaining, L1-L5 fidelity PASS, 356/356 annotations intact
 
+### Key & Function Name Normalization (OWASP compliance)
+- Renamed 184 annotation keys: 78 camelCase→snake_case + 132 classification suffix stripped
+- Stripped `_safe`, `_unsafe`, `_insecure`, `_vulnerable` suffixes from all keys and function names
+- Renamed 83 function definitions to remove classification hints (e.g. `authenticate_safe()` → `authenticate()`, `db_query_unsafe()` → `db_query_interpolated()`)
+- 4 collision pairs resolved with technique-descriptive names: `_eval`/`_declare`, `_interpolated`/`_escaped`, `_dynamic`/`_literal`
+- Cross-file call sites updated (parse_query_string_eval in deepflow-webhook)
+- Zero camelCase keys remaining, zero `_safe`/`_unsafe` function names remaining
+- L1-L5 fidelity PASS, 356/356, 0 duplicate keys
+
 ### Known Limitations (remaining from v0.3)
 - No baseline scorecard yet (awaiting first SAST tool run)
 - All new CWE category TP cases are tagged [EXPECTED_FN] — no engine rules exist yet for these patterns

@@ -6,7 +6,7 @@
 DB_FILE="${DB_FILE:-/var/securepipeline/deployments.db}"
 
 # vuln-code-snippet start sp_db_printf_q_escape
-db_query_safe() {
+db_query() {
     # User input is escaped with printf %q before SQL interpolation.
     local table="$1"
     local condition_value="$2"
@@ -17,7 +17,7 @@ db_query_safe() {
 # vuln-code-snippet end sp_db_printf_q_escape
 
 # vuln-code-snippet start sp_db_integer_validated
-get_deployment_by_id_safe() {
+get_deployment_by_id() {
     # ID is validated as a pure integer before use in SQL.
     local id="$1"
 
@@ -45,7 +45,7 @@ get_status_summary() {
 # vuln-code-snippet end sp_db_no_user_input_2
 
 # vuln-code-snippet start sp_db_column_whitelist
-record_deployment_safe() {
+record_deployment() {
     # All column names are hardcoded. Version is integer-validated.
     local environment="$1"
     local version="$2"
@@ -68,8 +68,8 @@ get_recent_deployments() {
 }
 # vuln-code-snippet end sp_db_no_user_input_3
 
-# vuln-code-snippet start sp_db_days_integer_safe
-cleanup_old_records_safe() {
+# vuln-code-snippet start sp_db_days_integer
+cleanup_old_records() {
     # Days parameter is validated as a pure integer.
     local days="$1"
 
@@ -78,9 +78,9 @@ cleanup_old_records_safe() {
         return 1
     fi
 
-    sqlite3 "$DB_FILE" "DELETE FROM deployments WHERE deployed_at < datetime('now', '-${days} days')"  # vuln-code-snippet safe-line sp_db_days_integer_safe
+    sqlite3 "$DB_FILE" "DELETE FROM deployments WHERE deployed_at < datetime('now', '-${days} days')"  # vuln-code-snippet safe-line sp_db_days_integer
 }
-# vuln-code-snippet end sp_db_days_integer_safe
+# vuln-code-snippet end sp_db_days_integer
 
 # vuln-code-snippet start sp_db_no_user_input_4
 list_distinct_services() {
@@ -90,7 +90,7 @@ list_distinct_services() {
 # vuln-code-snippet end sp_db_no_user_input_4
 
 # vuln-code-snippet start sp_db_identifier_whitelist
-get_migration_status_safe() {
+get_migration_status() {
     # Migration name validated against strict format (YYYYMMDD_lowercase_name).
     local migration_name="$1"
 

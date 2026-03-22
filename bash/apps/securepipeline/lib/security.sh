@@ -2,7 +2,7 @@
 # Secure Pipeline — Security Operations
 
 # vuln-code-snippet start sp_sec_read_r_flag
-authenticate_safe() {
+authenticate() {
     # read uses -r (no backslash interpretation) and -s (no echo).
     local username="$1"
     local password
@@ -15,7 +15,7 @@ authenticate_safe() {
 # vuln-code-snippet end sp_sec_read_r_flag
 
 # vuln-code-snippet start sp_sec_sql_integer_id
-validate_token_safe() {
+validate_token() {
     # Token is converted to an integer ID via a lookup.
     local token="$1"
     local DB_FILE="${DB_FILE:-/var/securepipeline/deployments.db}"
@@ -31,7 +31,7 @@ validate_token_safe() {
 # vuln-code-snippet end sp_sec_sql_integer_id
 
 # vuln-code-snippet start sp_sec_sudo_allowlist
-run_privileged_command_safe() {
+run_privileged_command() {
     # Command name validated against a fixed allowlist.
     local cmd="$1"
     local arg="$2"
@@ -49,7 +49,7 @@ run_privileged_command_safe() {
 # vuln-code-snippet end sp_sec_sudo_allowlist
 
 # vuln-code-snippet start sp_sec_printf_format
-format_output_safe() {
+format_output() {
     # printf format string is a hardcoded literal '%s\n'.
     local input="$1"
     printf '%s\n' "$input"  # vuln-code-snippet safe-line sp_sec_printf_format
@@ -65,7 +65,7 @@ set_secure_file_perms() {
 # vuln-code-snippet end sp_sec_chmod_600
 
 # vuln-code-snippet start sp_sec_no_set_x
-debug_trace_safe() {
+debug_trace() {
     # Debugging output uses explicit echo, NOT set -x/xtrace.
     local func_name="$1"
     local message="$2"
@@ -74,7 +74,7 @@ debug_trace_safe() {
 # vuln-code-snippet end sp_sec_no_set_x
 
 # vuln-code-snippet start sp_sec_umask_027
-create_files_with_secure_umask() {
+create_files_with_umask() {
     # umask 027 ensures new files are created with mode 640 and directories 750.
     umask 027  # vuln-code-snippet safe-line sp_sec_umask_027
 

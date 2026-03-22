@@ -19,7 +19,7 @@ log_info "Starting backup"
 log_info "Source: $SOURCE_PATH"
 log_info "Destination: $DEST_PATH"
 
-# vuln-code-snippet start dfo_backup_safe_validated
+# vuln-code-snippet start dfo_backup_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     log_info "Running in SAFE MODE"
 
@@ -28,7 +28,7 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     VALID_SOURCE=false
 
     for allowed in $ALLOWED_SOURCES; do
-        if validate_path "$SOURCE_PATH" "$allowed" 2>/dev/null; then  # vuln-code-snippet safe-line dfo_backup_safe_validated
+        if validate_path "$SOURCE_PATH" "$allowed" 2>/dev/null; then  # vuln-code-snippet safe-line dfo_backup_validated
             VALID_SOURCE=true
             break
         fi
@@ -62,7 +62,7 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
         rm -f "$BACKUP_FILE"
         exit 1
     fi
-# vuln-code-snippet end dfo_backup_safe_validated
+# vuln-code-snippet end dfo_backup_validated
 
 else
     log_warn "Running in UNSAFE MODE"

@@ -9,7 +9,7 @@ install_tool_quick() {
 }
 # vuln-code-snippet end rce_curl_pipe_bash
 
-# vuln-code-snippet start rce_download_verify_safe
+# vuln-code-snippet start rce_download_verify
 install_tool_verified() {
     local url="$1"
     local expected_hash="$2"
@@ -28,10 +28,10 @@ install_tool_verified() {
     fi
 
     chmod +x "$tmp_script"
-    "$tmp_script"  # vuln-code-snippet safe-line rce_download_verify_safe
+    "$tmp_script"  # vuln-code-snippet safe-line rce_download_verify
     rm -f "$tmp_script"
 }
-# vuln-code-snippet end rce_download_verify_safe
+# vuln-code-snippet end rce_download_verify
 
 # vuln-code-snippet start rce_wget_pipe_sh
 install_dependency() {
@@ -40,14 +40,14 @@ install_dependency() {
 }
 # vuln-code-snippet end rce_wget_pipe_sh
 
-# vuln-code-snippet start rce_curl_save_only_safe
+# vuln-code-snippet start rce_curl_save_only
 download_artifact() {
     local url="$1"
     local dest="$2"
-    curl -sf -o "$dest" "$url"  # vuln-code-snippet safe-line rce_curl_save_only_safe
+    curl -sf -o "$dest" "$url"  # vuln-code-snippet safe-line rce_curl_save_only
     echo "Downloaded to $dest"
 }
-# vuln-code-snippet end rce_curl_save_only_safe
+# vuln-code-snippet end rce_curl_save_only
 
 # vuln-code-snippet start rce_process_substitution
 run_remote_script() {

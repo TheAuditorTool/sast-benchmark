@@ -10,12 +10,12 @@ run_user_command() {
 }
 # vuln-code-snippet end cmdi_direct_eval
 
-# vuln-code-snippet start cmdi_eval_hardcoded_safe
+# vuln-code-snippet start cmdi_eval_hardcoded
 initialize_defaults() {
     local config_line="export APP_MODE=production"
-    eval "$config_line"  # vuln-code-snippet safe-line cmdi_eval_hardcoded_safe
+    eval "$config_line"  # vuln-code-snippet safe-line cmdi_eval_hardcoded
 }
-# vuln-code-snippet end cmdi_eval_hardcoded_safe
+# vuln-code-snippet end cmdi_eval_hardcoded
 
 # vuln-code-snippet start cmdi_variable_as_command
 dispatch_action() {
@@ -25,13 +25,13 @@ dispatch_action() {
 }
 # vuln-code-snippet end cmdi_variable_as_command
 
-# vuln-code-snippet start cmdi_validated_command_safe
+# vuln-code-snippet start cmdi_validated_command
 dispatch_validated_action() {
     local action="$1"
     shift
     case "$action" in
         start|stop|restart|status)
-            "$action" "$@"  # vuln-code-snippet safe-line cmdi_validated_command_safe
+            "$action" "$@"  # vuln-code-snippet safe-line cmdi_validated_command
             ;;
         *)
             echo "Invalid action: $action" >&2
@@ -39,7 +39,7 @@ dispatch_validated_action() {
             ;;
     esac
 }
-# vuln-code-snippet end cmdi_validated_command_safe
+# vuln-code-snippet end cmdi_validated_command
 
 # vuln-code-snippet start cmdi_backtick_injection
 get_dynamic_value() {
@@ -66,17 +66,17 @@ compute_offset() {
 }
 # vuln-code-snippet end cmdi_arithmetic_expansion
 
-# vuln-code-snippet start cmdi_arithmetic_validated_safe
-compute_offset_safe() {
+# vuln-code-snippet start cmdi_arithmetic_validated
+compute_offset() {
     local input="$1"
     if [[ ! "$input" =~ ^[0-9]+$ ]]; then
         echo "Invalid number" >&2
         return 1
     fi
-    local result=$(( input + 1 ))  # vuln-code-snippet safe-line cmdi_arithmetic_validated_safe
+    local result=$(( input + 1 ))  # vuln-code-snippet safe-line cmdi_arithmetic_validated
     echo "$result"
 }
-# vuln-code-snippet end cmdi_arithmetic_validated_safe
+# vuln-code-snippet end cmdi_arithmetic_validated
 
 # vuln-code-snippet start cmdi_xargs_tainted
 process_file_list() {
@@ -85,12 +85,12 @@ process_file_list() {
 }
 # vuln-code-snippet end cmdi_xargs_tainted
 
-# vuln-code-snippet start cmdi_xargs_null_safe
-process_file_list_safe() {
+# vuln-code-snippet start cmdi_xargs_null
+process_file_list() {
     local file_list="$1"
-    find "$file_list" -type f -print0 | xargs -0 rm -f  # vuln-code-snippet safe-line cmdi_xargs_null_safe
+    find "$file_list" -type f -print0 | xargs -0 rm -f  # vuln-code-snippet safe-line cmdi_xargs_null
 }
-# vuln-code-snippet end cmdi_xargs_null_safe
+# vuln-code-snippet end cmdi_xargs_null
 
 # vuln-code-snippet start cmdi_sed_expression_injection
 replace_in_file() {
@@ -121,13 +121,13 @@ run_cleanup_on_files() {
 }
 # vuln-code-snippet end cmdi_find_exec_injection
 
-# vuln-code-snippet start cmdi_find_exec_hardcoded_safe
+# vuln-code-snippet start cmdi_find_exec_hardcoded
 archive_old_logs() {
     local search_dir="$1"
     # Hardcoded command in -exec — no user control over what executes
-    find "$search_dir" -name "*.log" -mtime +30 -exec gzip {} \;  # vuln-code-snippet safe-line cmdi_find_exec_hardcoded_safe
+    find "$search_dir" -name "*.log" -mtime +30 -exec gzip {} \;  # vuln-code-snippet safe-line cmdi_find_exec_hardcoded
 }
-# vuln-code-snippet end cmdi_find_exec_hardcoded_safe
+# vuln-code-snippet end cmdi_find_exec_hardcoded
 
 # vuln-code-snippet start cmdi_argument_injection_grep
 search_logs() {
@@ -139,14 +139,14 @@ search_logs() {
 }
 # vuln-code-snippet end cmdi_argument_injection_grep
 
-# vuln-code-snippet start cmdi_argument_injection_safe
-search_logs_safe() {
+# vuln-code-snippet start cmdi_argument_injection_guarded
+search_logs() {
     local user_pattern="$1"
     local logfile="/var/log/app.log"
     # Double dash prevents flag interpretation; -F treats pattern as literal string
-    grep -F -- "$user_pattern" "$logfile"  # vuln-code-snippet safe-line cmdi_argument_injection_safe
+    grep -F -- "$user_pattern" "$logfile"  # vuln-code-snippet safe-line cmdi_argument_injection_guarded
 }
-# vuln-code-snippet end cmdi_argument_injection_safe
+# vuln-code-snippet end cmdi_argument_injection_guarded
 
 # vuln-code-snippet start cmdi_multistep_eval_chain
 _build_deploy_cmd() {
@@ -166,7 +166,7 @@ execute_service_action() {
 }
 # vuln-code-snippet end cmdi_multistep_eval_chain
 
-# vuln-code-snippet start cmdi_multistep_validated_safe
+# vuln-code-snippet start cmdi_multistep_validated
 safe_service_control() {
     local service="$1"
     local action="$2"
@@ -180,56 +180,56 @@ safe_service_control() {
         return 1
     fi
     # Direct call — no eval, no string building
-    systemctl "$action" "$service"  # vuln-code-snippet safe-line cmdi_multistep_validated_safe
+    systemctl "$action" "$service"  # vuln-code-snippet safe-line cmdi_multistep_validated
 }
-# vuln-code-snippet end cmdi_multistep_validated_safe
+# vuln-code-snippet end cmdi_multistep_validated
 
-# vuln-code-snippet start cmdi_printf_q_sanitizer_safe
+# vuln-code-snippet start cmdi_printf_q_sanitizer
 safe_echo_input() {
     local input="$1"
     local escaped
     # printf %q shell-escapes all special characters
     escaped=$(printf '%q' "$input")
     # eval with escaped input is safe — all metacharacters are literal
-    eval "echo $escaped"  # vuln-code-snippet safe-line cmdi_printf_q_sanitizer_safe
+    eval "echo $escaped"  # vuln-code-snippet safe-line cmdi_printf_q_sanitizer
 }
-# vuln-code-snippet end cmdi_printf_q_sanitizer_safe
+# vuln-code-snippet end cmdi_printf_q_sanitizer
 
 # [EXPECTED_FP] ${var@Q} is a bash 4.4+ quoting operator that produces single-quoted
 # output safe for eval. Some SAST tools may not recognize ${var@Q} as a sanitizer.
 # Engine will likely flag the eval usage without recognizing @Q as a sanitizer.
-# vuln-code-snippet start cmdi_bash_qquote_sanitizer_safe
+# vuln-code-snippet start cmdi_bash_qquote_sanitizer
 safe_eval_with_qquote() {
     local input="$1"
     # ${var@Q} produces single-quoted version: all metacharacters are literal
     # Example: input="hello; rm -rf /" → ${input@Q} → 'hello; rm -rf /'
     local safe="${input@Q}"
-    eval "echo $safe"  # vuln-code-snippet safe-line cmdi_bash_qquote_sanitizer_safe
+    eval "echo $safe"  # vuln-code-snippet safe-line cmdi_bash_qquote_sanitizer
 }
-# vuln-code-snippet end cmdi_bash_qquote_sanitizer_safe
+# vuln-code-snippet end cmdi_bash_qquote_sanitizer
 
 # --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
 
-# vuln-code-snippet start cmdi_dead_variable_safe
+# vuln-code-snippet start cmdi_dead_variable
 process_with_constant() {
     #user input is read into $input but a hardcoded constant is used
     # at the eval sink. Tests whether the tool tracks data flow correctly.
     local input="$1"
     local cmd="date"
-    eval "$cmd"  # vuln-code-snippet safe-line cmdi_dead_variable_safe
+    eval "$cmd"  # vuln-code-snippet safe-line cmdi_dead_variable
 }
-# vuln-code-snippet end cmdi_dead_variable_safe
+# vuln-code-snippet end cmdi_dead_variable
 
-# vuln-code-snippet start cmdi_echo_only_safe
+# vuln-code-snippet start cmdi_echo_only
 log_user_input() {
     #user input is only echoed to stdout. No subprocess, no eval,
     # no command execution. The tainted variable never reaches a command sink.
     local input="$1"
-    echo "Received input: $input"  # vuln-code-snippet safe-line cmdi_echo_only_safe
+    echo "Received input: $input"  # vuln-code-snippet safe-line cmdi_echo_only
 }
-# vuln-code-snippet end cmdi_echo_only_safe
+# vuln-code-snippet end cmdi_echo_only
 
-# vuln-code-snippet start cmdi_ping_validated_safe
+# vuln-code-snippet start cmdi_ping_validated
 check_host_status() {
     #hostname validated against strict regex before use as argument
     # to a hardcoded command. Only lowercase alphanumeric, dots, hyphens pass.
@@ -238,31 +238,31 @@ check_host_status() {
         echo "Invalid hostname" >&2
         return 1
     fi
-    ping -c 1 "$host"  # vuln-code-snippet safe-line cmdi_ping_validated_safe
+    ping -c 1 "$host"  # vuln-code-snippet safe-line cmdi_ping_validated
 }
-# vuln-code-snippet end cmdi_ping_validated_safe
+# vuln-code-snippet end cmdi_ping_validated
 
-# vuln-code-snippet start cmdi_head_integer_safe
+# vuln-code-snippet start cmdi_head_integer
 show_log_lines() {
     #line count coerced to integer via printf %d. Non-numeric input
     # results in 0 (harmless). The command (head) and file are hardcoded.
     local input="$1"
     local n
     printf -v n '%d' "$input" 2>/dev/null || n=10
-    head -n "$n" /var/log/syslog  # vuln-code-snippet safe-line cmdi_head_integer_safe
+    head -n "$n" /var/log/syslog  # vuln-code-snippet safe-line cmdi_head_integer
 }
-# vuln-code-snippet end cmdi_head_integer_safe
+# vuln-code-snippet end cmdi_head_integer
 
-# vuln-code-snippet start cmdi_exec_hardcoded_safe
+# vuln-code-snippet start cmdi_exec_hardcoded
 log_message_syslog() {
     #exec replaces the process with a hardcoded absolute-path binary.
     # User data is passed only as an argument to logger, never as a command.
     local message="$1"
-    /usr/bin/logger -t app "$message"  # vuln-code-snippet safe-line cmdi_exec_hardcoded_safe
+    /usr/bin/logger -t app "$message"  # vuln-code-snippet safe-line cmdi_exec_hardcoded
 }
-# vuln-code-snippet end cmdi_exec_hardcoded_safe
+# vuln-code-snippet end cmdi_exec_hardcoded
 
-# vuln-code-snippet start cmdi_getopts_safe
+# vuln-code-snippet start cmdi_getopts
 parse_deploy_options() {
     #getopts is a structured option parser built into bash.
     # It does not use eval or execute option values as commands.
@@ -275,11 +275,11 @@ parse_deploy_options() {
             *) return 1 ;;
         esac
     done
-    echo "Deploy: env=$environment ver=$version target=$target"  # vuln-code-snippet safe-line cmdi_getopts_safe
+    echo "Deploy: env=$environment ver=$version target=$target"  # vuln-code-snippet safe-line cmdi_getopts
 }
-# vuln-code-snippet end cmdi_getopts_safe
+# vuln-code-snippet end cmdi_getopts
 
-# vuln-code-snippet start cmdi_mapfile_safe
+# vuln-code-snippet start cmdi_mapfile
 load_host_list() {
     #mapfile -t reads lines into an array without shell interpretation.
     # The array is iterated with proper quoting. No eval, no word splitting.
@@ -288,41 +288,41 @@ load_host_list() {
     mapfile -t hosts < "$file"
     local host
     for host in "${hosts[@]}"; do
-        echo "Host: $host"  # vuln-code-snippet safe-line cmdi_mapfile_safe
+        echo "Host: $host"  # vuln-code-snippet safe-line cmdi_mapfile
     done
 }
-# vuln-code-snippet end cmdi_mapfile_safe
+# vuln-code-snippet end cmdi_mapfile
 
-# vuln-code-snippet start cmdi_ssh_singlequote_safe
+# vuln-code-snippet start cmdi_ssh_singlequote
 get_remote_status() {
     #remote command is single-quoted, preventing server-side expansion.
     # The host variable is the SSH target, not part of the executed command.
     local host="$1"
-    ssh "$host" 'systemctl status nginx'  # vuln-code-snippet safe-line cmdi_ssh_singlequote_safe
+    ssh "$host" 'systemctl status nginx'  # vuln-code-snippet safe-line cmdi_ssh_singlequote
 }
-# vuln-code-snippet end cmdi_ssh_singlequote_safe
+# vuln-code-snippet end cmdi_ssh_singlequote
 
-# vuln-code-snippet start cmdi_docker_exec_safe
+# vuln-code-snippet start cmdi_docker_exec
 check_container_health() {
     #docker exec command is single-quoted — no variable expansion
     # occurs inside the container. Container name is used only for targeting.
     local container="$1"
-    docker exec "$container" sh -c 'cat /proc/loadavg'  # vuln-code-snippet safe-line cmdi_docker_exec_safe
+    docker exec "$container" sh -c 'cat /proc/loadavg'  # vuln-code-snippet safe-line cmdi_docker_exec
 }
-# vuln-code-snippet end cmdi_docker_exec_safe
+# vuln-code-snippet end cmdi_docker_exec
 
-# vuln-code-snippet start cmdi_select_menu_safe
+# vuln-code-snippet start cmdi_select_menu
 interactive_service_control() {
     #select options are hardcoded string literals. The user picks
     # from a fixed menu — they cannot inject arbitrary commands.
     select opt in start stop status restart; do
-        systemctl "$opt" app  # vuln-code-snippet safe-line cmdi_select_menu_safe
+        systemctl "$opt" app  # vuln-code-snippet safe-line cmdi_select_menu
         break
     done
 }
-# vuln-code-snippet end cmdi_select_menu_safe
+# vuln-code-snippet end cmdi_select_menu
 
-# vuln-code-snippet start cmdi_indirect_expansion_safe
+# vuln-code-snippet start cmdi_indirect_expansion
 get_config_by_key() {
     #${!var} indirect expansion is used only after the variable name
     # is validated against a case allowlist of known config keys.
@@ -330,7 +330,7 @@ get_config_by_key() {
     local val
     case "$key" in
         DB_HOST|DB_PORT|APP_NAME|LOG_LEVEL)
-            val="${!key}"  # vuln-code-snippet safe-line cmdi_indirect_expansion_safe
+            val="${!key}"  # vuln-code-snippet safe-line cmdi_indirect_expansion
             ;;
         *)
             echo "Unknown config key: $key" >&2
@@ -339,18 +339,18 @@ get_config_by_key() {
     esac
     echo "$val"
 }
-# vuln-code-snippet end cmdi_indirect_expansion_safe
+# vuln-code-snippet end cmdi_indirect_expansion
 
-# vuln-code-snippet start cmdi_env_override_safe
+# vuln-code-snippet start cmdi_env_override
 run_sandboxed() {
     #env -i clears the entire environment, preventing LD_PRELOAD,
     # PATH hijacking, and other environment-based attacks. The command
     # is a hardcoded absolute path (/usr/bin/date).
-    env -i HOME="$HOME" PATH="/usr/bin:/bin" /usr/bin/date  # vuln-code-snippet safe-line cmdi_env_override_safe
+    env -i HOME="$HOME" PATH="/usr/bin:/bin" /usr/bin/date  # vuln-code-snippet safe-line cmdi_env_override
 }
-# vuln-code-snippet end cmdi_env_override_safe
+# vuln-code-snippet end cmdi_env_override
 
-# vuln-code-snippet start cmdi_timeout_validated_safe
+# vuln-code-snippet start cmdi_timeout_validated
 run_with_timeout() {
     #timeout value is integer-validated. The command is a hardcoded
     # binary (curl). User URL is passed as a quoted argument.
@@ -360,16 +360,16 @@ run_with_timeout() {
         echo "Invalid timeout" >&2
         return 1
     fi
-    timeout "$secs" /usr/bin/curl -sf "$url"  # vuln-code-snippet safe-line cmdi_timeout_validated_safe
+    timeout "$secs" /usr/bin/curl -sf "$url"  # vuln-code-snippet safe-line cmdi_timeout_validated
 }
-# vuln-code-snippet end cmdi_timeout_validated_safe
+# vuln-code-snippet end cmdi_timeout_validated
 
-# vuln-code-snippet start cmdi_basename_log_safe
+# vuln-code-snippet start cmdi_basename_log
 log_script_name() {
     #basename extracts the filename component of $0. The result
     # is used only in an echo for logging — never executed as a command.
     local name
     name=$(basename "$0")
-    echo "Script: $name"  # vuln-code-snippet safe-line cmdi_basename_log_safe
+    echo "Script: $name"  # vuln-code-snippet safe-line cmdi_basename_log
 }
-# vuln-code-snippet end cmdi_basename_log_safe
+# vuln-code-snippet end cmdi_basename_log

@@ -9,12 +9,12 @@ fetch_remote_resource() {
 }
 # vuln-code-snippet end ssrf_curl_user_url
 
-# vuln-code-snippet start ssrf_hardcoded_url_safe
+# vuln-code-snippet start ssrf_hardcoded_url
 check_api_health() {
     local endpoint="https://api.internal.example.com/health"
-    curl -sf "$endpoint"  # vuln-code-snippet safe-line ssrf_hardcoded_url_safe
+    curl -sf "$endpoint"  # vuln-code-snippet safe-line ssrf_hardcoded_url
 }
-# vuln-code-snippet end ssrf_hardcoded_url_safe
+# vuln-code-snippet end ssrf_hardcoded_url
 
 # vuln-code-snippet start ssrf_url_path_injection
 get_api_resource() {
@@ -24,16 +24,16 @@ get_api_resource() {
 }
 # vuln-code-snippet end ssrf_url_path_injection
 
-# vuln-code-snippet start ssrf_allowlist_validated_safe
+# vuln-code-snippet start ssrf_allowlist_validated
 fetch_validated_url() {
     local url="$1"
     if [[ ! "$url" =~ ^https://(api|cdn)\.example\.com/ ]]; then
         echo "URL not in allowlist" >&2
         return 1
     fi
-    curl -sf "$url"  # vuln-code-snippet safe-line ssrf_allowlist_validated_safe
+    curl -sf "$url"  # vuln-code-snippet safe-line ssrf_allowlist_validated
 }
-# vuln-code-snippet end ssrf_allowlist_validated_safe
+# vuln-code-snippet end ssrf_allowlist_validated
 
 # vuln-code-snippet start ssrf_wget_redirect_follow
 download_remote_file() {
@@ -46,17 +46,17 @@ download_remote_file() {
 
 # --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
 
-# vuln-code-snippet start ssrf_hardcoded_api_safe
+# vuln-code-snippet start ssrf_hardcoded_api
 get_github_commits() {
     #org and repo are hardcoded constants defined in the function.
     # The URL is assembled entirely from constants — no user control over host.
     local GITHUB_ORG="mycompany"
     local GITHUB_REPO="webapp"
-    curl -sf "https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/commits"  # vuln-code-snippet safe-line ssrf_hardcoded_api_safe
+    curl -sf "https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/commits"  # vuln-code-snippet safe-line ssrf_hardcoded_api
 }
-# vuln-code-snippet end ssrf_hardcoded_api_safe
+# vuln-code-snippet end ssrf_hardcoded_api
 
-# vuln-code-snippet start ssrf_base_url_constant_safe
+# vuln-code-snippet start ssrf_base_url_constant
 notify_monitoring() {
     #base URL is a hardcoded constant. User-provided message goes only
     # in the POST body, not in the URL. Attacker cannot control the destination.
@@ -64,11 +64,11 @@ notify_monitoring() {
     local BASE_URL="https://monitoring.corp.internal"
     curl -sf -X POST "${BASE_URL}/api/v1/alert" \
         -H "Content-Type: application/json" \
-        -d "{\"message\": \"${message}\"}"  # vuln-code-snippet safe-line ssrf_base_url_constant_safe
+        -d "{\"message\": \"${message}\"}"  # vuln-code-snippet safe-line ssrf_base_url_constant
 }
-# vuln-code-snippet end ssrf_base_url_constant_safe
+# vuln-code-snippet end ssrf_base_url_constant
 
-# vuln-code-snippet start ssrf_git_internal_safe
+# vuln-code-snippet start ssrf_git_internal
 clone_approved_repo() {
     #git host is hardcoded (git.corp.internal). Repo name is validated
     # against a strict regex — only lowercase alphanumeric + hyphens allowed.
@@ -77,12 +77,12 @@ clone_approved_repo() {
         echo "Invalid repo name: $name" >&2
         return 1
     fi
-    git clone "git@git.corp.internal:ops/${name}.git" "/tmp/${name}"  # vuln-code-snippet safe-line ssrf_git_internal_safe
+    git clone "git@git.corp.internal:ops/${name}.git" "/tmp/${name}"  # vuln-code-snippet safe-line ssrf_git_internal
 }
-# vuln-code-snippet end ssrf_git_internal_safe
+# vuln-code-snippet end ssrf_git_internal
 
-# vuln-code-snippet start ssrf_curl_jq_escaped_safe
-slack_notify_safe() {
+# vuln-code-snippet start ssrf_curl_jq_escaped
+slack_notify() {
     #Slack URL is a hardcoded constant. Message body is safely escaped
     # via jq --arg which handles JSON special characters. No user control of URL.
     local message="$1"
@@ -90,6 +90,6 @@ slack_notify_safe() {
     local json
     json=$(jq -n --arg msg "$message" '{"text": $msg}')
     curl -sf -X POST -H "Content-Type: application/json" \
-        -d "$json" "$SLACK_URL"  # vuln-code-snippet safe-line ssrf_curl_jq_escaped_safe
+        -d "$json" "$SLACK_URL"  # vuln-code-snippet safe-line ssrf_curl_jq_escaped
 }
-# vuln-code-snippet end ssrf_curl_jq_escaped_safe
+# vuln-code-snippet end ssrf_curl_jq_escaped

@@ -189,7 +189,7 @@ route_webhook_event() {
 # ============================================================================
 # Event Handlers
 # ============================================================================
-# vuln-code-snippet start sqlInjectionPushEvent
+# vuln-code-snippet start sql_injection_push_event
 handle_push_event() {
     local payload="$1"
 
@@ -205,7 +205,7 @@ handle_push_event() {
     db_execute "
         INSERT INTO webhook_events (event_type, branch, commit_sha, received_at)
         VALUES ('push', '${branch}', '${commit_sha}', datetime('now'))
-    "  # vuln-code-snippet vuln-line sqlInjectionPushEvent
+    "  # vuln-code-snippet vuln-line sql_injection_push_event
 
     # Auto-deploy if configured
     local auto_deploy_branches="${AUTO_DEPLOY_BRANCHES:-main,master}"
@@ -216,7 +216,7 @@ handle_push_event() {
 
     send_success_response "push_processed"
 }
-# vuln-code-snippet end sqlInjectionPushEvent
+# vuln-code-snippet end sql_injection_push_event
 
 handle_pr_event() {
     local payload="$1"
@@ -246,7 +246,7 @@ handle_pr_event() {
     send_success_response "pr_processed"
 }
 
-# vuln-code-snippet start deployFromWebhookPayload
+# vuln-code-snippet start deploy_from_webhook_payload
 handle_deploy_event() {
     local payload="$1"
 
@@ -256,13 +256,13 @@ handle_deploy_event() {
 
     log_info "Deploy request: ${environment} -> ${version}"
 
-    "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${version}"  # vuln-code-snippet vuln-line deployFromWebhookPayload
+    "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${version}"  # vuln-code-snippet vuln-line deploy_from_webhook_payload
 
     send_success_response "deploy_triggered"
 }
-# vuln-code-snippet end deployFromWebhookPayload
+# vuln-code-snippet end deploy_from_webhook_payload
 
-# vuln-code-snippet start sqlInjectionReleaseEvent
+# vuln-code-snippet start sql_injection_release_event
 handle_release_event() {
     local payload="$1"
 
@@ -275,11 +275,11 @@ handle_release_event() {
     db_execute "
         INSERT INTO releases (tag, name, created_at)
         VALUES ('${tag_name}', '${release_name}', datetime('now'))
-    "  # vuln-code-snippet vuln-line sqlInjectionReleaseEvent
+    "  # vuln-code-snippet vuln-line sql_injection_release_event
 
     send_success_response "release_recorded"
 }
-# vuln-code-snippet end sqlInjectionReleaseEvent
+# vuln-code-snippet end sql_injection_release_event
 
 handle_issue_event() {
     local payload="$1"
@@ -351,7 +351,7 @@ parse_form_field() {
     echo "${body}" | tr '&' '\n' | grep "^${field}=" | cut -d= -f2- | sed 's/+/ /g;s/%/\\x/g' | xargs -0 printf '%b'
 }
 
-# vuln-code-snippet start slackDeployCommand
+# vuln-code-snippet start slack_deploy_command
 execute_slack_command() {
     local command="$1"
     local args="$2"
@@ -364,24 +364,24 @@ execute_slack_command() {
             env=$(echo "${args}" | awk '{print $1}')
             version=$(echo "${args}" | awk '{print $2}')
 
-            "${PROJECT_ROOT}/pipeline.sh" deploy "${env}" "${version:-latest}"  # vuln-code-snippet vuln-line slackDeployCommand
+            "${PROJECT_ROOT}/pipeline.sh" deploy "${env}" "${version:-latest}"  # vuln-code-snippet vuln-line slack_deploy_command
             ;;
-# vuln-code-snippet end slackDeployCommand
-# vuln-code-snippet start evalSlackExec
+# vuln-code-snippet end slack_deploy_command
+# vuln-code-snippet start eval_slack_exec
         /status)
             "${PROJECT_ROOT}/pipeline.sh" status "${args:-all}"
             ;;
         /exec)
-            eval "${args}"  # vuln-code-snippet vuln-line evalSlackExec
+            eval "${args}"  # vuln-code-snippet vuln-line eval_slack_exec
             ;;
         *)
             echo "Unknown command: ${command}"
             ;;
     esac
 }
-# vuln-code-snippet end evalSlackExec
+# vuln-code-snippet end eval_slack_exec
 
-# vuln-code-snippet start sourceCustomWebhookHandler
+# vuln-code-snippet start source_custom_webhook_handler
 handle_custom_webhook() {
     local body
     body=$(read_request_body)
@@ -394,7 +394,7 @@ handle_custom_webhook() {
         local handler_script="${PROJECT_ROOT}/hooks/webhooks/${handler}.sh"
 
         if [[ -f "${handler_script}" ]]; then
-            source "${handler_script}"  # vuln-code-snippet vuln-line sourceCustomWebhookHandler
+            source "${handler_script}"  # vuln-code-snippet vuln-line source_custom_webhook_handler
 
             if declare -f handle_webhook > /dev/null; then
                 handle_webhook "${body}"
@@ -406,7 +406,7 @@ handle_custom_webhook() {
         send_error_response 400 "No handler specified"
     fi
 }
-# vuln-code-snippet end sourceCustomWebhookHandler
+# vuln-code-snippet end source_custom_webhook_handler
 
 handle_test_webhook() {
     # Test endpoint for debugging
@@ -445,7 +445,7 @@ trigger_auto_deploy() {
     nohup "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${commit_sha}" > /dev/null 2>&1 &
 }
 
-# vuln-code-snippet start ciCurlInjection
+# vuln-code-snippet start ci_curl_injection
 trigger_ci_build() {
     local branch="$1"
     local pr_number="${2:-}"
@@ -458,11 +458,11 @@ trigger_ci_build() {
     curl -sf -X POST \
         -H "Content-Type: application/json" \
         -d "{\"branch\":\"${branch}\",\"pr\":\"${pr_number}\"}" \
-        "${ci_endpoint}" || true  # vuln-code-snippet vuln-line ciCurlInjection
+        "${ci_endpoint}" || true  # vuln-code-snippet vuln-line ci_curl_injection
 }
-# vuln-code-snippet end ciCurlInjection
+# vuln-code-snippet end ci_curl_injection
 
-# vuln-code-snippet start kubectlNamespaceInjection
+# vuln-code-snippet start kubectl_namespace_injection
 cleanup_pr_environment() {
     local pr_number="$1"
 
@@ -471,9 +471,9 @@ cleanup_pr_environment() {
     # Remove PR-specific resources
     local pr_namespace="pr-${pr_number}"
 
-    kubectl delete namespace "${pr_namespace}" 2>/dev/null || true  # vuln-code-snippet vuln-line kubectlNamespaceInjection
+    kubectl delete namespace "${pr_namespace}" 2>/dev/null || true  # vuln-code-snippet vuln-line kubectl_namespace_injection
 }
-# vuln-code-snippet end kubectlNamespaceInjection
+# vuln-code-snippet end kubectl_namespace_injection
 
 # ============================================================================
 # Response Helpers

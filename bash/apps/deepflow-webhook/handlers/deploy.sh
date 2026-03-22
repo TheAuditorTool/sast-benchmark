@@ -93,13 +93,13 @@ do_deploy() {
 }
 
 # Perform deployment with validation (SAFE version)
-# vuln-code-snippet start dfw_deploy_safe_validated
-do_deploy_safe() {
+# vuln-code-snippet start dfw_deploy_validated
+do_deploy_validated() {
     local target="$1"
     local script="$2"
 
     local deploy_path
-    deploy_path=$(validate_path "$DEPLOY_DIR/$target" "$DEPLOY_DIR") # vuln-code-snippet safe-line dfw_deploy_safe_validated
+    deploy_path=$(validate_path "$DEPLOY_DIR/$target" "$DEPLOY_DIR") # vuln-code-snippet safe-line dfw_deploy_validated
 
     if [[ $? -ne 0 ]]; then
         send_error 400 "Invalid target path"
@@ -126,7 +126,7 @@ do_deploy_safe() {
 
     send_json_response 200 '{"status": "deployed"}'
 }
-# vuln-code-snippet end dfw_deploy_safe_validated
+# vuln-code-snippet end dfw_deploy_validated
 
 # Rollback deployment
 # vuln-code-snippet start dfw_rollback_path_traversal

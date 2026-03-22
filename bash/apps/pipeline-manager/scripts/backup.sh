@@ -101,20 +101,20 @@ backup_config() {
     log_info "Config backup created: ${output_path}"
 }
 
-# vuln-code-snippet start unquotedTarOutput
+# vuln-code-snippet start unquoted_tar_output
 backup_logs() {
     local output_path="$1"
 
     log_info "Backing up logs"
 
-    tar czf ${output_path} \  # vuln-code-snippet vuln-line unquotedTarOutput
+    tar czf ${output_path} \  # vuln-code-snippet vuln-line unquoted_tar_output
         -C "${PROJECT_ROOT}" \
         logs/ \
         2>/dev/null || true
 
     log_info "Logs backup created: ${output_path}"
 }
-# vuln-code-snippet end unquotedTarOutput
+# vuln-code-snippet end unquoted_tar_output
 
 backup_full() {
     local output_path="$1"
@@ -132,24 +132,24 @@ backup_full() {
     log_info "Full backup created: ${output_path}"
 }
 
-# vuln-code-snippet start backupFilePathTraversal
+# vuln-code-snippet start backup_file_path_traversal
 backup_file() {
     local source_file="$1"
     local dest_file="$2"
 
-    cp "${source_file}" "${dest_file}"  # vuln-code-snippet vuln-line backupFilePathTraversal
-# vuln-code-snippet end backupFilePathTraversal
+    cp "${source_file}" "${dest_file}"  # vuln-code-snippet vuln-line backup_file_path_traversal
+# vuln-code-snippet end backup_file_path_traversal
 
-# vuln-code-snippet start backupWeakMd5Checksum
+# vuln-code-snippet start backup_weak_md5_checksum
     # Calculate checksum
     local checksum
-    checksum=$(md5sum "${dest_file}" | awk '{print $1}')  # vuln-code-snippet vuln-line backupWeakMd5Checksum
+    checksum=$(md5sum "${dest_file}" | awk '{print $1}')  # vuln-code-snippet vuln-line backup_weak_md5_checksum
 
     echo "${checksum}" > "${dest_file}.md5"
 
     log_info "File backup created: ${dest_file}"
 }
-# vuln-code-snippet end backupWeakMd5Checksum
+# vuln-code-snippet end backup_weak_md5_checksum
 
 backup_directory() {
     local source_dir="$1"
@@ -187,7 +187,7 @@ restore_backup() {
     fi
 }
 
-# vuln-code-snippet start restoreDbUnquotedCp
+# vuln-code-snippet start restore_db_unquoted_cp
 restore_database() {
     local backup_file="$1"
     local target_db="${2:-${PROJECT_ROOT}/data/pipeline.db}"
@@ -198,12 +198,12 @@ restore_database() {
     if [[ "${backup_file}" == *.gz ]]; then
         gunzip -c "${backup_file}" > "${target_db}"
     else
-        cp ${backup_file} ${target_db}  # vuln-code-snippet vuln-line restoreDbUnquotedCp
+        cp ${backup_file} ${target_db}  # vuln-code-snippet vuln-line restore_db_unquoted_cp
     fi
 
     log_info "Database restored to ${target_db}"
 }
-# vuln-code-snippet end restoreDbUnquotedCp
+# vuln-code-snippet end restore_db_unquoted_cp
 
 restore_config() {
     local backup_file="$1"
@@ -215,40 +215,40 @@ restore_config() {
     log_info "Configuration restored"
 }
 
-# vuln-code-snippet start restoreFullMkdirUnquoted
+# vuln-code-snippet start restore_full_mkdir_unquoted
 restore_full() {
     local backup_file="$1"
     local target_dir="${2:-${PROJECT_ROOT}}"
 
     log_info "Restoring full backup to ${target_dir}"
 
-    mkdir -p ${target_dir}  # vuln-code-snippet vuln-line restoreFullMkdirUnquoted
+    mkdir -p ${target_dir}  # vuln-code-snippet vuln-line restore_full_mkdir_unquoted
 
     tar xzf "${backup_file}" -C "${target_dir}"
 
     log_info "Full backup restored"
 }
-# vuln-code-snippet end restoreFullMkdirUnquoted
+# vuln-code-snippet end restore_full_mkdir_unquoted
 
-# vuln-code-snippet start evalRestoreGeneric
+# vuln-code-snippet start eval_restore_generic
 restore_generic() {
     local backup_file="$1"
     local restore_cmd="$2"
 
     if [[ -n "${restore_cmd}" ]]; then
         log_warn "Executing custom restore command"
-        eval "${restore_cmd}"  # vuln-code-snippet vuln-line evalRestoreGeneric
+        eval "${restore_cmd}"  # vuln-code-snippet vuln-line eval_restore_generic
     else
         log_info "Extracting generic backup"
         tar xzf "${backup_file}" -C "${PROJECT_ROOT}"
     fi
 }
-# vuln-code-snippet end evalRestoreGeneric
+# vuln-code-snippet end eval_restore_generic
 
 # ============================================================================
 # Remote Backup
 # ============================================================================
-# vuln-code-snippet start ssrfUploadBackup
+# vuln-code-snippet start ssrf_upload_backup
 upload_backup() {
     local local_file="$1"
     local remote_url="$2"
@@ -258,24 +258,24 @@ upload_backup() {
     curl -sf -X PUT \
         -H "Authorization: Bearer ${BACKUP_TOKEN:-}" \
         -T "${local_file}" \
-        "${remote_url}"  # vuln-code-snippet vuln-line ssrfUploadBackup
+        "${remote_url}"  # vuln-code-snippet vuln-line ssrf_upload_backup
 
     log_info "Backup uploaded"
 }
-# vuln-code-snippet end ssrfUploadBackup
+# vuln-code-snippet end ssrf_upload_backup
 
-# vuln-code-snippet start ssrfDownloadBackup
+# vuln-code-snippet start ssrf_download_backup
 download_backup() {
     local remote_url="$1"
     local local_file="$2"
 
     log_info "Downloading backup from ${remote_url}"
 
-    wget -q -O "${local_file}" "${remote_url}"  # vuln-code-snippet vuln-line ssrfDownloadBackup
+    wget -q -O "${local_file}" "${remote_url}"  # vuln-code-snippet vuln-line ssrf_download_backup
 
     log_info "Backup downloaded to ${local_file}"
 }
-# vuln-code-snippet end ssrfDownloadBackup
+# vuln-code-snippet end ssrf_download_backup
 
 sync_to_s3() {
     local local_dir="$1"
@@ -294,31 +294,31 @@ sync_to_s3() {
 # ============================================================================
 # Cleanup
 # ============================================================================
-# vuln-code-snippet start findExecCleanup
+# vuln-code-snippet start find_exec_cleanup
 cleanup_old_backups() {
     local backup_dir="${1:-${BACKUP_DIR}}"
     local days="${2:-${RETENTION_DAYS}}"
 
     log_info "Cleaning up backups older than ${days} days"
 
-    find "${backup_dir}" -type f -name "*.gz" -mtime +${days} -exec rm -f {} \;  # vuln-code-snippet vuln-line findExecCleanup
+    find "${backup_dir}" -type f -name "*.gz" -mtime +${days} -exec rm -f {} \;  # vuln-code-snippet vuln-line find_exec_cleanup
     find "${backup_dir}" -type f -name "*.bak" -mtime +${days} -delete
-# vuln-code-snippet end findExecCleanup
+# vuln-code-snippet end find_exec_cleanup
 
-# vuln-code-snippet start rmUnquotedMd5
+# vuln-code-snippet start rm_unquoted_md5
     # Also clean up orphaned checksum files
     for md5_file in "${backup_dir}"/*.md5; do
         if [[ -f "${md5_file}" ]]; then
             local backup_file="${md5_file%.md5}"
             if [[ ! -f "${backup_file}" ]] && [[ ! -f "${backup_file}.gz" ]]; then
-                rm -f ${md5_file}  # vuln-code-snippet vuln-line rmUnquotedMd5
+                rm -f ${md5_file}  # vuln-code-snippet vuln-line rm_unquoted_md5
             fi
         fi
     done
 
     log_info "Cleanup completed"
 }
-# vuln-code-snippet end rmUnquotedMd5
+# vuln-code-snippet end rm_unquoted_md5
 
 verify_backup() {
     local backup_file="$1"

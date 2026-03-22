@@ -18,10 +18,10 @@ BACKUP_DIR="${BACKUP_DIR:-/var/backups}"
 log_info "Starting cleanup"
 log_info "Target path: $TARGET_PATH"
 
-# vuln-code-snippet start dfo_cleanup_safe_validated
+# vuln-code-snippet start dfo_cleanup_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     log_info "Running in SAFE MODE"
-    if ! validate_path "$TARGET_PATH" "$DEPLOY_DIR"; then  # vuln-code-snippet safe-line dfo_cleanup_safe_validated
+    if ! validate_path "$TARGET_PATH" "$DEPLOY_DIR"; then  # vuln-code-snippet safe-line dfo_cleanup_validated
         log_error "Path validation failed - refusing to delete"
         exit 1
     fi
@@ -46,7 +46,7 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     # Delete
     rm -rf "$RESOLVED_PATH"
     log_info "Cleanup completed: $RESOLVED_PATH"
-# vuln-code-snippet end dfo_cleanup_safe_validated
+# vuln-code-snippet end dfo_cleanup_validated
 
 else
     log_warn "Running in UNSAFE MODE"

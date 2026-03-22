@@ -69,7 +69,7 @@ notify_slack() {
 }
 # vuln-code-snippet end dfw_slack_ssrf
 
-# vuln-code-snippet start dfw_email_validated_safe
+# vuln-code-snippet start dfw_email_validated
 # Send email notification
 notify_email() {
     local message="$1"
@@ -80,11 +80,11 @@ notify_email() {
         return 1
     fi
 
-    if ! validate_email "$recipient"; then # vuln-code-snippet safe-line dfw_email_validated_safe
+    if ! validate_email "$recipient"; then # vuln-code-snippet safe-line dfw_email_validated
         log "ERROR" "Invalid email format: $recipient"
         return 1
     fi
-# vuln-code-snippet end dfw_email_validated_safe
+# vuln-code-snippet end dfw_email_validated
 
 # vuln-code-snippet start dfw_email_header_injection
     echo "$message" | mail -s "Deployment Notification" "$recipient" # vuln-code-snippet vuln-line dfw_email_header_injection
@@ -162,13 +162,13 @@ notify_from_template() {
 }
 # vuln-code-snippet end dfw_template_double_eval
 
-# vuln-code-snippet start dfw_notify_safe_sanitized
+# vuln-code-snippet start dfw_notify_sanitized
 # Safe notification sender
-notify_safe() {
+notify_sanitized() {
     local channel="$1"
     local message="$2"
 
-    message=$(printf '%q' "$message") # vuln-code-snippet safe-line dfw_notify_safe_sanitized
+    message=$(printf '%q' "$message") # vuln-code-snippet safe-line dfw_notify_sanitized
 
     case "$channel" in
         slack)
@@ -183,4 +183,4 @@ notify_safe() {
             ;;
     esac
 }
-# vuln-code-snippet end dfw_notify_safe_sanitized
+# vuln-code-snippet end dfw_notify_sanitized

@@ -6,7 +6,7 @@ BACKUP_DIR="${BACKUP_DIR:-/var/securepipeline/backups}"
 BACKUP_REMOTE_URL="https://backup.corp.internal/api/v1/upload"
 
 # vuln-code-snippet start sp_backup_realpath_validated
-backup_file_safe() {
+backup_file() {
     # Source path is canonicalized with realpath and checked against prefix.
     local source_file="$1"
     local resolved
@@ -24,7 +24,7 @@ backup_file_safe() {
 # vuln-code-snippet end sp_backup_realpath_validated
 
 # vuln-code-snippet start sp_backup_tar_quoted
-backup_logs_safe() {
+backup_logs() {
     # Output path is properly double-quoted in tar command.
     local output_path="${BACKUP_DIR}/logs_$(date +%Y%m%d).tar.gz"
 
@@ -34,7 +34,7 @@ backup_logs_safe() {
 # vuln-code-snippet end sp_backup_tar_quoted
 
 # vuln-code-snippet start sp_backup_restore_quoted
-restore_database_safe() {
+restore_database() {
     # Both backup file and target database paths are double-quoted.
     local backup_file="$1"
     local target_db="$2"
@@ -44,14 +44,14 @@ restore_database_safe() {
 # vuln-code-snippet end sp_backup_restore_quoted
 
 # vuln-code-snippet start sp_backup_cleanup_find_hardcoded
-cleanup_old_backups_safe() {
+cleanup_old_backups() {
     # find uses -delete with hardcoded pattern. 30-day retention.
     find "$BACKUP_DIR" -type f -name "*.tar.gz" -mtime +30 -delete  # vuln-code-snippet safe-line sp_backup_cleanup_find_hardcoded
 }
 # vuln-code-snippet end sp_backup_cleanup_find_hardcoded
 
 # vuln-code-snippet start sp_backup_upload_allowlisted
-upload_backup_safe() {
+upload_backup() {
     # Upload URL is a hardcoded constant defined at the top of this file.
     local local_file="$1"
 

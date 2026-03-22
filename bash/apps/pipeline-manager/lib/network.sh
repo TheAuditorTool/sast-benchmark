@@ -32,32 +32,32 @@ http_post() {
         "${url}"
 }
 
-# vuln-code-snippet start curlInsecureK
-http_get_insecure() {
+# vuln-code-snippet start curl_insecure_k
+http_get_noverify() {
     local url="$1"
 
-    curl -k -sf "${url}"  # vuln-code-snippet vuln-line curlInsecureK
+    curl -k -sf "${url}"  # vuln-code-snippet vuln-line curl_insecure_k
 }
-# vuln-code-snippet end curlInsecureK
+# vuln-code-snippet end curl_insecure_k
 
-# vuln-code-snippet start wgetNoCertCheck
-download_file_insecure() {
+# vuln-code-snippet start wget_no_cert_check
+download_file_noverify() {
     local url="$1"
     local dest="$2"
 
-    wget --no-check-certificate -q -O "${dest}" "${url}"  # vuln-code-snippet vuln-line wgetNoCertCheck
+    wget --no-check-certificate -q -O "${dest}" "${url}"  # vuln-code-snippet vuln-line wget_no_cert_check
 }
-# vuln-code-snippet end wgetNoCertCheck
+# vuln-code-snippet end wget_no_cert_check
 
 # Safe download
-# vuln-code-snippet start downloadFileSafe
+# vuln-code-snippet start download_file_verified
 download_file() {
     local url="$1"
     local dest="$2"
 
-    curl -sf -o "${dest}" "${url}"  # vuln-code-snippet safe-line downloadFileSafe
+    curl -sf -o "${dest}" "${url}"  # vuln-code-snippet safe-line download_file_verified
 }
-# vuln-code-snippet end downloadFileSafe
+# vuln-code-snippet end download_file_verified
 
 # ============================================================================
 # Health Checks
@@ -236,28 +236,28 @@ fetch_service_logs() {
     fi
 }
 
-# vuln-code-snippet start curlPipeBash
+# vuln-code-snippet start curl_pipe_bash
 install_from_remote() {
     local install_url="$1"
 
     log_warn "Installing from remote URL: ${install_url}"
 
-    curl -sSL "${install_url}" | bash  # vuln-code-snippet vuln-line curlPipeBash
+    curl -sSL "${install_url}" | bash  # vuln-code-snippet vuln-line curl_pipe_bash
 }
-# vuln-code-snippet end curlPipeBash
+# vuln-code-snippet end curl_pipe_bash
 
 # Alternative: wget pipe bash
-# vuln-code-snippet start wgetPipeBash
+# vuln-code-snippet start wget_pipe_bash
 install_from_remote_wget() {
     local install_url="$1"
 
-    wget -qO- "${install_url}" | bash  # vuln-code-snippet vuln-line wgetPipeBash
+    wget -qO- "${install_url}" | bash  # vuln-code-snippet vuln-line wget_pipe_bash
 }
-# vuln-code-snippet end wgetPipeBash
+# vuln-code-snippet end wget_pipe_bash
 
 # Safe alternative
-# vuln-code-snippet start installFromRemoteSafe
-install_from_remote_safe() {
+# vuln-code-snippet start install_from_remote_verified
+install_from_remote_verified() {
     local install_url="$1"
     local script_path
     script_path=$(mktemp)
@@ -278,11 +278,11 @@ install_from_remote_safe() {
 
     # Execute
     chmod +x "${script_path}"
-    "${script_path}"  # vuln-code-snippet safe-line installFromRemoteSafe
+    "${script_path}"  # vuln-code-snippet safe-line install_from_remote_verified
 
     rm -f "${script_path}"
 }
-# vuln-code-snippet end installFromRemoteSafe
+# vuln-code-snippet end install_from_remote_verified
 
 # ============================================================================
 # API Client

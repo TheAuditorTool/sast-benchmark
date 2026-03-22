@@ -10,13 +10,13 @@ prepare_shared_dir() {
 }
 # vuln-code-snippet end perms_chmod_777
 
-# vuln-code-snippet start perms_chmod_700_safe
+# vuln-code-snippet start perms_chmod_700
 prepare_private_dir() {
     local dir="$1"
     mkdir -p "$dir"
-    chmod 700 "$dir"  # vuln-code-snippet safe-line perms_chmod_700_safe
+    chmod 700 "$dir"  # vuln-code-snippet safe-line perms_chmod_700
 }
-# vuln-code-snippet end perms_chmod_700_safe
+# vuln-code-snippet end perms_chmod_700
 
 # vuln-code-snippet start perms_umask_000
 create_world_readable_files() {
@@ -26,13 +26,13 @@ create_world_readable_files() {
 }
 # vuln-code-snippet end perms_umask_000
 
-# vuln-code-snippet start perms_umask_077_safe
+# vuln-code-snippet start perms_umask_077
 create_private_files() {
-    umask 077  # vuln-code-snippet safe-line perms_umask_077_safe
+    umask 077  # vuln-code-snippet safe-line perms_umask_077
     touch /tmp/app_data.txt
     echo "sensitive data" > /tmp/app_config.txt
 }
-# vuln-code-snippet end perms_umask_077_safe
+# vuln-code-snippet end perms_umask_077
 
 # vuln-code-snippet start perms_chmod_arwx
 make_accessible() {

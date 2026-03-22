@@ -6,7 +6,7 @@ CONFIG_DIR="${SCRIPT_DIR}/config"
 PLUGIN_DIR="${SCRIPT_DIR}/plugins"
 
 # vuln-code-snippet start sp_config_set_validated
-set_config_value_safe() {
+set_config_value() {
     # Allowlist of known config keys. Value is printf-%q escaped.
     local key="$1"
     local value="$2"
@@ -27,7 +27,7 @@ set_config_value_safe() {
 # vuln-code-snippet end sp_config_set_validated
 
 # vuln-code-snippet start sp_config_load_constant
-load_config_safe() {
+load_config() {
     # Path assembled entirely from constants.
     local config_path="${CONFIG_DIR}/app.conf"
 
@@ -41,7 +41,7 @@ load_config_safe() {
 # vuln-code-snippet end sp_config_load_constant
 
 # vuln-code-snippet start sp_config_env_validated
-load_environment_config_safe() {
+load_environment_config() {
     # Environment name validated against a fixed allowlist.
     local env_name="$1"
 
@@ -58,7 +58,7 @@ load_environment_config_safe() {
 # vuln-code-snippet end sp_config_env_validated
 
 # vuln-code-snippet start sp_config_ifs_restored
-parse_csv_line_safe() {
+parse_csv_line() {
     # IFS is saved before modification and restored after.
     local line="$1"
     local saved_ifs="$IFS"
@@ -73,7 +73,7 @@ parse_csv_line_safe() {
 # vuln-code-snippet end sp_config_ifs_restored
 
 # vuln-code-snippet start sp_config_absolute_path
-setup_path_safe() {
+setup_path() {
     # PATH is set to absolute system directories only.
     PATH="/usr/local/bin:/usr/bin:/bin"  # vuln-code-snippet safe-line sp_config_absolute_path
     export PATH
@@ -82,7 +82,7 @@ setup_path_safe() {
 # vuln-code-snippet end sp_config_absolute_path
 
 # vuln-code-snippet start sp_config_plugin_validated
-load_plugin_config_safe() {
+load_plugin_config() {
     # Plugin name validated against a strict regex before path construction.
     local plugin_name="$1"
 
@@ -99,7 +99,7 @@ load_plugin_config_safe() {
 # vuln-code-snippet end sp_config_plugin_validated
 
 # vuln-code-snippet start sp_config_no_ld_preload
-setup_library_path_safe() {
+setup_library_path() {
     # Unset LD_PRELOAD and LD_LIBRARY_PATH. Set only approved library paths.
     unset LD_PRELOAD  # vuln-code-snippet safe-line sp_config_no_ld_preload
     unset LD_LIBRARY_PATH
@@ -108,7 +108,7 @@ setup_library_path_safe() {
 # vuln-code-snippet end sp_config_no_ld_preload
 
 # vuln-code-snippet start sp_config_read_r_flag
-read_config_value_safe() {
+read_config_value() {
     # read uses -r flag to prevent backslash interpretation.
     local config_file="$1"
     local target_key="$2"

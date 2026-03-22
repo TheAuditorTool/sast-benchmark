@@ -11,14 +11,14 @@ process_files() {
 }
 # vuln-code-snippet end unquoted_for_loop
 
-# vuln-code-snippet start unquoted_quoted_array_safe
-process_files_safe() {
+# vuln-code-snippet start unquoted_quoted_array
+process_files() {
     local -a files=("$@")
-    for f in "${files[@]}"; do  # vuln-code-snippet safe-line unquoted_quoted_array_safe
+    for f in "${files[@]}"; do  # vuln-code-snippet safe-line unquoted_quoted_array
         echo "Processing: $f"
     done
 }
-# vuln-code-snippet end unquoted_quoted_array_safe
+# vuln-code-snippet end unquoted_quoted_array
 
 # vuln-code-snippet start unquoted_test_bracket
 check_file_exists() {
@@ -29,14 +29,14 @@ check_file_exists() {
 }
 # vuln-code-snippet end unquoted_test_bracket
 
-# vuln-code-snippet start unquoted_double_bracket_safe
-check_file_exists_safe() {
+# vuln-code-snippet start unquoted_double_bracket
+check_file_exists() {
     local path="$1"
-    if [[ -f "$path" ]]; then  # vuln-code-snippet safe-line unquoted_double_bracket_safe
+    if [[ -f "$path" ]]; then  # vuln-code-snippet safe-line unquoted_double_bracket
         echo "exists"
     fi
 }
-# vuln-code-snippet end unquoted_double_bracket_safe
+# vuln-code-snippet end unquoted_double_bracket
 
 # vuln-code-snippet start unquoted_rm_variable
 cleanup_directory() {
@@ -45,45 +45,45 @@ cleanup_directory() {
 }
 # vuln-code-snippet end unquoted_rm_variable
 
-# vuln-code-snippet start unquoted_rm_quoted_safe
-cleanup_directory_safe() {
+# vuln-code-snippet start unquoted_rm_quoted
+cleanup_directory() {
     local dir="$1"
-    rm -rf "$dir"  # vuln-code-snippet safe-line unquoted_rm_quoted_safe
+    rm -rf "$dir"  # vuln-code-snippet safe-line unquoted_rm_quoted
 }
-# vuln-code-snippet end unquoted_rm_quoted_safe
+# vuln-code-snippet end unquoted_rm_quoted
 
 # --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
 
-# vuln-code-snippet start unquoted_array_iteration_safe
+# vuln-code-snippet start unquoted_array_iteration
 deploy_services() {
     #array expansion "${services[@]}" is properly double-quoted.
     # Each array element is preserved as a single token, even if it contains spaces.
     local -a services=("$@")
     local svc
     for svc in "${services[@]}"; do
-        systemctl restart "$svc"  # vuln-code-snippet safe-line unquoted_array_iteration_safe
+        systemctl restart "$svc"  # vuln-code-snippet safe-line unquoted_array_iteration
     done
 }
-# vuln-code-snippet end unquoted_array_iteration_safe
+# vuln-code-snippet end unquoted_array_iteration
 
-# vuln-code-snippet start unquoted_cp_both_quoted_safe
+# vuln-code-snippet start unquoted_cp_both_quoted
 archive_logs() {
     #both source and destination paths are properly double-quoted.
     # Without quotes, paths with spaces would split into separate arguments.
     local log_dir="$1"
     local archive_dir="$2"
-    cp -r "$log_dir" "$archive_dir"  # vuln-code-snippet safe-line unquoted_cp_both_quoted_safe
+    cp -r "$log_dir" "$archive_dir"  # vuln-code-snippet safe-line unquoted_cp_both_quoted
 }
-# vuln-code-snippet end unquoted_cp_both_quoted_safe
+# vuln-code-snippet end unquoted_cp_both_quoted
 
-# vuln-code-snippet start unquoted_read_r_ifs_safe
+# vuln-code-snippet start unquoted_read_r_ifs
 parse_env_file() {
     #read -r prevents backslash interpretation, IFS='=' splits only
     # on equals sign. Variables are properly quoted in the export statement.
     local file="$1"
     local key value
     while IFS='=' read -r key value; do
-        export "$key=$value"  # vuln-code-snippet safe-line unquoted_read_r_ifs_safe
+        export "$key=$value"  # vuln-code-snippet safe-line unquoted_read_r_ifs
     done < "$file"
 }
-# vuln-code-snippet end unquoted_read_r_ifs_safe
+# vuln-code-snippet end unquoted_read_r_ifs

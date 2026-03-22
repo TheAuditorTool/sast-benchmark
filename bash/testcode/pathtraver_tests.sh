@@ -11,14 +11,14 @@ read_user_file() {
 }
 # vuln-code-snippet end pathtraver_cat_user_input
 
-# vuln-code-snippet start pathtraver_basename_safe
-read_user_file_safe() {
+# vuln-code-snippet start pathtraver_basename
+read_user_file() {
     local filename="$1"
     local safe_name
     safe_name=$(basename "$filename")
-    cat "${DATA_DIR}/${safe_name}"  # vuln-code-snippet safe-line pathtraver_basename_safe
+    cat "${DATA_DIR}/${safe_name}"  # vuln-code-snippet safe-line pathtraver_basename
 }
-# vuln-code-snippet end pathtraver_basename_safe
+# vuln-code-snippet end pathtraver_basename
 
 # vuln-code-snippet start pathtraver_tar_extract
 extract_user_archive() {
@@ -28,8 +28,8 @@ extract_user_archive() {
 }
 # vuln-code-snippet end pathtraver_tar_extract
 
-# vuln-code-snippet start pathtraver_realpath_check_safe
-read_file_validated() {
+# vuln-code-snippet start pathtraver_realpath_check
+read_file_checked() {
     local user_path="$1"
     local real_path
     real_path=$(realpath -m "${DATA_DIR}/${user_path}")
@@ -37,9 +37,9 @@ read_file_validated() {
         echo "Path traversal attempt blocked" >&2
         return 1
     fi
-    cat "$real_path"  # vuln-code-snippet safe-line pathtraver_realpath_check_safe
+    cat "$real_path"  # vuln-code-snippet safe-line pathtraver_realpath_check
 }
-# vuln-code-snippet end pathtraver_realpath_check_safe
+# vuln-code-snippet end pathtraver_realpath_check
 
 # vuln-code-snippet start pathtraver_symlink_bypass
 read_file_dotdot_only() {
@@ -71,8 +71,8 @@ extract_user_upload() {
 }
 # vuln-code-snippet end pathtraver_tar_member_traversal
 
-# vuln-code-snippet start pathtraver_tar_safe_extract
-extract_user_upload_safe() {
+# vuln-code-snippet start pathtraver_tar_validated_extract
+extract_user_upload() {
     local archive="$1"
     local extract_dir="/var/app/uploads"
     mkdir -p "$extract_dir"
@@ -86,14 +86,14 @@ extract_user_upload_safe() {
         echo "Archive contains path traversal — rejected" >&2
         return 1
     fi
-    cp -r "$tmp_dir"/* "$extract_dir"/  # vuln-code-snippet safe-line pathtraver_tar_safe_extract
+    cp -r "$tmp_dir"/* "$extract_dir"/  # vuln-code-snippet safe-line pathtraver_tar_validated_extract
     rm -rf "$tmp_dir"
 }
-# vuln-code-snippet end pathtraver_tar_safe_extract
+# vuln-code-snippet end pathtraver_tar_validated_extract
 
 # --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
 
-# vuln-code-snippet start pathtraver_readlink_safe
+# vuln-code-snippet start pathtraver_readlink
 serve_user_file() {
     #readlink -f resolves the full canonical path (following symlinks),
     # then a prefix check ensures the resolved path stays within DATA_DIR.
@@ -106,6 +106,6 @@ serve_user_file() {
         echo "Path traversal blocked: $name" >&2
         return 1
     fi
-    cat "$resolved"  # vuln-code-snippet safe-line pathtraver_readlink_safe
+    cat "$resolved"  # vuln-code-snippet safe-line pathtraver_readlink
 }
-# vuln-code-snippet end pathtraver_readlink_safe
+# vuln-code-snippet end pathtraver_readlink

@@ -50,7 +50,7 @@ run_migration() {
     esac
 }
 
-# vuln-code-snippet start sourceMigrationFile
+# vuln-code-snippet start source_migration_file
 migrate_up() {
     local target="$1"
 
@@ -77,7 +77,7 @@ migrate_up() {
         log_info "Applying migration: ${migration_id}"
 
         # Execute migration
-        source "${migration}"  # vuln-code-snippet vuln-line sourceMigrationFile
+        source "${migration}"  # vuln-code-snippet vuln-line source_migration_file
 
         # Call the up function
         if declare -f migration_up > /dev/null; then
@@ -98,9 +98,9 @@ migrate_up() {
 
     log_info "All migrations completed"
 }
-# vuln-code-snippet end sourceMigrationFile
+# vuln-code-snippet end source_migration_file
 
-# vuln-code-snippet start sqlInjectionDeleteMigration
+# vuln-code-snippet start sql_injection_delete_migration
 migrate_down() {
     local target="$1"
 
@@ -135,14 +135,14 @@ migrate_down() {
         fi
 
         # Remove migration record
-        db_execute "DELETE FROM migrations WHERE migration_id = '${migration_id}'"  # vuln-code-snippet vuln-line sqlInjectionDeleteMigration
+        db_execute "DELETE FROM migrations WHERE migration_id = '${migration_id}'"  # vuln-code-snippet vuln-line sql_injection_delete_migration
 
         log_info "Migration ${migration_id} rolled back"
 
         unset -f migration_up migration_down 2>/dev/null || true
     done
 }
-# vuln-code-snippet end sqlInjectionDeleteMigration
+# vuln-code-snippet end sql_injection_delete_migration
 
 get_pending_migrations() {
     local all_migrations
@@ -229,7 +229,7 @@ MIGRATION_TEMPLATE
 # Advanced Migration Features
 # ============================================================================
 
-# vuln-code-snippet start readWithoutRMigration
+# vuln-code-snippet start read_without_r_migration
 process_migration_data() {
     local data_file="$1"
 
@@ -241,20 +241,20 @@ process_migration_data() {
     local data
     data=$(cat "${data_file}")
 
-    echo "${data}" | while read line; do  # vuln-code-snippet vuln-line readWithoutRMigration
+    echo "${data}" | while read line; do  # vuln-code-snippet vuln-line read_without_r_migration
         # Parse line
         local key value
         key=$(echo "${line}" | cut -d: -f1)
         value=$(echo "${line}" | cut -d: -f2-)
-# vuln-code-snippet end readWithoutRMigration
+# vuln-code-snippet end read_without_r_migration
 
-# vuln-code-snippet start sqlInjectionMigrationData
-        db_execute "INSERT INTO migration_data (key, value) VALUES ('${key}', '${value}')"  # vuln-code-snippet vuln-line sqlInjectionMigrationData
+# vuln-code-snippet start sql_injection_migration_data
+        db_execute "INSERT INTO migration_data (key, value) VALUES ('${key}', '${value}')"  # vuln-code-snippet vuln-line sql_injection_migration_data
     done
 }
-# vuln-code-snippet end sqlInjectionMigrationData
+# vuln-code-snippet end sql_injection_migration_data
 
-# vuln-code-snippet start executeCustomSqlFromStdin
+# vuln-code-snippet start execute_custom_sql_from_stdin
 execute_custom_sql() {
     local sql_file="$1"
 
@@ -268,14 +268,14 @@ execute_custom_sql() {
     fi
 
     log_info "Executing custom SQL"
-    sqlite3 "${DB_FILE}" "${sql}"  # vuln-code-snippet vuln-line executeCustomSqlFromStdin
+    sqlite3 "${DB_FILE}" "${sql}"  # vuln-code-snippet vuln-line execute_custom_sql_from_stdin
 }
-# vuln-code-snippet end executeCustomSqlFromStdin
+# vuln-code-snippet end execute_custom_sql_from_stdin
 
 # ============================================================================
 # Migration Hooks
 # ============================================================================
-# vuln-code-snippet start sourcePreMigrationHook
+# vuln-code-snippet start source_pre_migration_hook
 run_pre_migration_hook() {
     local migration_id="$1"
 
@@ -283,10 +283,10 @@ run_pre_migration_hook() {
 
     if [[ -f "${hook_file}" ]]; then
         log_info "Running pre-migration hook: ${migration_id}"
-        . "${hook_file}"  # vuln-code-snippet vuln-line sourcePreMigrationHook
+        . "${hook_file}"  # vuln-code-snippet vuln-line source_pre_migration_hook
     fi
 }
-# vuln-code-snippet end sourcePreMigrationHook
+# vuln-code-snippet end source_pre_migration_hook
 
 run_post_migration_hook() {
     local migration_id="$1"
@@ -317,20 +317,20 @@ seed_database() {
     log_info "Database seeded"
 }
 
-# vuln-code-snippet start runSeedScript
+# vuln-code-snippet start run_seed_script
 run_seed_script() {
     local seed_name="$1"
 
     local seed_script="${PROJECT_ROOT}/data/seeds/${seed_name}.sh"
 
     if [[ -f "${seed_script}" ]]; then
-        "${seed_script}"  # vuln-code-snippet vuln-line runSeedScript
+        "${seed_script}"  # vuln-code-snippet vuln-line run_seed_script
     else
         log_error "Seed script not found: ${seed_name}"
         return 1
     fi
 }
-# vuln-code-snippet end runSeedScript
+# vuln-code-snippet end run_seed_script
 
 # ============================================================================
 # Entry Point

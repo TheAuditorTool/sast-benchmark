@@ -5,7 +5,7 @@
 DEPLOY_DIR="${DEPLOY_DIR:-/var/securepipeline/deployments}"
 
 # vuln-code-snippet start sp_deploy_ssh_strict
-deploy_to_target_safe() {
+deploy_to_target() {
     # SSH with StrictHostKeyChecking=yes.
     local host="$1"
     local version="$2"
@@ -16,7 +16,7 @@ deploy_to_target_safe() {
 # vuln-code-snippet end sp_deploy_ssh_strict
 
 # vuln-code-snippet start sp_deploy_ssh_quoted_args
-run_remote_command_safe() {
+run_remote_command() {
     # Remote command is a fixed string. Version is integer-validated.
     local host="$1"
     local version="$2"
@@ -31,7 +31,7 @@ run_remote_command_safe() {
 # vuln-code-snippet end sp_deploy_ssh_quoted_args
 
 # vuln-code-snippet start sp_deploy_docker_quoted
-docker_run_safe() {
+docker_run() {
     # All variables are properly double-quoted in docker run.
     local container_name="$1"
     local env_file="$2"
@@ -46,7 +46,7 @@ docker_run_safe() {
 # vuln-code-snippet end sp_deploy_docker_quoted
 
 # vuln-code-snippet start sp_deploy_chmod_755
-prepare_deploy_directory_safe() {
+prepare_deploy_directory() {
     # chmod 755 gives owner rwx, group/world rx.
     local deploy_path="$1"
 
@@ -56,7 +56,7 @@ prepare_deploy_directory_safe() {
 # vuln-code-snippet end sp_deploy_chmod_755
 
 # vuln-code-snippet start sp_deploy_quoted_cp
-copy_artifacts_safe() {
+copy_artifacts() {
     # Both source and destination paths are double-quoted.
     local src="$1"
     local dst="$2"
@@ -82,7 +82,7 @@ validate_and_deploy() {
 # vuln-code-snippet end sp_deploy_version_integer
 
 # vuln-code-snippet start sp_deploy_hook_allowlist
-run_deploy_hook_safe() {
+run_deploy_hook() {
     # Hook name validated against a fixed allowlist.
     local hook_name="$1"
     local hook_dir="${DEPLOY_DIR}/hooks"
@@ -102,7 +102,7 @@ run_deploy_hook_safe() {
 # vuln-code-snippet end sp_deploy_hook_allowlist
 
 # vuln-code-snippet start sp_deploy_kubectl_identifier
-kubectl_rollout_safe() {
+kubectl_rollout() {
     # Namespace and deployment name validated against strict identifier regex.
     local namespace="$1"
     local deployment="$2"

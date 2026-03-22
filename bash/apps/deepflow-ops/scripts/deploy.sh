@@ -22,12 +22,12 @@ log_info "Environment: $ENVIRONMENT"
 log_info "Branch: $BRANCH"
 
 # Check if running in safe mode
-# vuln-code-snippet start dfo_deploy_safe_validated
+# vuln-code-snippet start dfo_deploy_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     log_info "Running in SAFE MODE"
 
     # Validate all inputs
-    if ! validate_identifier "$TARGET"; then  # vuln-code-snippet safe-line dfo_deploy_safe_validated
+    if ! validate_identifier "$TARGET"; then  # vuln-code-snippet safe-line dfo_deploy_validated
         log_error "Target validation failed"
         exit 1
     fi
@@ -59,7 +59,7 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     else
         git clone --branch "$BRANCH" "https://github.com/org/$TARGET.git" .
     fi
-# vuln-code-snippet end dfo_deploy_safe_validated
+# vuln-code-snippet end dfo_deploy_validated
 
 else
     log_warn "Running in UNSAFE MODE"

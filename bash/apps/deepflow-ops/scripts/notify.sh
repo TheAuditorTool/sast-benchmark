@@ -18,10 +18,10 @@ EMAIL_TO="${EMAIL_TO:-}"
 log_info "Sending notification"
 log_info "Message: $MESSAGE"
 
-# vuln-code-snippet start dfo_notify_safe_encoded
+# vuln-code-snippet start dfo_notify_encoded
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
     log_info "Running in SAFE MODE"
-    if ! validate_message "$MESSAGE"; then  # vuln-code-snippet safe-line dfo_notify_safe_encoded
+    if ! validate_message "$MESSAGE"; then  # vuln-code-snippet safe-line dfo_notify_encoded
         log_error "Message validation failed"
         exit 1
     fi
@@ -49,7 +49,7 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
             -d "{\"text\": $SAFE_MESSAGE}"
         log_info "Notification sent to Slack"
     fi
-# vuln-code-snippet end dfo_notify_safe_encoded
+# vuln-code-snippet end dfo_notify_encoded
 
 else
     log_warn "Running in UNSAFE MODE"

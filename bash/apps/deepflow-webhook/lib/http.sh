@@ -58,16 +58,16 @@ read_body() {
 
 # vuln-code-snippet start dfw_parse_qs_eval
 # Parse URL-encoded query string into variables
-parse_query_string_unsafe() {
+parse_query_string_eval() {
     local qs="$1"
 
     eval "$qs" # vuln-code-snippet vuln-line dfw_parse_qs_eval
 }
 # vuln-code-snippet end dfw_parse_qs_eval
 
-# vuln-code-snippet start dfw_parse_qs_safe
+# vuln-code-snippet start dfw_parse_qs_declare
 # Parse query string safely into associative array
-parse_query_string_safe() {
+parse_query_string_declare() {
     local qs="$1"
     declare -gA QUERY_PARAMS
 
@@ -78,12 +78,12 @@ parse_query_string_safe() {
         local value="${param#*=}"
         # URL decode
         value=$(printf '%b' "${value//%/\\x}")
-        QUERY_PARAMS["$key"]="$value" # vuln-code-snippet safe-line dfw_parse_qs_safe
+        QUERY_PARAMS["$key"]="$value" # vuln-code-snippet safe-line dfw_parse_qs_declare
     done
 }
-# vuln-code-snippet end dfw_parse_qs_safe
+# vuln-code-snippet end dfw_parse_qs_declare
 
-# vuln-code-snippet start dfw_send_response_safe
+# vuln-code-snippet start dfw_send_response
 # Send HTTP response
 # Usage: send_response STATUS_CODE CONTENT_TYPE BODY
 send_response() {
@@ -105,14 +105,14 @@ send_response() {
 
     local content_length=${#body}
 
-    printf "HTTP/1.1 %s %s\r\n" "$status_code" "$status_text" # vuln-code-snippet safe-line dfw_send_response_safe
+    printf "HTTP/1.1 %s %s\r\n" "$status_code" "$status_text" # vuln-code-snippet safe-line dfw_send_response
     printf "Content-Type: %s\r\n" "$content_type"
     printf "Content-Length: %d\r\n" "$content_length"
     printf "Connection: close\r\n"
     printf "\r\n"
     printf "%s" "$body"
 }
-# vuln-code-snippet end dfw_send_response_safe
+# vuln-code-snippet end dfw_send_response
 
 # Send JSON response
 send_json_response() {

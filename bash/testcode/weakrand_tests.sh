@@ -63,57 +63,57 @@ generate_shuffle_key() {
 
 # --- Safe variants ---
 
-# vuln-code-snippet start weakrand_urandom_token_safe
+# vuln-code-snippet start weakrand_urandom_token
 generate_secure_token() {
     #/dev/urandom is the kernel's cryptographically secure PRNG.
     # 32 bytes = 256 bits of entropy from the kernel entropy pool.
     # Not predictable, not seeded from PID, not an LCG.
     local token
-    token=$(head -c 32 /dev/urandom | base64 | tr -d '=+/' | head -c 32)  # vuln-code-snippet safe-line weakrand_urandom_token_safe
+    token=$(head -c 32 /dev/urandom | base64 | tr -d '=+/' | head -c 32)  # vuln-code-snippet safe-line weakrand_urandom_token
     echo "$token"
 }
-# vuln-code-snippet end weakrand_urandom_token_safe
+# vuln-code-snippet end weakrand_urandom_token
 
-# vuln-code-snippet start weakrand_openssl_rand_safe
+# vuln-code-snippet start weakrand_openssl_rand
 generate_api_key_secure() {
     #openssl rand uses the OpenSSL CSPRNG, which is seeded from
     # /dev/urandom. Produces 32 bytes (256 bits) of cryptographic randomness.
     local key
-    key=$(openssl rand -hex 32)  # vuln-code-snippet safe-line weakrand_openssl_rand_safe
+    key=$(openssl rand -hex 32)  # vuln-code-snippet safe-line weakrand_openssl_rand
     echo "$key"
 }
-# vuln-code-snippet end weakrand_openssl_rand_safe
+# vuln-code-snippet end weakrand_openssl_rand
 
-# vuln-code-snippet start weakrand_urandom_otp_safe
+# vuln-code-snippet start weakrand_urandom_otp
 generate_secure_otp() {
     #reads 4 bytes from /dev/urandom via od, producing a 32-bit
     # unsigned integer with full cryptographic randomness. The modulo
     # operation then maps to a 6-digit OTP range.
     local otp
     otp=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
-    otp=$(( otp % 1000000 ))  # vuln-code-snippet safe-line weakrand_urandom_otp_safe
+    otp=$(( otp % 1000000 ))  # vuln-code-snippet safe-line weakrand_urandom_otp
     printf '%06d' "$otp"
 }
-# vuln-code-snippet end weakrand_urandom_otp_safe
+# vuln-code-snippet end weakrand_urandom_otp
 
-# vuln-code-snippet start weakrand_mktemp_secure_safe
+# vuln-code-snippet start weakrand_mktemp_secure
 create_secure_workdir() {
     #mktemp uses the kernel's secure random source for the X
     # placeholders. The directory name is unpredictable and the creation
     # is atomic (no TOCTOU window).
     local work_dir
-    work_dir=$(mktemp -d "/tmp/work.XXXXXXXXXX")  # vuln-code-snippet safe-line weakrand_mktemp_secure_safe
+    work_dir=$(mktemp -d "/tmp/work.XXXXXXXXXX")  # vuln-code-snippet safe-line weakrand_mktemp_secure
     echo "$work_dir"
 }
-# vuln-code-snippet end weakrand_mktemp_secure_safe
+# vuln-code-snippet end weakrand_mktemp_secure
 
-# vuln-code-snippet start weakrand_python_secrets_safe
+# vuln-code-snippet start weakrand_python_secrets
 generate_token_python() {
     #Python's secrets module uses the operating system's CSPRNG
     # (os.urandom on Linux). This is the recommended approach for
     # cryptographic token generation from bash scripts.
     local token
-    token=$(python3 -c 'import secrets; print(secrets.token_hex(32))')  # vuln-code-snippet safe-line weakrand_python_secrets_safe
+    token=$(python3 -c 'import secrets; print(secrets.token_hex(32))')  # vuln-code-snippet safe-line weakrand_python_secrets
     echo "$token"
 }
-# vuln-code-snippet end weakrand_python_secrets_safe
+# vuln-code-snippet end weakrand_python_secrets

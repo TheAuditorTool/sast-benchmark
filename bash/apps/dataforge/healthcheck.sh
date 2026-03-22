@@ -27,7 +27,7 @@ echo ""
 
 OVERALL_STATUS=0
 
-# vuln-code-snippet start dfg_healthcheck_http_safe
+# vuln-code-snippet start dfg_healthcheck_http
 # Function to check HTTP endpoint
 check_http() {
     local name=$1
@@ -36,7 +36,7 @@ check_http() {
 
     printf "Checking %-20s ... " "$name"
 
-    response=$(curl -s -o /dev/null -w "%{http_code}" --max-time $TIMEOUT "$url" 2>/dev/null || echo "000")  # vuln-code-snippet safe-line dfg_healthcheck_http_safe
+    response=$(curl -s -o /dev/null -w "%{http_code}" --max-time $TIMEOUT "$url" 2>/dev/null || echo "000")  # vuln-code-snippet safe-line dfg_healthcheck_http
 
     if [ "$response" = "$expected_status" ]; then
         echo -e "${GREEN}OK${NC} (HTTP $response)"
@@ -47,9 +47,9 @@ check_http() {
         return 1
     fi
 }
-# vuln-code-snippet end dfg_healthcheck_http_safe
+# vuln-code-snippet end dfg_healthcheck_http
 
-# vuln-code-snippet start dfg_healthcheck_process_safe
+# vuln-code-snippet start dfg_healthcheck_process
 # Function to check process
 check_process() {
     local name=$1
@@ -57,7 +57,7 @@ check_process() {
 
     printf "Checking %-20s ... " "$name"
 
-    if pgrep -f "$pattern" > /dev/null 2>&1; then  # vuln-code-snippet safe-line dfg_healthcheck_process_safe
+    if pgrep -f "$pattern" > /dev/null 2>&1; then  # vuln-code-snippet safe-line dfg_healthcheck_process
         echo -e "${GREEN}RUNNING${NC}"
         return 0
     else
@@ -66,9 +66,9 @@ check_process() {
         return 1
     fi
 }
-# vuln-code-snippet end dfg_healthcheck_process_safe
+# vuln-code-snippet end dfg_healthcheck_process
 
-# vuln-code-snippet start dfg_healthcheck_file_safe
+# vuln-code-snippet start dfg_healthcheck_file
 # Function to check file
 check_file() {
     local name=$1
@@ -76,7 +76,7 @@ check_file() {
 
     printf "Checking %-20s ... " "$name"
 
-    if [ -f "$path" ]; then  # vuln-code-snippet safe-line dfg_healthcheck_file_safe
+    if [ -f "$path" ]; then  # vuln-code-snippet safe-line dfg_healthcheck_file
         size=$(stat -f%z "$path" 2>/dev/null || stat -c%s "$path" 2>/dev/null || echo "unknown")
         echo -e "${GREEN}EXISTS${NC} (size: $size bytes)"
         return 0
@@ -86,9 +86,9 @@ check_file() {
         return 0
     fi
 }
-# vuln-code-snippet end dfg_healthcheck_file_safe
+# vuln-code-snippet end dfg_healthcheck_file
 
-# vuln-code-snippet start dfg_healthcheck_database_safe
+# vuln-code-snippet start dfg_healthcheck_database
 # Function to check database
 check_database() {
     local name=$1
@@ -98,7 +98,7 @@ check_database() {
 
     if [ -f "$path" ]; then
         # Check if database is valid
-        if sqlite3 "$path" "SELECT 1" > /dev/null 2>&1; then  # vuln-code-snippet safe-line dfg_healthcheck_database_safe
+        if sqlite3 "$path" "SELECT 1" > /dev/null 2>&1; then  # vuln-code-snippet safe-line dfg_healthcheck_database
             tables=$(sqlite3 "$path" "SELECT COUNT(*) FROM sqlite_master WHERE type='table'" 2>/dev/null || echo "?")
             echo -e "${GREEN}OK${NC} ($tables tables)"
             return 0
@@ -112,9 +112,9 @@ check_database() {
         return 0
     fi
 }
-# vuln-code-snippet end dfg_healthcheck_database_safe
+# vuln-code-snippet end dfg_healthcheck_database
 
-# vuln-code-snippet start dfg_healthcheck_disk_safe
+# vuln-code-snippet start dfg_healthcheck_disk
 # Function to check disk space
 check_disk() {
     local name=$1
@@ -124,7 +124,7 @@ check_disk() {
     printf "Checking %-20s ... " "$name"
 
     if [ -d "$path" ]; then
-        available=$(df "$path" | tail -1 | awk '{print $5}' | tr -d '%')  # vuln-code-snippet safe-line dfg_healthcheck_disk_safe
+        available=$(df "$path" | tail -1 | awk '{print $5}' | tr -d '%')  # vuln-code-snippet safe-line dfg_healthcheck_disk
         used=$((100 - available))
 
         if [ "$available" -ge "$min_percent" ]; then
@@ -140,7 +140,7 @@ check_disk() {
         return 0
     fi
 }
-# vuln-code-snippet end dfg_healthcheck_disk_safe
+# vuln-code-snippet end dfg_healthcheck_disk
 
 echo "--- HTTP Services ---"
 check_http "API Gateway" "$API_URL/health"

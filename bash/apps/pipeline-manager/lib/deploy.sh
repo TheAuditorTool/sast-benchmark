@@ -103,11 +103,11 @@ deploy_to_target() {
 
     local ssh_opts="-o BatchMode=yes -o ConnectTimeout=30"
 
-    # vuln-code-snippet start sshHostKeyBypass
+    # vuln-code-snippet start ssh_host_key_bypass
     if [[ "${DEPLOY_SKIP_HOST_CHECK:-false}" == "true" ]]; then
-        ssh_opts="${ssh_opts} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # vuln-code-snippet vuln-line sshHostKeyBypass
+        ssh_opts="${ssh_opts} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  # vuln-code-snippet vuln-line ssh_host_key_bypass
     fi
-    # vuln-code-snippet end sshHostKeyBypass
+    # vuln-code-snippet end ssh_host_key_bypass
 
     local deploy_key="${DEPLOY_KEY/#\~/$HOME}"
     if [[ -f "${deploy_key}" ]]; then
@@ -122,10 +122,10 @@ deploy_to_target() {
     scp ${ssh_opts} "${package_path}" "${user}@${host}:/tmp/deploy_${version}.tar.gz"
 
     # Execute remote deployment script
-    # vuln-code-snippet start sshCommandInjection
+    # vuln-code-snippet start ssh_command_injection
     local deploy_cmd="cd /opt/app && tar xzf /tmp/deploy_${version}.tar.gz && ./deploy-hook.sh ${version}"
-    ssh ${ssh_opts} "${user}@${host}" "${deploy_cmd}"  # vuln-code-snippet vuln-line sshCommandInjection
-    # vuln-code-snippet end sshCommandInjection
+    ssh ${ssh_opts} "${user}@${host}" "${deploy_cmd}"  # vuln-code-snippet vuln-line ssh_command_injection
+    # vuln-code-snippet end ssh_command_injection
 
     # Cleanup
     rm -f "${package_path}"
@@ -176,7 +176,7 @@ run_deploy_hooks() {
     done
 }
 
-# vuln-code-snippet start customHookExecution
+# vuln-code-snippet start custom_hook_execution
 run_custom_hook() {
     local hook_name="$1"
     shift
@@ -186,12 +186,12 @@ run_custom_hook() {
 
     if [[ -x "${hook_cmd}" ]]; then
         # Execute hook with arguments
-        $hook_cmd "${hook_args[@]}"  # vuln-code-snippet vuln-line customHookExecution
+        $hook_cmd "${hook_args[@]}"  # vuln-code-snippet vuln-line custom_hook_execution
     else
         log_warn "Custom hook not found or not executable: ${hook_name}"
     fi
 }
-# vuln-code-snippet end customHookExecution
+# vuln-code-snippet end custom_hook_execution
 
 # ============================================================================
 # Deployment Verification
@@ -235,7 +235,7 @@ verify_deployment() {
 # ============================================================================
 # Service Management
 # ============================================================================
-# vuln-code-snippet start sshSudoCommandInjection
+# vuln-code-snippet start ssh_sudo_command_injection
 restart_service() {
     local service="$1"
     local host="${2:-localhost}"
@@ -246,10 +246,10 @@ restart_service() {
         # Local restart
         systemctl restart "${service}"
     else
-        ssh "${DEPLOY_USER}@${host}" "sudo systemctl restart ${service}"  # vuln-code-snippet vuln-line sshSudoCommandInjection
+        ssh "${DEPLOY_USER}@${host}" "sudo systemctl restart ${service}"  # vuln-code-snippet vuln-line ssh_sudo_command_injection
     fi
 }
-# vuln-code-snippet end sshSudoCommandInjection
+# vuln-code-snippet end ssh_sudo_command_injection
 
 stop_service() {
     local service="$1"
@@ -291,7 +291,7 @@ get_service_status() {
 # ============================================================================
 # Container Deployment (Docker)
 # ============================================================================
-# vuln-code-snippet start dockerUnquotedVars
+# vuln-code-snippet start docker_unquoted_vars
 deploy_container() {
     local image="$1"
     local container_name="$2"
@@ -314,7 +314,7 @@ deploy_container() {
         --name ${container_name} \
         --env-file ${env_file} \
         --restart unless-stopped \
-        ${image}  # vuln-code-snippet vuln-line dockerUnquotedVars
+        ${image}  # vuln-code-snippet vuln-line docker_unquoted_vars
 
     # Wait for container to be healthy
     local max_wait=60
@@ -336,7 +336,7 @@ deploy_container() {
     log_error "Container health check timeout"
     return 1
 }
-# vuln-code-snippet end dockerUnquotedVars
+# vuln-code-snippet end docker_unquoted_vars
 
 # ============================================================================
 # Kubernetes Deployment
@@ -387,22 +387,22 @@ get_rollback_version() {
     fi
 }
 
-# vuln-code-snippet start chmod777DeployDir
+# vuln-code-snippet start chmod777_deploy_dir
 prepare_deploy_directory() {
     local deploy_path="$1"
 
     mkdir -p "${deploy_path}"
 
-    chmod 777 "${deploy_path}"  # vuln-code-snippet vuln-line chmod777DeployDir
+    chmod 777 "${deploy_path}"  # vuln-code-snippet vuln-line chmod777_deploy_dir
 }
-# vuln-code-snippet end chmod777DeployDir
+# vuln-code-snippet end chmod777_deploy_dir
 
 # Safe version
-# vuln-code-snippet start chmod755DeployDirSafe
-prepare_deploy_directory_safe() {
+# vuln-code-snippet start chmod755_deploy_dir
+prepare_deploy_directory() {
     local deploy_path="$1"
 
     mkdir -p "${deploy_path}"
-    chmod 755 "${deploy_path}"  # vuln-code-snippet safe-line chmod755DeployDirSafe
+    chmod 755 "${deploy_path}"  # vuln-code-snippet safe-line chmod755_deploy_dir
 }
-# vuln-code-snippet end chmod755DeployDirSafe
+# vuln-code-snippet end chmod755_deploy_dir

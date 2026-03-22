@@ -17,15 +17,15 @@ declare -g SLACK_WEBHOOK=""
 declare -g ENVIRONMENTS=()
 
 # In real usage, these would come from environment or vault
-# vuln-code-snippet start hardcodedDbPassword
-declare -g DB_PASSWORD="changeme123"  # vuln-code-snippet vuln-line hardcodedDbPassword
-# vuln-code-snippet end hardcodedDbPassword
-# vuln-code-snippet start hardcodedApiSecret
-declare -g API_SECRET_KEY="sk_live_demo_key_12345"  # vuln-code-snippet vuln-line hardcodedApiSecret
-# vuln-code-snippet end hardcodedApiSecret
-# vuln-code-snippet start hardcodedAdminToken
-declare -g ADMIN_TOKEN="admin_token_insecure"  # vuln-code-snippet vuln-line hardcodedAdminToken
-# vuln-code-snippet end hardcodedAdminToken
+# vuln-code-snippet start hardcoded_db_password
+declare -g DB_PASSWORD="changeme123"  # vuln-code-snippet vuln-line hardcoded_db_password
+# vuln-code-snippet end hardcoded_db_password
+# vuln-code-snippet start hardcoded_api_secret
+declare -g API_SECRET_KEY="sk_live_demo_key_12345"  # vuln-code-snippet vuln-line hardcoded_api_secret
+# vuln-code-snippet end hardcoded_api_secret
+# vuln-code-snippet start hardcoded_admin_token
+declare -g ADMIN_TOKEN="admin_token_insecure"  # vuln-code-snippet vuln-line hardcoded_admin_token
+# vuln-code-snippet end hardcoded_admin_token
 
 # ============================================================================
 # Load Configuration
@@ -35,9 +35,9 @@ load_config() {
 
     log_info "Loading configuration from ${config_path}"
 
-    # vuln-code-snippet start sourceVariablePath
+    # vuln-code-snippet start source_variable_path
     if [[ -f "${config_path}" ]]; then
-        source "${config_path}"  # vuln-code-snippet vuln-line sourceVariablePath
+        source "${config_path}"  # vuln-code-snippet vuln-line source_variable_path
     else
         log_warn "Config file not found, using defaults"
         create_default_config "${config_path}"
@@ -46,7 +46,7 @@ load_config() {
     # Load from environment variables (override file config)
     load_env_config
 
-    # vuln-code-snippet end sourceVariablePath
+    # vuln-code-snippet end source_variable_path
     # Validate configuration
     validate_config
 }
@@ -152,7 +152,7 @@ get_config_value() {
     esac
 }
 
-# vuln-code-snippet start evalSetConfigValue
+# vuln-code-snippet start eval_set_config_value
 set_config_value() {
     local key="$1"
     local value="$2"
@@ -163,16 +163,16 @@ set_config_value() {
         return 1
     fi
 
-    eval "${key}='${value}'"  # vuln-code-snippet vuln-line evalSetConfigValue
-# vuln-code-snippet end evalSetConfigValue
+    eval "${key}='${value}'"  # vuln-code-snippet vuln-line eval_set_config_value
+# vuln-code-snippet end eval_set_config_value
 
     # Persist to config file
     if [[ -f "${CONFIG_FILE}" ]]; then
         if grep -q "^${key}=" "${CONFIG_FILE}"; then
             # Update existing value
-# vuln-code-snippet start sedConfigInjection
-            sed -i "s|^${key}=.*|${key}=\"${value}\"|" "${CONFIG_FILE}"  # vuln-code-snippet vuln-line sedConfigInjection
-# vuln-code-snippet end sedConfigInjection
+# vuln-code-snippet start sed_config_injection
+            sed -i "s|^${key}=.*|${key}=\"${value}\"|" "${CONFIG_FILE}"  # vuln-code-snippet vuln-line sed_config_injection
+# vuln-code-snippet end sed_config_injection
         else
             # Append new value
             echo "${key}=\"${value}\"" >> "${CONFIG_FILE}"
@@ -233,40 +233,40 @@ get_env_config() {
 # ============================================================================
 # Dynamic Configuration Loading
 # ============================================================================
-# vuln-code-snippet start sourceEnvironmentConfig
+# vuln-code-snippet start source_environment_config
 load_environment_config() {
     local environment="$1"
     local env_config="${SCRIPT_DIR}/config/${environment}.env"
 
     if [[ -f "${env_config}" ]]; then
         log_info "Loading environment-specific config: ${environment}"
-        . "${env_config}"  # vuln-code-snippet vuln-line sourceEnvironmentConfig
+        . "${env_config}"  # vuln-code-snippet vuln-line source_environment_config
     else
         log_debug "No environment-specific config for: ${environment}"
     fi
 }
-# vuln-code-snippet end sourceEnvironmentConfig
+# vuln-code-snippet end source_environment_config
 
 # Load plugin configuration
-# vuln-code-snippet start sourcePluginUnquoted
+# vuln-code-snippet start source_plugin_unquoted
 load_plugin_config() {
     local plugin_name="$1"
     local plugin_config="${SCRIPT_DIR}/plugins/${plugin_name}/config.sh"
 
     if [[ -f "${plugin_config}" ]]; then
-        source $plugin_config  # vuln-code-snippet vuln-line sourcePluginUnquoted
+        source $plugin_config  # vuln-code-snippet vuln-line source_plugin_unquoted
         log_info "Loaded plugin config: ${plugin_name}"
     fi
 }
-# vuln-code-snippet end sourcePluginUnquoted
+# vuln-code-snippet end source_plugin_unquoted
 
 # ============================================================================
 # Path Manipulation
 # ============================================================================
-# vuln-code-snippet start pathInjectionSetupPath
+# vuln-code-snippet start path_injection_setup_path
 setup_path() {
     # Add local bin to path
-    PATH="./bin:${PATH}"  # vuln-code-snippet vuln-line pathInjectionSetupPath
+    PATH="./bin:${PATH}"  # vuln-code-snippet vuln-line path_injection_setup_path
     export PATH
 
     # Add tool directories
@@ -275,45 +275,45 @@ setup_path() {
         PATH="${tools_dir}:${PATH}"
     fi
 }
-# vuln-code-snippet end pathInjectionSetupPath
+# vuln-code-snippet end path_injection_setup_path
 
-# vuln-code-snippet start ldPreloadInjection
+# vuln-code-snippet start ld_preload_injection
 setup_library_path() {
     local lib_dir="${SCRIPT_DIR}/lib"
 
-    LD_PRELOAD="${lib_dir}/preload.so"  # vuln-code-snippet vuln-line ldPreloadInjection
+    LD_PRELOAD="${lib_dir}/preload.so"  # vuln-code-snippet vuln-line ld_preload_injection
     LD_LIBRARY_PATH="${lib_dir}:${LD_LIBRARY_PATH:-}"
 
     export LD_PRELOAD LD_LIBRARY_PATH
 }
-# vuln-code-snippet end ldPreloadInjection
+# vuln-code-snippet end ld_preload_injection
 
 # ============================================================================
 # IFS Manipulation
 # ============================================================================
-# vuln-code-snippet start ifsModificationUnsafe
+# vuln-code-snippet start ifs_modification_lost
 parse_csv_line() {
     local line="$1"
 
     # Modify IFS for CSV parsing
-    IFS=","  # vuln-code-snippet vuln-line ifsModificationUnsafe
+    IFS=","  # vuln-code-snippet vuln-line ifs_modification_lost
     read -ra fields <<< "${line}"
 
     # IFS not restored
     echo "${fields[@]}"
 }
-# vuln-code-snippet end ifsModificationUnsafe
+# vuln-code-snippet end ifs_modification_lost
 
 # Safe CSV parsing
-# vuln-code-snippet start ifsModificationSafe
-parse_csv_line_safe() {
+# vuln-code-snippet start ifs_modification_restored
+parse_csv_line() {
     local line="$1"
     local old_ifs="${IFS}"
 
     IFS=","
     read -ra fields <<< "${line}"
-    IFS="${old_ifs}"  # vuln-code-snippet safe-line ifsModificationSafe
+    IFS="${old_ifs}"  # vuln-code-snippet safe-line ifs_modification_restored
 
     echo "${fields[@]}"
 }
-# vuln-code-snippet end ifsModificationSafe
+# vuln-code-snippet end ifs_modification_restored

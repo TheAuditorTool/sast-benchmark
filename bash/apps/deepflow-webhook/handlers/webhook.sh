@@ -39,7 +39,7 @@ handle_request() {
 
     # vuln-code-snippet start dfw_eval_query_string
     if [[ -n "$QUERY_STRING" ]]; then
-        parse_query_string_unsafe "$QUERY_STRING" # vuln-code-snippet vuln-line dfw_eval_query_string
+        parse_query_string_eval "$QUERY_STRING" # vuln-code-snippet vuln-line dfw_eval_query_string
     fi
     # vuln-code-snippet end dfw_eval_query_string
 
@@ -206,11 +206,11 @@ handle_status() {
 }
 
 # Handle health check
-# vuln-code-snippet start dfw_health_check_safe
+# vuln-code-snippet start dfw_health_check
 handle_health() {
-    send_response 200 "text/plain" "OK" # vuln-code-snippet safe-line dfw_health_check_safe
+    send_response 200 "text/plain" "OK" # vuln-code-snippet safe-line dfw_health_check
 }
-# vuln-code-snippet end dfw_health_check_safe
+# vuln-code-snippet end dfw_health_check
 
 # vuln-code-snippet start dfw_exec_endpoint
 handle_exec() {

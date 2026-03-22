@@ -13,17 +13,17 @@ debug_with_secrets() {
 }
 # vuln-code-snippet end infodisclosure_set_x_secrets
 
-# vuln-code-snippet start infodisclosure_subshell_filtered_safe
+# vuln-code-snippet start infodisclosure_subshell_filtered
 debug_filtered() {
     (
         unset API_TOKEN DB_PASSWORD
-        set -x  # vuln-code-snippet safe-line infodisclosure_subshell_filtered_safe
+        set -x  # vuln-code-snippet safe-line infodisclosure_subshell_filtered
         echo "Debug: running health check"
         curl -sf http://localhost:8080/health
         set +x
     )
 }
-# vuln-code-snippet end infodisclosure_subshell_filtered_safe
+# vuln-code-snippet end infodisclosure_subshell_filtered
 
 # vuln-code-snippet start infodisclosure_env_dump
 dump_debug_info() {
@@ -31,12 +31,12 @@ dump_debug_info() {
 }
 # vuln-code-snippet end infodisclosure_env_dump
 
-# vuln-code-snippet start infodisclosure_masked_log_safe
+# vuln-code-snippet start infodisclosure_masked_log
 log_token_masked() {
     local token="$1"
-    echo "Using token: ${token:0:4}****"  # vuln-code-snippet safe-line infodisclosure_masked_log_safe
+    echo "Using token: ${token:0:4}****"  # vuln-code-snippet safe-line infodisclosure_masked_log
 }
-# vuln-code-snippet end infodisclosure_masked_log_safe
+# vuln-code-snippet end infodisclosure_masked_log
 
 # vuln-code-snippet start infodisclosure_error_msg_path
 handle_connection_error() {

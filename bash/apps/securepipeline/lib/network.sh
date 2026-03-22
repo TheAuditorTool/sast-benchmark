@@ -51,7 +51,7 @@ fetch_api_allowlisted() {
 # vuln-code-snippet end sp_net_ssrf_allowlist
 
 # vuln-code-snippet start sp_net_ssrf_hardcoded_url
-notify_slack_safe() {
+notify_slack() {
     # Slack webhook URL is a hardcoded constant. Message is printf-%q escaped.
     local message="$1"
     local SLACK_WEBHOOK="https://hooks.slack.com/services/T00000/B00000/XXXX"
@@ -65,7 +65,7 @@ notify_slack_safe() {
 # vuln-code-snippet end sp_net_ssrf_hardcoded_url
 
 # vuln-code-snippet start sp_net_ssrf_scheme_check
-fetch_url_validated() {
+fetch_url() {
     # URL must be HTTPS and must not point to private IP ranges.
     local url="$1"
 
@@ -87,7 +87,7 @@ fetch_url_validated() {
 # vuln-code-snippet end sp_net_ssrf_scheme_check
 
 # vuln-code-snippet start sp_net_rce_save_only
-download_artifact_safe() {
+download_artifact() {
     # curl saves the artifact to a file. Content is not executed.
     local url="$1"
     local dest="$2"
@@ -97,7 +97,7 @@ download_artifact_safe() {
 # vuln-code-snippet end sp_net_rce_save_only
 
 # vuln-code-snippet start sp_net_dns_validated
-dns_lookup_safe() {
+dns_lookup() {
     # Hostname validated against a strict regex before use in dig.
     local host="$1"
 

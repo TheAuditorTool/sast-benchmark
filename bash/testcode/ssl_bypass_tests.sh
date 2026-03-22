@@ -9,12 +9,12 @@ fetch_internal_api() {
 }
 # vuln-code-snippet end ssl_curl_insecure_flag
 
-# vuln-code-snippet start ssl_curl_default_safe
+# vuln-code-snippet start ssl_curl_default
 fetch_external_api() {
     local url="$1"
-    curl -sf "$url"  # vuln-code-snippet safe-line ssl_curl_default_safe
+    curl -sf "$url"  # vuln-code-snippet safe-line ssl_curl_default
 }
-# vuln-code-snippet end ssl_curl_default_safe
+# vuln-code-snippet end ssl_curl_default
 
 # vuln-code-snippet start ssl_git_no_verify
 clone_internal_repo() {
@@ -24,26 +24,26 @@ clone_internal_repo() {
 }
 # vuln-code-snippet end ssl_git_no_verify
 
-# vuln-code-snippet start ssl_curl_cacert_safe
+# vuln-code-snippet start ssl_curl_cacert
 fetch_with_custom_ca() {
     local url="$1"
-    curl --cacert /etc/ssl/internal-ca.pem -sf "$url"  # vuln-code-snippet safe-line ssl_curl_cacert_safe
+    curl --cacert /etc/ssl/internal-ca.pem -sf "$url"  # vuln-code-snippet safe-line ssl_curl_cacert
 }
-# vuln-code-snippet end ssl_curl_cacert_safe
+# vuln-code-snippet end ssl_curl_cacert
 
-# vuln-code-snippet start ssl_ssh_accept_new_safe
+# vuln-code-snippet start ssl_ssh_accept_new
 ssh_first_connect() {
     local host="$1"
     local cmd="$2"
     # accept-new: accepts first-time keys but rejects changed keys (TOFU model)
-    ssh -o StrictHostKeyChecking=accept-new "$host" "$cmd"  # vuln-code-snippet safe-line ssl_ssh_accept_new_safe
+    ssh -o StrictHostKeyChecking=accept-new "$host" "$cmd"  # vuln-code-snippet safe-line ssl_ssh_accept_new
 }
-# vuln-code-snippet end ssl_ssh_accept_new_safe
+# vuln-code-snippet end ssl_ssh_accept_new
 
 # --- Tier 2 additions (Phase 3, verified 2026-03-19) ---
 
 # vuln-code-snippet start ssl_node_tls_reject_disabled
-start_node_insecure() {
+start_node_noverify() {
     local app_dir="$1"
     # Disables TLS certificate verification for ALL https requests in Node.js.
     # Common in CI/CD scripts to bypass self-signed cert issues. CWE-295.
@@ -51,11 +51,11 @@ start_node_insecure() {
 }
 # vuln-code-snippet end ssl_node_tls_reject_disabled
 
-# vuln-code-snippet start ssl_node_tls_default_safe
+# vuln-code-snippet start ssl_node_tls_default
 start_node_secure() {
     local app_dir="$1"
     # Default Node.js behavior verifies TLS certificates.
     # No override of NODE_TLS_REJECT_UNAUTHORIZED — verification enabled.
-    node "${app_dir}/server.js"  # vuln-code-snippet safe-line ssl_node_tls_default_safe
+    node "${app_dir}/server.js"  # vuln-code-snippet safe-line ssl_node_tls_default
 }
-# vuln-code-snippet end ssl_node_tls_default_safe
+# vuln-code-snippet end ssl_node_tls_default

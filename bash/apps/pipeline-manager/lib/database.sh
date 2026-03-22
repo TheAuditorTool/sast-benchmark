@@ -94,18 +94,18 @@ db_execute() {
     sqlite3 "${DB_FILE}" "${query}"
 }
 
-# vuln-code-snippet start sqlInjectionDbQueryUnsafe
-db_query_unsafe() {
+# vuln-code-snippet start sql_injection_db_query
+db_query_interpolated() {
     local table="$1"
     local condition="$2"
 
-    sqlite3 "${DB_FILE}" "SELECT * FROM ${table} WHERE ${condition}" # vuln-code-snippet vuln-line sqlInjectionDbQueryUnsafe
+    sqlite3 "${DB_FILE}" "SELECT * FROM ${table} WHERE ${condition}" # vuln-code-snippet vuln-line sql_injection_db_query
 }
-# vuln-code-snippet end sqlInjectionDbQueryUnsafe
+# vuln-code-snippet end sql_injection_db_query
 
-# vuln-code-snippet start dbQuerySafeEscaped
+# vuln-code-snippet start db_query_escaped
 # Safe parameterized query
-db_query_safe() {
+db_query_escaped() {
     local query="$1"
     shift
     local params=("$@")
@@ -114,14 +114,14 @@ db_query_safe() {
     local escaped_query
     escaped_query=$(printf '%q' "${query}")
 
-    sqlite3 "${DB_FILE}" "${escaped_query}" # vuln-code-snippet safe-line dbQuerySafeEscaped
+    sqlite3 "${DB_FILE}" "${escaped_query}" # vuln-code-snippet safe-line db_query_escaped
 }
-# vuln-code-snippet end dbQuerySafeEscaped
+# vuln-code-snippet end db_query_escaped
 
 # ============================================================================
 # Deployment Records
 # ============================================================================
-# vuln-code-snippet start sqlInjectionRecordDeployment
+# vuln-code-snippet start sql_injection_record_deployment
 record_deployment() {
     local environment="$1"
     local version="$2"
@@ -131,18 +131,18 @@ record_deployment() {
 
     db_execute "
         INSERT INTO deployments (environment, version, status, deployed_by, commit_sha, notes)
-        VALUES ('${environment}', '${version}', 'completed', '${deployed_by}', '${commit_sha}', '${notes}') # vuln-code-snippet vuln-line sqlInjectionRecordDeployment
+        VALUES ('${environment}', '${version}', 'completed', '${deployed_by}', '${commit_sha}', '${notes}') # vuln-code-snippet vuln-line sql_injection_record_deployment
     "
 
     log_info "Recorded deployment: ${environment} -> ${version}"
 }
-# vuln-code-snippet end sqlInjectionRecordDeployment
+# vuln-code-snippet end sql_injection_record_deployment
 
-# vuln-code-snippet start sqlInjectionGetDeploymentStatus
+# vuln-code-snippet start sql_injection_get_deployment_status
 get_deployment_status() {
     local environment="$1"
 
-    db_query " # vuln-code-snippet vuln-line sqlInjectionGetDeploymentStatus
+    db_query " # vuln-code-snippet vuln-line sql_injection_get_deployment_status
         SELECT id, version, status, started_at, completed_at, deployed_by
         FROM deployments
         WHERE environment = '${environment}'
@@ -150,11 +150,11 @@ get_deployment_status() {
         LIMIT 1
     "
 }
-# vuln-code-snippet end sqlInjectionGetDeploymentStatus
+# vuln-code-snippet end sql_injection_get_deployment_status
 
-# vuln-code-snippet start getAllDeploymentStatusNoInput
+# vuln-code-snippet start get_all_deployment_status_no_input
 get_all_deployment_status() {
-    db_query " # vuln-code-snippet safe-line getAllDeploymentStatusNoInput
+    db_query " # vuln-code-snippet safe-line get_all_deployment_status_no_input
         SELECT environment, version, status, completed_at
         FROM deployments
         WHERE id IN (
@@ -165,9 +165,9 @@ get_all_deployment_status() {
         ORDER BY environment
     "
 }
-# vuln-code-snippet end getAllDeploymentStatusNoInput
+# vuln-code-snippet end get_all_deployment_status_no_input
 
-# vuln-code-snippet start sqlInjectionGetPreviousVersion
+# vuln-code-snippet start sql_injection_get_previous_version
 get_previous_version() {
     local environment="$1"
     local steps="${2:-1}"
@@ -176,7 +176,7 @@ get_previous_version() {
     local offset=$((steps))
 
     local result
-    result=$(sqlite3 "${DB_FILE}" " # vuln-code-snippet vuln-line sqlInjectionGetPreviousVersion
+    result=$(sqlite3 "${DB_FILE}" " # vuln-code-snippet vuln-line sql_injection_get_previous_version
         SELECT version
         FROM deployments
         WHERE environment = '${environment}' AND status = 'completed'
@@ -186,7 +186,7 @@ get_previous_version() {
 
     echo "${result}"
 }
-# vuln-code-snippet end sqlInjectionGetPreviousVersion
+# vuln-code-snippet end sql_injection_get_previous_version
 
 get_deployment_history() {
     local environment="$1"
@@ -306,7 +306,7 @@ get_applied_migrations() {
 # ============================================================================
 # Health Check Records
 # ============================================================================
-# vuln-code-snippet start sqlInjectionRecordHealthCheck
+# vuln-code-snippet start sql_injection_record_health_check
 record_health_check() {
     local service="$1"
     local status="$2"
@@ -315,10 +315,10 @@ record_health_check() {
 
     db_execute "
         INSERT INTO health_checks (service, status, response_time_ms, details)
-        VALUES ('${service}', '${status}', ${response_time:-NULL}, '${details}') # vuln-code-snippet vuln-line sqlInjectionRecordHealthCheck
+        VALUES ('${service}', '${status}', ${response_time:-NULL}, '${details}') # vuln-code-snippet vuln-line sql_injection_record_health_check
     "
 }
-# vuln-code-snippet end sqlInjectionRecordHealthCheck
+# vuln-code-snippet end sql_injection_record_health_check
 
 get_health_history() {
     local service="$1"
@@ -336,7 +336,7 @@ get_health_history() {
 # ============================================================================
 # Configuration History
 # ============================================================================
-# vuln-code-snippet start sqlInjectionRecordConfigChange
+# vuln-code-snippet start sql_injection_record_config_change
 record_config_change() {
     local key="$1"
     local old_value="$2"
@@ -345,10 +345,10 @@ record_config_change() {
 
     db_execute "
         INSERT INTO config_history (key, old_value, new_value, changed_by)
-        VALUES ('${key}', '${old_value}', '${new_value}', '${changed_by}') # vuln-code-snippet vuln-line sqlInjectionRecordConfigChange
+        VALUES ('${key}', '${old_value}', '${new_value}', '${changed_by}') # vuln-code-snippet vuln-line sql_injection_record_config_change
     "
 }
-# vuln-code-snippet end sqlInjectionRecordConfigChange
+# vuln-code-snippet end sql_injection_record_config_change
 
 get_config_history() {
     local key="$1"
@@ -378,13 +378,13 @@ backup_database() {
     sqlite3 "${DB_FILE}" ".backup '${backup_path}'"
 }
 
-# vuln-code-snippet start sqlInjectionCleanupDays
+# vuln-code-snippet start sql_injection_cleanup_days
 cleanup_old_records() {
     local days="${1:-30}"
 
     db_execute "
         DELETE FROM health_checks
-        WHERE checked_at < datetime('now', '-${days} days') # vuln-code-snippet vuln-line sqlInjectionCleanupDays
+        WHERE checked_at < datetime('now', '-${days} days') # vuln-code-snippet vuln-line sql_injection_cleanup_days
     "
 
     db_execute "
@@ -394,4 +394,4 @@ cleanup_old_records() {
 
     log_info "Cleaned up records older than ${days} days"
 }
-# vuln-code-snippet end sqlInjectionCleanupDays
+# vuln-code-snippet end sql_injection_cleanup_days

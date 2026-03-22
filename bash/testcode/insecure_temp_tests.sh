@@ -9,14 +9,14 @@ create_lock_file() {
 }
 # vuln-code-snippet end insecure_temp_predictable
 
-# vuln-code-snippet start insecure_temp_mktemp_safe
-create_lock_file_safe() {
+# vuln-code-snippet start insecure_temp_mktemp
+create_lock_file() {
     local lock_file
-    lock_file=$(mktemp "/tmp/myapp_lock.XXXXXX")  # vuln-code-snippet safe-line insecure_temp_mktemp_safe
+    lock_file=$(mktemp "/tmp/myapp_lock.XXXXXX")  # vuln-code-snippet safe-line insecure_temp_mktemp
     echo $$ > "$lock_file"
     echo "$lock_file"
 }
-# vuln-code-snippet end insecure_temp_mktemp_safe
+# vuln-code-snippet end insecure_temp_mktemp
 
 # vuln-code-snippet start insecure_temp_timestamp
 create_timestamped_temp() {
@@ -26,18 +26,18 @@ create_timestamped_temp() {
 }
 # vuln-code-snippet end insecure_temp_timestamp
 
-# vuln-code-snippet start insecure_temp_mktemp_dir_safe
+# vuln-code-snippet start insecure_temp_mktemp_dir
 create_work_directory() {
     local work_dir
-    work_dir=$(mktemp -d)  # vuln-code-snippet safe-line insecure_temp_mktemp_dir_safe
+    work_dir=$(mktemp -d)  # vuln-code-snippet safe-line insecure_temp_mktemp_dir
     echo "$work_dir"
 }
-# vuln-code-snippet end insecure_temp_mktemp_dir_safe
+# vuln-code-snippet end insecure_temp_mktemp_dir
 
 # --- Tier 1 additions (Phase 2, verified 2026-03-19) ---
 
 # vuln-code-snippet start insecure_temp_toctou_race
-acquire_lock_unsafe() {
+acquire_lock_toctou() {
     local lockfile="/tmp/myapp.lock"
     # TOCTOU race: between the existence check and the write, an attacker can
     # create a symlink at /tmp/myapp.lock pointing to a sensitive file.
@@ -48,13 +48,13 @@ acquire_lock_unsafe() {
 }
 # vuln-code-snippet end insecure_temp_toctou_race
 
-# vuln-code-snippet start insecure_temp_noclobber_safe
+# vuln-code-snippet start insecure_temp_noclobber
 acquire_lock_atomic() {
     local lockfile="/tmp/myapp.lock"
     # set -C (noclobber) makes > fail atomically if file already exists.
     # No race window between check and create — single atomic operation.
     set -C
-    if echo $$ > "$lockfile" 2>/dev/null; then  # vuln-code-snippet safe-line insecure_temp_noclobber_safe
+    if echo $$ > "$lockfile" 2>/dev/null; then  # vuln-code-snippet safe-line insecure_temp_noclobber
         echo "Lock acquired"
     else
         echo "Lock held by another process" >&2
@@ -62,4 +62,4 @@ acquire_lock_atomic() {
     fi
     set +C
 }
-# vuln-code-snippet end insecure_temp_noclobber_safe
+# vuln-code-snippet end insecure_temp_noclobber
