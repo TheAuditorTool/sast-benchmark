@@ -4,7 +4,7 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.1.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
+**Ground truth**: `expectedresults-0.3.2.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
 ### Test Case Inventory
@@ -116,7 +116,7 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 Score via the standardized SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
 python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir .
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv \
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
     --annotations-dir apps --annotations-dir testcode
 ```
 
@@ -130,7 +130,7 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.1.csv \
+python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
     --annotations-dir apps --annotations-dir testcode
 ```
 
@@ -140,7 +140,7 @@ python ../scripts/score_sarif.py results.sarif expectedresults-0.1.csv \
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db \
     --language rust --benchmark-dir . > theauditor.sarif
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv \
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
     --annotations-dir apps --annotations-dir testcode
 ```
 
@@ -149,7 +149,7 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv \
 The embedded TheAuditor-specific scoring script was removed in v0.3.2. All scoring now goes through the standard SARIF pipeline:
 
 1. `python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir .`
-2. `python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.csv --annotations-dir apps --annotations-dir testcode`
+2. `python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv --annotations-dir apps --annotations-dir testcode`
 
 See `SCORING.md` for full documentation.
 

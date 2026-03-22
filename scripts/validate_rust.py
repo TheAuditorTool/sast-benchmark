@@ -21,7 +21,7 @@ from collections import defaultdict
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BENCH_ROOT = os.path.dirname(SCRIPT_DIR)
 RUST_DIR = os.path.join(BENCH_ROOT, "rust")
-CSV_FILE = os.path.join(RUST_DIR, "expectedresults-0.1.csv")
+CSV_FILE = os.path.join(RUST_DIR, "expectedresults-0.3.2.csv")
 SCAN_DIRS = [
     os.path.join(RUST_DIR, "apps"),
     os.path.join(RUST_DIR, "testcode"),
