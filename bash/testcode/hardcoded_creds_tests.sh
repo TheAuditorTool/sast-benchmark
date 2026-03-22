@@ -84,3 +84,37 @@ EOF
     chmod 600 /etc/myapp/database.conf
 }
 # vuln-code-snippet end hardcoded_creds_heredoc_envvar_safe
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start hardcoded_creds_docker_secret_safe
+load_secret_from_mount() {
+    # Safe: API key is read from /run/secrets/ — Docker's secret management
+    # mount point. The credential is injected at runtime by the orchestrator,
+    # never hardcoded in source code.
+    local API_KEY
+    API_KEY=$(cat /run/secrets/api_key)  # vuln-code-snippet safe-line hardcoded_creds_docker_secret_safe
+    curl -sf -H "Authorization: Bearer ${API_KEY}" "https://api.internal/data"
+}
+# vuln-code-snippet end hardcoded_creds_docker_secret_safe
+
+# vuln-code-snippet start hardcoded_creds_env_required_safe
+connect_with_env_token() {
+    # Safe: TOKEN is required from the environment with :? — if not set,
+    # the script exits with an error. No default value is provided, so
+    # there is no hardcoded credential.
+    local TOKEN="${SERVICE_TOKEN:?SERVICE_TOKEN must be set}"  # vuln-code-snippet safe-line hardcoded_creds_env_required_safe
+    curl -sf -H "X-API-Token: ${TOKEN}" "https://api.internal/v1/status"
+}
+# vuln-code-snippet end hardcoded_creds_env_required_safe
+
+# vuln-code-snippet start hardcoded_creds_keyfile_safe
+deploy_via_ssh_key() {
+    # Safe: authentication uses a key FILE on disk, not an inline credential.
+    # The key path is a system-level location (/etc/deploy/keys/).
+    # IdentitiesOnly=yes prevents SSH from trying other keys.
+    local host="$1"
+    ssh -i /etc/deploy/keys/id_ed25519 -o IdentitiesOnly=yes "deploy@${host}" \
+        'systemctl restart app'  # vuln-code-snippet safe-line hardcoded_creds_keyfile_safe
+}
+# vuln-code-snippet end hardcoded_creds_keyfile_safe

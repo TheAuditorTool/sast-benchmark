@@ -92,3 +92,25 @@ list_users_sorted_safe() {
     esac
 }
 # vuln-code-snippet end sqli_order_by_whitelist_safe
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start sqli_printf_q_escaped_safe
+search_deployments_safe() {
+    # Safe: user input is escaped with printf %q before SQL interpolation.
+    # printf %q escapes all shell metacharacters and single quotes,
+    # preventing SQL injection when the value is wrapped in SQL string quotes.
+    local search_val="$1"
+    local escaped
+    escaped=$(printf '%q' "$search_val")
+    sqlite3 "$DB_FILE" "SELECT * FROM deployments WHERE name = '${escaped}'"  # vuln-code-snippet safe-line sqli_printf_q_escaped_safe
+}
+# vuln-code-snippet end sqli_printf_q_escaped_safe
+
+# vuln-code-snippet start sqli_where_constant_safe
+get_active_deployments() {
+    # Safe: entirely static query with no user-provided values.
+    # All literals ('active', 10) are hardcoded constants.
+    sqlite3 "$DB_FILE" "SELECT * FROM deployments WHERE status = 'active' ORDER BY created_at DESC LIMIT 10"  # vuln-code-snippet safe-line sqli_where_constant_safe
+}
+# vuln-code-snippet end sqli_where_constant_safe

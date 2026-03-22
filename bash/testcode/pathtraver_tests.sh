@@ -90,3 +90,22 @@ extract_user_upload_safe() {
     rm -rf "$tmp_dir"
 }
 # vuln-code-snippet end pathtraver_tar_safe_extract
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start pathtraver_readlink_safe
+serve_user_file() {
+    # Safe: readlink -f resolves the full canonical path (following symlinks),
+    # then a prefix check ensures the resolved path stays within DATA_DIR.
+    # This blocks ../ traversal AND symlink-based escapes.
+    local name="$1"
+    local DATA_DIR="/var/app/uploads"
+    local resolved
+    resolved=$(readlink -f "${DATA_DIR}/${name}")
+    if [[ "$resolved" != "${DATA_DIR}/"* ]]; then
+        echo "Path traversal blocked: $name" >&2
+        return 1
+    fi
+    cat "$resolved"  # vuln-code-snippet safe-line pathtraver_readlink_safe
+}
+# vuln-code-snippet end pathtraver_readlink_safe

@@ -118,3 +118,108 @@ load_remote_config() {
     source <(curl -s "$url")  # vuln-code-snippet vuln-line codeinj_source_process_sub
 }
 # vuln-code-snippet end codeinj_source_process_sub
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# vuln-code-snippet start codeinj_source_regex_dir_safe
+load_lib_validated() {
+    # Safe: library name validated against strict regex (lowercase alpha + digits
+    # + underscore only) before being used in source path.
+    local name="$1"
+    if [[ ! "$name" =~ ^[a-z][a-z0-9_]+$ ]]; then
+        echo "Invalid library name: $name" >&2
+        return 1
+    fi
+    source "${SCRIPT_DIR}/lib/${name}.sh"  # vuln-code-snippet safe-line codeinj_source_regex_dir_safe
+}
+# vuln-code-snippet end codeinj_source_regex_dir_safe
+
+# vuln-code-snippet start codeinj_bash_c_static_safe
+run_db_maintenance() {
+    # Safe: bash -c with single-quoted argument. Single quotes prevent all
+    # variable expansion — the command is a fixed string literal.
+    local db_path="$1"
+    bash -c 'sqlite3 /var/app/app.db "VACUUM; ANALYZE"'  # vuln-code-snippet safe-line codeinj_bash_c_static_safe
+}
+# vuln-code-snippet end codeinj_bash_c_static_safe
+
+# vuln-code-snippet start codeinj_printf_integer_safe
+format_numeric_value() {
+    # Safe: printf -v assigns an integer representation directly to $result.
+    # No eval is used. Non-numeric input produces 0 (harmless).
+    local input="$1"
+    local result
+    printf -v result '%d' "$input" 2>/dev/null  # vuln-code-snippet safe-line codeinj_printf_integer_safe
+    echo "Formatted: $result"
+}
+# vuln-code-snippet end codeinj_printf_integer_safe
+
+# vuln-code-snippet start codeinj_process_sub_read_safe
+read_config_entries() {
+    # Safe: process substitution is used for READING data (grep output),
+    # not for sourcing/executing code. The config file content is never
+    # interpreted as bash commands.
+    local config_file="$1"
+    local key value
+    while IFS='=' read -r key value; do
+        echo "Config: $key = $value"  # vuln-code-snippet safe-line codeinj_process_sub_read_safe
+    done < <(grep -v '^#' "$config_file")
+}
+# vuln-code-snippet end codeinj_process_sub_read_safe
+
+# vuln-code-snippet start codeinj_source_feature_safe
+activate_feature() {
+    # Safe: feature name validated against strict regex before path construction.
+    # Only lowercase letters and underscores allowed — prevents path traversal
+    # and ensures only legitimate feature flag files can be sourced.
+    local feature="$1"
+    if [[ ! "$feature" =~ ^[a-z_]+$ ]]; then
+        echo "Invalid feature name: $feature" >&2
+        return 1
+    fi
+    source "/etc/app/features/${feature}.sh"  # vuln-code-snippet safe-line codeinj_source_feature_safe
+}
+# vuln-code-snippet end codeinj_source_feature_safe
+
+# vuln-code-snippet start codeinj_grep_metadata_safe
+read_plugin_metadata() {
+    # Safe: plugin file is parsed with grep/cut for declarative metadata.
+    # The file is NEVER sourced — content is not executed as bash code.
+    local plugin_file="$1"
+    local version name
+    version=$(grep '^VERSION=' "$plugin_file" | head -1 | cut -d= -f2)
+    name=$(grep '^NAME=' "$plugin_file" | head -1 | cut -d= -f2)
+    echo "Plugin: $name v$version"  # vuln-code-snippet safe-line codeinj_grep_metadata_safe
+}
+# vuln-code-snippet end codeinj_grep_metadata_safe
+
+# vuln-code-snippet start codeinj_trap_funcref_safe
+setup_exit_handler() {
+    # Safe: trap uses a function NAME reference, not a string to be eval'd.
+    # Bash calls the named function directly — no string interpretation occurs.
+    # This is distinct from trap "$string_cmd" which evaluates the string.
+    trap cleanup EXIT  # vuln-code-snippet safe-line codeinj_trap_funcref_safe
+}
+
+cleanup() {
+    rm -f /tmp/app_lockfile
+}
+# vuln-code-snippet end codeinj_trap_funcref_safe
+
+# vuln-code-snippet start codeinj_declare_f_dispatch_safe
+call_handler() {
+    # Safe: function existence verified via declare -F before calling.
+    # Only functions already defined in the current shell can be dispatched.
+    # An attacker cannot inject a new function name — it must already exist.
+    local fn="$1"
+    shift
+    if declare -F "$fn" > /dev/null 2>&1; then
+        "$fn" "$@"  # vuln-code-snippet safe-line codeinj_declare_f_dispatch_safe
+    else
+        echo "Handler not found: $fn" >&2
+        return 1
+    fi
+}
+# vuln-code-snippet end codeinj_declare_f_dispatch_safe

@@ -230,7 +230,6 @@ MIGRATION_TEMPLATE
 # Advanced Migration Features
 # ============================================================================
 
-# vuln-code-snippet start sqlInjectionMigrationData
 # vuln-code-snippet start readWithoutRMigration
 # DEEP TAINT FLOW: Data flows from file -> variable -> database -> command
 process_migration_data() {
@@ -251,13 +250,14 @@ process_migration_data() {
         local key value
         key=$(echo "${line}" | cut -d: -f1)
         value=$(echo "${line}" | cut -d: -f2-)
+# vuln-code-snippet end readWithoutRMigration
 
+# vuln-code-snippet start sqlInjectionMigrationData
         # TAINT SINK: Insert into database (SQL injection risk)
         db_execute "INSERT INTO migration_data (key, value) VALUES ('${key}', '${value}')"  # vuln-code-snippet vuln-line sqlInjectionMigrationData
     done
 }
 # vuln-code-snippet end sqlInjectionMigrationData
-# vuln-code-snippet end readWithoutRMigration
 
 # vuln-code-snippet start executeCustomSqlFromStdin
 # DEEP TAINT FLOW: User input -> SQL -> command execution

@@ -71,7 +71,7 @@ notify_slack() {
 }
 # vuln-code-snippet end dfw_slack_ssrf
 
-# vuln-code-snippet start dfw_email_header_injection
+# vuln-code-snippet start dfw_email_validated_safe
 # Send email notification
 notify_email() {
     local message="$1"
@@ -82,14 +82,14 @@ notify_email() {
         return 1
     fi
 
-    # vuln-code-snippet start dfw_email_validated_safe
     # SAFE: Validate email format
     if ! validate_email "$recipient"; then # vuln-code-snippet safe-line dfw_email_validated_safe
         log "ERROR" "Invalid email format: $recipient"
         return 1
     fi
-    # vuln-code-snippet end dfw_email_validated_safe
+# vuln-code-snippet end dfw_email_validated_safe
 
+# vuln-code-snippet start dfw_email_header_injection
     # VULNERABLE: message passed directly to mail command
     # Taint: message -> mail body (potential header injection)
     echo "$message" | mail -s "Deployment Notification" "$recipient" # vuln-code-snippet vuln-line dfw_email_header_injection

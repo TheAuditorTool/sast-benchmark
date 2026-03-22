@@ -47,9 +47,14 @@ gorustbash_benchmark/
   README.md               # This file
   LICENSE                  # Apache 2.0
   CONTRIBUTING.md          # How to contribute
-  go/                      # Go benchmark (424 tests, 16 CWEs)
+  scripts/                 # Tool-agnostic scoring scripts
+    score_sarif.py           # SARIF scorer (any SAST tool)
+    convert_theauditor.py    # TheAuditor DB to SARIF bridge
+    validate_go.py           # Go CSV/file consistency checker
+  go/                      # Go benchmark (476 tests, 21 CWEs)
     expectedresults-0.1.csv
     go_benchmark.md
+    SCORING.md               # Scoring methodology and tool instructions
     CHANGELOG.md
     testcode/
     apps/
@@ -60,18 +65,18 @@ gorustbash_benchmark/
     dev_roadmap.md
     testcode/                # 144 standalone test files
     apps/                    # 8 annotated applications
-  bash/                    # Bash benchmark (237 tests, 13 CWEs)
-    bash_ground_truth.yml    # Answer key (237 test cases)
+  bash/                    # Bash benchmark (356 tests, 16 CWEs)
+    bash_ground_truth.yml    # Answer key (356 test cases)
     bash_benchmark.py        # Automated scoring script
     BENCHMARK.md             # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
     apps/                    # 4 annotated applications
-    testcode/                # 13 standalone CWE test files
+    testcode/                # 16 standalone CWE test files
 ```
 
 ## Language Benchmarks
 
-### Go v0.3 -- 424 test cases, 16 CWEs, 8 frameworks
+### Go v0.3.1 -- 476 test cases, 21 CWEs, 8 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -85,16 +90,21 @@ gorustbash_benchmark/
 | weakcipher | 327 | 8 | 8 | 16 |
 | securecookie | 614 | 8 | 8 | 16 |
 | redirect | 601 | 8 | 8 | 16 |
+| hardcodedcreds | 798 | 6 | 6 | 12 |
+| authnfailure | 287 | 6 | 6 | 12 |
 | tlsverify | 295 | 5 | 5 | 10 |
-| loginjection | 117 | 4 | 4 | 8 |
-| nosql | 943 | 4 | 4 | 8 |
+| loginjection | 117 | 4 | 5 | 9 |
+| nosql | 943 | 4 | 5 | 9 |
+| authzfailure | 862 | 5 | 4 | 9 |
+| csrf | 352 | 5 | 4 | 9 |
+| codeinj | 94 | 4 | 4 | 8 |
 | ldapi | 90 | 4 | 4 | 8 |
 | trustbound | 501 | 4 | 4 | 8 |
 | deserial | 502 | 4 | 4 | 8 |
 
-Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
+Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3 -- 262 test cases, 13 CWEs, 4 frameworks
+### Rust v0.3.1 -- 262 test cases, 13 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -107,41 +117,44 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 | weakrand | 330 | 7 | 9 | 16 |
 | xss | 79 | 5 | 11 | 16 |
 | infodisclosure | 200 | 8 | 8 | 16 |
-| deser | 502 | 5 | 7 | 12 |
+| deser | 502 | 6 | 6 | 12 |
 | intoverflow | 190 | 5 | 7 | 12 |
-| redos | 1333 | 4 | 6 | 10 |
+| redos | 1333 | 5 | 5 | 10 |
 | inputval | 20 | 4 | 6 | 10 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 44/56. All 13 categories have both vulnerable and safe test cases.
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 143 standalone test files in `testcode/`. TP/TN balance: 45/55. All 13 categories have both vulnerable and safe test cases. v0.3.1 fixed 12 misclassified test cases identified during OWASP Foundation review.
 
-### Bash v0.3 -- 237 test cases, 13 CWEs
+### Bash v0.3.1 -- 356 test cases, 16 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
-| cmdi | 78 | 53 | 21 | 74 |
-| sqli | 89 | 21 | 6 | 27 |
-| codeinj | 94 | 18 | 6 | 24 |
-| pathtraver | 22 | 9 | 7 | 16 |
-| infodisclosure | 200 | 6 | 8 | 14 |
-| unquoted | 78 | 10 | 3 | 13 |
-| ssrf | 918 | 11 | 2 | 13 |
-| ssl_bypass | 295 | 6 | 5 | 11 |
-| hardcoded_creds | 798 | 7 | 4 | 11 |
-| insecure_perms | 732 | 5 | 4 | 9 |
-| weakcrypto | 327 | 6 | 3 | 9 |
+| cmdi | 78 | 53 | 53 | 106 |
+| sqli | 89 | 21 | 21 | 42 |
+| codeinj | 94 | 18 | 18 | 36 |
+| ssrf | 918 | 11 | 11 | 22 |
+| unquoted | 78 | 10 | 10 | 20 |
+| pathtraver | 22 | 9 | 9 | 18 |
+| infodisclosure | 200 | 6 | 9 | 15 |
+| hardcoded_creds | 798 | 7 | 7 | 14 |
+| ssl_bypass | 295 | 6 | 7 | 13 |
+| weakcrypto | 327 | 6 | 6 | 12 |
+| insecure_perms | 732 | 5 | 7 | 12 |
+| rce | 94 | 5 | 5 | 10 |
+| weakrand | 330 | 5 | 5 | 10 |
+| race_condition | 362 | 5 | 5 | 10 |
 | insecure_temp | 377 | 4 | 4 | 8 |
-| rce | 94 | 5 | 3 | 8 |
+| auth_bypass | 287 | 4 | 4 | 8 |
 
-4 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files). Plus 13 adversarial CWE test files. TP/TN split: 68/32.
+5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), hardened CI/CD pipeline (7 files, safe-only). Plus 13 adversarial CWE test files. TP/TN split: 49/51.
 
 ## Combined Scale
 
 | Language | Tests | CWEs | TP/TN Balance |
 |----------|-------|------|---------------|
-| Go | 424 | 16 | 50/50 |
+| Go | 476 | 21 | 50/50 |
+| Bash | 356 | 16 | 49/51 |
 | Rust | 262 | 13 | 44/56 |
-| Bash | 237 | 13 | 68/32 |
-| **Total** | **923** | **42 unique** | |
+| **Total** | **1,066** | **47 unique** | |
 
 ## How to Use
 

@@ -65,6 +65,13 @@ RULE_MAP = {
     "bash-curl-pipe-bash": "rce",               # curl|bash, wget|bash
     # Insecure temp files (CWE-377) — NOT YET VERIFIED if rule fires
     "bash-unsafe-temp": "insecure_temp",        # predictable /tmp paths
+    # Weak randomness (CWE-330) — v0.3.1
+    "bash-weak-random": "weakrand",             # $RANDOM for security-sensitive values
+    # Race condition / TOCTOU (CWE-362) — v0.3.1
+    "bash-toctou-race": "race_condition",       # check-then-use file operations
+    # Authentication bypass (CWE-287/306) — v0.3.1
+    "bash-missing-auth-check": "auth_bypass",   # functions that skip authentication
+    "bash-env-auth-bypass": "auth_bypass",      # SKIP_AUTH env var patterns
 }
 
 # Rules to IGNORE in scoring (not security-relevant for benchmark categories)
@@ -87,6 +94,10 @@ SINK_MAP = {
     "Weak Cryptography": "weakcrypto",
     "Remote Code Execution": "rce",
     "Code Injection": "codeinj",
+    # v0.3.1 additions
+    "Weak Randomness": "weakrand",
+    "Race Condition": "race_condition",
+    "Authentication Bypass": "auth_bypass",
 }
 
 # ============================================================================

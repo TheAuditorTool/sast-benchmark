@@ -207,3 +207,169 @@ safe_eval_with_qquote() {
     eval "echo $safe"  # vuln-code-snippet safe-line cmdi_bash_qquote_sanitizer_safe
 }
 # vuln-code-snippet end cmdi_bash_qquote_sanitizer_safe
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start cmdi_dead_variable_safe
+process_with_constant() {
+    # Safe: user input is read into $input but a hardcoded constant is used
+    # at the eval sink. Tests whether the tool tracks data flow correctly.
+    local input="$1"
+    local cmd="date"
+    eval "$cmd"  # vuln-code-snippet safe-line cmdi_dead_variable_safe
+}
+# vuln-code-snippet end cmdi_dead_variable_safe
+
+# vuln-code-snippet start cmdi_echo_only_safe
+log_user_input() {
+    # Safe: user input is only echoed to stdout. No subprocess, no eval,
+    # no command execution. The tainted variable never reaches a command sink.
+    local input="$1"
+    echo "Received input: $input"  # vuln-code-snippet safe-line cmdi_echo_only_safe
+}
+# vuln-code-snippet end cmdi_echo_only_safe
+
+# vuln-code-snippet start cmdi_ping_validated_safe
+check_host_status() {
+    # Safe: hostname validated against strict regex before use as argument
+    # to a hardcoded command. Only lowercase alphanumeric, dots, hyphens pass.
+    local host="$1"
+    if [[ ! "$host" =~ ^[a-z0-9][a-z0-9.-]*$ ]]; then
+        echo "Invalid hostname" >&2
+        return 1
+    fi
+    ping -c 1 "$host"  # vuln-code-snippet safe-line cmdi_ping_validated_safe
+}
+# vuln-code-snippet end cmdi_ping_validated_safe
+
+# vuln-code-snippet start cmdi_head_integer_safe
+show_log_lines() {
+    # Safe: line count coerced to integer via printf %d. Non-numeric input
+    # results in 0 (harmless). The command (head) and file are hardcoded.
+    local input="$1"
+    local n
+    printf -v n '%d' "$input" 2>/dev/null || n=10
+    head -n "$n" /var/log/syslog  # vuln-code-snippet safe-line cmdi_head_integer_safe
+}
+# vuln-code-snippet end cmdi_head_integer_safe
+
+# vuln-code-snippet start cmdi_exec_hardcoded_safe
+log_message_syslog() {
+    # Safe: exec replaces the process with a hardcoded absolute-path binary.
+    # User data is passed only as an argument to logger, never as a command.
+    local message="$1"
+    /usr/bin/logger -t app "$message"  # vuln-code-snippet safe-line cmdi_exec_hardcoded_safe
+}
+# vuln-code-snippet end cmdi_exec_hardcoded_safe
+
+# vuln-code-snippet start cmdi_getopts_safe
+parse_deploy_options() {
+    # Safe: getopts is a structured option parser built into bash.
+    # It does not use eval or execute option values as commands.
+    local environment="" version="" target=""
+    while getopts "e:v:t:" opt; do
+        case "$opt" in
+            e) environment="$OPTARG" ;;
+            v) version="$OPTARG" ;;
+            t) target="$OPTARG" ;;
+            *) return 1 ;;
+        esac
+    done
+    echo "Deploy: env=$environment ver=$version target=$target"  # vuln-code-snippet safe-line cmdi_getopts_safe
+}
+# vuln-code-snippet end cmdi_getopts_safe
+
+# vuln-code-snippet start cmdi_mapfile_safe
+load_host_list() {
+    # Safe: mapfile -t reads lines into an array without shell interpretation.
+    # The array is iterated with proper quoting. No eval, no word splitting.
+    local file="$1"
+    local -a hosts
+    mapfile -t hosts < "$file"
+    local host
+    for host in "${hosts[@]}"; do
+        echo "Host: $host"  # vuln-code-snippet safe-line cmdi_mapfile_safe
+    done
+}
+# vuln-code-snippet end cmdi_mapfile_safe
+
+# vuln-code-snippet start cmdi_ssh_singlequote_safe
+get_remote_status() {
+    # Safe: remote command is single-quoted, preventing server-side expansion.
+    # The host variable is the SSH target, not part of the executed command.
+    local host="$1"
+    ssh "$host" 'systemctl status nginx'  # vuln-code-snippet safe-line cmdi_ssh_singlequote_safe
+}
+# vuln-code-snippet end cmdi_ssh_singlequote_safe
+
+# vuln-code-snippet start cmdi_docker_exec_safe
+check_container_health() {
+    # Safe: docker exec command is single-quoted — no variable expansion
+    # occurs inside the container. Container name is used only for targeting.
+    local container="$1"
+    docker exec "$container" sh -c 'cat /proc/loadavg'  # vuln-code-snippet safe-line cmdi_docker_exec_safe
+}
+# vuln-code-snippet end cmdi_docker_exec_safe
+
+# vuln-code-snippet start cmdi_select_menu_safe
+interactive_service_control() {
+    # Safe: select options are hardcoded string literals. The user picks
+    # from a fixed menu — they cannot inject arbitrary commands.
+    select opt in start stop status restart; do
+        systemctl "$opt" app  # vuln-code-snippet safe-line cmdi_select_menu_safe
+        break
+    done
+}
+# vuln-code-snippet end cmdi_select_menu_safe
+
+# vuln-code-snippet start cmdi_indirect_expansion_safe
+get_config_by_key() {
+    # Safe: ${!var} indirect expansion is used only after the variable name
+    # is validated against a case allowlist of known config keys.
+    local key="$1"
+    local val
+    case "$key" in
+        DB_HOST|DB_PORT|APP_NAME|LOG_LEVEL)
+            val="${!key}"  # vuln-code-snippet safe-line cmdi_indirect_expansion_safe
+            ;;
+        *)
+            echo "Unknown config key: $key" >&2
+            return 1
+            ;;
+    esac
+    echo "$val"
+}
+# vuln-code-snippet end cmdi_indirect_expansion_safe
+
+# vuln-code-snippet start cmdi_env_override_safe
+run_sandboxed() {
+    # Safe: env -i clears the entire environment, preventing LD_PRELOAD,
+    # PATH hijacking, and other environment-based attacks. The command
+    # is a hardcoded absolute path (/usr/bin/date).
+    env -i HOME="$HOME" PATH="/usr/bin:/bin" /usr/bin/date  # vuln-code-snippet safe-line cmdi_env_override_safe
+}
+# vuln-code-snippet end cmdi_env_override_safe
+
+# vuln-code-snippet start cmdi_timeout_validated_safe
+run_with_timeout() {
+    # Safe: timeout value is integer-validated. The command is a hardcoded
+    # binary (curl). User URL is passed as a quoted argument.
+    local secs="$1"
+    local url="$2"
+    if [[ ! "$secs" =~ ^[0-9]+$ ]]; then
+        echo "Invalid timeout" >&2
+        return 1
+    fi
+    timeout "$secs" /usr/bin/curl -sf "$url"  # vuln-code-snippet safe-line cmdi_timeout_validated_safe
+}
+# vuln-code-snippet end cmdi_timeout_validated_safe
+
+# vuln-code-snippet start cmdi_basename_log_safe
+log_script_name() {
+    # Safe: basename extracts the filename component of $0. The result
+    # is used only in an echo for logging — never executed as a command.
+    local name
+    name=$(basename "$0")
+    echo "Script: $name"  # vuln-code-snippet safe-line cmdi_basename_log_safe
+}
+# vuln-code-snippet end cmdi_basename_log_safe

@@ -165,14 +165,15 @@ set_config_value() {
 
     # DANGEROUS: eval with user input - for demonstration
     eval "${key}='${value}'"  # vuln-code-snippet vuln-line evalSetConfigValue
+# vuln-code-snippet end evalSetConfigValue
 
     # Persist to config file
     if [[ -f "${CONFIG_FILE}" ]]; then
         if grep -q "^${key}=" "${CONFIG_FILE}"; then
             # Update existing value
-            # vuln-code-snippet start sedConfigInjection
+# vuln-code-snippet start sedConfigInjection
             sed -i "s|^${key}=.*|${key}=\"${value}\"|" "${CONFIG_FILE}"  # vuln-code-snippet vuln-line sedConfigInjection
-            # vuln-code-snippet end sedConfigInjection
+# vuln-code-snippet end sedConfigInjection
         else
             # Append new value
             echo "${key}=\"${value}\"" >> "${CONFIG_FILE}"
@@ -181,7 +182,6 @@ set_config_value() {
 
     log_info "Config ${key} updated"
 }
-# vuln-code-snippet end evalSetConfigValue
 
 # ============================================================================
 # Show Configuration

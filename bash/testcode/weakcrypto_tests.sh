@@ -40,3 +40,15 @@ verify_webhook_signature() {
     echo -n "$payload" | openssl dgst -sha1 -hmac "$secret" | awk '{print $2}'  # vuln-code-snippet vuln-line weakcrypto_sha1_signature
 }
 # vuln-code-snippet end weakcrypto_sha1_signature
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start weakcrypto_hmac_sha256_safe
+sign_request() {
+    # Safe: HMAC-SHA256 is a cryptographically strong message authentication code.
+    # SHA-256 has no known collision attacks, unlike SHA-1 (which is in the TP above).
+    local data="$1"
+    local key="$2"
+    echo -n "$data" | openssl dgst -sha256 -hmac "$key" | awk '{print $2}'  # vuln-code-snippet safe-line weakcrypto_hmac_sha256_safe
+}
+# vuln-code-snippet end weakcrypto_hmac_sha256_safe

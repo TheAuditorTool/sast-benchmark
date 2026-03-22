@@ -1,5 +1,53 @@
 # Bash SAST Benchmark — Changelog
 
+## v0.3.1 (2026-03-22)
+
+356 test cases across 16 categories, 5 applications, 52 shell scripts. **OWASP rebalancing release.**
+
+### OWASP Foundation Feedback Response
+
+The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "biggest methodological weakness" — a tool that blindly flags everything scores 68% TPR for free. This release addresses that feedback directly.
+
+### New Application
+- **apps/securepipeline/** — Hardened CI/CD pipeline (7 files, 55 TN-only safe cases). A deliberately secure version of pipeline-manager demonstrating proper input validation, parameterized queries, quoting, allowlisting, and safe API patterns. Every function includes inline comments explaining WHY it is safe.
+
+### TP/TN Rebalancing
+- Added 91 new safe (TN) test cases across securepipeline app and existing testcode/ files
+- TP/TN split improved from 68/32 (v0.3) to **49/51** (v0.3.1)
+- 13 of 16 categories now at exact 50/50 TP/TN balance
+- 3 categories slightly TN-heavy (acceptable): insecure_perms (42/58), ssl_bypass (46/54), infodisclosure (40/60)
+- Safe pattern taxonomy expanded: dead variable, input-only-echoed, regex-validated discrete args, getopts structured parsing, mapfile array population, single-quoted SSH/docker commands, select menus, declare -F dispatch, jq JSON escaping, process-substitution-for-reading, and more
+
+### Safe Pattern Categories Added (inspired by Go benchmark's paired-twin approach)
+- **Dead variable**: user input read but constant used at sink (Go's #1 safe pattern)
+- **Hardcoded command with user as discrete arg**: ping/head/grep with validated user argument
+- **Structured parsing**: getopts, mapfile -t, IFS read -r
+- **Container isolation**: single-quoted SSH/docker exec commands
+- **Dynamic dispatch via declare -F**: verify function existence before calling
+- **Declarative parsing**: grep/cut metadata extraction instead of source
+- **Docker secrets**: /run/secrets/ mount instead of hardcoded credentials
+- **jq JSON escaping**: safe JSON construction for webhook payloads
+
+### Quality Assurance
+- Every new TN classification verified as genuinely safe (not toy examples)
+- Zero duplicate keys (agent-verified against 356-entry YAML)
+- Annotation count matches YAML count exactly (356/356)
+- Per-category balance verified programmatically
+
+### New CWE Categories (CWE Top 25 gap closure)
+- **weakrand (CWE-330)**: 5 TP + 5 TN. $RANDOM is 15-bit LCG — session tokens, OTPs, API keys. Safe: /dev/urandom, openssl rand, mktemp, python secrets.
+- **race_condition (CWE-362)**: 5 TP + 5 TN. TOCTOU on lock files, PID files, stat-then-source, mkdir-chmod gap. Safe: flock, noclobber, mkdir-as-lock, install -m.
+- **auth_bypass (CWE-287/306)**: 4 TP + 4 TN. SKIP_AUTH env bypass, empty credential comparison, missing webhook signature, timing-vulnerable compare. Safe: HMAC verification gate, empty-check rejection, mandatory auth, constant-time compare.
+
+### Known Limitations (remaining from v0.3)
+- No baseline scorecard yet (awaiting first SAST tool run)
+- All new CWE category TP cases are tagged [EXPECTED_FN] — no engine rules exist yet for these patterns
+- IFDS taint analysis still only consumed for Command Injection in the reference tool
+- Self-authored benchmark (bias risk documented)
+- Scoring script still hardcoded to specific tool's database schema (SARIF interface planned)
+
+---
+
 ## v0.3 (2026-03-19)
 
 237 test cases across 13 categories, 4 applications, 42 shell scripts, 7,716 lines.

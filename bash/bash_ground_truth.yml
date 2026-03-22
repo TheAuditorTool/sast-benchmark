@@ -1,6 +1,6 @@
 # bash_ground_truth.yml
 # Answer Key for Bash SAST Benchmark
-# Version: 0.3 | Created: 2026-03-19
+# Version: 0.3.1 | Created: 2026-03-19 | Updated: 2026-03-22
 #
 # Philosophy: This answer key was written BEFORE adversarial code, to prevent
 # unconscious bias toward what the engine already detects.
@@ -1856,3 +1856,886 @@ test_cases:
     cwe: 532
     vulnerable: true
     description: "Incomplete keyword redaction — leaks TF_VAR_api_key/token (only *password*/*secret* masked)"
+
+  # ============================================================================
+  # SECUREPIPELINE APP — Hardened CI/CD pipeline (all TN safe cases)
+  # Added in v0.4 for OWASP 50/50 TP/TN rebalancing
+  # ============================================================================
+
+  # --- securepipeline/lib/config.sh ---
+
+  - key: sp_config_set_validated
+    file: apps/securepipeline/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Allowlist config keys via case, printf %q escapes value — no eval injection"
+
+  - key: sp_config_load_constant
+    file: apps/securepipeline/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "source path from constant CONFIG_DIR + hardcoded filename — no user input in path"
+
+  - key: sp_config_env_validated
+    file: apps/securepipeline/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "case allowlist (dev/staging/prod) before source — only known environments loaded"
+
+  - key: sp_config_ifs_restored
+    file: apps/securepipeline/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "IFS saved before modification and restored after — prevents persistent IFS corruption"
+
+  - key: sp_config_absolute_path
+    file: apps/securepipeline/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "PATH set to absolute system dirs only — no ./bin relative path hijacking"
+
+  - key: sp_config_plugin_validated
+    file: apps/securepipeline/lib/config.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Plugin name validated ^[a-z][a-z0-9_-]*$ before path construction and source"
+
+  - key: sp_config_no_ld_preload
+    file: apps/securepipeline/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Explicitly unset LD_PRELOAD and LD_LIBRARY_PATH — prevents library injection"
+
+  - key: sp_config_read_r_flag
+    file: apps/securepipeline/lib/config.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "read -r flag prevents backslash interpretation in config file parsing"
+
+  # --- securepipeline/lib/database.sh ---
+
+  - key: sp_db_printf_q_escape
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "printf %q escapes user input before SQL interpolation — prevents injection"
+
+  - key: sp_db_integer_validated
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "ID validated ^[0-9]+$ before WHERE clause — integers cannot contain SQL syntax"
+
+  - key: sp_db_no_user_input_1
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Static COUNT(*) query — no user-provided values reach SQL string"
+
+  - key: sp_db_no_user_input_2
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Static GROUP BY aggregation — all columns and tables are hardcoded"
+
+  - key: sp_db_column_whitelist
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Column names hardcoded, version integer-validated — no string injection surface"
+
+  - key: sp_db_no_user_input_3
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Static historical query with hardcoded LIMIT/ORDER — no user input"
+
+  - key: sp_db_days_integer_safe
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Days parameter integer-validated before DELETE datetime arithmetic"
+
+  - key: sp_db_no_user_input_4
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Static DISTINCT query listing services — completely hardcoded"
+
+  - key: sp_db_identifier_whitelist
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Migration name validated ^[0-9]{8}_[a-z_]+$ before SQL use"
+
+  - key: sp_db_maintenance_constant
+    file: apps/securepipeline/lib/database.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "VACUUM/ANALYZE — entirely hardcoded DDL maintenance commands"
+
+  # --- securepipeline/lib/deploy.sh ---
+
+  - key: sp_deploy_ssh_strict
+    file: apps/securepipeline/lib/deploy.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "SSH StrictHostKeyChecking=yes — rejects unknown host keys, prevents MITM"
+
+  - key: sp_deploy_ssh_quoted_args
+    file: apps/securepipeline/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Remote SSH command is fixed string, version integer-validated before use"
+
+  - key: sp_deploy_docker_quoted
+    file: apps/securepipeline/lib/deploy.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "All docker run variables properly double-quoted — prevents word splitting"
+
+  - key: sp_deploy_chmod_755
+    file: apps/securepipeline/lib/deploy.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "chmod 755 — owner rwx, group/world rx — appropriate for deployment directories"
+
+  - key: sp_deploy_quoted_cp
+    file: apps/securepipeline/lib/deploy.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "cp with both source and dest double-quoted — prevents word splitting"
+
+  - key: sp_deploy_version_integer
+    file: apps/securepipeline/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Version validated against ^[0-9]+.[0-9]+.[0-9]+$ before use in paths"
+
+  - key: sp_deploy_hook_allowlist
+    file: apps/securepipeline/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Hook name validated against fixed allowlist (pre-deploy/post-deploy/rollback)"
+
+  - key: sp_deploy_kubectl_identifier
+    file: apps/securepipeline/lib/deploy.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Namespace and deployment validated ^[a-z][a-z0-9-]*$ before kubectl"
+
+  # --- securepipeline/lib/network.sh ---
+
+  - key: sp_net_curl_ssl_verified
+    file: apps/securepipeline/lib/network.sh
+    category: ssl_bypass
+    cwe: 295
+    vulnerable: false
+    description: "curl -sf without -k flag — SSL verification enabled by default"
+
+  - key: sp_net_download_no_exec
+    file: apps/securepipeline/lib/network.sh
+    category: rce
+    cwe: 94
+    vulnerable: false
+    description: "Download to file with SHA-256 checksum verification — never pipes to shell"
+
+  - key: sp_net_ssrf_allowlist
+    file: apps/securepipeline/lib/network.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "URL validated against regex allowlist of approved internal hosts before curl"
+
+  - key: sp_net_ssrf_hardcoded_url
+    file: apps/securepipeline/lib/network.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Slack webhook URL is hardcoded constant — user data only in printf-%q-escaped body"
+
+  - key: sp_net_ssrf_scheme_check
+    file: apps/securepipeline/lib/network.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "HTTPS-only scheme check + private IP range blocklist before curl"
+
+  - key: sp_net_rce_save_only
+    file: apps/securepipeline/lib/network.sh
+    category: rce
+    cwe: 94
+    vulnerable: false
+    description: "curl -sf -o saves to file — downloaded content never executed"
+
+  - key: sp_net_dns_validated
+    file: apps/securepipeline/lib/network.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Hostname validated ^[a-z0-9.-]+$ before dig — prevents argument injection"
+
+  # --- securepipeline/lib/security.sh ---
+
+  - key: sp_sec_read_r_flag
+    file: apps/securepipeline/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "read -r -s -p — -r flag prevents backslash interpretation in password input"
+
+  - key: sp_sec_sql_integer_id
+    file: apps/securepipeline/lib/security.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Token hashed to integer ID via SHA-256 prefix — integer used in SQL, not raw token"
+
+  - key: sp_sec_sudo_allowlist
+    file: apps/securepipeline/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "case allowlist (systemctl/journalctl) before sudo — only approved commands"
+
+  - key: sp_sec_printf_format
+    file: apps/securepipeline/lib/security.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "printf with hardcoded literal '%s' format — user input only as argument"
+
+  - key: sp_sec_chmod_600
+    file: apps/securepipeline/lib/security.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "chmod 600 — owner-only read/write — correct for credential files"
+
+  - key: sp_sec_no_set_x
+    file: apps/securepipeline/lib/security.sh
+    category: infodisclosure
+    cwe: 200
+    vulnerable: false
+    description: "Debug uses echo with func name — no set -x which would expose secrets in trace"
+
+  - key: sp_sec_umask_027
+    file: apps/securepipeline/lib/security.sh
+    category: insecure_perms
+    cwe: 732
+    vulnerable: false
+    description: "umask 027 — new files 640, directories 750 — prevents world-readable creation"
+
+  # --- securepipeline/scripts/backup.sh ---
+
+  - key: sp_backup_realpath_validated
+    file: apps/securepipeline/scripts/backup.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "realpath -m + prefix check against /var/securepipeline/ — blocks ../ and symlinks"
+
+  - key: sp_backup_tar_quoted
+    file: apps/securepipeline/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "tar czf with double-quoted output path — prevents word splitting"
+
+  - key: sp_backup_restore_quoted
+    file: apps/securepipeline/scripts/backup.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "cp with both paths double-quoted — prevents word splitting on spaces"
+
+  - key: sp_backup_cleanup_find_hardcoded
+    file: apps/securepipeline/scripts/backup.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "find with -delete flag and hardcoded -name glob — no user-controlled -exec"
+
+  - key: sp_backup_upload_allowlisted
+    file: apps/securepipeline/scripts/backup.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Upload URL is hardcoded constant from file header — not user-provided"
+
+  - key: sp_backup_sha256_integrity
+    file: apps/securepipeline/scripts/backup.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "sha256sum for backup integrity — cryptographically strong, unlike MD5/SHA-1"
+
+  # --- securepipeline/scripts/webhook.sh ---
+
+  - key: sp_webhook_sql_validated
+    file: apps/securepipeline/scripts/webhook.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Branch regex-validated, commit SHA validated as 40-char hex before SQL INSERT"
+
+  - key: sp_webhook_tag_validated
+    file: apps/securepipeline/scripts/webhook.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Tag validated ^v[0-9]+.[0-9]+.[0-9]+$ (semver) before SQL INSERT"
+
+  - key: sp_webhook_cmdi_allowlisted
+    file: apps/securepipeline/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Service name allowlisted (webapp/api/worker/scheduler) before deploy script call"
+
+  - key: sp_webhook_deploy_validated
+    file: apps/securepipeline/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Environment allowlisted AND version regex-validated before pipeline.sh call"
+
+  - key: sp_webhook_kubectl_validated
+    file: apps/securepipeline/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "PR number validated ^[0-9]+$ before kubectl namespace deletion"
+
+  - key: sp_webhook_ssrf_hardcoded
+    file: apps/securepipeline/scripts/webhook.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "CI endpoint URL is hardcoded constant — user branch only in quoted JSON body"
+
+  - key: sp_webhook_source_validated
+    file: apps/securepipeline/scripts/webhook.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Handler type allowlisted (github/gitlab/bitbucket/slack) before source path"
+
+  - key: sp_webhook_hmac_sha256
+    file: apps/securepipeline/scripts/webhook.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "openssl dgst -sha256 -hmac for webhook HMAC — strong hash, not SHA-1"
+
+  - key: sp_webhook_no_eval
+    file: apps/securepipeline/scripts/webhook.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Query string parsed with read + IFS splitting and associative array — no eval"
+
+  # ============================================================================
+  # PHASE 2 TESTCODE EXTENSIONS — OWASP 50/50 rebalancing (all TN safe cases)
+  # Added in v0.4 (2026-03-22)
+  # ============================================================================
+
+  # --- testcode/cmdi_tests.sh Phase 2 additions ---
+
+  - key: cmdi_dead_variable_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "User input read but hardcoded constant used at eval sink — dead variable pattern"
+
+  - key: cmdi_echo_only_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "User input only echoed to stdout — never reaches a command execution sink"
+
+  - key: cmdi_ping_validated_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Hostname regex-validated ^[a-z0-9.-]+$ then used as arg to hardcoded ping command"
+
+  - key: cmdi_head_integer_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Line count coerced to integer via printf %d, then used in hardcoded head command"
+
+  - key: cmdi_exec_hardcoded_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Hardcoded absolute-path binary (/usr/bin/logger), user data only as argument"
+
+  - key: cmdi_getopts_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "getopts structured option parsing — no eval, no command execution of option values"
+
+  - key: cmdi_mapfile_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "mapfile -t for safe array population from file, quoted iteration with ${hosts[@]}"
+
+  - key: cmdi_ssh_singlequote_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "SSH remote command single-quoted — prevents server-side variable expansion"
+
+  - key: cmdi_docker_exec_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "docker exec with single-quoted command — no variable expansion inside container"
+
+  - key: cmdi_select_menu_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "select with hardcoded option literals — user picks from fixed menu only"
+
+  - key: cmdi_indirect_expansion_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "${!var} indirect expansion with case-validated key names (DB_HOST/DB_PORT/etc)"
+
+  - key: cmdi_env_override_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "env -i clears environment + hardcoded /usr/bin/date — prevents LD_PRELOAD/PATH attacks"
+
+  - key: cmdi_timeout_validated_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "Integer-validated timeout value + hardcoded curl binary — no injection surface"
+
+  - key: cmdi_basename_log_safe
+    file: testcode/cmdi_tests.sh
+    category: cmdi
+    cwe: 78
+    vulnerable: false
+    description: "basename output used only in echo for logging — never executed as command"
+
+  # --- testcode/codeinj_tests.sh Phase 2 additions ---
+
+  - key: codeinj_source_regex_dir_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Library name regex-validated ^[a-z][a-z0-9_]+$ before source path construction"
+
+  - key: codeinj_bash_c_static_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "bash -c with single-quoted static command — no variable expansion possible"
+
+  - key: codeinj_printf_integer_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "printf -v assigns integer directly — no eval, non-numeric input produces 0"
+
+  - key: codeinj_process_sub_read_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Process substitution used for READING (grep output), not for sourcing/executing"
+
+  - key: codeinj_source_feature_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Feature name regex-validated ^[a-z_]+$ before source — prevents path traversal"
+
+  - key: codeinj_grep_metadata_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "Plugin metadata parsed with grep/cut — file is NEVER sourced or executed"
+
+  - key: codeinj_trap_funcref_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "trap uses function NAME reference — no string interpretation, distinct from trap string"
+
+  - key: codeinj_declare_f_dispatch_safe
+    file: testcode/codeinj_tests.sh
+    category: codeinj
+    cwe: 94
+    vulnerable: false
+    description: "declare -F verifies function exists before dynamic dispatch — only defined functions callable"
+
+  # --- testcode/ssrf_tests.sh Phase 2 additions ---
+
+  - key: ssrf_hardcoded_api_safe
+    file: testcode/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "GitHub API URL assembled from hardcoded org/repo constants — no user control of host"
+
+  - key: ssrf_base_url_constant_safe
+    file: testcode/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Monitoring endpoint is hardcoded constant — user message only in POST body"
+
+  - key: ssrf_git_internal_safe
+    file: testcode/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "Git host hardcoded (git.corp.internal), repo name regex-validated before clone"
+
+  - key: ssrf_curl_jq_escaped_safe
+    file: testcode/ssrf_tests.sh
+    category: ssrf
+    cwe: 918
+    vulnerable: false
+    description: "jq --arg safely escapes message for JSON, Slack URL is hardcoded constant"
+
+  # --- testcode/hardcoded_creds_tests.sh Phase 2 additions ---
+
+  - key: hardcoded_creds_docker_secret_safe
+    file: testcode/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "API key read from /run/secrets/ Docker mount — runtime injection, not hardcoded"
+
+  - key: hardcoded_creds_env_required_safe
+    file: testcode/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "${TOKEN:?must be set} — fail-fast if env var missing, no default value provided"
+
+  - key: hardcoded_creds_keyfile_safe
+    file: testcode/hardcoded_creds_tests.sh
+    category: hardcoded_creds
+    cwe: 798
+    vulnerable: false
+    description: "SSH key file authentication — no inline credential, key stored in /etc/deploy/keys/"
+
+  # --- testcode/unquoted_tests.sh Phase 2 additions ---
+
+  - key: unquoted_array_iteration_safe
+    file: testcode/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "Array expansion ${services[@]} properly double-quoted — prevents word splitting"
+
+  - key: unquoted_cp_both_quoted_safe
+    file: testcode/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "cp with both source and dest double-quoted — prevents word splitting on spaces"
+
+  - key: unquoted_read_r_ifs_safe
+    file: testcode/unquoted_tests.sh
+    category: unquoted
+    cwe: 78
+    vulnerable: false
+    description: "while IFS='=' read -r — proper field splitting with -r flag preventing backslash interp"
+
+  # --- testcode/sqli_tests.sh Phase 2 additions ---
+
+  - key: sqli_printf_q_escaped_safe
+    file: testcode/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "printf %q escapes user input before SQL interpolation — prevents injection"
+
+  - key: sqli_where_constant_safe
+    file: testcode/sqli_tests.sh
+    category: sqli
+    cwe: 89
+    vulnerable: false
+    description: "Static query with all literals hardcoded — no user-provided values reach SQL"
+
+  # --- testcode/pathtraver_tests.sh Phase 2 additions ---
+
+  - key: pathtraver_readlink_safe
+    file: testcode/pathtraver_tests.sh
+    category: pathtraver
+    cwe: 22
+    vulnerable: false
+    description: "readlink -f resolves canonical path + prefix check against DATA_DIR — blocks traversal"
+
+  # --- testcode/weakcrypto_tests.sh Phase 2 additions ---
+
+  - key: weakcrypto_hmac_sha256_safe
+    file: testcode/weakcrypto_tests.sh
+    category: weakcrypto
+    cwe: 327
+    vulnerable: false
+    description: "HMAC-SHA256 for request signing — cryptographically strong, no known collision attacks"
+
+  # ============================================================================
+  # NEW CWE CATEGORIES — Phases 3-5 (2026-03-22)
+  # ============================================================================
+
+  # --- testcode/weakrand_tests.sh (CWE-330: Weak Randomness) ---
+
+  - key: weakrand_session_token
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "$RANDOM session token — 15-bit LCG, predictable after observing one output [EXPECTED_FN]"
+
+  - key: weakrand_work_dir_predictable
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "/tmp/work_$$_$RANDOM — PID + RANDOM both predictable, symlink attack [EXPECTED_FN]"
+
+  - key: weakrand_otp_predictable
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "RANDOM % 1000000 produces only 32768 outputs, brute-forceable in milliseconds [EXPECTED_FN]"
+
+  - key: weakrand_api_key_timestamp_random
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "date+$RANDOM API key — timestamp known, RANDOM values correlated LCG [EXPECTED_FN]"
+
+  - key: weakrand_string_from_random
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: true
+    description: "16-char key from RANDOM%36 loop — LCG state only 15 bits, entire space searchable [EXPECTED_FN]"
+
+  - key: weakrand_urandom_token_safe
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "/dev/urandom token — kernel CSPRNG, 256 bits entropy"
+
+  - key: weakrand_openssl_rand_safe
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "openssl rand -hex 32 — OpenSSL CSPRNG, 256 bits"
+
+  - key: weakrand_urandom_otp_safe
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "od from /dev/urandom for OTP — crypto random source"
+
+  - key: weakrand_mktemp_secure_safe
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "mktemp -d with XXXXXXXXXX — kernel random for placeholders"
+
+  - key: weakrand_python_secrets_safe
+    file: testcode/weakrand_tests.sh
+    category: weakrand
+    cwe: 330
+    vulnerable: false
+    description: "python3 secrets.token_hex — OS-level CSPRNG via Python"
+
+  # --- testcode/race_condition_tests.sh (CWE-362: Race Condition / TOCTOU) ---
+
+  - key: race_lock_toctou
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: true
+    description: "Check-then-write lock file — symlink attack between [ ! -e ] and echo > [EXPECTED_FN]"
+
+  - key: race_pid_file_symlink
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: true
+    description: "PID file rm after stale check — attacker replaces with symlink to /etc/passwd [EXPECTED_FN]"
+
+  - key: race_stat_then_source
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: true
+    description: "stat ownership check then source — ownership/content can change between operations [EXPECTED_FN]"
+
+  - key: race_mkdir_chmod_gap
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: true
+    description: "mkdir then chmod 700 — directory world-readable between creation and permission set [EXPECTED_FN]"
+
+  - key: race_trap_predictable_path
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: true
+    description: "trap rm on /tmp/process_$$_data — PID predictable, symlink pre-creation attack [EXPECTED_FN]"
+
+  - key: race_flock_atomic_safe
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: false
+    description: "flock -n 9 — kernel atomic file lock, no TOCTOU window"
+
+  - key: race_noclobber_atomic_safe
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: false
+    description: "set -C (noclobber) for PID file — O_EXCL atomic create-if-not-exists"
+
+  - key: race_mkdir_lock_atomic_safe
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: false
+    description: "mkdir as lock — atomic on POSIX, fails if exists, no race window"
+
+  - key: race_mktemp_unpredictable_safe
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: false
+    description: "mktemp -d — kernel random name + atomic creation, no prediction"
+
+  - key: race_install_atomic_safe
+    file: testcode/race_condition_tests.sh
+    category: race_condition
+    cwe: 362
+    vulnerable: false
+    description: "install -m 700 — sets permissions atomically during copy, no chmod gap"
+
+  # --- testcode/auth_bypass_tests.sh (CWE-287/306: Authentication Bypass) ---
+
+  - key: auth_env_bypass
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 306
+    vulnerable: true
+    description: "SKIP_AUTH=1 env var bypasses authentication entirely [EXPECTED_FN]"
+
+  - key: auth_empty_credential_bypass
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 287
+    vulnerable: true
+    description: "Empty stored token matches empty input — auth bypass when token file missing [EXPECTED_FN]"
+
+  - key: auth_webhook_no_signature
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 306
+    vulnerable: true
+    description: "Webhook processed without X-Hub-Signature-256 verification [EXPECTED_FN]"
+
+  - key: auth_timing_vulnerable_compare
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 287
+    vulnerable: true
+    description: "bash == short-circuit comparison enables timing side-channel [EXPECTED_FN]"
+
+  - key: auth_webhook_hmac_verified_safe
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 306
+    vulnerable: false
+    description: "HMAC-SHA256 signature gate — request rejected before processing if signature invalid"
+
+  - key: auth_empty_check_prevents_bypass_safe
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 287
+    vulnerable: false
+    description: "Explicit empty-token rejection prevents empty-comparison bypass"
+
+  - key: auth_mandatory_no_bypass_safe
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 306
+    vulnerable: false
+    description: "No SKIP_AUTH env var — authentication always required via guard clause"
+
+  - key: auth_constant_time_compare_safe
+    file: testcode/auth_bypass_tests.sh
+    category: auth_bypass
+    cwe: 287
+    vulnerable: false
+    description: "Python hmac.compare_digest — constant-time comparison prevents timing attacks"

@@ -133,7 +133,6 @@ backup_full() {
 }
 
 # vuln-code-snippet start backupFilePathTraversal
-# vuln-code-snippet start backupWeakMd5Checksum
 # DEEP TAINT FLOW: User input -> file path -> file operation -> remote upload
 backup_file() {
     local source_file="$1"
@@ -141,7 +140,9 @@ backup_file() {
 
     # TAINT SINK: cp with user-provided path
     cp "${source_file}" "${dest_file}"  # vuln-code-snippet vuln-line backupFilePathTraversal
+# vuln-code-snippet end backupFilePathTraversal
 
+# vuln-code-snippet start backupWeakMd5Checksum
     # Calculate checksum
     local checksum
     checksum=$(md5sum "${dest_file}" | awk '{print $1}')  # vuln-code-snippet vuln-line backupWeakMd5Checksum
@@ -150,7 +151,6 @@ backup_file() {
 
     log_info "File backup created: ${dest_file}"
 }
-# vuln-code-snippet end backupFilePathTraversal
 # vuln-code-snippet end backupWeakMd5Checksum
 
 backup_directory() {
@@ -297,7 +297,6 @@ sync_to_s3() {
 # Cleanup
 # ============================================================================
 # vuln-code-snippet start findExecCleanup
-# vuln-code-snippet start rmUnquotedMd5
 cleanup_old_backups() {
     local backup_dir="${1:-${BACKUP_DIR}}"
     local days="${2:-${RETENTION_DAYS}}"
@@ -306,7 +305,9 @@ cleanup_old_backups() {
 
     find "${backup_dir}" -type f -name "*.gz" -mtime +${days} -exec rm -f {} \;  # vuln-code-snippet vuln-line findExecCleanup
     find "${backup_dir}" -type f -name "*.bak" -mtime +${days} -delete
+# vuln-code-snippet end findExecCleanup
 
+# vuln-code-snippet start rmUnquotedMd5
     # Also clean up orphaned checksum files
     for md5_file in "${backup_dir}"/*.md5; do
         if [[ -f "${md5_file}" ]]; then
@@ -319,7 +320,6 @@ cleanup_old_backups() {
 
     log_info "Cleanup completed"
 }
-# vuln-code-snippet end findExecCleanup
 # vuln-code-snippet end rmUnquotedMd5
 
 verify_backup() {

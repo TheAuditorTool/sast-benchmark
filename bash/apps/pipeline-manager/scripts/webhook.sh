@@ -368,7 +368,6 @@ parse_form_field() {
     echo "${body}" | tr '&' '\n' | grep "^${field}=" | cut -d= -f2- | sed 's/+/ /g;s/%/\\x/g' | xargs -0 printf '%b'
 }
 
-# vuln-code-snippet start evalSlackExec
 # vuln-code-snippet start slackDeployCommand
 execute_slack_command() {
     local command="$1"
@@ -385,6 +384,8 @@ execute_slack_command() {
             # TAINT SINK: User-controlled deployment
             "${PROJECT_ROOT}/pipeline.sh" deploy "${env}" "${version:-latest}"  # vuln-code-snippet vuln-line slackDeployCommand
             ;;
+# vuln-code-snippet end slackDeployCommand
+# vuln-code-snippet start evalSlackExec
         /status)
             "${PROJECT_ROOT}/pipeline.sh" status "${args:-all}"
             ;;
@@ -398,7 +399,6 @@ execute_slack_command() {
     esac
 }
 # vuln-code-snippet end evalSlackExec
-# vuln-code-snippet end slackDeployCommand
 
 # vuln-code-snippet start sourceCustomWebhookHandler
 handle_custom_webhook() {

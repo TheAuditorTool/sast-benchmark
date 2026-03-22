@@ -43,3 +43,53 @@ download_remote_file() {
     wget -q -O "$dest" "$url"  # vuln-code-snippet vuln-line ssrf_wget_redirect_follow
 }
 # vuln-code-snippet end ssrf_wget_redirect_follow
+
+# --- Phase 2 TN additions (OWASP 50/50 rebalancing, 2026-03-22) ---
+
+# vuln-code-snippet start ssrf_hardcoded_api_safe
+get_github_commits() {
+    # Safe: org and repo are hardcoded constants defined in the function.
+    # The URL is assembled entirely from constants — no user control over host.
+    local GITHUB_ORG="mycompany"
+    local GITHUB_REPO="webapp"
+    curl -sf "https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/commits"  # vuln-code-snippet safe-line ssrf_hardcoded_api_safe
+}
+# vuln-code-snippet end ssrf_hardcoded_api_safe
+
+# vuln-code-snippet start ssrf_base_url_constant_safe
+notify_monitoring() {
+    # Safe: base URL is a hardcoded constant. User-provided message goes only
+    # in the POST body, not in the URL. Attacker cannot control the destination.
+    local message="$1"
+    local BASE_URL="https://monitoring.corp.internal"
+    curl -sf -X POST "${BASE_URL}/api/v1/alert" \
+        -H "Content-Type: application/json" \
+        -d "{\"message\": \"${message}\"}"  # vuln-code-snippet safe-line ssrf_base_url_constant_safe
+}
+# vuln-code-snippet end ssrf_base_url_constant_safe
+
+# vuln-code-snippet start ssrf_git_internal_safe
+clone_approved_repo() {
+    # Safe: git host is hardcoded (git.corp.internal). Repo name is validated
+    # against a strict regex — only lowercase alphanumeric + hyphens allowed.
+    local name="$1"
+    if [[ ! "$name" =~ ^[a-z][a-z0-9-]+$ ]]; then
+        echo "Invalid repo name: $name" >&2
+        return 1
+    fi
+    git clone "git@git.corp.internal:ops/${name}.git" "/tmp/${name}"  # vuln-code-snippet safe-line ssrf_git_internal_safe
+}
+# vuln-code-snippet end ssrf_git_internal_safe
+
+# vuln-code-snippet start ssrf_curl_jq_escaped_safe
+slack_notify_safe() {
+    # Safe: Slack URL is a hardcoded constant. Message body is safely escaped
+    # via jq --arg which handles JSON special characters. No user control of URL.
+    local message="$1"
+    local SLACK_URL="https://hooks.slack.com/services/T000/B000/XXXXX"
+    local json
+    json=$(jq -n --arg msg "$message" '{"text": $msg}')
+    curl -sf -X POST -H "Content-Type: application/json" \
+        -d "$json" "$SLACK_URL"  # vuln-code-snippet safe-line ssrf_curl_jq_escaped_safe
+}
+# vuln-code-snippet end ssrf_curl_jq_escaped_safe

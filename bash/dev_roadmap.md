@@ -251,9 +251,16 @@ Document surprises — categories that scored better or worse than expected.
 | 6C | dataforge app | DONE | 10 | 4 files, 436 lines — 5 TP, 5 TN |
 | 6D | Phase 6 polish | DONE | 0 | All docs updated to 237 |
 | 7 | Pre-flight check | DONE | 0 | Hallucinated numbers fixed, CHANGELOG.md created, validate_bash.py created, CI updated, v0.3 |
+| 8A | OWASP rebalancing — securepipeline app | DONE | 55 (TN only) | 7 files, hardened CI/CD app, all safe patterns |
+| 8B | OWASP rebalancing — testcode extensions | DONE | 36 (TN only) | +14 cmdi, +8 codeinj, +4 ssrf, +3 hardcoded_creds, +3 unquoted, +2 sqli, +1 pathtraver, +1 weakcrypto |
+| 9 | New CWE: weakrand (CWE-330) | DONE | 10 (5+5) | $RANDOM vs /dev/urandom patterns |
+| 10 | New CWE: race_condition (CWE-362) | DONE | 10 (5+5) | TOCTOU, flock, noclobber patterns |
+| 11 | New CWE: auth_bypass (CWE-287/306) | DONE | 8 (4+4) | env bypass, empty cred, missing webhook sig |
+| 12 | Scoring script updates | DONE | 0 | RULE_MAP/SINK_MAP for 3 new categories |
+| 13 | Final documentation + v0.3.1 release | DONE | 0 | All stats finalized |
 
-**Final state**: 237 test cases (161 TP / 76 TN = 67.9% / 32.1%). 42 files, 7,716 lines, 4 apps.
-**Agent classification corrections**: 2 false-positive corrections in dataforge healthcheck.sh (check_process and check_database are SAFE, not vulnerable — manual verification verification).
+**Current state (v0.3.1)**: 356 test cases (175 TP / 181 TN = 49.2% / 50.8%). 52 files, 5 apps, 16 CWE categories.
+**Agent classification corrections**: 2 false-positive corrections in dataforge healthcheck.sh (check_process and check_database are SAFE, not vulnerable — manual verification).
 
 ---
 
