@@ -1,9 +1,6 @@
 #!/bin/bash
 # webhook_handler.sh - CGI-style webhook handler for DeployBot
 #
-# CONTAINS INTENTIONAL VULNERABILITIES FOR TAINT ANALYSIS
-# Demonstrates bash HTTP/CGI handling patterns
-#
 # Usage: Called via netcat/socat HTTP server or CGI
 # Environment: QUERY_STRING, REQUEST_METHOD, CONTENT_LENGTH, etc.
 
@@ -23,13 +20,9 @@ http_response() {
 }
 
 # Parse query string into variables
-# VULNERABLE: Directly evaluates query string parameters
 parse_query_string_unsafe() {
-    # TAINT FLOW: $QUERY_STRING -> eval (Command Injection)
-    # Attacker can send: ?foo=bar;rm+-rf+/
     local IFS='&'
     for param in $QUERY_STRING; do
-        # VULNERABLE: Direct eval of parameter
         eval "$param"
     done
 }
@@ -45,9 +38,7 @@ parse_query_string_safe() {
         # URL decode (basic)
         value=$(echo -e "${value//+/ }" | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g')
 
-        # SAFE: Only allow alphanumeric keys
         if [[ "$key" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
-            # SAFE: Use declare instead of eval
             declare -g "PARAM_$key=$value"  # vuln-code-snippet safe-line dfo_wh_parse_qs_safe
         fi
     done
@@ -68,10 +59,7 @@ main() {
     log_info "Query: $QUERY_STRING"
 
     if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-        # === SAFE PATH ===
         parse_query_string_safe
-
-        # SAFE: Use parsed parameters with PARAM_ prefix
         local action="${PARAM_action:-}"
         local target="${PARAM_target:-}"
 
@@ -118,23 +106,12 @@ main() {
         http_response "200 OK" '{"status": "success"}'
 
     else
-        # === VULNERABLE PATH ===
-
-        # VULNERABLE: Parse query string with eval
-        # TAINT FLOW: $QUERY_STRING -> eval (Command Injection)
         parse_query_string_unsafe
 
-        # VULNERABLE: Variables now set from query string
-        # Attacker can set: action, target, cmd, etc.
-
-        # VULNERABLE: Read and use POST body
         read_post_body
 
-        # VULNERABLE: Execute action from query string
-        # TAINT FLOW: $action -> script execution (Command Injection)
         case "$action" in
             deploy)
-                # VULNERABLE: $target from query string
                 "$SCRIPT_DIR/deploy.sh" "$target" "$environment" "$branch"
                 ;;
             cleanup)
@@ -147,20 +124,14 @@ main() {
                 "$SCRIPT_DIR/notify.sh" "$message"
                 ;;
             exec)
-                # VULNERABLE: Direct command execution from query string
-                # TAINT FLOW: $cmd -> eval (Command Injection)
                 log_warn "Executing command: $cmd"
                 eval "$cmd"
                 ;;
             mysql)
-                # VULNERABLE: SQL execution from query string
-                # TAINT FLOW: $query -> mysql -e (SQL Injection)
                 log_warn "Executing MySQL query"
                 mysql -u "$db_user" -p"$db_pass" -e "$query"
                 ;;
             mysql_interactive)
-                # VULNERABLE: Read SQL from stdin and execute
-                # TAINT FLOW: read input -> mysql -e "$input" (SQL Injection)
                 log_warn "Reading SQL query from stdin"
                 read -r input
                 # vuln-code-snippet start dfo_wh_mysql_stdin
@@ -168,10 +139,7 @@ main() {
                 # vuln-code-snippet end dfo_wh_mysql_stdin
                 ;;
             callback)
-                # VULNERABLE: Bash -> Python -> Go reverse chain
-                # Calls Python service which updates Go service
-                # TAINT FLOW: $callback_data -> curl -> Python -> Go (Cross-service)
-                log_warn "Executing callback chain: Bash -> Python -> Go"
+                log_warn "Executing callback chain"
                 local response
                 # vuln-code-snippet start dfo_wh_cross_service_callback
                 response=$(curl -s -X POST "http://python-service:8081/process/callback" \
@@ -181,7 +149,7 @@ main() {
                 echo "$response"
                 ;;
             *)
-                # VULNERABLE: Try POST body as command
+                # Execute POST body
                 # vuln-code-snippet start dfo_wh_eval_post_body
                 if [[ -n "$POST_DATA" ]]; then
                     log_warn "Executing POST body as command"

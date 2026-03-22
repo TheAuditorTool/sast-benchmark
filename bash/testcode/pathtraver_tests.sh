@@ -95,7 +95,7 @@ extract_user_upload_safe() {
 
 # vuln-code-snippet start pathtraver_readlink_safe
 serve_user_file() {
-    # Safe: readlink -f resolves the full canonical path (following symlinks),
+    #readlink -f resolves the full canonical path (following symlinks),
     # then a prefix check ensures the resolved path stays within DATA_DIR.
     # This blocks ../ traversal AND symlink-based escapes.
     local name="$1"

@@ -36,7 +36,6 @@ http_post() {
 http_get_insecure() {
     local url="$1"
 
-    # BAD: Disables SSL verification
     curl -k -sf "${url}"  # vuln-code-snippet vuln-line curlInsecureK
 }
 # vuln-code-snippet end curlInsecureK
@@ -46,7 +45,6 @@ download_file_insecure() {
     local url="$1"
     local dest="$2"
 
-    # BAD: Disables certificate verification
     wget --no-check-certificate -q -O "${dest}" "${url}"  # vuln-code-snippet vuln-line wgetNoCertCheck
 }
 # vuln-code-snippet end wgetNoCertCheck
@@ -244,7 +242,6 @@ install_from_remote() {
 
     log_warn "Installing from remote URL: ${install_url}"
 
-    # CRITICAL VULNERABILITY: Remote code execution
     curl -sSL "${install_url}" | bash  # vuln-code-snippet vuln-line curlPipeBash
 }
 # vuln-code-snippet end curlPipeBash
@@ -254,7 +251,6 @@ install_from_remote() {
 install_from_remote_wget() {
     local install_url="$1"
 
-    # CRITICAL VULNERABILITY
     wget -qO- "${install_url}" | bash  # vuln-code-snippet vuln-line wgetPipeBash
 }
 # vuln-code-snippet end wgetPipeBash

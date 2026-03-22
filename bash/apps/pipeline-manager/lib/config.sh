@@ -163,7 +163,6 @@ set_config_value() {
         return 1
     fi
 
-    # DANGEROUS: eval with user input - for demonstration
     eval "${key}='${value}'"  # vuln-code-snippet vuln-line evalSetConfigValue
 # vuln-code-snippet end evalSetConfigValue
 
@@ -262,11 +261,11 @@ load_plugin_config() {
 # vuln-code-snippet end sourcePluginUnquoted
 
 # ============================================================================
-# Path Manipulation (Intentionally Vulnerable)
+# Path Manipulation
 # ============================================================================
 # vuln-code-snippet start pathInjectionSetupPath
 setup_path() {
-    # Add local bin to path - BAD: relative path first
+    # Add local bin to path
     PATH="./bin:${PATH}"  # vuln-code-snippet vuln-line pathInjectionSetupPath
     export PATH
 
@@ -282,7 +281,6 @@ setup_path() {
 setup_library_path() {
     local lib_dir="${SCRIPT_DIR}/lib"
 
-    # These are dangerous environment variables
     LD_PRELOAD="${lib_dir}/preload.so"  # vuln-code-snippet vuln-line ldPreloadInjection
     LD_LIBRARY_PATH="${lib_dir}:${LD_LIBRARY_PATH:-}"
 
@@ -291,7 +289,7 @@ setup_library_path() {
 # vuln-code-snippet end ldPreloadInjection
 
 # ============================================================================
-# IFS Manipulation (Intentionally Vulnerable)
+# IFS Manipulation
 # ============================================================================
 # vuln-code-snippet start ifsModificationUnsafe
 parse_csv_line() {
@@ -301,7 +299,7 @@ parse_csv_line() {
     IFS=","  # vuln-code-snippet vuln-line ifsModificationUnsafe
     read -ra fields <<< "${line}"
 
-    # Should restore IFS but this is intentionally buggy
+    # IFS not restored
     echo "${fields[@]}"
 }
 # vuln-code-snippet end ifsModificationUnsafe

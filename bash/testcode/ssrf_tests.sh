@@ -48,7 +48,7 @@ download_remote_file() {
 
 # vuln-code-snippet start ssrf_hardcoded_api_safe
 get_github_commits() {
-    # Safe: org and repo are hardcoded constants defined in the function.
+    #org and repo are hardcoded constants defined in the function.
     # The URL is assembled entirely from constants — no user control over host.
     local GITHUB_ORG="mycompany"
     local GITHUB_REPO="webapp"
@@ -58,7 +58,7 @@ get_github_commits() {
 
 # vuln-code-snippet start ssrf_base_url_constant_safe
 notify_monitoring() {
-    # Safe: base URL is a hardcoded constant. User-provided message goes only
+    #base URL is a hardcoded constant. User-provided message goes only
     # in the POST body, not in the URL. Attacker cannot control the destination.
     local message="$1"
     local BASE_URL="https://monitoring.corp.internal"
@@ -70,7 +70,7 @@ notify_monitoring() {
 
 # vuln-code-snippet start ssrf_git_internal_safe
 clone_approved_repo() {
-    # Safe: git host is hardcoded (git.corp.internal). Repo name is validated
+    #git host is hardcoded (git.corp.internal). Repo name is validated
     # against a strict regex — only lowercase alphanumeric + hyphens allowed.
     local name="$1"
     if [[ ! "$name" =~ ^[a-z][a-z0-9-]+$ ]]; then
@@ -83,7 +83,7 @@ clone_approved_repo() {
 
 # vuln-code-snippet start ssrf_curl_jq_escaped_safe
 slack_notify_safe() {
-    # Safe: Slack URL is a hardcoded constant. Message body is safely escaped
+    #Slack URL is a hardcoded constant. Message body is safely escaped
     # via jq --arg which handles JSON special characters. No user control of URL.
     local message="$1"
     local SLACK_URL="https://hooks.slack.com/services/T000/B000/XXXXX"

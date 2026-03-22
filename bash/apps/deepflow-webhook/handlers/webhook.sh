@@ -37,8 +37,6 @@ handle_request() {
 
     log "INFO" "Request: $METHOD $PATH_INFO"
 
-    # VULNERABLE: Parse query string with eval
-    # Taint: QUERY_STRING -> eval (command injection)
     # vuln-code-snippet start dfw_eval_query_string
     if [[ -n "$QUERY_STRING" ]]; then
         parse_query_string_unsafe "$QUERY_STRING" # vuln-code-snippet vuln-line dfw_eval_query_string
@@ -104,7 +102,6 @@ handle_webhook_post() {
 
     log "INFO" "Webhook event: $event, action: $action"
 
-    # SAFE: Route based on whitelisted event types
     case "$event" in
         push)
             handle_push_event "$body"
@@ -116,7 +113,6 @@ handle_webhook_post() {
             handle_deployment_event "$body"
             ;;
         *)
-            # VULNERABLE: Log includes unsanitized event
             log "WARN" "Unknown event type: $event"
             send_json_response 200 '{"status": "ignored"}'
             ;;
@@ -133,7 +129,6 @@ handle_push_event() {
     branch="${ref#refs/heads/}"
     repo_url=$(json_get "$body" ".repository.clone_url")
 
-    # SAFE: Validate branch name
     if ! validate_branch "$branch"; then # vuln-code-snippet safe-line dfw_push_branch_validated
         send_error 400 "Invalid branch name"
         return
@@ -186,8 +181,6 @@ handle_deployment_event() {
     environment=$(json_get "$body" ".deployment.environment")
     task=$(json_get "$body" ".deployment.task")
 
-    # VULNERABLE: Execute task from webhook
-    # Taint: .deployment.task -> eval (command injection)
     if [[ "$task" == "custom:"* ]]; then
         local custom_cmd="${task#custom:}"
         eval "$custom_cmd" # vuln-code-snippet vuln-line dfw_eval_deployment_task
@@ -219,8 +212,6 @@ handle_health() {
 }
 # vuln-code-snippet end dfw_health_check_safe
 
-# VULNERABLE: Execute arbitrary command from request
-# Taint: body.command -> eval (command injection)
 # vuln-code-snippet start dfw_exec_endpoint
 handle_exec() {
     local body="$1"
@@ -240,8 +231,6 @@ handle_exec() {
 
     log "WARN" "Executing command: $cmd"
 
-    # VULNERABLE: Direct command execution
-    # Taint: .command -> eval (command injection)
     local output
     output=$(eval "$cmd" 2>&1) # vuln-code-snippet vuln-line dfw_exec_endpoint
     local exit_code=$?
@@ -256,8 +245,6 @@ handle_exec() {
 }
 # vuln-code-snippet end dfw_exec_endpoint
 
-# VULNERABLE: Execute database query from request
-# Taint: body.query -> mysql -e (SQL injection)
 # vuln-code-snippet start dfw_sql_query_endpoint
 handle_query() {
     local body="$1"
@@ -272,8 +259,6 @@ handle_query() {
 
     log "INFO" "Executing query"
 
-    # VULNERABLE: Direct SQL execution
-    # Taint: .query -> mysql -e (SQL injection)
     local output
     output=$(mysql -h "$DB_HOST" -u "$DB_USER" "$DB_NAME" -e "$query" 2>&1) # vuln-code-snippet vuln-line dfw_sql_query_endpoint
     local exit_code=$?

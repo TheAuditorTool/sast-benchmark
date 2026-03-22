@@ -1,8 +1,6 @@
 #!/bin/bash
 # backup.sh - Backup script for DeployBot
 #
-# CONTAINS INTENTIONAL VULNERABILITIES FOR TAINT ANALYSIS
-#
 # Usage: ./backup.sh <source_path> [destination]
 
 set -e
@@ -23,10 +21,9 @@ log_info "Destination: $DEST_PATH"
 
 # vuln-code-snippet start dfo_backup_safe_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-    # === SAFE PATH ===
     log_info "Running in SAFE MODE"
 
-    # SAFE: Validate source path is within allowed directories
+    # Validate source path is within allowed directories
     ALLOWED_SOURCES="/var/deployments /home/deploy /app"
     VALID_SOURCE=false
 
@@ -42,22 +39,22 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
         exit 1
     fi
 
-    # SAFE: Validate destination is within backup directory
+    # Validate destination is within backup directory
     if ! validate_path "$DEST_PATH" "$BACKUP_DIR"; then
         log_error "Destination must be within backup directory"
         exit 1
     fi
 
-    # SAFE: Generate safe backup filename
+    # Generate backup filename
     SOURCE_BASENAME=$(basename "$SOURCE_PATH" | tr -cd 'a-zA-Z0-9_-')
     TIMESTAMP=$(date +%Y%m%d-%H%M%S)
     BACKUP_FILE="$DEST_PATH/${SOURCE_BASENAME}-${TIMESTAMP}.tar.gz"
 
-    # SAFE: Create backup with validated paths
+    # Create backup
     tar -czf "$BACKUP_FILE" -C "$(dirname "$SOURCE_PATH")" "$(basename "$SOURCE_PATH")"
     log_info "Backup created: $BACKUP_FILE"
 
-    # SAFE: Verify backup integrity
+    # Verify backup integrity
     if tar -tzf "$BACKUP_FILE" >/dev/null 2>&1; then
         log_info "Backup verified successfully"
     else
@@ -68,25 +65,15 @@ if [[ "${SAFE_MODE:-false}" == "true" ]]; then
 # vuln-code-snippet end dfo_backup_safe_validated
 
 else
-    # === VULNERABLE PATH ===
     log_warn "Running in UNSAFE MODE"
-
-    # VULNERABLE: No path validation
-    # TAINT FLOW: $1 -> tar source (Path Traversal / Information Disclosure)
-
-    # VULNERABLE: Construct backup filename with user input
     BACKUP_FILE="$DEST_PATH/backup-$(basename $SOURCE_PATH)-$(date +%s).tar.gz"
 
     log_info "Creating backup: $BACKUP_FILE"
 
-    # VULNERABLE: tar with unsanitized source path
-    # TAINT FLOW: $SOURCE_PATH -> tar command (Path Traversal)
     # vuln-code-snippet start dfo_backup_unquoted_tar
     tar -czf "$BACKUP_FILE" $SOURCE_PATH  # vuln-code-snippet vuln-line dfo_backup_unquoted_tar
     # vuln-code-snippet end dfo_backup_unquoted_tar
 
-    # VULNERABLE: Custom compression command from environment
-    # TAINT FLOW: $COMPRESSION -> command execution (Command Injection)
     # vuln-code-snippet start dfo_backup_compression_cmd
     if [[ "$COMPRESSION" != "gzip" ]]; then
         log_info "Applying custom compression: $COMPRESSION"
@@ -94,8 +81,6 @@ else
     fi
     # vuln-code-snippet end dfo_backup_compression_cmd
 
-    # VULNERABLE: Execute post-backup hook from environment
-    # TAINT FLOW: $POST_BACKUP_CMD -> eval (Command Injection)
     # vuln-code-snippet start dfo_backup_eval_hook
     if [[ -n "$POST_BACKUP_CMD" ]]; then
         log_info "Running post-backup command"
@@ -103,8 +88,6 @@ else
     fi
     # vuln-code-snippet end dfo_backup_eval_hook
 
-    # VULNERABLE: Upload to user-specified URL
-    # TAINT FLOW: $BACKUP_UPLOAD_URL -> curl (SSRF)
     # vuln-code-snippet start dfo_backup_curl_ssrf
     if [[ -n "$BACKUP_UPLOAD_URL" ]]; then
         log_info "Uploading backup to: $BACKUP_UPLOAD_URL"
@@ -112,8 +95,7 @@ else
     fi
     # vuln-code-snippet end dfo_backup_curl_ssrf
 
-    # VULNERABLE: Send backup path to notification with user data
-    # TAINT FLOW: $BACKUP_FILE -> external command
+    # Send notification
     if [[ -n "$NOTIFY_ON_BACKUP" ]]; then
         "$SCRIPT_DIR/notify.sh" "Backup created: $BACKUP_FILE"
     fi

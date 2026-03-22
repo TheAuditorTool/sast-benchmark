@@ -251,7 +251,7 @@ Document surprises — categories that scored better or worse than expected.
 | 6C | dataforge app | DONE | 10 | 4 files, 436 lines — 5 TP, 5 TN |
 | 6D | Phase 6 polish | DONE | 0 | All docs updated to 237 |
 | 7 | Pre-flight check | DONE | 0 | Hallucinated numbers fixed, CHANGELOG.md created, validate_bash.py created, CI updated, v0.3 |
-| 8A | OWASP rebalancing — securepipeline app | DONE | 55 (TN only) | 7 files, hardened CI/CD app, all safe patterns |
+| 8A | OWASP rebalancing — securepipeline app | DONE | 55 (TN only) | 7 files, CI/CD pipeline, all TN cases |
 | 8B | OWASP rebalancing — testcode extensions | DONE | 36 (TN only) | +14 cmdi, +8 codeinj, +4 ssrf, +3 hardcoded_creds, +3 unquoted, +2 sqli, +1 pathtraver, +1 weakcrypto |
 | 9 | New CWE: weakrand (CWE-330) | DONE | 10 (5+5) | $RANDOM vs /dev/urandom patterns |
 | 10 | New CWE: race_condition (CWE-362) | DONE | 10 (5+5) | TOCTOU, flock, noclobber patterns |

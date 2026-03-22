@@ -393,7 +393,6 @@ prepare_deploy_directory() {
 
     mkdir -p "${deploy_path}"
 
-    # BAD: World-writable directory
     chmod 777 "${deploy_path}"  # vuln-code-snippet vuln-line chmod777DeployDir
 }
 # vuln-code-snippet end chmod777DeployDir

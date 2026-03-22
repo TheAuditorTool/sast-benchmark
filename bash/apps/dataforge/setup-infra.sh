@@ -3,18 +3,9 @@
 # DataForge Infrastructure Setup Script
 #
 # Wrapper for Terraform that receives variables from Python.
-# TAINT FLOW: GitHub Actions -> Python -> TF_VAR_* env vars -> Terraform -> AWS
 #
 
 set -e
-
-# ============================================================================
-# ENVIRONMENT VARIABLE INJECTION
-# ============================================================================
-# TF_VAR_* environment variables are set by Python shell_runner.py
-# from user-controlled values (GitHub Actions inputs, CLI args).
-# These flow through to Terraform and can affect infrastructure.
-# ============================================================================
 
 TERRAFORM_DIR="${TERRAFORM_DIR:-./infra}"
 ACTION="${1:-plan}"  # plan, apply, destroy
@@ -55,7 +46,6 @@ terraform validate
 case "$ACTION" in
     plan)
         echo "--- Running Terraform Plan ---"
-        # TAINT: TF_VAR_* environment variables affect the plan
         terraform plan -out=tfplan
         ;;
 
@@ -65,7 +55,6 @@ case "$ACTION" in
         if [ -f "tfplan" ]; then
             terraform apply -auto-approve tfplan
         else
-            # TAINT: TF_VAR_* directly affects apply
             terraform apply -auto-approve
         fi
         ;;

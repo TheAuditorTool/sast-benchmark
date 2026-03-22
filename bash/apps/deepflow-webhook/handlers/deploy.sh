@@ -17,7 +17,6 @@ deploy_branch() {
 
     local target_dir="$DEPLOY_DIR/$branch"
 
-    # SAFE: Validate branch name
     if ! validate_branch "$branch"; then
         log "ERROR" "Invalid branch name: $branch"
         return 1
@@ -26,8 +25,6 @@ deploy_branch() {
     # Create deployment directory
     mkdir -p "$target_dir"
 
-    # VULNERABLE: repo_url is used directly in git clone
-    # Taint: repo_url -> git clone (SSRF/command injection via URL)
     git clone --branch "$branch" --single-branch "$repo_url" "$target_dir" 2>&1 # vuln-code-snippet vuln-line dfw_git_clone_ssrf
 
     log "INFO" "Deployed $branch to $target_dir"
@@ -48,7 +45,6 @@ handle_deploy() {
     action=$(json_get "$body" ".action")
     script=$(json_get "$body" ".script")
 
-    # SAFE: Validate action with whitelist
     if ! validate_action "$action"; then
         send_error 400 "Invalid action"
         return
@@ -75,12 +71,9 @@ do_deploy() {
     local target="$1"
     local script="$2"
 
-    # VULNERABLE: target used in path operations without validation
-    # Taint: target -> rm -rf (path traversal)
     local deploy_path="$DEPLOY_DIR/$target"
 
     # Clean existing deployment
-    # VULNERABLE: Path traversal via target
     # vuln-code-snippet start dfw_deploy_path_traversal
     rm -rf "$deploy_path" # vuln-code-snippet vuln-line dfw_deploy_path_traversal
     mkdir -p "$deploy_path"
@@ -89,8 +82,6 @@ do_deploy() {
     log "INFO" "Deploying to: $deploy_path"
 
     # Run pre-deploy script if specified
-    # VULNERABLE: Direct execution of user-provided script
-    # Taint: script -> bash -c (command injection)
     # vuln-code-snippet start dfw_deploy_bash_c
     if [[ -n "$script" ]]; then
         log "WARN" "Running deploy script"
@@ -107,7 +98,6 @@ do_deploy_safe() {
     local target="$1"
     local script="$2"
 
-    # SAFE: Validate and canonicalize path
     local deploy_path
     deploy_path=$(validate_path "$DEPLOY_DIR/$target" "$DEPLOY_DIR") # vuln-code-snippet safe-line dfw_deploy_safe_validated
 
@@ -120,7 +110,6 @@ do_deploy_safe() {
     rm -rf "$deploy_path"
     mkdir -p "$deploy_path"
 
-    # SAFE: Only run whitelisted scripts
     if [[ -n "$script" ]]; then
         case "$script" in
             npm_install)
@@ -147,8 +136,6 @@ do_rollback() {
     local deploy_path="$DEPLOY_DIR/$target"
     local backup_path="$DEPLOY_DIR/.backups/$target"
 
-    # VULNERABLE: Path traversal via target
-    # Taint: target -> cp -r (path traversal)
     if [[ -d "$backup_path" ]]; then
         rm -rf "$deploy_path"
         cp -r "$backup_path" "$deploy_path" # vuln-code-snippet vuln-line dfw_rollback_path_traversal
@@ -189,8 +176,6 @@ run_post_deploy_hook() {
 
     log "INFO" "Running post-deploy hook for $target"
 
-    # VULNERABLE: Direct eval of hook command
-    # Taint: hook_cmd -> eval (command injection)
     eval "$hook_cmd" # vuln-code-snippet vuln-line dfw_post_deploy_eval
 }
 # vuln-code-snippet end dfw_post_deploy_eval
@@ -204,8 +189,6 @@ deploy_from_url() {
     local deploy_path="$DEPLOY_DIR/$target"
     mkdir -p "$deploy_path"
 
-    # VULNERABLE: URL passed directly to curl
-    # Taint: url -> curl (SSRF)
     curl -sSL "$url" -o "$deploy_path/package.tar.gz" # vuln-code-snippet vuln-line dfw_curl_ssrf_deploy
 
     # Extract

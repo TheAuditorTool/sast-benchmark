@@ -159,7 +159,6 @@ join_array() {
     local result=""
     local first=true
 
-    # Intentionally unquoted for demonstration
     for item in ${arr[@]}; do  # vuln-code-snippet vuln-line unquotedArrayJoin
         if [[ "${first}" == "true" ]]; then
             result="${item}"

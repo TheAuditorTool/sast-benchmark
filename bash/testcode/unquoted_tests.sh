@@ -56,7 +56,7 @@ cleanup_directory_safe() {
 
 # vuln-code-snippet start unquoted_array_iteration_safe
 deploy_services() {
-    # Safe: array expansion "${services[@]}" is properly double-quoted.
+    #array expansion "${services[@]}" is properly double-quoted.
     # Each array element is preserved as a single token, even if it contains spaces.
     local -a services=("$@")
     local svc
@@ -68,7 +68,7 @@ deploy_services() {
 
 # vuln-code-snippet start unquoted_cp_both_quoted_safe
 archive_logs() {
-    # Safe: both source and destination paths are properly double-quoted.
+    #both source and destination paths are properly double-quoted.
     # Without quotes, paths with spaces would split into separate arguments.
     local log_dir="$1"
     local archive_dir="$2"
@@ -78,7 +78,7 @@ archive_logs() {
 
 # vuln-code-snippet start unquoted_read_r_ifs_safe
 parse_env_file() {
-    # Safe: read -r prevents backslash interpretation, IFS='=' splits only
+    #read -r prevents backslash interpretation, IFS='=' splits only
     # on equals sign. Variables are properly quoted in the export statement.
     local file="$1"
     local key value

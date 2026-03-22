@@ -1,7 +1,5 @@
 #!/bin/bash
-# Secure Pipeline — Configuration Management (Hardened)
-# All functions demonstrate SAFE patterns for config handling.
-# This app is a hardened version of pipeline-manager's config.sh.
+# Secure Pipeline — Configuration Management
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_DIR="${SCRIPT_DIR}/config"
@@ -9,8 +7,7 @@ PLUGIN_DIR="${SCRIPT_DIR}/plugins"
 
 # vuln-code-snippet start sp_config_set_validated
 set_config_value_safe() {
-    # Safe: allowlist of known config keys prevents arbitrary eval/sed injection.
-    # Only known keys can be written; value is printf-%q escaped.
+    # Allowlist of known config keys. Value is printf-%q escaped.
     local key="$1"
     local value="$2"
     local config_file="${CONFIG_DIR}/app.conf"
@@ -31,8 +28,7 @@ set_config_value_safe() {
 
 # vuln-code-snippet start sp_config_load_constant
 load_config_safe() {
-    # Safe: path assembled entirely from constants. No user input in the path.
-    # CONFIG_DIR is derived from SCRIPT_DIR (process-level constant).
+    # Path assembled entirely from constants.
     local config_path="${CONFIG_DIR}/app.conf"
 
     if [[ -f "$config_path" ]]; then
@@ -46,8 +42,7 @@ load_config_safe() {
 
 # vuln-code-snippet start sp_config_env_validated
 load_environment_config_safe() {
-    # Safe: environment name is validated against a fixed allowlist before
-    # being used in a source path. Only dev/staging/prod can be loaded.
+    # Environment name validated against a fixed allowlist.
     local env_name="$1"
 
     case "$env_name" in
@@ -64,8 +59,7 @@ load_environment_config_safe() {
 
 # vuln-code-snippet start sp_config_ifs_restored
 parse_csv_line_safe() {
-    # Safe: IFS is saved before modification and restored after.
-    # The original IFS value is preserved regardless of function outcome.
+    # IFS is saved before modification and restored after.
     local line="$1"
     local saved_ifs="$IFS"
     local -a fields
@@ -80,8 +74,7 @@ parse_csv_line_safe() {
 
 # vuln-code-snippet start sp_config_absolute_path
 setup_path_safe() {
-    # Safe: PATH is set to absolute system directories only. No relative
-    # paths (./bin) that could be hijacked via CWD manipulation.
+    # PATH is set to absolute system directories only.
     PATH="/usr/local/bin:/usr/bin:/bin"  # vuln-code-snippet safe-line sp_config_absolute_path
     export PATH
     hash -r
@@ -90,8 +83,7 @@ setup_path_safe() {
 
 # vuln-code-snippet start sp_config_plugin_validated
 load_plugin_config_safe() {
-    # Safe: plugin name is validated against a strict regex before path
-    # construction. Only lowercase alphanumeric with hyphens/underscores allowed.
+    # Plugin name validated against a strict regex before path construction.
     local plugin_name="$1"
 
     if [[ ! "$plugin_name" =~ ^[a-z][a-z0-9_-]*$ ]]; then
@@ -108,8 +100,7 @@ load_plugin_config_safe() {
 
 # vuln-code-snippet start sp_config_no_ld_preload
 setup_library_path_safe() {
-    # Safe: explicitly unsets LD_PRELOAD and LD_LIBRARY_PATH to prevent
-    # library injection attacks. Sets only approved library paths.
+    # Unset LD_PRELOAD and LD_LIBRARY_PATH. Set only approved library paths.
     unset LD_PRELOAD  # vuln-code-snippet safe-line sp_config_no_ld_preload
     unset LD_LIBRARY_PATH
     export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib"
@@ -118,8 +109,7 @@ setup_library_path_safe() {
 
 # vuln-code-snippet start sp_config_read_r_flag
 read_config_value_safe() {
-    # Safe: read uses -r flag to prevent backslash interpretation.
-    # Without -r, backslash sequences in input are processed as escape chars.
+    # read uses -r flag to prevent backslash interpretation.
     local config_file="$1"
     local target_key="$2"
     local key value

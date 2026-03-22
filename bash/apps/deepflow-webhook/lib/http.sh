@@ -58,12 +58,9 @@ read_body() {
 
 # vuln-code-snippet start dfw_parse_qs_eval
 # Parse URL-encoded query string into variables
-# VULNERABLE: Uses eval - taint flows through here
 parse_query_string_unsafe() {
     local qs="$1"
 
-    # VULNERABLE: Direct eval of query string
-    # Taint: QUERY_STRING -> eval (command injection)
     eval "$qs" # vuln-code-snippet vuln-line dfw_parse_qs_eval
 }
 # vuln-code-snippet end dfw_parse_qs_eval

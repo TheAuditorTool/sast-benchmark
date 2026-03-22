@@ -45,7 +45,7 @@ verify_webhook_signature() {
 
 # vuln-code-snippet start weakcrypto_hmac_sha256_safe
 sign_request() {
-    # Safe: HMAC-SHA256 is a cryptographically strong message authentication code.
+    #HMAC-SHA256 is a cryptographically strong message authentication code.
     # SHA-256 has no known collision attacks, unlike SHA-1 (which is in the TP above).
     local data="$1"
     local key="$2"

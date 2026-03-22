@@ -133,12 +133,10 @@ backup_full() {
 }
 
 # vuln-code-snippet start backupFilePathTraversal
-# DEEP TAINT FLOW: User input -> file path -> file operation -> remote upload
 backup_file() {
     local source_file="$1"
     local dest_file="$2"
 
-    # TAINT SINK: cp with user-provided path
     cp "${source_file}" "${dest_file}"  # vuln-code-snippet vuln-line backupFilePathTraversal
 # vuln-code-snippet end backupFilePathTraversal
 

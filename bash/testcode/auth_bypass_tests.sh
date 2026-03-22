@@ -7,7 +7,7 @@
 
 # vuln-code-snippet start auth_env_bypass
 authenticate_user() {
-    # Vulnerable (CWE-306): SKIP_AUTH environment variable completely bypasses
+    # CWE-306): SKIP_AUTH environment variable completely bypasses
     # authentication. In containerized environments, environment variables are
     # often injectable by an attacker (e.g., Kubernetes env injection, Docker
     # compose override, CI/CD variable manipulation).
@@ -24,7 +24,7 @@ authenticate_user() {
 
 # vuln-code-snippet start auth_empty_credential_bypass
 verify_api_token() {
-    # Vulnerable (CWE-287): if the token file is missing or empty,
+    # CWE-287): if the token file is missing or empty,
     # stored_token="" and provided_token="" will match — authentication
     # is bypassed. This is the "empty comparison" bypass class.
     local provided_token="$1"
@@ -40,7 +40,7 @@ verify_api_token() {
 
 # vuln-code-snippet start auth_webhook_no_signature
 handle_github_webhook() {
-    # Vulnerable (CWE-306): webhook body is processed and used to trigger
+    # CWE-306): webhook body is processed and used to trigger
     # a deployment without verifying the X-Hub-Signature-256 header.
     # Any HTTP client can trigger deployments by sending a crafted JSON body.
     local body="$1"
@@ -54,7 +54,7 @@ handle_github_webhook() {
 
 # vuln-code-snippet start auth_timing_vulnerable_compare
 check_admin_password() {
-    # Vulnerable (CWE-287): bash's [[ == ]] operator performs a short-circuit
+    # CWE-287): bash's [[ == ]] operator performs a short-circuit
     # string comparison — it returns false as soon as a character mismatch is
     # found. An attacker can measure response time differences to determine
     # how many leading characters of the password are correct, then brute-force

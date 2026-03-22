@@ -1,15 +1,13 @@
 #!/bin/bash
-# Secure Pipeline — Backup Operations (Hardened)
-# All functions demonstrate SAFE backup/restore patterns.
-# Defense strategies: path validation, quoting, strong hashing, hardcoded URLs.
+# Secure Pipeline — Backup Operations
+# Path validation, quoting, strong hashing, hardcoded URLs.
 
 BACKUP_DIR="${BACKUP_DIR:-/var/securepipeline/backups}"
 BACKUP_REMOTE_URL="https://backup.corp.internal/api/v1/upload"
 
 # vuln-code-snippet start sp_backup_realpath_validated
 backup_file_safe() {
-    # Safe: source path is canonicalized with realpath and checked against
-    # an allowed prefix. This prevents path traversal via ../ or symlinks.
+    # Source path is canonicalized with realpath and checked against prefix.
     local source_file="$1"
     local resolved
 
@@ -27,8 +25,7 @@ backup_file_safe() {
 
 # vuln-code-snippet start sp_backup_tar_quoted
 backup_logs_safe() {
-    # Safe: output path variable is properly double-quoted in tar command.
-    # Without quotes, paths with spaces would cause word splitting.
+    # Output path is properly double-quoted in tar command.
     local output_path="${BACKUP_DIR}/logs_$(date +%Y%m%d).tar.gz"
 
     tar czf "$output_path" \
@@ -38,8 +35,7 @@ backup_logs_safe() {
 
 # vuln-code-snippet start sp_backup_restore_quoted
 restore_database_safe() {
-    # Safe: both backup file and target database paths are double-quoted.
-    # This prevents word splitting on paths containing spaces.
+    # Both backup file and target database paths are double-quoted.
     local backup_file="$1"
     local target_db="$2"
 
@@ -49,17 +45,14 @@ restore_database_safe() {
 
 # vuln-code-snippet start sp_backup_cleanup_find_hardcoded
 cleanup_old_backups_safe() {
-    # Safe: find uses -delete instead of -exec with a user-controlled command.
-    # The -name pattern is a hardcoded glob, not user-provided.
-    # The -mtime value uses a fixed 30-day retention.
+    # find uses -delete with hardcoded pattern. 30-day retention.
     find "$BACKUP_DIR" -type f -name "*.tar.gz" -mtime +30 -delete  # vuln-code-snippet safe-line sp_backup_cleanup_find_hardcoded
 }
 # vuln-code-snippet end sp_backup_cleanup_find_hardcoded
 
 # vuln-code-snippet start sp_backup_upload_allowlisted
 upload_backup_safe() {
-    # Safe: the upload URL is a hardcoded constant defined at the top of
-    # this file, not user-provided. SSRF requires attacker control of the URL.
+    # Upload URL is a hardcoded constant defined at the top of this file.
     local local_file="$1"
 
     curl -sf -X PUT \
@@ -71,9 +64,7 @@ upload_backup_safe() {
 
 # vuln-code-snippet start sp_backup_sha256_integrity
 verify_backup_integrity() {
-    # Safe: SHA-256 is a cryptographically strong hash function.
-    # Unlike MD5 or SHA-1, SHA-256 has no known collision attacks,
-    # making it suitable for integrity verification.
+    # SHA-256 integrity verification.
     local file="$1"
     local expected_hash="$2"
     local actual_hash

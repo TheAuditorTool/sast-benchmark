@@ -1,9 +1,6 @@
 #!/bin/bash
 # Webhook Handler for Pipeline Manager
-# CGI-style webhook processing with deep taint flows
-#
-# This script demonstrates external input handling and taint propagation
-# from HTTP request data through processing to dangerous sinks.
+# CGI-style webhook processing
 
 # NOTE: When run as CGI, set -e can cause silent failures
 # set -e
@@ -23,11 +20,8 @@ PROJECT_ROOT="$(dirname "${SCRIPT_DIR}")"
 readonly WEBHOOK_LOG="${PROJECT_ROOT}/logs/webhook.log"
 
 # ============================================================================
-# CGI Environment - TAINT SOURCES
-# All $HTTP_* and $QUERY_STRING variables are external input
+# CGI Environment
 # ============================================================================
-
-# TAINT SOURCE: CGI environment variables (user-controlled)
 readonly REQUEST_METHOD="${REQUEST_METHOD:-GET}"
 readonly QUERY_STRING="${QUERY_STRING:-}"
 readonly CONTENT_TYPE="${CONTENT_TYPE:-application/json}"
@@ -81,12 +75,11 @@ log_webhook_request() {
     local timestamp
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
-    # TAINT PROPAGATION: Logging user-controlled data
     echo "${timestamp} | ${REQUEST_METHOD} | ${REQUEST_URI} | ${REMOTE_ADDR} | ${HTTP_USER_AGENT}" >> "${WEBHOOK_LOG}"
 }
 
 # ============================================================================
-# Request Processing - DEEP TAINT FLOWS
+# Request Processing
 # ============================================================================
 process_webhook_request() {
     # Validate request method
@@ -105,7 +98,6 @@ process_webhook_request() {
         return
     fi
 
-    # TAINT PROPAGATION: Parse user-controlled JSON
     local event_type
     event_type=$(parse_json_field "${body}" "event")
 
@@ -113,7 +105,6 @@ process_webhook_request() {
     payload=$(parse_json_field "${body}" "payload")
 
     # Route to handler
-    # TAINT SINK: Dynamic dispatch based on user input
     route_webhook_event "${event_type}" "${payload}"
 }
 
@@ -121,7 +112,6 @@ read_request_body() {
     local body=""
 
     if [[ "${CONTENT_LENGTH}" -gt 0 ]]; then
-        # TAINT SOURCE: Read from stdin (HTTP request body)
         read -n "${CONTENT_LENGTH}" body
     fi
 
@@ -144,7 +134,6 @@ validate_webhook_signature() {
     expected_sig=$(echo -n "${body}" | openssl dgst -sha256 -hmac "${secret}" | awk '{print $2}')
 
     # Compare with provided signature
-    # TAINT: Using user-provided header
     local provided_sig="${HTTP_X_SIGNATURE}"
 
     if [[ "${expected_sig}" == "${provided_sig}" ]]; then
@@ -159,12 +148,11 @@ parse_json_field() {
     local json="$1"
     local field="$2"
 
-    # Simple extraction - TAINT PROPAGATION
     echo "${json}" | grep -o "\"${field}\":[^,}]*" | sed 's/"[^"]*"://;s/"//g;s/[[:space:]]//g'
 }
 
 # ============================================================================
-# Event Routing - TAINT SINK
+# Event Routing
 # ============================================================================
 route_webhook_event() {
     local event_type="$1"
@@ -192,7 +180,6 @@ route_webhook_event() {
             send_success_response "pong"
             ;;
         *)
-            # TAINT SINK: Log user-controlled event type
             log_warn "Unknown event type: ${event_type}"
             send_success_response "event_ignored"
             ;;
@@ -200,7 +187,7 @@ route_webhook_event() {
 }
 
 # ============================================================================
-# Event Handlers - DEEP TAINT SINKS
+# Event Handlers
 # ============================================================================
 # vuln-code-snippet start sqlInjectionPushEvent
 handle_push_event() {
@@ -214,7 +201,6 @@ handle_push_event() {
 
     log_info "Push to ${branch}: ${commit_sha}"
 
-    # DEEP TAINT FLOW: User input -> database -> deployment
     # Store push event
     db_execute "
         INSERT INTO webhook_events (event_type, branch, commit_sha, received_at)
@@ -270,7 +256,6 @@ handle_deploy_event() {
 
     log_info "Deploy request: ${environment} -> ${version}"
 
-    # DEEP TAINT SINK: User-controlled deployment parameters
     "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${version}"  # vuln-code-snippet vuln-line deployFromWebhookPayload
 
     send_success_response "deploy_triggered"
@@ -287,7 +272,6 @@ handle_release_event() {
 
     log_info "Release: ${release_name} (${tag_name})"
 
-    # TAINT SINK: Store user-controlled data
     db_execute "
         INSERT INTO releases (tag, name, created_at)
         VALUES ('${tag_name}', '${release_name}', datetime('now'))
@@ -356,7 +340,6 @@ handle_slack_webhook() {
 
     log_info "Slack command from ${user}: ${command} ${text}"
 
-    # DEEP TAINT SINK: Execute slash command
     execute_slack_command "${command}" "${text}" "${user}"
 }
 
@@ -381,7 +364,6 @@ execute_slack_command() {
             env=$(echo "${args}" | awk '{print $1}')
             version=$(echo "${args}" | awk '{print $2}')
 
-            # TAINT SINK: User-controlled deployment
             "${PROJECT_ROOT}/pipeline.sh" deploy "${env}" "${version:-latest}"  # vuln-code-snippet vuln-line slackDeployCommand
             ;;
 # vuln-code-snippet end slackDeployCommand
@@ -390,7 +372,6 @@ execute_slack_command() {
             "${PROJECT_ROOT}/pipeline.sh" status "${args:-all}"
             ;;
         /exec)
-            # CRITICAL: Arbitrary command execution
             eval "${args}"  # vuln-code-snippet vuln-line evalSlackExec
             ;;
         *)
@@ -406,7 +387,6 @@ handle_custom_webhook() {
     body=$(read_request_body)
 
     # Parse custom handler from query string
-    # TAINT SOURCE: Query string parsing
     local handler
     handler=$(echo "${QUERY_STRING}" | grep -o 'handler=[^&]*' | cut -d= -f2)
 
@@ -414,7 +394,6 @@ handle_custom_webhook() {
         local handler_script="${PROJECT_ROOT}/hooks/webhooks/${handler}.sh"
 
         if [[ -f "${handler_script}" ]]; then
-            # TAINT SINK: Execute user-specified handler
             source "${handler_script}"  # vuln-code-snippet vuln-line sourceCustomWebhookHandler
 
             if declare -f handle_webhook > /dev/null; then
@@ -463,7 +442,6 @@ trigger_auto_deploy() {
             ;;
     esac
 
-    # TAINT SINK: Execute deployment with derived parameters
     nohup "${PROJECT_ROOT}/pipeline.sh" deploy "${environment}" "${commit_sha}" > /dev/null 2>&1 &
 }
 
@@ -477,7 +455,6 @@ trigger_ci_build() {
     # Start CI job
     local ci_endpoint="${CI_ENDPOINT:-http://localhost:8080/api/build}"
 
-    # TAINT SINK: Send user-controlled data to CI
     curl -sf -X POST \
         -H "Content-Type: application/json" \
         -d "{\"branch\":\"${branch}\",\"pr\":\"${pr_number}\"}" \
@@ -494,7 +471,6 @@ cleanup_pr_environment() {
     # Remove PR-specific resources
     local pr_namespace="pr-${pr_number}"
 
-    # TAINT SINK: kubectl with user-derived input
     kubectl delete namespace "${pr_namespace}" 2>/dev/null || true  # vuln-code-snippet vuln-line kubectlNamespaceInjection
 }
 # vuln-code-snippet end kubectlNamespaceInjection

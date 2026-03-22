@@ -99,7 +99,6 @@ db_query_unsafe() {
     local table="$1"
     local condition="$2"
 
-    # DANGEROUS: Direct string interpolation
     sqlite3 "${DB_FILE}" "SELECT * FROM ${table} WHERE ${condition}" # vuln-code-snippet vuln-line sqlInjectionDbQueryUnsafe
 }
 # vuln-code-snippet end sqlInjectionDbQueryUnsafe

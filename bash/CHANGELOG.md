@@ -22,7 +22,7 @@
 The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "biggest methodological weakness" — a tool that blindly flags everything scores 68% TPR for free. This release addresses that feedback directly.
 
 ### New Application
-- **apps/securepipeline/** — Hardened CI/CD pipeline (7 files, 55 TN-only safe cases). A deliberately secure version of pipeline-manager demonstrating proper input validation, parameterized queries, quoting, allowlisting, and safe API patterns. Every function includes inline comments explaining WHY it is safe.
+- **apps/securepipeline/** — CI/CD pipeline (7 files, 55 TN-only cases). A secure version of pipeline-manager demonstrating proper input validation, parameterized queries, quoting, allowlisting, and safe API patterns.
 
 ### TP/TN Rebalancing
 - Added 91 new safe (TN) test cases across securepipeline app and existing testcode/ files
@@ -51,6 +51,14 @@ The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "
 - **weakrand (CWE-330)**: 5 TP + 5 TN. $RANDOM is 15-bit LCG — session tokens, OTPs, API keys. Safe: /dev/urandom, openssl rand, mktemp, python secrets.
 - **race_condition (CWE-362)**: 5 TP + 5 TN. TOCTOU on lock files, PID files, stat-then-source, mkdir-chmod gap. Safe: flock, noclobber, mkdir-as-lock, install -m.
 - **auth_bypass (CWE-287/306)**: 4 TP + 4 TN. SKIP_AUTH env bypass, empty credential comparison, missing webhook signature, timing-vulnerable compare. Safe: HMAC verification gate, empty-check rejection, mandatory auth, constant-time compare.
+
+### Source Code Hint Purge (CONTRIBUTING.md compliance)
+- Stripped ~278 inline hint comments from 38 files (28 apps + 10 testcode)
+- Removed: `# VULNERABLE`, `# SAFE:`, `# TAINT FLOW:`, `# Taint:`, `# DANGEROUS`, `# CRITICAL`, `# BAD:`, `# Safe:`, `# Vulnerable:`, `# COMMAND INJECTION`, `# CONTAINS INTENTIONAL VULNERABILITIES`, section markers, header blocks
+- Per CONTRIBUTING.md line 15: "No vulnerability hints. The CSV is the only ground truth."
+- Technical explanations preserved (only classification prefix stripped)
+- All vuln-code-snippet annotations (start/end/vuln-line/safe-line) preserved
+- Verified: 0 hint matches remaining, L1-L5 fidelity PASS, 356/356 annotations intact
 
 ### Known Limitations (remaining from v0.3)
 - No baseline scorecard yet (awaiting first SAST tool run)

@@ -1,7 +1,6 @@
 #!/bin/bash
-# Secure Pipeline — Webhook Handler (Hardened)
-# All functions demonstrate SAFE webhook processing patterns.
-# Defense strategies: input validation, SQL parameter safety, allowlists,
+# Secure Pipeline — Webhook Handler
+# Input validation, SQL parameter safety, allowlists,
 # hardcoded URLs, HMAC verification.
 
 DB_FILE="${DB_FILE:-/var/securepipeline/deployments.db}"
@@ -9,9 +8,7 @@ CI_ENDPOINT="https://ci.corp.internal/api/v1/builds"
 
 # vuln-code-snippet start sp_webhook_sql_validated
 handle_push_event_safe() {
-    # Safe: branch name and commit SHA are validated against strict regexes
-    # before use in SQL. Branch allows alphanumeric/dots/slashes/hyphens.
-    # Commit SHA is validated as a 40-character hex string.
+    # Branch name and commit SHA are validated against strict regexes.
     local branch="$1"
     local commit_sha="$2"
 
@@ -30,8 +27,7 @@ handle_push_event_safe() {
 
 # vuln-code-snippet start sp_webhook_tag_validated
 handle_release_event_safe() {
-    # Safe: tag name is validated against semantic version format.
-    # Only vN.N.N patterns pass, preventing SQL injection via tag names.
+    # Tag name validated against semantic version format (vN.N.N).
     local tag_name="$1"
 
     if [[ ! "$tag_name" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -45,8 +41,7 @@ handle_release_event_safe() {
 
 # vuln-code-snippet start sp_webhook_cmdi_allowlisted
 execute_deploy_command_safe() {
-    # Safe: service name is validated against a fixed allowlist of known
-    # services. The deploy script path is a hardcoded constant.
+    # Service name validated against a fixed allowlist.
     local service="$1"
     local version="$2"
     local deploy_script="/opt/securepipeline/deploy.sh"
@@ -65,7 +60,6 @@ execute_deploy_command_safe() {
 
 # vuln-code-snippet start sp_webhook_deploy_validated
 handle_deploy_event_safe() {
-    # Safe: both environment and version are validated before use.
     # Environment is allowlisted. Version is regex-validated.
     local environment="$1"
     local version="$2"
@@ -89,8 +83,7 @@ handle_deploy_event_safe() {
 
 # vuln-code-snippet start sp_webhook_kubectl_validated
 cleanup_pr_environment_safe() {
-    # Safe: PR number is validated as a pure integer before constructing
-    # the Kubernetes namespace name. Integer values cannot inject kubectl args.
+    # PR number validated as a pure integer.
     local pr_number="$1"
 
     if [[ ! "$pr_number" =~ ^[0-9]+$ ]]; then
@@ -104,8 +97,7 @@ cleanup_pr_environment_safe() {
 
 # vuln-code-snippet start sp_webhook_ssrf_hardcoded
 trigger_ci_build_safe() {
-    # Safe: CI endpoint URL is a hardcoded constant. User-provided branch
-    # name is placed only in the JSON body (quoted), not in the URL.
+    # CI endpoint URL is a hardcoded constant.
     local branch="$1"
     local pr_number="$2"
 
@@ -118,8 +110,7 @@ trigger_ci_build_safe() {
 
 # vuln-code-snippet start sp_webhook_source_validated
 load_webhook_handler_safe() {
-    # Safe: handler type is validated against a fixed list before
-    # constructing the source path. Only known handler types load.
+    # Handler type validated against a fixed list.
     local handler_type="$1"
     local handler_dir="/opt/securepipeline/handlers"
 
@@ -137,9 +128,7 @@ load_webhook_handler_safe() {
 
 # vuln-code-snippet start sp_webhook_hmac_sha256
 verify_webhook_signature_safe() {
-    # Safe: uses HMAC-SHA256 for webhook signature verification.
-    # SHA-256 is cryptographically strong, unlike SHA-1 which has known
-    # collision attacks. This follows GitHub's X-Hub-Signature-256 spec.
+    # HMAC-SHA256 webhook signature verification.
     local payload="$1"
     local provided_signature="$2"
     local secret="${WEBHOOK_SECRET:?WEBHOOK_SECRET must be set}"
@@ -156,9 +145,7 @@ verify_webhook_signature_safe() {
 
 # vuln-code-snippet start sp_webhook_no_eval
 parse_query_string_safe() {
-    # Safe: query string is parsed using read + IFS splitting, NOT eval.
-    # Each key=value pair is stored in an associative array via direct
-    # assignment. No shell interpretation of the values occurs.
+    # Query string parsed using read + IFS splitting.
     local query_string="$1"
     local -A params
 

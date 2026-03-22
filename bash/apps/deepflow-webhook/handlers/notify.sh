@@ -60,8 +60,6 @@ notify_slack() {
     local payload
     payload=$(json_build "text" "$message")
 
-    # VULNERABLE: webhook_url can be attacker-controlled
-    # Taint: webhook_url -> curl (SSRF)
     curl -sSL -X POST \
         -H "Content-Type: application/json" \
         -d "$payload" \
@@ -82,7 +80,6 @@ notify_email() {
         return 1
     fi
 
-    # SAFE: Validate email format
     if ! validate_email "$recipient"; then # vuln-code-snippet safe-line dfw_email_validated_safe
         log "ERROR" "Invalid email format: $recipient"
         return 1
@@ -90,8 +87,6 @@ notify_email() {
 # vuln-code-snippet end dfw_email_validated_safe
 
 # vuln-code-snippet start dfw_email_header_injection
-    # VULNERABLE: message passed directly to mail command
-    # Taint: message -> mail body (potential header injection)
     echo "$message" | mail -s "Deployment Notification" "$recipient" # vuln-code-snippet vuln-line dfw_email_header_injection
 
     log "INFO" "Sent email notification to $recipient"
@@ -109,8 +104,6 @@ notify_custom() {
         return 1
     fi
 
-    # VULNERABLE: Direct eval of callback
-    # Taint: callback -> eval (command injection)
     eval "$callback" # vuln-code-snippet vuln-line dfw_custom_eval_callback
 
     log "INFO" "Executed custom notification callback"
@@ -122,22 +115,17 @@ notify_webhook() {
     local url="$1"
     local payload="$2"
 
-    # VULNERABLE: URL is user-controlled
-    # Taint: url -> curl (SSRF)
     curl -sSL -X POST \
         -H "Content-Type: application/json" \
         -d "$payload" \
         "$url"
 }
 
-# Notify with data exfiltration potential
+# Notify with data
 notify_with_data() {
     local endpoint="$1"
     local data="$2"
 
-    # VULNERABLE: Sensitive data sent to attacker-controlled URL
-    # Taint: endpoint -> curl URL (SSRF)
-    # Taint: data -> curl -d body (data exfiltration)
     curl -sSL -X POST \
         -H "Content-Type: application/json" \
         -d "$data" \
@@ -152,8 +140,6 @@ notify_script() {
     local script_path="$1"
     local args="$2"
 
-    # VULNERABLE: Script path not validated
-    # Taint: script_path -> bash (path traversal/command execution)
     if [[ -f "$script_path" ]]; then
         bash "$script_path" $args # vuln-code-snippet vuln-line dfw_notify_script_path
     fi
@@ -166,11 +152,9 @@ notify_from_template() {
     local template="$1"
     local vars="$2"
 
-    # VULNERABLE: Template variables processed with eval
-    # Taint: vars -> eval (command injection)
     eval "$vars" # vuln-code-snippet vuln-line dfw_template_double_eval
 
-    # Expand template (also vulnerable to injection)
+    # Expand template
     local expanded
     expanded=$(eval "echo \"$template\"")
 
@@ -184,10 +168,8 @@ notify_safe() {
     local channel="$1"
     local message="$2"
 
-    # SAFE: Sanitize message
     message=$(printf '%q' "$message") # vuln-code-snippet safe-line dfw_notify_safe_sanitized
 
-    # SAFE: Use only configured URLs
     case "$channel" in
         slack)
             if [[ -n "$SLACK_WEBHOOK_URL" ]]; then

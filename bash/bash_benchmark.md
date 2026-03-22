@@ -133,7 +133,7 @@ gorustbash_benchmark/bash/
 |   +-- deepflow-webhook/          # HTTP webhook server (8 files, 28 test cases)
 |   +-- deepflow-ops/              # Operations suite with SAFE_MODE (7 files, 20 test cases)
 |   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
-|   +-- securepipeline/            # Hardened CI/CD pipeline (7 files, 55 TN-only safe cases)
+|   +-- securepipeline/            # CI/CD pipeline (7 files, 55 TN-only cases)
 +-- testcode/                      # 16 standalone CWE test files (165 test cases)
 +-- expectedresults-0.3.1.csv      # Answer key (356 test cases, OWASP CSV format)
 +-- bash_benchmark.py              # Scoring script
@@ -167,7 +167,7 @@ gorustbash_benchmark/bash/
 
 **TP/TN split: 49.2% / 50.8%** — Balanced per-category to match OWASP methodology. A tool that flags everything scores ~50% TPR, not the inflated 68% of v0.3.
 
-**5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (hardened CI/CD with 55 safe-only patterns).
+**5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (CI/CD pipeline with 55 TN-only cases).
 
 For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 49/51 is within OWASP's acceptable range.
 

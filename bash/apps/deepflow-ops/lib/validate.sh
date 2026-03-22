@@ -1,10 +1,7 @@
 #!/bin/bash
 # Input validation helpers for DeployBot bash scripts
-# These demonstrate SAFE patterns for bash input handling
 
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
-
-# === SAFE VALIDATION FUNCTIONS ===
 
 # Validate alphanumeric string (allows dashes and underscores)
 # Usage: validate_identifier "my-target-123"
@@ -18,7 +15,7 @@ validate_identifier() {
         return 1
     fi
 
-    # SAFE: Use regex to validate format
+    # Validate format
     if [[ ! "$input" =~ ^[a-zA-Z0-9_-]+$ ]]; then
         log_error "Invalid identifier format: $input"
         return 1
@@ -38,7 +35,7 @@ validate_identifier() {
 validate_environment() {
     local env="$1"
 
-    # SAFE: Whitelist approach using case statement
+    # Whitelist approach using case statement
     case "$env" in
         dev|staging|production|prod)
             return 0
@@ -56,7 +53,7 @@ validate_path() {
     local path="$1"
     local allowed_base="$2"
 
-    # SAFE: Resolve to absolute path and check prefix
+    # Resolve to absolute path and check prefix
     local resolved_path
     resolved_path=$(realpath -m "$path" 2>/dev/null)
 
@@ -79,7 +76,7 @@ validate_path() {
 validate_url() {
     local url="$1"
 
-    # SAFE: Check URL format with regex
+    # Check URL format with regex
     if [[ ! "$url" =~ ^https?://[a-zA-Z0-9.-]+(:[0-9]+)?(/[a-zA-Z0-9./_-]*)?$ ]]; then
         log_error "Invalid URL format: $url"
         return 1
@@ -93,7 +90,7 @@ validate_url() {
 validate_branch() {
     local branch="$1"
 
-    # SAFE: Allow only safe git branch characters
+    # Allow only valid git branch characters
     if [[ ! "$branch" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
         log_error "Invalid branch name: $branch"
         return 1
@@ -113,7 +110,7 @@ validate_branch() {
 sanitize_string() {
     local input="$1"
 
-    # SAFE: Use printf %q to quote for shell
+    # Use printf %q to quote for shell
     printf '%q' "$input"
 }
 

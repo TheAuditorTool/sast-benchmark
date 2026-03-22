@@ -97,7 +97,7 @@ list_users_sorted_safe() {
 
 # vuln-code-snippet start sqli_printf_q_escaped_safe
 search_deployments_safe() {
-    # Safe: user input is escaped with printf %q before SQL interpolation.
+    #user input is escaped with printf %q before SQL interpolation.
     # printf %q escapes all shell metacharacters and single quotes,
     # preventing SQL injection when the value is wrapped in SQL string quotes.
     local search_val="$1"
@@ -109,7 +109,7 @@ search_deployments_safe() {
 
 # vuln-code-snippet start sqli_where_constant_safe
 get_active_deployments() {
-    # Safe: entirely static query with no user-provided values.
+    #entirely static query with no user-provided values.
     # All literals ('active', 10) are hardcoded constants.
     sqlite3 "$DB_FILE" "SELECT * FROM deployments WHERE status = 'active' ORDER BY created_at DESC LIMIT 10"  # vuln-code-snippet safe-line sqli_where_constant_safe
 }

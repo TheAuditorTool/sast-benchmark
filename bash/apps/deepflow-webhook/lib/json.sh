@@ -24,14 +24,10 @@ json_get_default() {
 }
 
 # vuln-code-snippet start dfw_json_get_unsafe_eval
-# VULNERABLE: Extract field using eval (command injection)
-# Taint: JSON body -> eval
 json_get_unsafe() {
     local json="$1"
     local field="$2"
 
-    # VULNERABLE: Uses eval for "parsing"
-    # This is intentionally vulnerable for taint analysis testing
     local value
     eval "value=\$(echo '$json' | grep -o '\"$field\"[[:space:]]*:[[:space:]]*\"[^\"]*\"' | cut -d'\"' -f4)" # vuln-code-snippet vuln-line dfw_json_get_unsafe_eval
     echo "$value"
@@ -39,16 +35,11 @@ json_get_unsafe() {
 # vuln-code-snippet end dfw_json_get_unsafe_eval
 
 # vuln-code-snippet start dfw_json_exec_command
-# VULNERABLE: Execute command from JSON
-# Taint: JSON command field -> eval
 json_exec_command() {
     local json="$1"
 
     local cmd
     cmd=$(json_get "$json" ".command")
-
-    # VULNERABLE: Direct eval of JSON field
-    # Taint: .command -> eval (command injection)
     if [[ -n "$cmd" ]]; then
         eval "$cmd" # vuln-code-snippet vuln-line dfw_json_exec_command
     fi

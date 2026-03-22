@@ -65,7 +65,6 @@ migrate_up() {
         return 0
     fi
 
-    # DEEP TAINT FLOW: User input (target) flows through multiple functions
     for migration in ${pending_migrations}; do
         local migration_id
         migration_id=$(basename "${migration}" .sh)
@@ -231,7 +230,6 @@ MIGRATION_TEMPLATE
 # ============================================================================
 
 # vuln-code-snippet start readWithoutRMigration
-# DEEP TAINT FLOW: Data flows from file -> variable -> database -> command
 process_migration_data() {
     local data_file="$1"
 
@@ -240,11 +238,9 @@ process_migration_data() {
         return 1
     fi
 
-    # TAINT SOURCE: Read from file
     local data
     data=$(cat "${data_file}")
 
-    # TAINT PROPAGATION: Process data line by line
     echo "${data}" | while read line; do  # vuln-code-snippet vuln-line readWithoutRMigration
         # Parse line
         local key value
@@ -253,14 +249,12 @@ process_migration_data() {
 # vuln-code-snippet end readWithoutRMigration
 
 # vuln-code-snippet start sqlInjectionMigrationData
-        # TAINT SINK: Insert into database (SQL injection risk)
         db_execute "INSERT INTO migration_data (key, value) VALUES ('${key}', '${value}')"  # vuln-code-snippet vuln-line sqlInjectionMigrationData
     done
 }
 # vuln-code-snippet end sqlInjectionMigrationData
 
 # vuln-code-snippet start executeCustomSqlFromStdin
-# DEEP TAINT FLOW: User input -> SQL -> command execution
 execute_custom_sql() {
     local sql_file="$1"
 
@@ -273,7 +267,6 @@ execute_custom_sql() {
         sql=$(cat "${sql_file}")
     fi
 
-    # TAINT SINK: Execute user-provided SQL
     log_info "Executing custom SQL"
     sqlite3 "${DB_FILE}" "${sql}"  # vuln-code-snippet vuln-line executeCustomSqlFromStdin
 }

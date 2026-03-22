@@ -1,14 +1,12 @@
 #!/bin/bash
-# Secure Pipeline — Network Operations (Hardened)
-# All functions demonstrate SAFE HTTP client patterns.
-# Defense strategies: URL validation, scheme checks, hardcoded endpoints,
+# Secure Pipeline — Network Operations
+# URL validation, scheme checks, hardcoded endpoints,
 # IP range blocklists, save-only downloads.
 
 # vuln-code-snippet start sp_net_curl_ssl_verified
 http_get_verified() {
-    # Safe: curl is called without -k/--insecure. SSL certificate
-    # verification is ON by default. Invalid or self-signed certs will
-    # cause curl to fail with exit code 60.
+    # curl is called without -k/--insecure. SSL certificate
+    # verification is ON by default.
     local url="$1"
     curl -sf --fail-with-body "$url"  # vuln-code-snippet safe-line sp_net_curl_ssl_verified
 }
@@ -16,8 +14,7 @@ http_get_verified() {
 
 # vuln-code-snippet start sp_net_download_no_exec
 download_with_checksum() {
-    # Safe: artifact is downloaded to a temp file and checksum-verified
-    # before any use. The downloaded content is never piped to bash/sh.
+    # Artifact is downloaded to a temp file and checksum-verified.
     local url="$1"
     local expected_sha="$2"
     local dest="$3"
@@ -41,8 +38,7 @@ download_with_checksum() {
 
 # vuln-code-snippet start sp_net_ssrf_allowlist
 fetch_api_allowlisted() {
-    # Safe: URL is validated against a regex allowlist of approved internal
-    # hosts before curl is called. Requests to other domains are rejected.
+    # URL is validated against a regex allowlist of approved internal hosts.
     local url="$1"
 
     if [[ ! "$url" =~ ^https://(api|cdn|registry)\.corp\.internal/ ]]; then
@@ -56,8 +52,7 @@ fetch_api_allowlisted() {
 
 # vuln-code-snippet start sp_net_ssrf_hardcoded_url
 notify_slack_safe() {
-    # Safe: Slack webhook URL is a hardcoded constant, not user-provided.
-    # Only the message body uses user data, which is printf-%q escaped.
+    # Slack webhook URL is a hardcoded constant. Message is printf-%q escaped.
     local message="$1"
     local SLACK_WEBHOOK="https://hooks.slack.com/services/T00000/B00000/XXXX"
     local escaped_msg
@@ -71,8 +66,7 @@ notify_slack_safe() {
 
 # vuln-code-snippet start sp_net_ssrf_scheme_check
 fetch_url_validated() {
-    # Safe: URL must be HTTPS and must not point to private IP ranges.
-    # This prevents SSRF attacks that probe internal infrastructure.
+    # URL must be HTTPS and must not point to private IP ranges.
     local url="$1"
 
     if [[ ! "$url" =~ ^https:// ]]; then
@@ -94,8 +88,7 @@ fetch_url_validated() {
 
 # vuln-code-snippet start sp_net_rce_save_only
 download_artifact_safe() {
-    # Safe: curl saves the artifact to a file. The downloaded content
-    # is never executed, piped to a shell, or eval'd.
+    # curl saves the artifact to a file. Content is not executed.
     local url="$1"
     local dest="$2"
 
@@ -105,9 +98,7 @@ download_artifact_safe() {
 
 # vuln-code-snippet start sp_net_dns_validated
 dns_lookup_safe() {
-    # Safe: hostname is validated against a strict regex before use in dig.
-    # Only lowercase alphanumeric, dots, and hyphens are allowed. This
-    # prevents argument injection and shell metacharacter issues.
+    # Hostname validated against a strict regex before use in dig.
     local host="$1"
 
     if [[ ! "$host" =~ ^[a-z0-9][a-z0-9.-]*$ ]]; then

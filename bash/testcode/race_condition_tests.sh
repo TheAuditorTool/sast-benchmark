@@ -7,7 +7,7 @@
 
 # vuln-code-snippet start race_lock_toctou
 acquire_exclusive_lock() {
-    # Vulnerable: between the [ ! -e ] existence test and the echo > write,
+    #between the [ ! -e ] existence test and the echo > write,
     # an attacker can create a symlink at $LOCK_FILE pointing to a sensitive
     # file (e.g., /etc/cron.d/backdoor). The echo then writes PID to the
     # symlink target, creating an attacker-controlled cron entry.
@@ -20,7 +20,7 @@ acquire_exclusive_lock() {
 
 # vuln-code-snippet start race_pid_file_symlink
 check_and_restart() {
-    # Vulnerable: between reading the PID file and removing it, an attacker
+    #between reading the PID file and removing it, an attacker
     # can replace the regular file with a symlink to /etc/passwd. The rm
     # then deletes the symlink target (/etc/passwd), not the PID file.
     local PID_FILE="/var/run/myapp.pid"
@@ -37,7 +37,7 @@ check_and_restart() {
 
 # vuln-code-snippet start race_stat_then_source
 load_verified_config() {
-    # Vulnerable: file ownership is checked with stat, then the file is
+    #file ownership is checked with stat, then the file is
     # sourced as bash code. Between the stat check and the source execution,
     # the file's owner or content could change (e.g., attacker writes to a
     # world-writable directory or wins a symlink race).
@@ -53,7 +53,7 @@ load_verified_config() {
 
 # vuln-code-snippet start race_mkdir_chmod_gap
 create_secure_dir() {
-    # Vulnerable: mkdir creates the directory with default permissions
+    #mkdir creates the directory with default permissions
     # (based on umask, typically 755). Between mkdir and chmod 700, the
     # directory is world-readable. An attacker can read its contents during
     # this window or replace it with a symlink before chmod executes.
@@ -65,7 +65,7 @@ create_secure_dir() {
 
 # vuln-code-snippet start race_trap_predictable_path
 setup_cleanup() {
-    # Vulnerable: the trap cleanup path uses $$ (PID), which is predictable.
+    #the trap cleanup path uses $$ (PID), which is predictable.
     # An attacker can pre-create a symlink at /tmp/process_<PID>_data before
     # the process starts. When the process exits, the trap rm -f deletes
     # whatever the symlink points to.
@@ -79,7 +79,7 @@ setup_cleanup() {
 
 # vuln-code-snippet start race_flock_atomic_safe
 acquire_lock_flock() {
-    # Safe: flock(2) is a kernel-level file lock. The lock acquisition is
+    #flock(2) is a kernel-level file lock. The lock acquisition is
     # atomic — there is no window between checking and locking. If another
     # process holds the lock, flock -n fails immediately (non-blocking).
     local LOCK_FILE="/var/run/myapp.lock"
@@ -92,7 +92,7 @@ acquire_lock_flock() {
 
 # vuln-code-snippet start race_noclobber_atomic_safe
 create_pid_atomic() {
-    # Safe: set -C (noclobber) makes > redirect fail atomically if the file
+    #set -C (noclobber) makes > redirect fail atomically if the file
     # already exists (equivalent to open(O_EXCL)). No TOCTOU window.
     # Distinct from insecure_temp_noclobber_safe which uses noclobber for
     # temp file creation — this uses it for PID file management.
@@ -111,7 +111,7 @@ create_pid_atomic() {
 
 # vuln-code-snippet start race_mkdir_lock_atomic_safe
 acquire_dir_lock() {
-    # Safe: mkdir is atomic on POSIX file systems. If the directory exists,
+    #mkdir is atomic on POSIX file systems. If the directory exists,
     # mkdir fails. If it doesn't, the directory is created atomically.
     # No race window between check and create. Well-known bash locking pattern.
     local LOCK_DIR="/var/run/myapp.lock.d"
@@ -127,7 +127,7 @@ acquire_dir_lock() {
 
 # vuln-code-snippet start race_mktemp_unpredictable_safe
 create_workspace() {
-    # Safe: mktemp creates the directory atomically using kernel randomness
+    #mktemp creates the directory atomically using kernel randomness
     # for the name. The path is unpredictable, so symlink pre-creation is
     # not feasible. No TOCTOU window.
     local WORK_DIR
@@ -139,7 +139,7 @@ create_workspace() {
 
 # vuln-code-snippet start race_install_atomic_safe
 install_config_safe() {
-    # Safe: install(1) copies the file and sets ownership + permissions
+    #install(1) copies the file and sets ownership + permissions
     # in a single operation. There is no gap between file creation and
     # permission setting, unlike the mkdir + chmod pattern in the TP case.
     local src="$1"

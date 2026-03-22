@@ -219,7 +219,6 @@ get_secret() {
 debug_mode() {
     log_warn "Enabling debug mode - SECRETS MAY BE EXPOSED"
 
-    # BAD: This will print all commands including secrets
     set -x  # vuln-code-snippet vuln-line setXDebugLeak
 }
 # vuln-code-snippet end setXDebugLeak
@@ -302,7 +301,6 @@ format_output_unsafe() {
     shift
     local args=("$@")
 
-    # DANGEROUS: User-controlled format string
     printf "${format}" "${args[@]}"  # vuln-code-snippet vuln-line printfFormatInjection
 }
 # vuln-code-snippet end printfFormatInjection
@@ -365,7 +363,6 @@ run_as_root() {
 
     log_info "Running with elevated privileges: ${command}"
 
-    # DANGEROUS: Variable expansion in sudo
     sudo ${command} "${args[@]}"  # vuln-code-snippet vuln-line sudoVariableCommand
 }
 # vuln-code-snippet end sudoVariableCommand
@@ -398,7 +395,6 @@ secure_file() {
 make_file_world_readable() {
     local file_path="$1"
 
-    # BAD: Overly permissive
     chmod 666 "${file_path}"  # vuln-code-snippet vuln-line chmod666WorldReadable
 }
 # vuln-code-snippet end chmod666WorldReadable
