@@ -69,13 +69,44 @@ Each language directory has a `*_benchmark.md` file. Improvements to scoring scr
 - **Rust:** Standard `rustfmt` formatting. Module structure per benchmark doc.
 - **Bash:** ShellCheck-clean. POSIX-compatible where possible.
 
+## Validation
+
+Before submitting, run the validation script to ensure CSV/file consistency:
+
+```bash
+python scripts/validate_go.py    # Go benchmark
+python scripts/validate_rust.py  # Rust benchmark
+python scripts/validate_bash.py  # Bash benchmark
+```
+
+The validator checks:
+- Every CSV key has a matching test file
+- Every test file has a matching CSV entry
+- No duplicate keys
+- Per-category TP/TN balance summary
+
+## Scoring Your Tool
+
+To score a SAST tool against the benchmark:
+
+```bash
+# Export SARIF from your tool
+your-tool scan go/testcode/ --output results.sarif
+
+# Score
+python scripts/score_sarif.py results.sarif go/expectedresults-0.1.csv
+```
+
+See `go/SCORING.md` for tool-specific SARIF export commands.
+
 ## Pull Request Process
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b add-go-race-condition-tests`)
 3. Add test files + CSV entries
-4. Update the language's benchmark doc if adding new categories
-5. Submit a PR with a clear description of what patterns you're testing and why
+4. Run `python scripts/validate_go.py` to verify consistency
+5. Update the language's benchmark doc if adding new categories
+6. Submit a PR with a clear description of what patterns you're testing and why
 
 ## License
 
