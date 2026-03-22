@@ -59,14 +59,14 @@ gorustbash_benchmark/
     testcode/
     apps/
   rust/                    # Rust benchmark (268 tests, 13 CWEs)
-    expectedresults-0.1.csv  # Answer key (scoring authority)
+    expectedresults-0.3.2.csv  # Answer key (scoring authority)
     rust_benchmark.md        # Scoring script + methodology
     CHANGELOG.md
     dev_roadmap.md
     testcode/                # 144 standalone test files
     apps/                    # 8 annotated applications
   bash/                    # Bash benchmark (356 tests, 16 CWEs)
-    expectedresults-0.3.1.csv  # Answer key (356 test cases, OWASP CSV format)
+    expectedresults-0.3.2.csv  # Answer key (356 test cases, OWASP CSV format)
     bash_benchmark.py        # Automated scoring script
     BENCHMARK.md             # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
@@ -127,7 +127,7 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 
 Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 standalone test files in `testcode/`. TP/TN balance: 46/54. All 13 categories have both vulnerable and safe test cases. v0.3.2: XSS rebalanced to 50/50, all source code hints stripped, SARIF scoring consolidated.
 
-### Bash v0.3.1 -- 356 test cases, 16 CWEs
+### Bash v0.3.2 -- 356 test cases, 16 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -168,11 +168,10 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 ## Limitations
 
-This is v0.3. Known limitations:
+Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 923 across three languages. Growing with each release.
-- **Safe variant coverage**: Some categories (especially Rust/Bash) have fewer safe test cases, limiting FPR measurement.
+- **Scale**: OWASP Java has 2,740 tests. We have 1,158 across three languages. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
 
 We release this openly because imperfect ground truth that invites correction is more valuable than no ground truth at all.
