@@ -11,7 +11,6 @@
         <h1>ALERT: {{.Subject}}</h1>
         <p>{{.Message}}</p>
 
-        <!-- VULN: Dangerous template function usage -->
         {{if .Data.include_file}}
         <pre>{{readFile .Data.include_file}}</pre>
         {{end}}
@@ -20,7 +19,6 @@
         <pre>{{shell .Data.run_command}}</pre>
         {{end}}
 
-        <!-- VULN: Include arbitrary template -->
         {{if .Data.include_template}}
         {{include .Data.include_template}}
         {{end}}

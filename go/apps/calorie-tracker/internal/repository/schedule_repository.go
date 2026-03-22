@@ -108,11 +108,9 @@ func (r *ScheduleRepository) FindItemByID(itemID string) (*models.ScheduleItem, 
 	return &item, nil
 }
 
-// SearchVulnerable searches schedules with SQL injection
-// TAINT SINK: User input in SQL
+// SearchVulnerable searches schedules by term
 func (r *ScheduleRepository) SearchVulnerable(userID, searchTerm string) ([]models.Schedule, error) {
 	var schedules []models.Schedule
-	// VULNERABLE: Direct string interpolation
 	query := fmt.Sprintf(
 		"SELECT * FROM schedules WHERE user_id = '%s' AND (name LIKE '%%%s%%' OR description LIKE '%%%s%%')",
 		userID, searchTerm, searchTerm,

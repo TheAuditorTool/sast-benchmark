@@ -44,13 +44,11 @@ func (r *MealRepository) Delete(id string) error {
 }
 
 // ListForUser lists meals for a user with pagination
-// TAINT PROPAGATION: orderBy from user input flows to SQL
 func (r *MealRepository) ListForUser(userID string, limit, offset int, orderBy string) ([]models.Meal, error) {
 	var meals []models.Meal
 	query := r.db.Where("user_id = ?", userID).Limit(limit).Offset(offset)
 
 	if orderBy != "" {
-		// VULNERABLE: Order by clause from user input
 		query = query.Order(orderBy)
 	} else {
 		query = query.Order("consumed_at DESC")
@@ -122,11 +120,9 @@ func (r *MealRepository) GetDailySummary(userID, date string) (*models.DailyMeal
 	return summary, nil
 }
 
-// SearchVulnerable searches meals with SQL injection vulnerability
-// TAINT SINK: User input directly in SQL query
+// SearchVulnerable searches meals by term
 func (r *MealRepository) SearchVulnerable(userID, searchTerm string) ([]models.Meal, error) {
 	var meals []models.Meal
-	// VULNERABLE: Direct string interpolation in SQL
 	query := fmt.Sprintf(
 		"SELECT * FROM meals WHERE user_id = '%s' AND (name LIKE '%%%s%%' OR description LIKE '%%%s%%')",
 		userID, searchTerm, searchTerm,

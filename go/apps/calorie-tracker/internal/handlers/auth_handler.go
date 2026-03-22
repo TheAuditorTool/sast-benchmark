@@ -23,7 +23,6 @@ func NewAuthHandler(userService *services.UserService) *AuthHandler {
 
 // Register handles user registration
 // POST /api/auth/register
-// TAINT SOURCE: JSON body -> service -> repository -> database
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req models.CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -54,7 +53,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 // Login handles user login
 // POST /api/auth/login
-// TAINT SOURCE: JSON body -> service -> session
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req models.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

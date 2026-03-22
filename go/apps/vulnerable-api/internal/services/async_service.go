@@ -43,8 +43,8 @@ func (s *AsyncService) processItem(item string, index int) {
 	fmt.Printf("Processed item %d: %s\n", index, item)
 }
 
-// ProcessWithAnonymous - VULNERABLE: Captured loop variable
-// This is the classic Go race condition pattern
+// ProcessWithAnonymous demonstrates captured loop variable race condition
+
 func (s *AsyncService) ProcessWithAnonymous(items []string) {
 	for i, v := range items {
 		// GOROUTINE: Anonymous function with captured loop variables
@@ -56,11 +56,11 @@ func (s *AsyncService) ProcessWithAnonymous(items []string) {
 	}
 }
 
-// ProcessWithAnonymousFixed - SECURE: Loop variable passed as parameter
+// ProcessWithAnonymousFixed passes loop variable as parameter
 func (s *AsyncService) ProcessWithAnonymousFixed(items []string) {
 	for i, v := range items {
 		// GOROUTINE: Anonymous function with parameters
-		// SAFE: v and i are passed as parameters (copied)
+		// v and i are passed as parameters (copied)
 		go func(index int, value string) {
 			fmt.Printf("Item %d: %s\n", index, value)
 		}(i, v)
@@ -114,10 +114,7 @@ func (s *AsyncService) WorkerPool(numWorkers int) chan<- string {
 // worker processes jobs from channel
 func (s *AsyncService) worker(id int, jobs <-chan string, results chan<- string) {
 	for job := range jobs {
-		// CHANNEL OPERATION: Receive from jobs
 		processed := fmt.Sprintf("Worker %d processed: %s", id, job)
-
-		// CHANNEL OPERATION: Send to results
 		results <- processed
 	}
 }
@@ -129,7 +126,6 @@ func (s *AsyncService) Pipeline(input []int) <-chan int {
 		out := make(chan int)
 		go func() {
 			for _, n := range nums {
-				// CHANNEL OPERATION: Send
 				out <- n
 			}
 			close(out)
@@ -142,8 +138,7 @@ func (s *AsyncService) Pipeline(input []int) <-chan int {
 		out := make(chan int)
 		go func() {
 			for n := range in {
-				// CHANNEL OPERATION: Receive and send
-				out <- n * n
+					out <- n * n
 			}
 			close(out)
 		}()
@@ -155,8 +150,7 @@ func (s *AsyncService) Pipeline(input []int) <-chan int {
 		out := make(chan int)
 		go func() {
 			for n := range in {
-				// CHANNEL OPERATION: Receive and send
-				out <- n * 2
+					out <- n * 2
 			}
 			close(out)
 		}()
@@ -285,50 +279,50 @@ func (s *AsyncService) TimeoutTask(data string, timeout time.Duration) error {
 // RACE CONDITION EXAMPLES - For security analysis
 // ===============================================
 
-// UnsafeCounter - VULNERABLE: Race condition on shared counter
+// UnsafeCounter has a race condition on shared counter
 type UnsafeCounter struct {
 	value int
 }
 
-// Increment - VULNERABLE: Not thread-safe
+// Increment is not thread-safe
 func (c *UnsafeCounter) Increment() {
 	// RACE CONDITION: Read-modify-write without synchronization
 	c.value++
 }
 
-// Get - VULNERABLE: Not thread-safe read
+// Get is not thread-safe
 func (c *UnsafeCounter) Get() int {
 	return c.value
 }
 
-// SafeCounter - SECURE: Uses mutex for thread safety
+// SafeCounter uses mutex for thread safety
 type SafeCounter struct {
 	mu    sync.Mutex
 	value int
 }
 
-// Increment - SECURE: Protected by mutex
+// Increment is protected by mutex
 func (c *SafeCounter) Increment() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.value++
 }
 
-// Get - SECURE: Protected by mutex
+// Get is protected by mutex
 func (c *SafeCounter) Get() int {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.value
 }
 
-// UnsafeCacheUpdate - VULNERABLE: Race on map access
+// UnsafeCacheUpdate has a race on map access
 func (s *AsyncService) UnsafeCacheUpdate(key string, value interface{}) {
 	// RACE CONDITION: Map access without synchronization
 	// Multiple goroutines can read/write simultaneously
 	s.cache[key] = value
 }
 
-// SafeCacheUpdate - SECURE: Protected by mutex
+// SafeCacheUpdate is protected by mutex
 func (s *AsyncService) SafeCacheUpdate(key string, value interface{}) {
 	s.mu.Lock()
 	defer s.mu.Unlock()

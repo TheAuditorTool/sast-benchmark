@@ -127,12 +127,11 @@ func (s *SQLiteStore) UpdateStatus(id int64, status, errorMsg string) error {
 }
 
 // ListNotifications retrieves notifications with optional filters
-// VULN: SQL Injection via orderBy parameter
 func (s *SQLiteStore) ListNotifications(channel, status, recipient, limit, orderBy string) ([]map[string]interface{}, error) {
 	query := "SELECT id, channel, recipient, subject, message, status, error, created_at, sent_at FROM notifications WHERE 1=1"
 	args := []interface{}{}
 
-	// These are parameterized (safe)
+	// These are parameterized
 	if channel != "" {
 		query += " AND channel = ?"
 		args = append(args, channel)
@@ -146,23 +145,19 @@ func (s *SQLiteStore) ListNotifications(channel, status, recipient, limit, order
 		args = append(args, recipient)
 	}
 
-	// VULN: SQL Injection - orderBy is concatenated directly
 	if orderBy != "" {
-		// orderBy could be: "id; DROP TABLE notifications;--"
-		query += " ORDER BY " + orderBy // TAINT SINK: SQL Injection
+		query += " ORDER BY " + orderBy
 	} else {
 		query += " ORDER BY created_at DESC"
 	}
 
-	// VULN: SQL Injection - limit is concatenated directly
 	if limit != "" {
-		// limit could be: "1; DELETE FROM notifications;--"
-		query += " LIMIT " + limit // TAINT SINK: SQL Injection
+		query += " LIMIT " + limit
 	} else {
 		query += " LIMIT 100"
 	}
 
-	log.Printf("Executing query: %s", query) // VULN: Logs potentially malicious query
+	log.Printf("Executing query: %s", query)
 
 	rows, err := s.db.Query(query, args...)
 	if err != nil {
@@ -174,17 +169,14 @@ func (s *SQLiteStore) ListNotifications(channel, status, recipient, limit, order
 }
 
 // Search performs full-text search
-// VULN: SQL Injection via search query
 func (s *SQLiteStore) Search(searchQuery string) ([]map[string]interface{}, error) {
-	// VULN: Search query used directly in LIKE clause
-	// searchQuery could be: "'; DROP TABLE notifications;--"
 	query := fmt.Sprintf(`
 		SELECT id, channel, recipient, subject, message, status, created_at
 		FROM notifications
 		WHERE subject LIKE '%%%s%%' OR message LIKE '%%%s%%'
 		ORDER BY created_at DESC
 		LIMIT 100
-	`, searchQuery, searchQuery) // TAINT SINK: SQL Injection
+	`, searchQuery, searchQuery)
 
 	rows, err := s.db.Query(query)
 	if err != nil {
@@ -197,8 +189,7 @@ func (s *SQLiteStore) Search(searchQuery string) ([]map[string]interface{}, erro
 
 // GetNotificationByID retrieves a single notification
 func (s *SQLiteStore) GetNotificationByID(id string) (map[string]interface{}, error) {
-	// VULN: SQL Injection via ID
-	query := fmt.Sprintf("SELECT * FROM notifications WHERE id = %s", id) // TAINT SINK
+	query := fmt.Sprintf("SELECT * FROM notifications WHERE id = %s", id)
 	row := s.db.QueryRow(query)
 
 	var n channels.Notification
@@ -261,39 +252,31 @@ func (s *SQLiteStore) GetJobStatus(jobID string) (string, error) {
 }
 
 // CreateUser creates a new user
-// VULN: Weak password handling
 func (s *SQLiteStore) CreateUser(username, email, password string) error {
-	// VULN: Password stored in plaintext
 	_, err := s.db.Exec(`
 		INSERT INTO users (username, email, password, api_key)
 		VALUES (?, ?, ?, ?)
-	`, username, email, password, generateAPIKey()) // VULN: Plaintext password
+	`, username, email, password, generateAPIKey())
 
 	return err
 }
 
 // AuthenticateUser checks user credentials
-// VULN: SQL Injection and timing attack
 func (s *SQLiteStore) AuthenticateUser(username, password string) (bool, error) {
-	// VULN: SQL Injection via username
-	query := fmt.Sprintf("SELECT password FROM users WHERE username = '%s'", username) // TAINT SINK
+	query := fmt.Sprintf("SELECT password FROM users WHERE username = '%s'", username)
 	var storedPassword string
 	err := s.db.QueryRow(query).Scan(&storedPassword)
 	if err != nil {
 		return false, err
 	}
 
-	// VULN: String comparison (timing attack)
-	// VULN: Comparing plaintext passwords
 	return storedPassword == password, nil
 }
 
 // GetUserByAPIKey retrieves user by API key
-// VULN: SQL Injection
 func (s *SQLiteStore) GetUserByAPIKey(apiKey string) (map[string]interface{}, error) {
-	// VULN: SQL Injection via API key
 	query := fmt.Sprintf("SELECT id, username, email, role FROM users WHERE api_key = '%s'", apiKey)
-	row := s.db.QueryRow(query) // TAINT SINK
+	row := s.db.QueryRow(query)
 
 	var id int
 	var username, email, role string
@@ -310,47 +293,40 @@ func (s *SQLiteStore) GetUserByAPIKey(apiKey string) (map[string]interface{}, er
 }
 
 // SaveTemplate stores a template
-// VULN: Template content stored without sanitization
 func (s *SQLiteStore) SaveTemplate(name, content, createdBy string) error {
 	_, err := s.db.Exec(`
 		INSERT OR REPLACE INTO templates (name, content, created_by)
 		VALUES (?, ?, ?)
-	`, name, content, createdBy) // VULN: Malicious template content stored
+	`, name, content, createdBy)
 	return err
 }
 
 // GetTemplate retrieves a template
 func (s *SQLiteStore) GetTemplate(name string) (string, error) {
-	// VULN: SQL Injection via template name
-	query := fmt.Sprintf("SELECT content FROM templates WHERE name = '%s'", name) // TAINT SINK
+	query := fmt.Sprintf("SELECT content FROM templates WHERE name = '%s'", name)
 	var content string
 	err := s.db.QueryRow(query).Scan(&content)
 	return content, err
 }
 
 // DeleteNotification deletes a notification by ID
-// VULN: SQL Injection
 func (s *SQLiteStore) DeleteNotification(id string) error {
-	query := fmt.Sprintf("DELETE FROM notifications WHERE id = %s", id) // TAINT SINK
+	query := fmt.Sprintf("DELETE FROM notifications WHERE id = %s", id)
 	_, err := s.db.Exec(query)
 	return err
 }
 
 // BulkDelete deletes multiple notifications
-// VULN: SQL Injection via IDs
 func (s *SQLiteStore) BulkDelete(ids []string) error {
-	// VULN: IDs joined directly into query
 	idList := strings.Join(ids, ",")
-	query := fmt.Sprintf("DELETE FROM notifications WHERE id IN (%s)", idList) // TAINT SINK
+	query := fmt.Sprintf("DELETE FROM notifications WHERE id IN (%s)", idList)
 	_, err := s.db.Exec(query)
 	return err
 }
 
 // ExecRawQuery executes a raw SQL query
-// VULN: Direct SQL execution
 func (s *SQLiteStore) ExecRawQuery(query string) ([]map[string]interface{}, error) {
-	// VULN: Arbitrary SQL execution
-	rows, err := s.db.Query(query) // TAINT SINK: Direct SQL injection
+	rows, err := s.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -360,19 +336,16 @@ func (s *SQLiteStore) ExecRawQuery(query string) ([]map[string]interface{}, erro
 }
 
 // Backup creates a database backup
-// VULN: Command injection via backup path
 func (s *SQLiteStore) Backup(backupPath string) error {
-	// VULN: Path in shell command
 	cmdStr := fmt.Sprintf("sqlite3 notifications.db '.backup %s'", backupPath)
-	cmd := exec.Command("sh", "-c", cmdStr) // TAINT SINK: Command injection
+	cmd := exec.Command("sh", "-c", cmdStr)
 	return cmd.Run()
 }
 
 // Restore restores from a backup
-// VULN: Command injection via backup path
 func (s *SQLiteStore) Restore(backupPath string) error {
 	cmdStr := fmt.Sprintf("sqlite3 notifications.db '.restore %s'", backupPath)
-	cmd := exec.Command("sh", "-c", cmdStr) // TAINT SINK
+	cmd := exec.Command("sh", "-c", cmdStr)
 	return cmd.Run()
 }
 
@@ -419,6 +392,5 @@ func metadataToJSON(metadata map[string]string) string {
 }
 
 func generateAPIKey() string {
-	// VULN: Weak API key generation
 	return fmt.Sprintf("api_%d", time.Now().UnixNano())
 }

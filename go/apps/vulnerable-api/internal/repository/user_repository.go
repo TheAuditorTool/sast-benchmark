@@ -25,68 +25,53 @@ func NewUserRepository(db *gorm.DB, sqlDB *sql.DB, sqlxDB *sqlx.DB) *UserReposit
 	}
 }
 
-// ===============================================
-// VULNERABLE: SQL Injection via string formatting
-// ===============================================
-
-// FindByUsername - VULNERABLE: SQL injection via fmt.Sprintf
+// FindByUsername uses fmt.Sprintf for SQL query construction
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	var user models.User
-	// VULNERABILITY: SQL injection - user input directly in query
 	query := fmt.Sprintf("SELECT * FROM users WHERE username = '%s'", username)
 	err := r.db.Raw(query).Scan(&user).Error
 	return &user, err
 }
 
-// FindByEmail - VULNERABLE: SQL injection via string concatenation
+// FindByEmail uses string concatenation for SQL query construction
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	var user models.User
-	// VULNERABILITY: SQL injection - string concatenation
 	query := "SELECT * FROM users WHERE email = '" + email + "'"
 	err := r.db.Raw(query).Scan(&user).Error
 	return &user, err
 }
 
-// SearchUsers - VULNERABLE: SQL injection in LIKE clause
+// SearchUsers performs LIKE search with user-provided term
 func (r *UserRepository) SearchUsers(searchTerm string) ([]models.User, error) {
 	var users []models.User
-	// VULNERABILITY: SQL injection - search term not escaped
 	query := fmt.Sprintf("SELECT * FROM users WHERE username LIKE '%%%s%%' OR email LIKE '%%%s%%'", searchTerm, searchTerm)
 	err := r.db.Raw(query).Scan(&users).Error
 	return users, err
 }
 
-// DeleteByID - VULNERABLE: SQL injection in DELETE
+// DeleteByID deletes a user by string ID
 func (r *UserRepository) DeleteByID(id string) error {
-	// VULNERABILITY: SQL injection - id not validated
 	query := fmt.Sprintf("DELETE FROM users WHERE id = %s", id)
 	return r.db.Exec(query).Error
 }
 
-// UpdateRole - VULNERABLE: SQL injection via UPDATE
+// UpdateRole updates user role by string IDs
 func (r *UserRepository) UpdateRole(userID, role string) error {
-	// VULNERABILITY: SQL injection - both parameters vulnerable
 	query := fmt.Sprintf("UPDATE users SET role = '%s' WHERE id = %s", role, userID)
 	return r.db.Exec(query).Error
 }
 
-// ===============================================
-// VULNERABLE: Using database/sql directly
-// ===============================================
-
-// FindByIDRaw - VULNERABLE: SQL injection with raw sql.DB
+// FindByIDRaw uses raw sql.DB for query construction
 func (r *UserRepository) FindByIDRaw(id string) (*models.User, error) {
 	var user models.User
-	// VULNERABILITY: SQL injection - using raw database/sql
 	query := "SELECT id, username, email FROM users WHERE id = " + id
 	row := r.sqlDB.QueryRow(query)
 	err := row.Scan(&user.ID, &user.Username, &user.Email)
 	return &user, err
 }
 
-// GetUsersByRoleRaw - VULNERABLE: SQL injection with Query
+// GetUsersByRoleRaw queries users by role using raw sql.DB
 func (r *UserRepository) GetUsersByRoleRaw(role string) ([]models.User, error) {
-	// VULNERABILITY: SQL injection via Query
 	query := fmt.Sprintf("SELECT * FROM users WHERE role = '%s'", role)
 	rows, err := r.sqlDB.Query(query)
 	if err != nil {
@@ -105,43 +90,31 @@ func (r *UserRepository) GetUsersByRoleRaw(role string) ([]models.User, error) {
 	return users, nil
 }
 
-// ===============================================
-// VULNERABLE: Using sqlx
-// ===============================================
-
-// FindByUsernameSqlx - VULNERABLE: SQL injection with sqlx
+// FindByUsernameSqlx queries by username using sqlx
 func (r *UserRepository) FindByUsernameSqlx(username string) (*models.User, error) {
 	var user models.User
-	// VULNERABILITY: SQL injection via sqlx.Get
 	query := fmt.Sprintf("SELECT * FROM users WHERE username = '%s'", username)
 	err := r.sqlxDB.Get(&user, query)
 	return &user, err
 }
 
-// NamedQueryVulnerable - VULNERABLE: SQL injection with NamedExec
+// NamedQueryVulnerable uses NamedExec with dynamic table/column names
 func (r *UserRepository) NamedQueryVulnerable(tableName, column, value string) error {
-	// VULNERABILITY: Table and column names from user input
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (:value)", tableName, column)
 	_, err := r.sqlxDB.NamedExec(query, map[string]interface{}{"value": value})
 	return err
 }
 
-// ===============================================
-// SECURE: Parameterized queries (for comparison)
-// ===============================================
-
-// FindByIDSecure - SECURE: Uses parameterized query
+// FindByIDSecure looks up a user by ID
 func (r *UserRepository) FindByIDSecure(id uint) (*models.User, error) {
 	var user models.User
-	// SECURE: Parameterized query
 	err := r.db.Where("id = ?", id).First(&user).Error
 	return &user, err
 }
 
-// FindByEmailSecure - SECURE: Uses GORM's built-in protection
+// FindByEmailSecure looks up a user by email
 func (r *UserRepository) FindByEmailSecure(email string) (*models.User, error) {
 	var user models.User
-	// SECURE: GORM handles parameterization
 	err := r.db.Where(&models.User{Email: email}).First(&user).Error
 	return &user, err
 }

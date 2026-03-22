@@ -44,7 +44,6 @@ func (m *Meal) BeforeCreate(tx *gorm.DB) error {
 }
 
 // CreateMealRequest for creating a meal
-// TAINT SOURCE: JSON body flows to database
 type CreateMealRequest struct {
 	Name         string   `json:"name" validate:"required,min=1,max=200"`
 	Description  string   `json:"description" validate:"max=1000"`

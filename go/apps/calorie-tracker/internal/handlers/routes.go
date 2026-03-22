@@ -98,7 +98,7 @@ func SetupRoutes(r *gin.Engine, h *Handlers) {
 		dashboard.POST("/water", h.Dashboard.LogWater)
 	}
 
-	// Admin routes (vulnerable - auth required)
+	// Admin routes (auth required)
 	admin := r.Group("/api/admin")
 	admin.Use(middleware.AuthRequired())
 	{

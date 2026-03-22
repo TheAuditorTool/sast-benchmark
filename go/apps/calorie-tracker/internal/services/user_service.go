@@ -27,7 +27,6 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 }
 
 // Register registers a new user
-// TAINT FLOW: request -> validation -> repository -> database
 func (s *UserService) Register(req models.CreateUserRequest) (*models.User, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {
@@ -66,7 +65,6 @@ func (s *UserService) Register(req models.CreateUserRequest) (*models.User, erro
 }
 
 // Login authenticates a user
-// TAINT FLOW: request -> service -> repository -> session
 func (s *UserService) Login(req models.LoginRequest) (*models.UserSession, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {
@@ -146,10 +144,8 @@ func (s *UserService) Update(userID string, req models.UpdateUserRequest) (*mode
 	return user, nil
 }
 
-// SearchUsersVulnerable searches users - VULNERABLE
-// TAINT FLOW: searchTerm -> repository.SearchVulnerable -> SQL
+// SearchUsersVulnerable searches users by term
 func (s *UserService) SearchUsersVulnerable(searchTerm string) ([]models.User, error) {
-	// VULNERABLE: Search term flows to SQL query
 	return s.repo.SearchVulnerable(searchTerm)
 }
 

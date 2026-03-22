@@ -27,7 +27,6 @@ func NewWorkoutService(repo *repository.WorkoutRepository) *WorkoutService {
 }
 
 // Create creates a new workout
-// TAINT FLOW: request -> service -> repository -> database
 func (s *WorkoutService) Create(userID string, req models.CreateWorkoutRequest) (*models.Workout, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {
@@ -137,7 +136,6 @@ func (s *WorkoutService) Delete(workoutID, userID string) error {
 }
 
 // ListForUser lists workouts for a user
-// TAINT FLOW: pagination.BuildOrderBy() -> repository -> SQL ORDER BY
 func (s *WorkoutService) ListForUser(userID string, pagination *models.PaginationParams) ([]models.Workout, error) {
 	limit := pagination.GetLimit()
 	offset := pagination.GetOffset()

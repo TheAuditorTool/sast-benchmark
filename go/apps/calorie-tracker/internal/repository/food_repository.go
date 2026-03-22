@@ -47,11 +47,9 @@ func (r *FoodRepository) ListByCategory(category string) ([]models.Food, error) 
 	return foods, err
 }
 
-// SearchVulnerable searches foods with SQL injection vulnerability
-// TAINT SINK: User input directly in SQL query
+// SearchVulnerable searches foods by term
 func (r *FoodRepository) SearchVulnerable(searchTerm string) ([]models.Food, error) {
 	var foods []models.Food
-	// VULNERABLE: Direct string interpolation in SQL
 	query := fmt.Sprintf(
 		"SELECT * FROM foods WHERE name LIKE '%%%s%%' OR brand LIKE '%%%s%%' OR category LIKE '%%%s%%'",
 		searchTerm, searchTerm, searchTerm,

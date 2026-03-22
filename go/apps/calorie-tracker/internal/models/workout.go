@@ -63,7 +63,6 @@ func (w *Workout) BeforeCreate(tx *gorm.DB) error {
 }
 
 // CreateWorkoutRequest for creating a workout
-// TAINT SOURCE: JSON body
 type CreateWorkoutRequest struct {
 	ExerciseID      string   `json:"exercise_id" validate:"required,uuid"`
 	DurationMinutes int      `json:"duration_minutes" validate:"required,min=1,max=600"`

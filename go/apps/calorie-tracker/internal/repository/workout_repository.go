@@ -44,13 +44,11 @@ func (r *WorkoutRepository) Delete(id string) error {
 }
 
 // ListForUser lists workouts for a user with pagination
-// TAINT PROPAGATION: orderBy flows to SQL
 func (r *WorkoutRepository) ListForUser(userID string, limit, offset int, orderBy string) ([]models.Workout, error) {
 	var workouts []models.Workout
 	query := r.db.Preload("Exercise").Where("user_id = ?", userID).Limit(limit).Offset(offset)
 
 	if orderBy != "" {
-		// VULNERABLE: Order by clause from user input
 		query = query.Order(orderBy)
 	} else {
 		query = query.Order("performed_at DESC")
@@ -149,11 +147,9 @@ func (r *WorkoutRepository) FindExerciseByID(id string) (*models.Exercise, error
 	return &exercise, nil
 }
 
-// SearchExercisesVulnerable searches exercises with SQL injection
-// TAINT SINK: User input in SQL
+// SearchExercisesVulnerable searches exercises by term
 func (r *WorkoutRepository) SearchExercisesVulnerable(searchTerm string) ([]models.Exercise, error) {
 	var exercises []models.Exercise
-	// VULNERABLE: Direct string interpolation
 	query := fmt.Sprintf(
 		"SELECT * FROM exercises WHERE name LIKE '%%%s%%' OR category LIKE '%%%s%%'",
 		searchTerm, searchTerm,

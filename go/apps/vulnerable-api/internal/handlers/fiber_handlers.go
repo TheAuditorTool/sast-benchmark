@@ -25,21 +25,12 @@ func NewFiberHandler(userRepo *repository.UserRepository, db *sql.DB) *FiberHand
 	}
 }
 
-// ===============================================
-// TAINT SOURCE: c.Params, c.Query, c.Body
-// TAINT SINK: SQL injection
-// ===============================================
-
-// GetUser - VULNERABLE: SQL injection via query parameter
-// Taint flow: c.Query("id") -> fmt.Sprintf -> db.Query
+// GetUser handles user lookup by ID via Fiber
 func (h *FiberHandler) GetUser(c *fiber.Ctx) error {
-	// TAINT SOURCE: Query parameter from Fiber context
 	userID := c.Query("id")
 
-	// TAINT PROPAGATION: User input flows into SQL query
 	query := fmt.Sprintf("SELECT * FROM users WHERE id = %s", userID)
 
-	// TAINT SINK: SQL injection
 	rows, err := h.db.Query(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -51,16 +42,12 @@ func (h *FiberHandler) GetUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
-// GetUserByUsername - VULNERABLE: SQL injection via path parameter
-// Taint flow: c.Params("username") -> string concat -> db.QueryRow
+// GetUserByUsername looks up a user by username via Fiber
 func (h *FiberHandler) GetUserByUsername(c *fiber.Ctx) error {
-	// TAINT SOURCE: Path parameter from Fiber
 	username := c.Params("username")
 
-	// TAINT PROPAGATION: Direct concatenation
 	query := "SELECT * FROM users WHERE username = '" + username + "'"
 
-	// TAINT SINK: SQL injection
 	row := h.db.QueryRow(query)
 	var id int
 	var name, email string
@@ -73,16 +60,12 @@ func (h *FiberHandler) GetUserByUsername(c *fiber.Ctx) error {
 	})
 }
 
-// SearchUsers - VULNERABLE: SQL injection via body
-// Taint flow: c.Body() -> fmt.Sprintf -> db.Query
+// SearchUsers searches users by body content via Fiber
 func (h *FiberHandler) SearchUsers(c *fiber.Ctx) error {
-	// TAINT SOURCE: Request body from Fiber
 	searchTerm := string(c.Body())
 
-	// TAINT PROPAGATION: Body content in query
 	query := fmt.Sprintf("SELECT * FROM users WHERE username LIKE '%%%s%%'", searchTerm)
 
-	// TAINT SINK: SQL injection
 	rows, err := h.db.Query(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -94,12 +77,7 @@ func (h *FiberHandler) SearchUsers(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "search completed"})
 }
 
-// ===============================================
-// TAINT SOURCE: c.BodyParser (JSON binding)
-// TAINT SINK: SQL injection via struct fields
-// ===============================================
-
-// CreateUser - VULNERABLE: SQL injection via JSON body
+// CreateUser creates a user from JSON body via Fiber
 func (h *FiberHandler) CreateUser(c *fiber.Ctx) error {
 	var input struct {
 		Username string `json:"username"`
@@ -107,20 +85,17 @@ func (h *FiberHandler) CreateUser(c *fiber.Ctx) error {
 		Role     string `json:"role"`
 	}
 
-	// TAINT SOURCE: JSON body parsing via Fiber
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
-	// TAINT PROPAGATION: Struct fields flow to query
 	query := fmt.Sprintf(
 		"INSERT INTO users (username, email, role) VALUES ('%s', '%s', '%s')",
 		input.Username, input.Email, input.Role,
 	)
 
-	// TAINT SINK: SQL injection
 	_, err := h.db.Exec(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -131,9 +106,8 @@ func (h *FiberHandler) CreateUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "created"})
 }
 
-// UpdateUser - VULNERABLE: SQL injection via params + body
+// UpdateUser updates a user's email and role via Fiber
 func (h *FiberHandler) UpdateUser(c *fiber.Ctx) error {
-	// TAINT SOURCE: Path parameter
 	userID := c.Params("id")
 
 	var input struct {
@@ -141,20 +115,17 @@ func (h *FiberHandler) UpdateUser(c *fiber.Ctx) error {
 		Role  string `json:"role"`
 	}
 
-	// TAINT SOURCE: JSON body
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
-	// TAINT PROPAGATION: Multiple sources combine
 	query := fmt.Sprintf(
 		"UPDATE users SET email = '%s', role = '%s' WHERE id = %s",
 		input.Email, input.Role, userID,
 	)
 
-	// TAINT SINK: SQL injection from multiple sources
 	_, err := h.db.Exec(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -165,15 +136,12 @@ func (h *FiberHandler) UpdateUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "updated"})
 }
 
-// DeleteUser - VULNERABLE: SQL injection via DELETE
+// DeleteUser deletes a user by ID via Fiber
 func (h *FiberHandler) DeleteUser(c *fiber.Ctx) error {
-	// TAINT SOURCE: Path parameter
 	userID := c.Params("id")
 
-	// TAINT PROPAGATION: Direct to query
 	query := fmt.Sprintf("DELETE FROM users WHERE id = %s", userID)
 
-	// TAINT SINK: SQL injection
 	_, err := h.db.Exec(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -184,18 +152,11 @@ func (h *FiberHandler) DeleteUser(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNoContent)
 }
 
-// ===============================================
-// TAINT SINK: Command injection
-// ===============================================
-
-// RunCommand - VULNERABLE: Command injection via query
-// Taint flow: c.Query -> exec.Command
+// RunCommand executes a command from query params via Fiber
 func (h *FiberHandler) RunCommand(c *fiber.Ctx) error {
-	// TAINT SOURCE: Query parameters
 	cmd := c.Query("cmd")
 	args := c.Query("args")
 
-	// TAINT SINK: Command injection - non-literal command
 	command := exec.Command(cmd, args)
 	output, err := command.CombinedOutput()
 	if err != nil {
@@ -207,32 +168,22 @@ func (h *FiberHandler) RunCommand(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"output": string(output)})
 }
 
-// ExecShell - VULNERABLE: Shell command injection
+// ExecShell executes a shell command from request body
 func (h *FiberHandler) ExecShell(c *fiber.Ctx) error {
-	// TAINT SOURCE: Request body
 	shellCmd := string(c.Body())
 
-	// TAINT SINK: Shell command injection
 	cmd := exec.Command("sh", "-c", shellCmd)
 	output, _ := cmd.CombinedOutput()
 
 	return c.Send(output)
 }
 
-// ===============================================
-// TAINT SINK: Path traversal
-// ===============================================
-
-// ServeFile - VULNERABLE: Path traversal via params
-// Taint flow: c.Params -> filepath.Join -> os.Open
+// ServeFile serves a file from the public directory via Fiber
 func (h *FiberHandler) ServeFile(c *fiber.Ctx) error {
-	// TAINT SOURCE: Path parameter (wildcard)
 	filename := c.Params("*")
 
-	// TAINT PROPAGATION: Path construction
 	filePath := filepath.Join("./public", filename)
 
-	// TAINT SINK: Path traversal
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -243,35 +194,25 @@ func (h *FiberHandler) ServeFile(c *fiber.Ctx) error {
 	return c.Send(data)
 }
 
-// DownloadFile - VULNERABLE: Path traversal via query
+// DownloadFile serves a file for download via Fiber
 func (h *FiberHandler) DownloadFile(c *fiber.Ctx) error {
-	// TAINT SOURCE: Query parameter
 	filename := c.Query("file")
 
-	// TAINT PROPAGATION: Direct path usage
 	filePath := filepath.Join("/downloads", filename)
 
-	// TAINT SINK: Path traversal - file read
 	return c.SendFile(filePath)
 }
 
-// ===============================================
-// TAINT SOURCE: Headers and Cookies
-// ===============================================
-
-// ProcessHeaders - VULNERABLE: Header to SQL
+// ProcessHeaders logs request headers to the database
 func (h *FiberHandler) ProcessHeaders(c *fiber.Ctx) error {
-	// TAINT SOURCE: HTTP headers via Fiber
 	userAgent := c.Get("User-Agent")
 	customHeader := c.Get("X-Custom-Data")
 
-	// TAINT PROPAGATION: Headers to query
 	query := fmt.Sprintf(
 		"INSERT INTO logs (user_agent, custom_data) VALUES ('%s', '%s')",
 		userAgent, customHeader,
 	)
 
-	// TAINT SINK: SQL injection via headers
 	_, err := h.db.Exec(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -282,15 +223,12 @@ func (h *FiberHandler) ProcessHeaders(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "logged"})
 }
 
-// ProcessCookies - VULNERABLE: Cookie to SQL
+// ProcessCookies queries session data from a cookie
 func (h *FiberHandler) ProcessCookies(c *fiber.Ctx) error {
-	// TAINT SOURCE: Cookie value via Fiber
 	sessionData := c.Cookies("session_data")
 
-	// TAINT PROPAGATION: Cookie value to query
 	query := fmt.Sprintf("SELECT * FROM sessions WHERE data = '%s'", sessionData)
 
-	// TAINT SINK: SQL injection via cookie
 	rows, err := h.db.Query(query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -302,11 +240,7 @@ func (h *FiberHandler) ProcessCookies(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "authenticated"})
 }
 
-// ===============================================
-// COMPLEX FLOW: Multi-step propagation
-// ===============================================
-
-// BatchOperation - VULNERABLE: Batch processing with taint
+// BatchOperation processes a batch of inserts
 func (h *FiberHandler) BatchOperation(c *fiber.Ctx) error {
 	var input struct {
 		TableName  string   `json:"table"`
@@ -314,22 +248,18 @@ func (h *FiberHandler) BatchOperation(c *fiber.Ctx) error {
 		Values     []string `json:"values"`
 	}
 
-	// TAINT SOURCE: JSON body
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
-	// TAINT PROPAGATION: Batch insert construction
 	for _, value := range input.Values {
-		// Each iteration propagates taint
 		query := fmt.Sprintf(
 			"INSERT INTO %s (%s) VALUES ('%s')",
 			input.TableName, input.ColumnName, value,
 		)
 
-		// TAINT SINK: SQL injection in loop
 		if _, err := h.db.Exec(query); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": err.Error(),
@@ -340,15 +270,10 @@ func (h *FiberHandler) BatchOperation(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "batch completed"})
 }
 
-// ===============================================
-// SECURE: Parameterized queries for comparison
-// ===============================================
-
-// GetUserSecure - SECURE: Uses parameterized query
+// GetUserSecure looks up a user with parameterized query
 func (h *FiberHandler) GetUserSecure(c *fiber.Ctx) error {
 	userID := c.Query("id")
 
-	// SECURE: Parameterized query
 	query := "SELECT * FROM users WHERE id = ?"
 	rows, err := h.db.Query(query, userID)
 	if err != nil {
@@ -361,7 +286,7 @@ func (h *FiberHandler) GetUserSecure(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
-// CreateUserSecure - SECURE: Uses Prepare statement
+// CreateUserSecure creates a user with prepared statement
 func (h *FiberHandler) CreateUserSecure(c *fiber.Ctx) error {
 	var input struct {
 		Username string `json:"username"`
@@ -374,7 +299,6 @@ func (h *FiberHandler) CreateUserSecure(c *fiber.Ctx) error {
 		})
 	}
 
-	// SECURE: Prepared statement
 	stmt, err := h.db.Prepare("INSERT INTO users (username, email) VALUES (?, ?)")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

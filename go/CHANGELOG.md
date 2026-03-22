@@ -38,6 +38,23 @@ This release addresses feedback from the OWASP Foundation review.
 - Added category-averaged scoring (OWASP standard): each category weighted equally regardless of test count
 - TheAuditor baseline: +24.9% category-averaged (vs +29.2% flat)
 
+### Hint Removal (OWASP Gold Standard Compliance)
+
+Stripped all vulnerability classification hints from apps/ source code. The ground_truth.csv in each app is now the sole oracle -- matching OWASP Java/Python benchmark design and the Rust benchmark's v0.3.1 hint removal.
+
+**apps/ (69 files across 5 apps):**
+- Removed ~838 whole-line hint comments (`// TAINT SOURCE:`, `// TAINT SINK:`, `// VULNERABLE:`, `// SECURE:`, etc.)
+- Stripped ~188 inline hint comments from code lines (kept code, removed trailing classification comments)
+- Stripped `# VULN:` comments from shell scripts (4 files), YAML config (1 file), and `<!-- VULN: -->` from HTML templates (2 files)
+- Includes .proto file hint stripping in grpc_users
+- Neutralized function doc comments from `// FuncName - VULNERABLE: desc` to `// FuncName does X`
+
+**Validation:**
+```
+grep -rn "TAINT|VULNERABLE|VULN:|SECURE:|SOURCE:|SINK" go/apps/ -- 0 results
+grep -rn "TAINT|VULNERABLE|VULN:|SECURE:|SOURCE:|SINK" go/testcode/ -- 0 results (was already clean)
+```
+
 ### Final State
 - 476 test cases (was 424)
 - 21 CWE categories (was 16)

@@ -26,7 +26,6 @@ func NewScheduleService(repo *repository.ScheduleRepository) *ScheduleService {
 }
 
 // Create creates a new schedule
-// TAINT FLOW: request -> service -> repository -> database
 func (s *ScheduleService) Create(userID string, req models.CreateScheduleRequest) (*models.Schedule, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {

@@ -31,7 +31,6 @@ func NewAnalyticsService(
 }
 
 // GetDailySummary gets comprehensive daily summary
-// TAINT PROPAGATION: Multiple repository calls aggregate data
 func (s *AnalyticsService) GetDailySummary(userID, date string) (*models.DailySummary, error) {
 	// Get user for calorie goal
 	user, err := s.userRepo.FindByID(userID)
@@ -225,15 +224,12 @@ func (s *AnalyticsService) LogWater(userID string, req models.WaterLogRequest) (
 	return s.analyticsRepo.UpdateWaterLog(userID, date, req.AmountMl)
 }
 
-// ExecuteRawQueryVulnerable executes raw SQL - VULNERABLE
-// TAINT SINK: Direct SQL execution from user input
+// ExecuteRawQueryVulnerable executes raw SQL
 func (s *AnalyticsService) ExecuteRawQueryVulnerable(query string) ([]map[string]interface{}, error) {
-	// VULNERABLE: Query flows directly to database
 	return s.analyticsRepo.ExecuteRawQuery(query)
 }
 
-// CustomReportVulnerable builds a custom report - VULNERABLE
-// TAINT FLOW: Multiple user inputs flow through helpers to SQL
+// CustomReportVulnerable builds a custom report
 func (s *AnalyticsService) CustomReportVulnerable(
 	userID string,
 	table string,
@@ -248,7 +244,6 @@ func (s *AnalyticsService) CustomReportVulnerable(
 		whereClause += " AND " + filter
 	}
 
-	// VULNERABLE: All parameters flow to SQL
 	return s.analyticsRepo.CustomReportVulnerable(table, columns, whereClause, groupBy, orderBy)
 }
 

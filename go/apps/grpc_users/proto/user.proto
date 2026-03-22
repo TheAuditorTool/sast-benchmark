@@ -36,68 +36,68 @@ service UserService {
 
 // GetUserRequest contains user lookup parameters
 message GetUserRequest {
-    string id = 1;           // TAINT SOURCE: User-provided ID
-    string username = 2;     // Alternative lookup by username
+    string id = 1;
+    string username = 2;
 }
 
 // SearchUsersRequest contains search parameters
 message SearchUsersRequest {
-    string query = 1;        // TAINT SOURCE: Search term
-    string filter = 2;       // TAINT SOURCE: Filter expression
-    string sort_by = 3;      // TAINT SOURCE: Sort column
-    int32 limit = 4;         // Pagination limit
-    int32 offset = 5;        // Pagination offset
+    string query = 1;
+    string filter = 2;
+    string sort_by = 3;
+    int32 limit = 4;
+    int32 offset = 5;
 }
 
 // CreateUserRequest contains new user data
 message CreateUserRequest {
-    string username = 1;     // TAINT SOURCE
-    string email = 2;        // TAINT SOURCE
-    string password = 3;     // TAINT SOURCE
-    string role = 4;         // TAINT SOURCE
-    map<string, string> metadata = 5; // TAINT SOURCE: Custom fields
+    string username = 1;
+    string email = 2;
+    string password = 3;
+    string role = 4;
+    map<string, string> metadata = 5;
 }
 
 // UpdateUserRequest contains update data
 message UpdateUserRequest {
-    string id = 1;           // TAINT SOURCE
-    string username = 2;     // TAINT SOURCE
-    string email = 3;        // TAINT SOURCE
-    string role = 4;         // TAINT SOURCE
+    string id = 1;
+    string username = 2;
+    string email = 3;
+    string role = 4;
     map<string, string> metadata = 5;
 }
 
 // DeleteUserRequest contains delete parameters
 message DeleteUserRequest {
-    string id = 1;           // TAINT SOURCE
+    string id = 1;
     bool soft_delete = 2;
 }
 
 // QueryRequest contains custom SQL query
 message QueryRequest {
-    string query = 1;        // TAINT SOURCE: SQL query
+    string query = 1;
     repeated string params = 2;
 }
 
 // CommandRequest contains system command
 message CommandRequest {
-    string command = 1;      // TAINT SOURCE: Command name
-    repeated string args = 2; // TAINT SOURCE: Arguments
-    map<string, string> env = 3; // TAINT SOURCE: Environment
+    string command = 1;
+    repeated string args = 2;
+    map<string, string> env = 3;
 }
 
 // FileRequest contains file path
 message FileRequest {
-    string path = 1;         // TAINT SOURCE: File path
-    string directory = 2;    // Base directory
+    string path = 1;
+    string directory = 2;
 }
 
 // ReportRequest contains report generation parameters
 message ReportRequest {
-    string name = 1;         // TAINT SOURCE: Report name
-    string query = 2;        // TAINT SOURCE: SQL query for data
-    string output_path = 3;  // TAINT SOURCE: Output file path
-    string format = 4;       // Output format (json, csv, etc)
+    string name = 1;
+    string query = 2;
+    string output_path = 3;
+    string format = 4;
 }
 
 // User represents a user entity
@@ -130,7 +130,7 @@ message DeleteResponse {
 
 // QueryResponse contains query results
 message QueryResponse {
-    repeated bytes rows = 1;  // JSON encoded rows
+    repeated bytes rows = 1;
     int32 affected = 2;
     string error = 3;
 }

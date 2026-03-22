@@ -87,8 +87,7 @@ func (r *AnalyticsRepository) GetWeightLogsInRange(userID string, startDate, end
 	return logs, err
 }
 
-// CustomReportVulnerable builds a custom report with SQL injection
-// TAINT SINK: Multiple user inputs flow to SQL
+// CustomReportVulnerable builds a custom report from dynamic parameters
 func (r *AnalyticsRepository) CustomReportVulnerable(
 	table string,
 	columns string,
@@ -96,14 +95,10 @@ func (r *AnalyticsRepository) CustomReportVulnerable(
 	groupBy string,
 	orderBy string,
 ) ([]map[string]interface{}, error) {
-	// Build query with user-controlled inputs - VULNERABLE
-	// TAINT FLOW: table, columns, whereClause, groupBy, orderBy -> SQL
-
 	columnClause := buildColumnClause(columns)
 	groupClause := buildGroupClause(groupBy)
 	orderClause := buildOrderClause(orderBy)
 
-	// VULNERABLE: Direct string interpolation
 	query := fmt.Sprintf(
 		"SELECT %s FROM %s WHERE %s %s %s",
 		columnClause, table, whereClause, groupClause, orderClause,
@@ -133,12 +128,11 @@ func (r *AnalyticsRepository) CustomReportVulnerable(
 	return results, nil
 }
 
-// Helper functions for building SQL clauses - TAINT PROPAGATION
+// Helper functions for building SQL clauses
 func buildColumnClause(columns string) string {
 	if columns == "" {
 		return "*"
 	}
-	// TAINT PROPAGATION: User input passes through
 	return columns
 }
 
@@ -146,7 +140,6 @@ func buildGroupClause(groupBy string) string {
 	if groupBy == "" {
 		return ""
 	}
-	// TAINT PROPAGATION: User input passes through
 	return "GROUP BY " + groupBy
 }
 
@@ -154,12 +147,10 @@ func buildOrderClause(orderBy string) string {
 	if orderBy == "" {
 		return ""
 	}
-	// TAINT PROPAGATION: User input passes through
 	return "ORDER BY " + orderBy
 }
 
-// ExecuteRawQuery executes a raw SQL query - VULNERABLE
-// TAINT SINK: Direct SQL execution
+// ExecuteRawQuery executes a raw SQL query
 func (r *AnalyticsRepository) ExecuteRawQuery(query string) ([]map[string]interface{}, error) {
 	var results []map[string]interface{}
 	rows, err := r.db.Raw(query).Rows()

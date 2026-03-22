@@ -34,7 +34,6 @@ func (f *Food) BeforeCreate(tx *gorm.DB) error {
 }
 
 // CreateFoodRequest for creating custom foods
-// TAINT SOURCE: JSON body
 type CreateFoodRequest struct {
 	Name               string  `json:"name" validate:"required,min=1,max=200"`
 	Brand              string  `json:"brand" validate:"max=100"`

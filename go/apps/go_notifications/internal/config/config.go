@@ -27,7 +27,7 @@ type SMTPConfig struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	Username string `yaml:"username"`
-	Password string `yaml:"password"` // VULN: Stored in plaintext
+	Password string `yaml:"password"`
 	From     string `yaml:"from"`
 	UseTLS   bool   `yaml:"use_tls"`
 }
@@ -54,7 +54,6 @@ func Load(path string) (*Config, error) {
 	}
 
 	// Apply environment variable overrides
-	// VULN: Environment variables logged without sanitization
 	if envAddr := os.Getenv("NOTIFY_LISTEN_ADDR"); envAddr != "" {
 		cfg.ListenAddr = envAddr
 	}
@@ -75,7 +74,7 @@ func Default() *Config {
 		DatabasePath:   "./notifications.db",
 		TemplatesDir:   "./templates",
 		LogDir:         "./logs",
-		APIKey:         "dev-api-key-12345", // VULN: Hardcoded default API key
+		APIKey:         "dev-api-key-12345",
 		WorkerCount:    4,
 		WebhookTimeout: 30 * time.Second,
 		SlackWebhook:   "",
@@ -88,8 +87,8 @@ func Default() *Config {
 			UseTLS:   false,
 		},
 		Security: SecurityConfig{
-			AllowedHosts:    []string{}, // VULN: Empty = allow all
-			RateLimitPerMin: 0,          // VULN: 0 = no rate limiting
+			AllowedHosts:    []string{},
+			RateLimitPerMin: 0,
 			EnableAuditLog:  false,
 			HooksEnabled:    true,
 			HooksDir:        "./scripts/hooks",
@@ -98,7 +97,6 @@ func Default() *Config {
 }
 
 // LoadFromEnvUnsafe loads config entirely from environment variables
-// VULN: User-controlled config values without validation
 func LoadFromEnvUnsafe() *Config {
 	cfg := Default()
 

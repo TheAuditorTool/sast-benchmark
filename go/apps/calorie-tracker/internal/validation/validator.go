@@ -98,9 +98,7 @@ func ValidateScheduleType(scheduleType string) bool {
 }
 
 // SanitizeString performs basic string sanitization
-// NOTE: This is intentionally weak for testing taint analysis
 func SanitizeString(s string) string {
-	// Only removes simple quotes - still vulnerable to many attacks
 	s = strings.ReplaceAll(s, "'", "")
 	return s
 }

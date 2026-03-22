@@ -39,7 +39,6 @@ func GinLoggingMiddleware() gin.HandlerFunc {
 // GinAuthMiddleware checks authentication
 func GinAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// TAINT SOURCE: Header value
 		token := c.GetHeader("Authorization")
 
 		if token == "" {
@@ -114,7 +113,6 @@ func EchoLoggingMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 // EchoAuthMiddleware checks authentication for Echo
 func EchoAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// TAINT SOURCE: Header value
 		token := c.Request().Header.Get("Authorization")
 
 		if token == "" {
@@ -132,7 +130,6 @@ func EchoAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 // EchoCORSMiddleware handles CORS
 func EchoCORSMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// TAINT SOURCE: Origin header
 		origin := c.Request().Header.Get("Origin")
 
 		// Set CORS headers (potential reflection)
@@ -171,7 +168,6 @@ func ChiLoggingMiddleware(next http.Handler) http.Handler {
 // ChiAuthMiddleware checks authentication for Chi
 func ChiAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TAINT SOURCE: Header value
 		token := r.Header.Get("Authorization")
 
 		if token == "" {
@@ -191,7 +187,6 @@ func ChiAuthMiddleware(next http.Handler) http.Handler {
 // ChiUserContextMiddleware extracts user from URL
 func ChiUserContextMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TAINT SOURCE: URL parameter
 		userID := chi.URLParam(r, "userID")
 
 		if userID != "" {
@@ -227,7 +222,6 @@ func FiberLoggingMiddleware(c *fiber.Ctx) error {
 
 // FiberAuthMiddleware checks authentication for Fiber
 func FiberAuthMiddleware(c *fiber.Ctx) error {
-	// TAINT SOURCE: Header value
 	token := c.Get("Authorization")
 
 	if token == "" {
@@ -258,7 +252,6 @@ func FiberRateLimitMiddleware(c *fiber.Ctx) error {
 
 // FiberCORSMiddleware handles CORS for Fiber
 func FiberCORSMiddleware(c *fiber.Ctx) error {
-	// TAINT SOURCE: Origin header
 	origin := c.Get("Origin")
 
 	// Set CORS headers (potential reflection)

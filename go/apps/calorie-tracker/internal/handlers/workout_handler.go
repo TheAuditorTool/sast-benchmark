@@ -23,7 +23,6 @@ func NewWorkoutHandler(workoutService *services.WorkoutService) *WorkoutHandler 
 
 // ListWorkouts lists workouts for the current user
 // GET /api/workouts
-// TAINT SOURCE: Query params -> service -> repository -> SQL
 func (h *WorkoutHandler) ListWorkouts(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -43,7 +42,6 @@ func (h *WorkoutHandler) ListWorkouts(c *gin.Context) {
 
 // CreateWorkout creates a new workout
 // POST /api/workouts
-// TAINT SOURCE: JSON body -> service -> repository -> database
 func (h *WorkoutHandler) CreateWorkout(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 

@@ -37,7 +37,6 @@ func (h *ScheduleHandler) ListSchedules(c *gin.Context) {
 
 // CreateSchedule creates a new schedule
 // POST /api/schedules
-// TAINT SOURCE: JSON body -> service -> repository -> database
 func (h *ScheduleHandler) CreateSchedule(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 

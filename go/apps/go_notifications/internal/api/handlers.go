@@ -66,7 +66,6 @@ func (h *Handlers) HealthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 // SendNotification handles immediate notification dispatch
-// TAINT SOURCE: All request body fields
 func (h *Handlers) SendNotification(w http.ResponseWriter, r *http.Request) {
 	var req NotificationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -74,18 +73,16 @@ func (h *Handlers) SendNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// VULN: User input directly used without validation
 	notification := &channels.Notification{
 		Channel:   req.Channel,
-		Recipient: req.Recipient, // TAINT: User-controlled recipient
-		Subject:   req.Subject,   // TAINT: User-controlled subject
-		Message:   req.Message,   // TAINT: User-controlled message body
+		Recipient: req.Recipient,
+		Subject:   req.Subject,
+		Message:   req.Message,
 		Metadata:  req.Metadata,
 	}
 
 	// If template specified, render it with user data
 	if req.Template != "" {
-		// TAINT FLOW: req.Template (user input) -> renderer.Render
 		rendered, err := h.renderer.Render(req.Template, req.Data)
 		if err != nil {
 			respondError(w, http.StatusBadRequest, "Template error: "+err.Error())
@@ -168,7 +165,6 @@ func (h *Handlers) SendBatchNotification(w http.ResponseWriter, r *http.Request)
 }
 
 // SendTemplatedNotification renders a template and sends notification
-// TAINT SOURCE: Template name and data from request
 func (h *Handlers) SendTemplatedNotification(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Template  string                 `json:"template"`
@@ -183,8 +179,6 @@ func (h *Handlers) SendTemplatedNotification(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	// VULN: Template path traversal possible
-	// req.Template could be "../../../etc/passwd"
 	rendered, err := h.renderer.Render(req.Template, req.Data)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, fmt.Sprintf("Template render failed: %v", err))
@@ -195,7 +189,7 @@ func (h *Handlers) SendTemplatedNotification(w http.ResponseWriter, r *http.Requ
 		Channel:   req.Channel,
 		Recipient: req.Recipient,
 		Subject:   req.Subject,
-		Message:   rendered, // TAINT SINK: Rendered template with user data
+		Message:   rendered,
 	}
 
 	result, err := h.dispatcher.Dispatch(notification)
@@ -208,16 +202,13 @@ func (h *Handlers) SendTemplatedNotification(w http.ResponseWriter, r *http.Requ
 }
 
 // ListNotifications returns stored notifications with filtering
-// TAINT SOURCE: Query parameters
 func (h *Handlers) ListNotifications(w http.ResponseWriter, r *http.Request) {
-	// VULN: Query params used directly in SQL
 	channel := r.URL.Query().Get("channel")
 	status := r.URL.Query().Get("status")
 	recipient := r.URL.Query().Get("recipient")
 	limit := r.URL.Query().Get("limit")
-	orderBy := r.URL.Query().Get("order_by") // VULN: SQL injection via ORDER BY
+	orderBy := r.URL.Query().Get("order_by")
 
-	// TAINT FLOW: Query params -> SQL query
 	notifications, err := h.store.ListNotifications(channel, status, recipient, limit, orderBy)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, "Query failed: "+err.Error())
@@ -228,7 +219,6 @@ func (h *Handlers) ListNotifications(w http.ResponseWriter, r *http.Request) {
 }
 
 // TestWebhook sends a test webhook to a user-provided URL
-// TAINT SOURCE: URL from request body - SSRF vulnerability
 func (h *Handlers) TestWebhook(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		URL     string            `json:"url"`
@@ -242,14 +232,11 @@ func (h *Handlers) TestWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// VULN: SSRF - No URL validation, internal network accessible
-	// User can provide http://169.254.169.254/latest/meta-data/ (AWS)
-	// Or http://localhost:6379/ (Redis) etc.
 	result, err := h.dispatcher.WebhookChannel().SendToURL(
-		req.URL,     // TAINT SINK: User-controlled URL
+		req.URL,
 		req.Method,
-		req.Headers, // TAINT: User-controlled headers
-		req.Body,    // TAINT: User-controlled body
+		req.Headers,
+		req.Body,
 	)
 	if err != nil {
 		respondError(w, http.StatusBadGateway, "Webhook failed: "+err.Error())
@@ -260,7 +247,6 @@ func (h *Handlers) TestWebhook(w http.ResponseWriter, r *http.Request) {
 }
 
 // ExecuteHook runs a shell script hook
-// TAINT SOURCE: Hook name and arguments - Command Injection
 func (h *Handlers) ExecuteHook(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Hook      string   `json:"hook"`
@@ -273,11 +259,7 @@ func (h *Handlers) ExecuteHook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// VULN: Path traversal in hook name
 	hookPath := filepath.Join("./scripts/hooks", req.Hook)
-
-	// VULN: No validation that hookPath is within allowed directory
-	// req.Hook could be "../../malicious.sh" or "hook; rm -rf /"
 
 	// Check if hook exists
 	if _, err := os.Stat(hookPath); os.IsNotExist(err) {
@@ -285,11 +267,8 @@ func (h *Handlers) ExecuteHook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// VULN: Command injection via arguments
-	// Arguments are passed directly to shell
 	cmd := exec.Command(hookPath, req.Arguments...)
 
-	// VULN: User-controlled environment variables
 	for key, value := range req.Env {
 		cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%s", key, value))
 	}
@@ -311,17 +290,13 @@ func (h *Handlers) ExecuteHook(w http.ResponseWriter, r *http.Request) {
 }
 
 // ReadLogFile reads a log file by name
-// TAINT SOURCE: Filename from URL - Path Traversal
 func (h *Handlers) ReadLogFile(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	filename := vars["filename"] // TAINT SOURCE
+	filename := vars["filename"]
 
-	// VULN: Path traversal - no sanitization
-	// filename could be "../../../etc/passwd"
 	logPath := filepath.Join("./logs", filename)
 
-	// VULN: No validation that path is within logs directory
-	content, err := os.ReadFile(logPath) // TAINT SINK
+	content, err := os.ReadFile(logPath)
 	if err != nil {
 		respondError(w, http.StatusNotFound, "Log file not found")
 		return
@@ -333,7 +308,6 @@ func (h *Handlers) ReadLogFile(w http.ResponseWriter, r *http.Request) {
 }
 
 // ImportConfig imports configuration from uploaded file
-// TAINT SOURCE: File upload content
 func (h *Handlers) ImportConfig(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("config")
 	if err != nil {
@@ -342,16 +316,13 @@ func (h *Handlers) ImportConfig(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// VULN: No file type validation
 	content, _ := io.ReadAll(file)
 
-	// VULN: Path from form used directly
 	savePath := r.FormValue("save_path")
 	if savePath == "" {
-		savePath = filepath.Join("./config", header.Filename) // VULN: User-controlled filename
+		savePath = filepath.Join("./config", header.Filename)
 	}
 
-	// VULN: Arbitrary file write
 	if err := os.WriteFile(savePath, content, 0644); err != nil {
 		respondError(w, http.StatusInternalServerError, "Failed to save config")
 		return
@@ -363,11 +334,9 @@ func (h *Handlers) ImportConfig(w http.ResponseWriter, r *http.Request) {
 }
 
 // SearchNotifications performs full-text search
-// TAINT SOURCE: Search query
 func (h *Handlers) SearchNotifications(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q")
 
-	// VULN: Search query used in SQL LIKE without escaping
 	results, err := h.store.Search(query)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
@@ -378,10 +347,9 @@ func (h *Handlers) SearchNotifications(w http.ResponseWriter, r *http.Request) {
 }
 
 // ExportNotifications exports notifications to a file
-// TAINT FLOW: User specifies output format and path
 func (h *Handlers) ExportNotifications(w http.ResponseWriter, r *http.Request) {
 	format := r.URL.Query().Get("format") // csv, json, xml
-	output := r.URL.Query().Get("output") // VULN: Arbitrary path
+	output := r.URL.Query().Get("output")
 
 	notifications, _ := h.store.ListNotifications("", "", "", "1000", "id")
 
@@ -396,7 +364,6 @@ func (h *Handlers) ExportNotifications(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if output != "" {
-		// VULN: Arbitrary file write to user-specified path
 		os.WriteFile(output, content, 0644)
 		respondJSON(w, http.StatusOK, map[string]string{"exported": output})
 	} else {
@@ -406,25 +373,22 @@ func (h *Handlers) ExportNotifications(w http.ResponseWriter, r *http.Request) {
 }
 
 // ProcessCallback handles webhook callbacks
-// TAINT SOURCE: Entire request body and headers
 func (h *Handlers) ProcessCallback(w http.ResponseWriter, r *http.Request) {
 	callbackID := mux.Vars(r)["id"]
 
 	// Read callback body
 	body, _ := io.ReadAll(r.Body)
 
-	// VULN: Callback data processed without validation
 	var callbackData map[string]interface{}
 	json.Unmarshal(body, &callbackData)
 
 	// Log callback with user-controlled data
 	logEntry := fmt.Sprintf("[CALLBACK %s] Headers: %v Body: %s\n",
 		callbackID,
-		r.Header, // TAINT: User-controlled headers
-		string(body), // TAINT: User-controlled body
+		r.Header,
+		string(body),
 	)
 
-	// VULN: Log injection - newlines in body can inject fake log entries
 	logPath := filepath.Join("./logs", "callbacks.log")
 	f, _ := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	f.WriteString(logEntry)
@@ -432,9 +396,8 @@ func (h *Handlers) ProcessCallback(w http.ResponseWriter, r *http.Request) {
 
 	// Execute callback hook if configured
 	if hookCmd := r.Header.Get("X-Callback-Hook"); hookCmd != "" {
-		// VULN: Header value used in command execution
 		go func() {
-			cmd := exec.Command("sh", "-c", hookCmd) // TAINT SINK: Command injection
+			cmd := exec.Command("sh", "-c", hookCmd)
 			cmd.Run()
 		}()
 	}
@@ -453,8 +416,7 @@ func respondError(w http.ResponseWriter, status int, message string) {
 	respondJSON(w, status, map[string]string{"error": message})
 }
 
-// DebugRequest logs full request details - useful for debugging
-// VULN: Logs sensitive information
+// DebugRequest logs full request details for debugging
 func (h *Handlers) DebugRequest(w http.ResponseWriter, r *http.Request) {
 	body, _ := io.ReadAll(r.Body)
 
@@ -467,21 +429,18 @@ func (h *Handlers) DebugRequest(w http.ResponseWriter, r *http.Request) {
 		"cookies":     r.Cookies(),
 	}
 
-	// VULN: Dumps all headers including Authorization
 	respondJSON(w, http.StatusOK, debug)
 }
 
 // ProxyRequest proxies a request to another service
-// VULN: Open redirect / SSRF
 func (h *Handlers) ProxyRequest(w http.ResponseWriter, r *http.Request) {
 	targetURL := r.URL.Query().Get("target")
 
-	// VULN: No URL validation - SSRF
 	if !strings.HasPrefix(targetURL, "http") {
 		targetURL = "http://" + targetURL
 	}
 
-	resp, err := http.Get(targetURL) // TAINT SINK: User-controlled URL
+	resp, err := http.Get(targetURL)
 	if err != nil {
 		respondError(w, http.StatusBadGateway, err.Error())
 		return

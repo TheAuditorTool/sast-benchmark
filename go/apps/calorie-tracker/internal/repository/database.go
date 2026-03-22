@@ -98,14 +98,12 @@ func (d *Database) SeedData() error {
 	return nil
 }
 
-// ExecuteRaw executes a raw SQL query - VULNERABLE
-// TAINT SINK: Direct SQL execution
+// ExecuteRaw executes a raw SQL query
 func (d *Database) ExecuteRaw(query string) error {
 	return d.DB.Exec(query).Error
 }
 
-// QueryRaw executes a raw SQL query and returns results - VULNERABLE
-// TAINT SINK: Direct SQL execution
+// QueryRaw executes a raw SQL query and returns results
 func (d *Database) QueryRaw(query string) ([]map[string]interface{}, error) {
 	var results []map[string]interface{}
 	rows, err := d.DB.Raw(query).Rows()

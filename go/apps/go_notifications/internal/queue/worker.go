@@ -100,14 +100,13 @@ func (w *Worker) Enqueue(n *channels.Notification) (string, error) {
 }
 
 // EnqueueWithCallback adds a job with a callback
-// VULN: Callback URL/command can be user-controlled
 func (w *Worker) EnqueueWithCallback(n *channels.Notification, callback, callbackURL string) (string, error) {
 	job := &Job{
 		ID:           fmt.Sprintf("job_%d", time.Now().UnixNano()),
 		Type:         "notification",
 		Notification: n,
-		Callback:     callback,    // TAINT: User-controlled callback command
-		CallbackURL:  callbackURL, // TAINT: User-controlled callback URL (SSRF)
+		Callback:     callback,
+		CallbackURL:  callbackURL,
 		Priority:     0,
 		MaxRetries:   3,
 		CreatedAt:    time.Now(),
@@ -162,7 +161,6 @@ func (w *Worker) processJob(job *Job) {
 	case "template":
 		err = w.processTemplate(job)
 	case "shell":
-		// VULN: User can submit shell-type jobs
 		err = w.processShellJob(job)
 	case "webhook":
 		err = w.processWebhookJob(job)
@@ -183,7 +181,6 @@ func (w *Worker) processJob(job *Job) {
 func (w *Worker) processNotification(job *Job) error {
 	// Render template if specified
 	if job.Template != "" {
-		// VULN: Template path from job (user-controlled)
 		rendered, err := w.renderer.Render(job.Template, job.Data)
 		if err != nil {
 			return err
@@ -201,13 +198,11 @@ func (w *Worker) processTemplate(job *Job) error {
 		return fmt.Errorf("template not specified")
 	}
 
-	// VULN: Template rendering with user data
 	_, err := w.renderer.Render(job.Template, job.Data)
 	return err
 }
 
 // processShellJob executes a shell command
-// VULN: Command injection - job data can specify shell commands
 func (w *Worker) processShellJob(job *Job) error {
 	// Get command from job data
 	cmdStr, ok := job.Data["command"].(string)
@@ -215,8 +210,7 @@ func (w *Worker) processShellJob(job *Job) error {
 		return fmt.Errorf("command not specified")
 	}
 
-	// VULN: Direct shell command execution from job data
-	cmd := exec.Command("sh", "-c", cmdStr) // TAINT SINK
+	cmd := exec.Command("sh", "-c", cmdStr)
 
 	// Add environment from job data
 	if env, ok := job.Data["env"].(map[string]interface{}); ok {
@@ -234,7 +228,6 @@ func (w *Worker) processShellJob(job *Job) error {
 }
 
 // processWebhookJob sends an HTTP request
-// VULN: SSRF via job data
 func (w *Worker) processWebhookJob(job *Job) error {
 	url, ok := job.Data["url"].(string)
 	if !ok {
@@ -260,7 +253,6 @@ func (w *Worker) processWebhookJob(job *Job) error {
 		}
 	}
 
-	// VULN: SSRF - URL from job data
 	_, err := w.dispatcher.WebhookChannel().SendToURL(url, method, headers, body)
 	return err
 }
@@ -272,13 +264,11 @@ func (w *Worker) handleSuccess(job *Job) {
 
 	// Execute callback if specified
 	if job.Callback != "" {
-		// VULN: Command injection via callback
-		exec.Command("sh", "-c", job.Callback).Run() // TAINT SINK
+		exec.Command("sh", "-c", job.Callback).Run()
 	}
 
 	// Call callback URL if specified
 	if job.CallbackURL != "" {
-		// VULN: SSRF via callback URL
 		w.dispatcher.WebhookChannel().SendToURL(job.CallbackURL, "POST", nil, `{"status":"completed"}`)
 	}
 }
@@ -305,7 +295,7 @@ func (w *Worker) handleFailure(job *Job, jobErr error) {
 		// Execute failure callback
 		if job.Callback != "" {
 			failCallback := fmt.Sprintf("%s --failed --error '%s'", job.Callback, jobErr.Error())
-			exec.Command("sh", "-c", failCallback).Run() // VULN: Command injection
+			exec.Command("sh", "-c", failCallback).Run()
 		}
 	}
 }
@@ -397,18 +387,14 @@ func timePtr(t time.Time) *time.Time {
 }
 
 // ExecuteHook runs a hook script for job lifecycle events
-// VULN: Path traversal and command injection
 func (w *Worker) ExecuteHook(hookName string, job *Job) error {
-	// VULN: Path traversal in hook name
 	hookPath := fmt.Sprintf("./scripts/hooks/%s", hookName)
 
-	// VULN: Job ID passed to shell without sanitization
-	cmd := exec.Command(hookPath, job.ID) // TAINT SINK
+	cmd := exec.Command(hookPath, job.ID)
 
 	// Set job data as environment variables
 	for key, value := range job.Data {
 		if strVal, ok := value.(string); ok {
-			// VULN: User data in environment variables
 			cmd.Env = append(cmd.Env, fmt.Sprintf("JOB_%s=%s", key, strVal))
 		}
 	}
@@ -417,11 +403,8 @@ func (w *Worker) ExecuteHook(hookName string, job *Job) error {
 }
 
 // RunPreprocessor runs a preprocessor script on notification content
-// VULN: Command injection via notification fields
 func (w *Worker) RunPreprocessor(scriptPath string, n *channels.Notification) (string, error) {
-	// VULN: Script path not validated
-	// VULN: Notification message passed via stdin but subject via argument
-	cmd := exec.Command(scriptPath, n.Subject) // TAINT SINK
+	cmd := exec.Command(scriptPath, n.Subject)
 	cmd.Stdin = os.Stdin
 
 	output, err := cmd.Output()

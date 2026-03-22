@@ -65,7 +65,6 @@ func (si *ScheduleItem) BeforeCreate(tx *gorm.DB) error {
 }
 
 // CreateScheduleRequest for creating a schedule
-// TAINT SOURCE: JSON body
 type CreateScheduleRequest struct {
 	Name         string `json:"name" validate:"required,min=1,max=200"`
 	Description  string `json:"description" validate:"max=1000"`

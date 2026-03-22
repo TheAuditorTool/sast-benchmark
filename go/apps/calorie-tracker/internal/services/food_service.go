@@ -24,7 +24,6 @@ func NewFoodService(repo *repository.FoodRepository) *FoodService {
 }
 
 // Create creates a new food
-// TAINT FLOW: request -> service -> repository -> database
 func (s *FoodService) Create(req models.CreateFoodRequest) (*models.Food, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {
@@ -76,9 +75,7 @@ func (s *FoodService) ListByCategory(category string) ([]models.Food, error) {
 	return s.repo.ListByCategory(category)
 }
 
-// SearchVulnerable searches foods - VULNERABLE
-// TAINT FLOW: searchTerm -> repository.SearchVulnerable -> SQL
+// SearchVulnerable searches foods by term
 func (s *FoodService) SearchVulnerable(searchTerm string) ([]models.Food, error) {
-	// VULNERABLE: Search term flows directly to SQL
 	return s.repo.SearchVulnerable(searchTerm)
 }

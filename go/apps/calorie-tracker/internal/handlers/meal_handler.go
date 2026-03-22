@@ -23,7 +23,6 @@ func NewMealHandler(mealService *services.MealService) *MealHandler {
 
 // ListMeals lists meals for the current user
 // GET /api/meals
-// TAINT SOURCE: Query params (pagination) -> service -> repository -> SQL
 func (h *MealHandler) ListMeals(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -46,7 +45,6 @@ func (h *MealHandler) ListMeals(c *gin.Context) {
 
 // CreateMeal creates a new meal
 // POST /api/meals
-// TAINT SOURCE: JSON body -> service -> repository -> database
 func (h *MealHandler) CreateMeal(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -170,9 +168,8 @@ func (h *MealHandler) QuickLog(c *gin.Context) {
 	c.JSON(http.StatusCreated, models.NewSuccessResponse(meal))
 }
 
-// SearchMeals searches meals - VULNERABLE
+// SearchMeals searches meals by query
 // GET /api/meals/search
-// TAINT SOURCE: Query param "q" -> service -> repository -> SQL injection
 func (h *MealHandler) SearchMeals(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	searchTerm := c.Query("q")
@@ -182,7 +179,6 @@ func (h *MealHandler) SearchMeals(c *gin.Context) {
 		return
 	}
 
-	// VULNERABLE: searchTerm flows to SQL without proper sanitization
 	meals, err := h.mealService.SearchMealsVulnerable(userID, searchTerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Search failed"))

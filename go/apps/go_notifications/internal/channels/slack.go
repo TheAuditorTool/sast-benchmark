@@ -57,19 +57,17 @@ type SlackAttachment struct {
 }
 
 // Send delivers the notification via Slack
-// TAINT SINK: Message content is user-controlled
 func (s *SlackChannel) Send(n *Notification) (map[string]interface{}, error) {
 	webhookURL := s.webhookURL
 	if n.Recipient != "" {
-		webhookURL = n.Recipient // VULN: SSRF - user can specify any URL
+		webhookURL = n.Recipient
 	}
 
 	// Build Slack message
-	// VULN: No sanitization of message content
 	msg := SlackMessage{
-		Text:     fmt.Sprintf("*%s*\n%s", n.Subject, n.Message), // TAINT SINK
-		Username: n.Metadata["username"],                        // TAINT SINK
-		Channel:  n.Metadata["channel"],                         // TAINT: User-controlled channel override
+		Text:     fmt.Sprintf("*%s*\n%s", n.Subject, n.Message),
+		Username: n.Metadata["username"],
+		Channel:  n.Metadata["channel"],
 	}
 
 	// Add attachment if metadata present
@@ -105,16 +103,13 @@ func (s *SlackChannel) Send(n *Notification) (map[string]interface{}, error) {
 }
 
 // SendWithTemplate sends a Slack message using a template
-// VULN: Template injection - user data in template
 func (s *SlackChannel) SendWithTemplate(n *Notification, templateStr string) (map[string]interface{}, error) {
-	// VULN: User-controlled template string
-	tmpl, err := template.New("slack").Parse(templateStr) // TAINT SINK: Template injection
+	tmpl, err := template.New("slack").Parse(templateStr)
 	if err != nil {
 		return nil, err
 	}
 
 	var buf bytes.Buffer
-	// VULN: User data passed to template without sanitization
 	err = tmpl.Execute(&buf, map[string]interface{}{
 		"Subject":  n.Subject,
 		"Message":  n.Message,
@@ -129,22 +124,20 @@ func (s *SlackChannel) SendWithTemplate(n *Notification, templateStr string) (ma
 }
 
 // SendBlockKit sends a Block Kit formatted message
-// VULN: Arbitrary JSON injection into blocks
 func (s *SlackChannel) SendBlockKit(n *Notification, blocksJSON string) (map[string]interface{}, error) {
 	webhookURL := s.webhookURL
 	if n.Recipient != "" {
 		webhookURL = n.Recipient
 	}
 
-	// VULN: User-controlled JSON directly embedded
 	var blocks []interface{}
-	if err := json.Unmarshal([]byte(blocksJSON), &blocks); err != nil { // TAINT: User JSON
+	if err := json.Unmarshal([]byte(blocksJSON), &blocks); err != nil {
 		return nil, fmt.Errorf("invalid blocks JSON: %w", err)
 	}
 
 	msg := SlackMessage{
 		Text:   n.Subject, // Fallback text
-		Blocks: blocks,    // TAINT SINK: User-controlled blocks
+		Blocks: blocks,
 	}
 
 	body, _ := json.Marshal(msg)
@@ -159,18 +152,14 @@ func (s *SlackChannel) SendBlockKit(n *Notification, blocksJSON string) (map[str
 }
 
 // PostToChannel uses Slack CLI/API to post
-// VULN: Command injection via channel name
 func (s *SlackChannel) PostToChannel(channel, message string) error {
-	// VULN: Channel name in shell command
-	cmd := exec.Command("slack-cli", "chat", "send", channel, message) // TAINT SINK
+	cmd := exec.Command("slack-cli", "chat", "send", channel, message)
 	return cmd.Run()
 }
 
 // UploadFile uploads a file to Slack
-// VULN: Command injection via filename
 func (s *SlackChannel) UploadFile(channel, filePath, comment string) error {
-	// VULN: File path in shell command without quoting
 	cmdStr := fmt.Sprintf("slack-cli file upload -c %s -f %s -m %s", channel, filePath, comment)
-	cmd := exec.Command("sh", "-c", cmdStr) // TAINT SINK: Command injection
+	cmd := exec.Command("sh", "-c", cmdStr)
 	return cmd.Run()
 }

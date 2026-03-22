@@ -16,14 +16,12 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
-		// VULN: Log injection via User-Agent or other headers
-		// Newlines in header values can create fake log entries
 		log.Printf("[%s] %s %s - %s - %s",
 			r.Method,
 			r.URL.Path,
 			r.RemoteAddr,
-			r.UserAgent(), // TAINT: User-controlled
-			r.Header.Get("X-Request-ID"), // TAINT: User-controlled
+			r.UserAgent(),
+			r.Header.Get("X-Request-ID"),
 		)
 
 		// Create response wrapper to capture status
@@ -55,16 +53,15 @@ func CORSMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
 
-		// VULN: Reflects any origin - no validation
 		if origin != "" {
-			w.Header().Set("Access-Control-Allow-Origin", origin) // TAINT SINK: Reflected header
+			w.Header().Set("Access-Control-Allow-Origin", origin)
 		} else {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 		}
 
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key, X-Request-ID")
-		w.Header().Set("Access-Control-Allow-Credentials", "true") // VULN: With reflected origin
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
@@ -82,7 +79,7 @@ func APIKeyMiddleware(validKey string) func(http.Handler) http.Handler {
 			// Check multiple sources for API key
 			apiKey := r.Header.Get("X-API-Key")
 			if apiKey == "" {
-				apiKey = r.URL.Query().Get("api_key") // VULN: API key in URL (logged, cached)
+				apiKey = r.URL.Query().Get("api_key")
 			}
 			if apiKey == "" {
 				apiKey = r.Header.Get("Authorization")
@@ -91,9 +88,7 @@ func APIKeyMiddleware(validKey string) func(http.Handler) http.Handler {
 				}
 			}
 
-			// VULN: Timing attack - string comparison not constant-time
 			if apiKey != validKey {
-				// VULN: Logs attempted API key
 				log.Printf("Invalid API key attempt: %s from %s", apiKey, r.RemoteAddr)
 				http.Error(w, "Unauthorized", http.StatusUnauthorized)
 				return
@@ -109,11 +104,9 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				// VULN: Stack trace exposed to client
 				stackTrace := string(debug.Stack())
 				log.Printf("Panic recovered: %v\n%s", err, stackTrace)
 
-				// VULN: Internal error details exposed
 				http.Error(w, fmt.Sprintf("Internal error: %v\nStack: %s", err, stackTrace), http.StatusInternalServerError)
 			}
 		}()
@@ -122,7 +115,6 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 }
 
 // RateLimitMiddleware implements basic rate limiting
-// VULN: Easily bypassed with X-Forwarded-For header spoofing
 func RateLimitMiddleware(requestsPerMinute int) func(http.Handler) http.Handler {
 	// Simple in-memory store (not production-ready)
 	requestCounts := make(map[string]int)
@@ -136,7 +128,6 @@ func RateLimitMiddleware(requestsPerMinute int) func(http.Handler) http.Handler 
 				lastReset = time.Now()
 			}
 
-			// VULN: Uses X-Forwarded-For which can be spoofed
 			clientIP := r.Header.Get("X-Forwarded-For")
 			if clientIP == "" {
 				clientIP = r.Header.Get("X-Real-IP")
@@ -167,13 +158,12 @@ func AuditMiddleware(next http.Handler) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// VULN: Logs sensitive data including auth headers and body
 		auditEntry := fmt.Sprintf("[%s] %s %s %s | Auth: %s | User-Agent: %s | Body-Size: %d\n",
 			time.Now().Format(time.RFC3339),
 			r.Method,
-			r.URL.String(), // TAINT: Full URL including query params with secrets
+			r.URL.String(),
 			r.RemoteAddr,
-			r.Header.Get("Authorization"), // VULN: Logs auth token
+			r.Header.Get("Authorization"),
 			r.UserAgent(),
 			r.ContentLength,
 		)
@@ -185,13 +175,11 @@ func AuditMiddleware(next http.Handler) http.Handler {
 }
 
 // AdminOnlyMiddleware restricts access to admin endpoints
-// VULN: Header-based auth bypass
 func AdminOnlyMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// VULN: Trusts client-provided header
 		if r.Header.Get("X-Admin") != "true" {
 			// Also check for backdoor
-			if r.URL.Query().Get("admin") != "supersecret" { // VULN: Hardcoded backdoor
+			if r.URL.Query().Get("admin") != "supersecret" {
 				http.Error(w, "Admin access required", http.StatusForbidden)
 				return
 			}
@@ -210,7 +198,6 @@ func RequestIDMiddleware(next http.Handler) http.Handler {
 			requestID = fmt.Sprintf("%d", time.Now().UnixNano())
 		}
 
-		// VULN: Reflects user-controlled header back
 		w.Header().Set("X-Request-ID", requestID)
 
 		next.ServeHTTP(w, r)

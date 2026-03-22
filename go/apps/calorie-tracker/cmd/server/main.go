@@ -1,16 +1,12 @@
 // Calorie Tracker - Main Entry Point
 //
 // A full-featured calorie tracking web application built with Gin.
-// This application demonstrates multi-hop taint flow and cross-file analysis
-// patterns for testing TheAuditor static analysis tool.
-//
 // Features:
 // - User authentication with session management
 // - CRUD operations for meals, workouts, and schedules
 // - Daily calorie and macro tracking
 // - Weight and water intake logging
 // - Progress analytics and reporting
-// - VULNERABLE endpoints for security testing
 
 package main
 

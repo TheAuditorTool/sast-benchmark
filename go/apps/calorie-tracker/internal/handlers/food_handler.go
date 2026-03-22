@@ -44,7 +44,6 @@ func (h *FoodHandler) ListFoods(c *gin.Context) {
 
 // CreateFood creates a new custom food
 // POST /api/foods
-// TAINT SOURCE: JSON body -> service -> repository -> database
 func (h *FoodHandler) CreateFood(c *gin.Context) {
 	var req models.CreateFoodRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -65,9 +64,8 @@ func (h *FoodHandler) CreateFood(c *gin.Context) {
 	c.JSON(http.StatusCreated, models.NewSuccessResponse(food))
 }
 
-// SearchFoods searches foods - VULNERABLE
+// SearchFoods searches foods by query
 // GET /api/foods/search
-// TAINT SOURCE: Query param "q" -> service -> repository -> SQL injection
 func (h *FoodHandler) SearchFoods(c *gin.Context) {
 	searchTerm := c.Query("q")
 
@@ -76,7 +74,6 @@ func (h *FoodHandler) SearchFoods(c *gin.Context) {
 		return
 	}
 
-	// VULNERABLE: searchTerm flows to SQL without proper sanitization
 	foods, err := h.foodService.SearchVulnerable(searchTerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Search failed"))

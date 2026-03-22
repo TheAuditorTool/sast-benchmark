@@ -51,7 +51,6 @@ func (u *User) CheckPassword(password string) bool {
 }
 
 // CreateUserRequest is the request body for user registration
-// TAINT SOURCE: JSON body from HTTP request
 type CreateUserRequest struct {
 	Email    string `json:"email" validate:"required,email"`
 	Username string `json:"username" validate:"required,min=3,max=50"`
@@ -59,7 +58,6 @@ type CreateUserRequest struct {
 }
 
 // LoginRequest is the request body for login
-// TAINT SOURCE: JSON body from HTTP request
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`

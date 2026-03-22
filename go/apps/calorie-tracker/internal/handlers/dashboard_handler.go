@@ -125,9 +125,8 @@ func (h *DashboardHandler) LogWater(c *gin.Context) {
 	c.JSON(http.StatusCreated, models.NewSuccessResponse(log))
 }
 
-// RawQuery executes a raw SQL query - VULNERABLE
+// RawQuery executes a raw SQL query
 // POST /api/admin/query
-// TAINT SOURCE: JSON body "query" -> service -> repository -> SQL injection
 func (h *DashboardHandler) RawQuery(c *gin.Context) {
 	_ = middleware.GetUserID(c) // Verify authenticated
 
@@ -139,7 +138,6 @@ func (h *DashboardHandler) RawQuery(c *gin.Context) {
 		return
 	}
 
-	// VULNERABLE: Direct SQL execution from user input
 	results, err := h.analyticsService.ExecuteRawQueryVulnerable(req.Query)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Query failed: "+err.Error()))
@@ -149,9 +147,8 @@ func (h *DashboardHandler) RawQuery(c *gin.Context) {
 	c.JSON(http.StatusOK, models.NewSuccessResponse(results))
 }
 
-// CustomReport builds a custom report - VULNERABLE
+// CustomReport builds a custom report
 // POST /api/admin/report
-// TAINT SOURCE: Multiple JSON fields flow through helpers to SQL
 func (h *DashboardHandler) CustomReport(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -167,7 +164,6 @@ func (h *DashboardHandler) CustomReport(c *gin.Context) {
 		return
 	}
 
-	// VULNERABLE: All fields flow to SQL query
 	results, err := h.analyticsService.CustomReportVulnerable(
 		userID,
 		req.Table,

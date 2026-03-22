@@ -34,7 +34,6 @@ func NewValidationErrorResponse(errors []string) APIResponse {
 }
 
 // PaginationParams for paginated requests
-// TAINT SOURCE: Query parameters flow to SQL
 type PaginationParams struct {
 	Page      int    `form:"page" validate:"min=1"`
 	PerPage   int    `form:"per_page" validate:"min=1,max=100"`
@@ -64,8 +63,7 @@ func (p *PaginationParams) GetLimit() int {
 	return p.PerPage
 }
 
-// BuildOrderBy builds ORDER BY clause - VULNERABLE to SQL injection
-// TAINT PROPAGATION: User input -> SQL fragment
+// BuildOrderBy builds ORDER BY clause from sort parameters
 func (p *PaginationParams) BuildOrderBy(defaultSort string) string {
 	sortBy := p.SortBy
 	if sortBy == "" {
@@ -75,7 +73,6 @@ func (p *PaginationParams) BuildOrderBy(defaultSort string) string {
 	if sortOrder == "" {
 		sortOrder = "DESC"
 	}
-	// VULNERABLE: Direct string concatenation
 	return sortBy + " " + sortOrder
 }
 

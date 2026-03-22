@@ -31,29 +31,25 @@ func (e *EmailChannel) Validate(n *Notification) error {
 	if n.Recipient == "" {
 		return fmt.Errorf("recipient email is required")
 	}
-	// VULN: No email format validation
 	return nil
 }
 
 // Send delivers the notification via email
-// TAINT SINK: Recipient, Subject, and Message from user input
 func (e *EmailChannel) Send(n *Notification) (map[string]interface{}, error) {
 	// Build email message
-	// VULN: No sanitization of header values - header injection possible
 	msg := fmt.Sprintf("From: %s\r\n", e.config.From)
-	msg += fmt.Sprintf("To: %s\r\n", n.Recipient) // TAINT SINK: User-controlled recipient
-	msg += fmt.Sprintf("Subject: %s\r\n", n.Subject) // TAINT SINK: Header injection via subject
+	msg += fmt.Sprintf("To: %s\r\n", n.Recipient)
+	msg += fmt.Sprintf("Subject: %s\r\n", n.Subject)
 	msg += "MIME-Version: 1.0\r\n"
 	msg += "Content-Type: text/html; charset=UTF-8\r\n"
 	msg += "\r\n"
-	msg += n.Message // TAINT SINK: User-controlled body
+	msg += n.Message
 
 	// Add custom headers from metadata
-	// VULN: User-controlled headers - header injection
 	for key, value := range n.Metadata {
 		if strings.HasPrefix(key, "header_") {
 			headerName := strings.TrimPrefix(key, "header_")
-			msg = fmt.Sprintf("%s: %s\r\n", headerName, value) + msg // TAINT SINK
+			msg = fmt.Sprintf("%s: %s\r\n", headerName, value) + msg
 		}
 	}
 
@@ -65,9 +61,8 @@ func (e *EmailChannel) Send(n *Notification) (map[string]interface{}, error) {
 		auth = smtp.PlainAuth("", e.config.Username, e.config.Password, e.config.Host)
 	}
 
-	// VULN: TLS verification disabled
 	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true, // VULN: No certificate validation
+		InsecureSkipVerify: true,
 		ServerName:         e.config.Host,
 	}
 
@@ -129,13 +124,10 @@ func (e *EmailChannel) sendWithTLS(addr string, auth smtp.Auth, from, to string,
 }
 
 // SendViaMailCommand sends email using system mail command
-// VULN: Command injection via recipient or subject
 func (e *EmailChannel) SendViaMailCommand(n *Notification) error {
-	// VULN: User input directly in shell command
-	// n.Recipient could be "user@example.com; rm -rf /"
 	cmd := exec.Command("mail",
-		"-s", n.Subject, // TAINT SINK: Command injection
-		n.Recipient,     // TAINT SINK: Command injection
+		"-s", n.Subject,
+		n.Recipient,
 	)
 
 	stdin, err := cmd.StdinPipe()
@@ -152,10 +144,8 @@ func (e *EmailChannel) SendViaMailCommand(n *Notification) error {
 }
 
 // SendViaSendmail uses sendmail binary
-// VULN: Command injection
 func (e *EmailChannel) SendViaSendmail(n *Notification) error {
-	// VULN: Recipient injected into command
 	cmdStr := fmt.Sprintf("echo '%s' | sendmail -t %s", n.Message, n.Recipient)
-	cmd := exec.Command("sh", "-c", cmdStr) // TAINT SINK: Shell injection
+	cmd := exec.Command("sh", "-c", cmdStr)
 	return cmd.Run()
 }

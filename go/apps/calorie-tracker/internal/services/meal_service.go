@@ -26,7 +26,6 @@ func NewMealService(repo *repository.MealRepository) *MealService {
 }
 
 // Create creates a new meal
-// TAINT FLOW: request -> service -> repository -> database
 func (s *MealService) Create(userID string, req models.CreateMealRequest) (*models.Meal, error) {
 	// Validate request
 	if errs := validation.ValidateStruct(&req); errs != nil {
@@ -128,7 +127,6 @@ func (s *MealService) Delete(mealID, userID string) error {
 }
 
 // ListForUser lists meals for a user
-// TAINT FLOW: pagination.BuildOrderBy() -> repository -> SQL ORDER BY
 func (s *MealService) ListForUser(userID string, pagination *models.PaginationParams, dateFilter *models.DateRangeFilter) ([]models.Meal, error) {
 	limit := pagination.GetLimit()
 	offset := pagination.GetOffset()
@@ -146,10 +144,8 @@ func (s *MealService) GetDailySummary(userID, date string) (*models.DailyMealSum
 	return s.repo.GetDailySummary(userID, date)
 }
 
-// SearchMealsVulnerable searches meals - VULNERABLE
-// TAINT FLOW: searchTerm -> repository.SearchVulnerable -> SQL
+// SearchMealsVulnerable searches meals by term
 func (s *MealService) SearchMealsVulnerable(userID, searchTerm string) ([]models.Meal, error) {
-	// VULNERABLE: Search term flows directly to SQL
 	return s.repo.SearchVulnerable(userID, searchTerm)
 }
 
