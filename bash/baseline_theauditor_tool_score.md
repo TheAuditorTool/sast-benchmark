@@ -1,8 +1,8 @@
 # Baseline Score: TheAuditor v3.5
 
 **Tool:** TheAuditor v3.5
-**Benchmark:** Bash SAST Benchmark v0.3 (237 test cases, 13 categories)
-**Date:** 2026-03-20
+**Benchmark:** Bash SAST Benchmark v0.3.1 (356 test cases, 16 categories)
+**Date:** 2026-03-23
 **Configuration:** `aud full --offline` (default rules, no tuning)
 
 ---
@@ -22,33 +22,36 @@ This baseline is a public roadmap. Every FN below is a detection gap we intend t
 ```
 Category             CWE    TP    FP    FN    TN      TPR     FPR   Score
 ------------------------------------------------------------------------------
-unquoted             78     8     0     2     3     80.0%    0.0%  +80.0%
-ssrf                 918    8     0     3     2     72.7%    0.0%  +72.7%
-codeinj              94     16    1     2     5     88.9%   16.7%  +72.2%
-hardcoded_creds      798    5     0     2     4     71.4%    0.0%  +71.4%
-weakcrypto           327    4     0     2     3     66.7%    0.0%  +66.7%
-rce                  94     5     1     0     2    100.0%   33.3%  +66.7%
-ssl_bypass           295    3     1     3     4     50.0%   20.0%  +30.0%
+hardcoded_creds      798    5     0     2     7     71.4%    0.0%  +71.4%
+codeinj              94     16    6     2     12    88.9%   33.3%  +55.6%
+unquoted             78     8     3     2     7     80.0%   30.0%  +50.0%
+race_condition       362    2     0     3     5     40.0%    0.0%  +40.0%
+rce                  94     5     3     0     2    100.0%   60.0%  +40.0%
+weakcrypto           327    4     2     2     4     66.7%   33.3%  +33.3%
+ssrf                 918    8     5     3     6     72.7%   45.5%  +27.3%
 insecure_temp        377    3     2     1     2     75.0%   50.0%  +25.0%
-cmdi                 78     40    11    13    10    75.5%   52.4%  +23.1%
-insecure_perms       732    4     3     1     1     80.0%   75.0%   +5.0%
-sqli                 89     8     2     13    4     38.1%   33.3%   +4.8%
-pathtraver           22     4     4     5     3     44.4%   57.1%  -12.7%
-infodisclosure       200    2     5     4     3     33.3%   62.5%  -29.2%
+cmdi                 78     39    26    14    27    73.6%   49.1%  +24.5%
+insecure_perms       732    4     5     1     2     80.0%   71.4%   +8.6%
+ssl_bypass           295    3     3     3     4     50.0%   42.9%   +7.1%
+auth_bypass          306    0     0     4     4      0.0%    0.0%   +0.0%
+weakrand             330    0     0     5     5      0.0%    0.0%   +0.0%
+pathtraver           22     4     5     5     4     44.4%   55.6%  -11.1%
+sqli                 89     7     10    14    11    33.3%   47.6%  -14.3%
+infodisclosure       200    2     6     4     3     33.3%   66.7%  -33.3%
 ------------------------------------------------------------------------------
-OVERALL                     110   30    51    46    68.3%   39.5%  +28.8%
+OVERALL                     110   76    65    105   62.9%   42.0%  +20.9%
 ```
 
-**Score: +28.8%** (Youden's J = TPR - FPR)
+**Score: +20.9%** (Youden's J = TPR - FPR)
 
 ---
 
 ## What The Numbers Mean
 
 - **110 True Positives**: Vulnerabilities correctly detected
-- **46 True Negatives**: Safe code correctly ignored
-- **51 False Negatives**: Vulnerabilities missed — detection gaps
-- **30 False Positives**: Safe code incorrectly flagged — discrimination gaps
+- **105 True Negatives**: Safe code correctly ignored
+- **65 False Negatives**: Vulnerabilities missed — detection gaps
+- **76 False Positives**: Safe code incorrectly flagged — discrimination gaps
 
 ---
 
