@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score a SAST tool's SARIF output against the Go/Rust/Bash SAST Benchmark.
+"""Score a SAST tool's SARIF output against the Go/Rust/Bash/PHP SAST Benchmark.
 
 Usage:
     python score_sarif.py <tool_output.sarif> [expectedresults.csv]
@@ -99,13 +99,14 @@ def load_sarif_detections_filename(sarif_path):
 
 
 def load_sarif_findings(sarif_path):
-    """Parse SARIF and return list of (file, line) tuples for all findings."""
+    """Parse SARIF and return list of (file, line, ruleId) tuples for all findings."""
     with open(sarif_path, "r", encoding="utf-8") as f:
         sarif = json.load(f)
 
     findings = []
     for run in sarif.get("runs", []):
         for result in run.get("results", []):
+            rule_id = result.get("ruleId", "")
             locations = result.get("locations", [])
             for loc in locations:
                 phys = loc.get("physicalLocation", {})
@@ -114,7 +115,7 @@ def load_sarif_findings(sarif_path):
                 region = phys.get("region", {})
                 line = region.get("startLine", 0)
                 if uri and line:
-                    findings.append((uri, line))
+                    findings.append((uri, line, rule_id))
 
     return findings
 
@@ -133,7 +134,7 @@ def scan_annotations(source_dirs):
         for root, dirs, files in os.walk(source_dir):
             dirs[:] = [d for d in dirs if d not in ("target", ".git", "node_modules", ".auditor_venv")]
             for fn in files:
-                if not (fn.endswith(".rs") or fn.endswith(".sh")):
+                if not (fn.endswith(".rs") or fn.endswith(".sh") or fn.endswith(".php")):
                     continue
                 fpath = os.path.join(root, fn)
                 try:
@@ -168,34 +169,40 @@ def detect_annotation_mode(expected):
 def compute_detections_annotation(expected, findings, annotations):
     """Match SARIF findings against annotation line ranges.
 
-    A test case is "detected" if any SARIF finding's (file, line) falls
-    within the annotation's (file, start_line, end_line) range.
+    A test case is "detected" if a SARIF finding's (file, line) falls
+    within the annotation's (file, start_line, end_line) range AND the
+    finding's ruleId category matches the test case's expected category.
+    This follows the OWASP standard: correct CWE classification required.
     """
     detected = set()
 
-    # Build lookup: normalized_file -> set of (line, ...)
-    finding_map = defaultdict(set)
-    for uri, line in findings:
+    # Build lookup: normalized_file -> list of (line, ruleId)
+    finding_map = defaultdict(list)
+    for uri, line, rule_id in findings:
         # Normalize: strip leading paths to get relative
         normalized = uri.replace("\\", "/")
-        finding_map[normalized].add(line)
+        finding_map[normalized].append((line, rule_id))
 
     for key, info in expected.items():
         ann = annotations.get(key)
         if not ann:
             continue
 
+        expected_cat = info["category"]
         ann_file = ann["file"]
         ann_start = ann["start"]
         ann_end = ann["end"]
 
         # Check all path variants for the annotation file
-        for fpath, lines_set in finding_map.items():
+        for fpath, line_rules in finding_map.items():
             if fpath.endswith(ann_file) or ann_file.endswith(fpath) or fpath == ann_file:
-                for line in lines_set:
+                for line, rule_id in line_rules:
                     if ann_start <= line <= ann_end:
-                        detected.add(key)
-                        break
+                        # Category-aware: strip "taint:" prefix and match
+                        finding_cat = rule_id.replace("taint:", "")
+                        if finding_cat == expected_cat:
+                            detected.add(key)
+                            break
                 if key in detected:
                     break
 
@@ -365,7 +372,7 @@ def main():
         print("  tool_output.sarif      SARIF 2.1.0 file from any SAST tool")
         print("  expectedresults.csv    Ground truth CSV (default: auto-detect)")
         print("  --annotations-dir DIR  Source directory with vuln-code-snippet annotations")
-        print("                         (required for Rust/Bash; Go uses filename matching)")
+        print("                         (required for Rust/Bash/PHP; Go uses filename matching)")
         print()
         print("Examples:")
         print("  # Go (filename-based matching)")
@@ -406,7 +413,7 @@ def main():
                 annotations_dirs.append(candidate)
 
     if use_annotations:
-        print("Mode: annotation-based matching (Rust/Bash)")
+        print("Mode: annotation-based matching (Rust/Bash/PHP)")
         annotations = scan_annotations(annotations_dirs)
         print("  Annotations found: %d" % len(annotations))
         findings = load_sarif_findings(sarif_path)

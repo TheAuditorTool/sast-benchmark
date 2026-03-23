@@ -1,6 +1,6 @@
-# OWASP-Style SAST Benchmark for Go, Rust, and Bash
+# OWASP-Style SAST Benchmark for Go, Rust, Bash, and PHP
 
-The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, and **Bash** -- three languages with zero existing public SAST benchmarks.
+The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, and **PHP** -- languages with zero existing public SAST benchmarks.
 
 ## Why This Exists
 
@@ -10,11 +10,11 @@ SAST tools need ground truth to measure accuracy. Without benchmarks, you can't 
 - **Does the tool cry wolf on safe code?** (False Positive Rate)
 - **Is the tool getting better or worse over time?** (Regression detection)
 
-The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, or Bash. This project fills that gap.
+The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, Bash, or PHP. This project fills that gap.
 
 ## Project Status
 
-This benchmark is under active development and released as open source to invite community contribution and iteration. Building ground truth for three languages simultaneously is a massive undertaking. We have done our best to classify every test case correctly, but acknowledge that some classifications may need adjustment as the community reviews them. That is the point of open-sourcing it -- no single team can perfectly write their own exam and grade it too.
+This benchmark is under active development and released as open source to invite community contribution and iteration. Building ground truth for four languages simultaneously is a massive undertaking. We have done our best to classify every test case correctly, but acknowledge that some classifications may need adjustment as the community reviews them. That is the point of open-sourcing it -- no single team can perfectly write their own exam and grade it too.
 
 If you find a misclassification, please open an issue. Every correction makes the benchmark more valuable for everyone.
 
@@ -51,6 +51,7 @@ gorustbash_benchmark/
     score_sarif.py           # SARIF scorer (any SAST tool)
     convert_theauditor.py    # TheAuditor DB to SARIF bridge
     validate_go.py           # Go CSV/file consistency checker
+    validate_php.py          # PHP CSV/annotation consistency checker
   go/                      # Go benchmark (534 tests, 24 CWEs)
     expectedresults-0.3.2.csv
     go_benchmark.md
@@ -72,6 +73,13 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     apps/                    # 4 annotated applications
     testcode/                # 16 standalone CWE test files
+  php/                     # PHP benchmark (369 tests, 25 CWEs)
+    expectedresults-0.1.0.csv  # Answer key (369 test cases, OWASP CSV format)
+    php_benchmark.md         # Full benchmark specification
+    SCORING.md               # Scoring methodology and tool instructions
+    CHANGELOG.md             # Version history
+    testcode/                # 251 standalone test files
+    apps/                    # 4 annotated applications
 ```
 
 ## Language Benchmarks
@@ -150,14 +158,47 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 13 adversarial CWE test files. TP/TN split: 49/51.
 
+### PHP v0.1.0 -- 369 test cases, 25 CWEs, 4 frameworks
+
+| Category | CWE | Vuln | Safe | Total |
+|----------|-----|------|------|-------|
+| sqli | 89 | 28 | 28 | 56 |
+| xss | 79 | 20 | 19 | 39 |
+| cmdi | 78 | 12 | 12 | 24 |
+| pathtraver | 22 | 12 | 11 | 23 |
+| fileinclusion | 98 | 10 | 9 | 19 |
+| typejuggling | 697 | 7 | 7 | 14 |
+| ssrf | 918 | 7 | 7 | 14 |
+| deserial | 502 | 7 | 7 | 14 |
+| codeinj | 94 | 6 | 6 | 12 |
+| csrf | 352 | 6 | 6 | 12 |
+| fileupload | 434 | 6 | 6 | 12 |
+| hardcodedcreds | 798 | 6 | 6 | 12 |
+| xxe | 611 | 6 | 6 | 12 |
+| extract | 621 | 5 | 5 | 10 |
+| massassign | 915 | 5 | 5 | 10 |
+| redirect | 601 | 5 | 5 | 10 |
+| ssti | 1336 | 5 | 5 | 10 |
+| weakhash | 328 | 5 | 5 | 10 |
+| weakrand | 330 | 5 | 5 | 10 |
+| headerinj | 113 | 4 | 4 | 8 |
+| ldapi | 90 | 4 | 4 | 8 |
+| securecookie | 614 | 4 | 4 | 8 |
+| unsafereflect | 470 | 4 | 4 | 8 |
+| variablevars | 627 | 4 | 4 | 8 |
+| weakcipher | 327 | 3 | 3 | 6 |
+
+251 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
+
 ## Combined Scale
 
 | Language | Tests | CWEs | TP/TN Balance |
 |----------|-------|------|---------------|
 | Go | 534 | 24 | 50/50 |
+| PHP | 369 | 25 | 50/50 |
 | Bash | 356 | 16 | 49/51 |
 | Rust | 268 | 13 | 46/54 |
-| **Total** | **1,158** | **50 unique** | |
+| **Total** | **1,527** | **63 unique** | |
 
 ## How to Use
 
@@ -171,7 +212,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 1,158 across three languages. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 1,527 across four languages. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
 
 We release this openly because imperfect ground truth that invites correction is more valuable than no ground truth at all.

@@ -84,14 +84,21 @@ RULE_MAP = {
     "bash-missing-auth-check": "auth_bypass",
     "bash-env-auth-bypass": "auth_bypass",
     # --- Rust rules ---
+    # Weak random (crypto_analyze.py)
+    "rust-weak-random": "weakrand",
     # Taint injection (rust_injection_analyze.py)
     "rust-command-injection-taint": "cmdi",
     "rust-sql-injection-taint": "sqli",
     "rust-path-traversal-taint": "pathtraver",
+    "rust-path-traversal-sink": "pathtraver",
     "rust-ssrf-taint": "ssrf",
+    "rust-ssrf-sink": "ssrf",
+    "express-ssrf-taint": "ssrf",
     # Structural injection (rust_injection_analyze.py)
     "rust-command-injection": "cmdi",
     "rust-sql-injection-format": "sqli",
+    "rust-sql-injection-sink": "sqli",
+    "rust-sql-injection-structural": "sqli",
     # Polyglot taint rules
     "path-traversal-taint": "pathtraver",
     "ssrf-taint": "ssrf",
@@ -146,6 +153,40 @@ RULE_MAP = {
     # ReDoS (redos_analyze.py)
     "redos-taint": "redos",
     "redos-dynamic-regex": "redos",
+    # --- PHP rules ---
+    "php-sql-injection": "sqli",
+    "php-sql-injection-concat": "sqli",
+    "php-sql-injection-taint": "sqli",
+    "php-command-injection": "cmdi",
+    "php-command-injection-taint": "cmdi",
+    "php-code-injection": "codeinj",
+    "php-file-inclusion": "fileinclusion",
+    "php-file-inclusion-taint": "fileinclusion",
+    "php-path-traversal": "pathtraver",
+    "php-path-traversal-taint": "pathtraver",
+    "php-xss": "xss",
+    "php-xss-taint": "xss",
+    "php-ssrf": "ssrf",
+    "php-ssrf-taint": "ssrf",
+    "php-deserialization": "deserial",
+    "php-insecure-deserialization": "deserial",
+    "php-xxe": "xxe",
+    "php-type-juggling": "typejuggling",
+    "php-extract-injection": "extract",
+    "php-variable-variables": "variablevars",
+    "php-unsafe-reflection": "unsafereflect",
+    "php-file-upload": "fileupload",
+    "php-open-redirect": "redirect",
+    "php-weak-hash": "weakhash",
+    "php-weak-random": "weakrand",
+    "php-weak-cipher": "weakcipher",
+    "php-hardcoded-credential": "hardcodedcreds",
+    "php-csrf-missing": "csrf",
+    "php-header-injection": "headerinj",
+    "php-ldap-injection": "ldapi",
+    "php-insecure-cookie": "securecookie",
+    "php-mass-assignment": "massassign",
+    "php-template-injection": "ssti",
 }
 
 SINK_MAP = {
@@ -174,10 +215,23 @@ SINK_MAP = {
     "Memory Safety": "memsafety",
     "Insecure Deserialization": "deser",
     "ReDoS": "redos",
+    # PHP-specific sink types
+    "File Inclusion": "fileinclusion",
+    "Type Juggling": "typejuggling",
+    "Variable Extraction": "extract",
+    "Variable Variables": "variablevars",
+    "Unsafe Reflection": "unsafereflect",
+    "Unrestricted Upload": "fileupload",
+    "Header Injection": "headerinj",
+    "Mass Assignment": "massassign",
+    "Server-Side Template Injection": "ssti",
+    "XXE": "xxe",
 }
 
 NOISE_RULES = {
     "deadcode-function",
+    "deadcode-module",
+    "unused_dependencies",
     "api-missing-auth",
     "bash-missing-set-e",
     "bash-missing-set-u",
@@ -266,8 +320,9 @@ def detect_language(db_path):
     go_count = sum(1 for r in rules if r.startswith("go-"))
     bash_count = sum(1 for r in rules if r.startswith("bash-"))
     rust_count = sum(1 for r in rules if r.startswith("rust-"))
+    php_count = sum(1 for r in rules if r.startswith("php-"))
 
-    counts = {"go": go_count, "bash": bash_count, "rust": rust_count}
+    counts = {"go": go_count, "bash": bash_count, "rust": rust_count, "php": php_count}
     return max(counts, key=counts.get)
 
 
@@ -278,8 +333,8 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
 
     # For annotation-based languages, scan source files
     file_ranges = {}
-    if language in ("bash", "rust") and benchmark_dir:
-        ext = ".sh" if language == "bash" else ".rs"
+    if language in ("bash", "rust", "php") and benchmark_dir:
+        ext = {"bash": ".sh", "rust": ".rs", "php": ".php"}[language]
         file_ranges = scan_annotations(benchmark_dir, extensions=(ext,))
 
     conn = sqlite3.connect(db_path)
@@ -381,7 +436,7 @@ def main():
         print("Usage: python convert_theauditor.py <db_path> [options]", file=sys.stderr)
         print(file=sys.stderr)
         print("Options:", file=sys.stderr)
-        print("  --language go|bash|rust   Language (auto-detected if omitted)", file=sys.stderr)
+        print("  --language go|bash|rust|php  Language (auto-detected if omitted)", file=sys.stderr)
         print("  --benchmark-dir <path>    Benchmark directory (required for bash/rust)", file=sys.stderr)
         print(file=sys.stderr)
         print("Examples:", file=sys.stderr)
@@ -406,7 +461,7 @@ def main():
             i += 1
 
     # Auto-detect benchmark dir if not provided
-    if benchmark_dir is None and language in ("bash", "rust"):
+    if benchmark_dir is None and language in ("bash", "rust", "php"):
         parent = os.path.dirname(os.path.dirname(os.path.abspath(db_path)))
         if os.path.isdir(os.path.join(parent, "testcode")):
             benchmark_dir = parent
