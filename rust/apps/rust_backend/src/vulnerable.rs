@@ -261,11 +261,11 @@ async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Re
 }
 // vuln-code-snippet end intoverflowBackendOverflow
 
-// vuln-code-snippet start intoverflowBackendCheckedArithmetic
 ///Checked arithmetic prevents overflow
 async fn integer_safe(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let a: i32 = query.get("a").and_then(|s| s.parse().ok()).unwrap_or(0);
     let b: i32 = query.get("b").and_then(|s| s.parse().ok()).unwrap_or(0);
+    // vuln-code-snippet start intoverflowBackendCheckedArithmetic
     let checked_add = a.checked_add(b); // vuln-code-snippet target-line intoverflowBackendCheckedArithmetic
     let checked_mul = a.checked_mul(b);
     HttpResponse::Ok().json(VulnResponse {

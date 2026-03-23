@@ -4,7 +4,12 @@
 pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
     let url = req.param("url");
 
-    let _resp = fetch_no_redirects(&url); // vuln-code-snippet target-line testcodeSsrf004
+    let redirect_policy = "none"; // vuln-code-snippet target-line testcodeSsrf004
+    if redirect_policy != "none" {
+        return super::shared::BenchmarkResponse::bad_request("Redirects must be disabled for external requests");
+    }
+
+    let _resp = fetch_no_redirects(&url);
 
     super::shared::BenchmarkResponse::ok(&format!("Fetched (no redirects): {}", url))
 }
