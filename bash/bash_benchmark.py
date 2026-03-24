@@ -31,7 +31,7 @@ GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.3.1.csv"
 # 27 distinct rules fire for bash. Each maps to a benchmark category.
 RULE_MAP = {
     # Command injection (CWE-78) — 12 rules
-    "bash-eval-injection": "cmdi",              # eval/bash -c with variable expansion
+    "bash-eval-injection": ["cmdi", "codeinj"],  # eval/bash -c — both CWE-78 and CWE-94
     "bash-exec-injection": "cmdi",              # exec with variable
     "bash-command-injection-taint": "cmdi",     # IFDS-confirmed taint->command flows
     "bash-read-without-r": "cmdi",              # read without -r flag (backslash interp)
@@ -39,13 +39,19 @@ RULE_MAP = {
     "bash-printf-format-injection": "cmdi",     # printf with variable format string
     "bash-sudo-variable": "cmdi",               # sudo $cmd
     "bash-variable-as-command": "cmdi",         # $cmd arg1 arg2
-    "bash-variable-command": "cmdi",            # similar variant
+    "bash-variable-command": ["cmdi", "codeinj"],  # variable as command — both CWE-78/94
     "bash-backtick-injection": "cmdi",          # `$cmd` backtick substitution
     "bash-indirect-expansion": "cmdi",          # ${!var} indirect expansion
     "bash-environment-injection": "cmdi",       # LD_PRELOAD, LD_LIBRARY_PATH
     "bash-path-modification": "cmdi",           # PATH=./bin:$PATH
-    # Code injection (CWE-94) — 1 rule
+    "bash-arithmetic-injection": "cmdi",        # $(( )) arithmetic expansion with variable
+    # Code injection (CWE-94) — 7 rules
     "bash-source-injection": "codeinj",         # source/dot with variable path
+    "bash-bash-c-injection": "codeinj",         # bash -c with variable expansion
+    "bash-sh-c-injection": "codeinj",           # sh -c with variable expansion
+    "bash-zsh-c-injection": "codeinj",          # zsh -c with variable expansion
+    "bash-ksh-c-injection": "codeinj",          # ksh -c with variable expansion
+    "bash-trap-injection": "codeinj",           # trap with variable command string
     # Unquoted expansion (CWE-78 variant) — 2 rules
     "bash-unquoted-expansion": "unquoted",      # unquoted vars in commands
     "bash-unquoted-dangerous": "unquoted",      # unquoted + dangerous cmd (rm, cp, mv)
@@ -54,11 +60,13 @@ RULE_MAP = {
     "secret-hardcoded-assignment": "hardcoded_creds",  # language-agnostic secret rule
     # Weak crypto (CWE-327) — 1 rule
     "bash-weak-crypto": "weakcrypto",           # md5sum, sha1sum
-    # Insecure permissions (CWE-732) — 2 rules
-    "bash-chmod-777": "insecure_perms",         # chmod 777
+    # Insecure permissions (CWE-732) — 3 rules
+    "bash-chmod-777": "insecure_perms",         # chmod 777, chmod a+rwx (symbolic)
     "bash-chmod-666": "insecure_perms",         # chmod 666
-    # SSL/TLS bypass (CWE-295) — 1 rule
-    "bash-ssl-bypass": "ssl_bypass",            # curl -k, wget --no-check-certificate, ssh StrictHostKeyChecking
+    "bash-insecure-umask": "insecure_perms",    # umask 000
+    # SSL/TLS bypass (CWE-295) — 2 rules
+    "bash-ssl-bypass": "ssl_bypass",            # curl -k, wget --no-check-certificate, env var bypass
+    "bash-ssh-hostkey-bypass": "ssl_bypass",    # SSH StrictHostKeyChecking=no
     # Information disclosure (CWE-200) — 1 rule
     "bash-debug-mode-leak": "infodisclosure",   # set -x / set -o xtrace
     # RCE pipe-to-shell (CWE-94) — 1 rule
@@ -72,6 +80,13 @@ RULE_MAP = {
     # Authentication bypass (CWE-287/306) — v0.3.1
     "bash-missing-auth-check": "auth_bypass",   # functions that skip authentication
     "bash-env-auth-bypass": "auth_bypass",      # SKIP_AUTH env var patterns
+    "bash-empty-credential-bypass": "auth_bypass",  # empty cred comparison without -z guard
+    "bash-missing-webhook-signature": "auth_bypass", # webhook body parsed without HMAC
+    "bash-timing-unsafe-compare": "auth_bypass",    # [[ == ]] on secrets without constant-time
+    # JSON body injection (CWE-94) — curl -d with unescaped variable expansion
+    "bash-json-body-injection": "codeinj",
+    # Cross-category taint rules
+    "ssrf-taint": "ssrf",                          # SSRF only — codeinj covered by bash-json-body-injection
 }
 
 # Rules to IGNORE in scoring (not security-relevant for benchmark categories)
@@ -89,7 +104,7 @@ SINK_MAP = {
     "Command Injection": "cmdi",
     "SQL Injection": "sqli",
     "Path Traversal": "pathtraver",
-    "Server-Side Request Forgery (SSRF)": "ssrf",  # exact string from DB
+    "Server-Side Request Forgery (SSRF)": "ssrf",  # SSRF only — codeinj covered by structural rule
     "Information Disclosure": "infodisclosure",
     "Weak Cryptography": "weakcrypto",
     "Remote Code Execution": "rce",
@@ -218,9 +233,12 @@ def main():
     c.execute("SELECT file, line, rule FROM pattern_findings")
     for f, ln, r in c.fetchall():
         if r not in NOISE_RULES:
-            cat = RULE_MAP.get(r)
-            if cat:
-                findings[f].add((ln, cat))
+            cats = RULE_MAP.get(r)
+            if cats:
+                if isinstance(cats, str):
+                    cats = [cats]
+                for cat in cats:
+                    findings[f].add((ln, cat))
 
     # Track 2: resolved_flow_audit (taint-confirmed)
     c.execute(
@@ -228,9 +246,12 @@ def main():
         "FROM resolved_flow_audit WHERE status = 'VULNERABLE'"
     )
     for f, ln, vt in c.fetchall():
-        cat = SINK_MAP.get(vt)
-        if cat:
-            findings[f].add((ln, cat))
+        cats = SINK_MAP.get(vt)
+        if cats:
+            if isinstance(cats, str):
+                cats = [cats]
+            for cat in cats:
+                findings[f].add((ln, cat))
 
     conn.close()
 
@@ -252,7 +273,7 @@ def main():
             for loc in locs:
                 file_findings = findings.get(loc["file"], set())
                 for ln, found_cat in file_findings:
-                    if loc["start"] <= ln <= loc["end"]:
+                    if loc["start"] <= ln <= loc["end"] and found_cat == cat:
                         detected = True
                         break
                 if detected:
@@ -331,12 +352,13 @@ def main():
         if not tc["vulnerable"]:
             continue
         key = tc["key"]
+        cat = tc["category"]
         locs = snippets.get(key, [])
         detected = False
         for loc in locs:
             file_findings = findings.get(loc["file"], set())
             for ln, found_cat in file_findings:
-                if loc["start"] <= ln <= loc["end"]:
+                if loc["start"] <= ln <= loc["end"] and found_cat == cat:
                     detected = True
                     break
             if detected:
@@ -360,12 +382,13 @@ def main():
         if tc["vulnerable"]:
             continue
         key = tc["key"]
+        cat = tc["category"]
         locs = snippets.get(key, [])
         detected = False
         for loc in locs:
             file_findings = findings.get(loc["file"], set())
             for ln, found_cat in file_findings:
-                if loc["start"] <= ln <= loc["end"]:
+                if loc["start"] <= ln <= loc["end"] and found_cat == cat:
                     detected = True
                     break
             if detected:

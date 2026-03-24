@@ -52,6 +52,7 @@ gorustbash_benchmark/
     convert_theauditor.py    # TheAuditor DB to SARIF bridge
     validate_go.py           # Go CSV/file consistency checker
     validate_php.py          # PHP CSV/annotation consistency checker
+    validate_adversarial.py  # Adversarial CSV/annotation consistency checker
   go/                      # Go benchmark (534 tests, 24 CWEs)
     expectedresults-0.3.2.csv
     go_benchmark.md
@@ -80,6 +81,12 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     testcode/                # 251 standalone test files
     apps/                    # 4 annotated applications
+  adversarial/             # Adversarial evasion benchmark (60 tests, 6 categories)
+    expectedresults-0.1.0.csv  # Answer key (60 test cases, OWASP CSV format)
+    adversarial_benchmark.py   # Scoring script (EIDL-aware)
+    adversarial_benchmark.md   # Methodology and category descriptions
+    CHANGELOG.md               # Version history
+    testcode/                  # Cross-language test cases (JS, Python, Go)
 ```
 
 ## Language Benchmarks
@@ -190,6 +197,19 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 251 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
+### Adversarial Evasion v0.1.0 -- 60 test cases, 6 categories, cross-language
+
+| Category | CWE | Vuln | Safe | Total |
+|----------|-----|------|------|-------|
+| unicode_payload | 506 | 5 | 5 | 10 |
+| visual_deception | 451 | 6 | 4 | 10 |
+| dynamic_construction | 506 | 6 | 4 | 10 |
+| supply_chain | 506 | 5 | 5 | 10 |
+| ai_prompt_injection | 1059 | 5 | 5 | 10 |
+| c2_fingerprint | 506 | 5 | 5 | 10 |
+
+Cross-language (JavaScript, Python, Go). Tests evasion detection rather than vulnerability detection: invisible Unicode payloads (Glassworm/Trojan Source), homoglyph identifier attacks, dynamic code construction, supply chain install hooks, AI prompt injection in comments, and non-standard C2 channels (Solana, Google Calendar, DNS TXT). Based on real-world campaigns from 2024-2026. TP/TN balance: 53/47.
+
 ## Combined Scale
 
 | Language | Tests | CWEs | TP/TN Balance |
@@ -198,7 +218,8 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 | PHP | 369 | 25 | 50/50 |
 | Bash | 356 | 16 | 49/51 |
 | Rust | 268 | 13 | 46/54 |
-| **Total** | **1,527** | **63 unique** | |
+| Adversarial | 60 | 4 | 53/47 |
+| **Total** | **1,587** | **66 unique** | |
 
 ## How to Use
 

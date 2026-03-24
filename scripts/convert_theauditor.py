@@ -113,6 +113,21 @@ RULE_MAP = {
     "rust-ffi-raw-pointer-return": "memsafety",
     "rust-ffi-extern-block": "memsafety",
     "rust-ffi-panic-across-boundary": "memsafety",
+    # Unsafe block operations (memory_safety.py dynamic rules)
+    "rust-unsafe-from-raw": "memsafety",
+    "rust-unsafe-leak": "memsafety",
+    "rust-unsafe-into-raw": "memsafety",
+    "rust-unsafe-ManuallyDrop-new": "memsafety",
+    "rust-unsafe-ManuallyDrop-into-inner": "memsafety",
+    "rust-unsafe-ManuallyDrop-drop": "memsafety",
+    "rust-unsafe-ManuallyDrop-take": "memsafety",
+    "rust-unsafe-set-len": "memsafety",
+    "rust-unsafe-get-unchecked": "memsafety",
+    "rust-unsafe-get-unchecked-mut": "memsafety",
+    "rust-unsafe-transmute": "memsafety",
+    "rust-unsafe-transmute-copy": "memsafety",
+    "rust-unsafe-from-raw-parts": "memsafety",
+    "rust-unsafe-from-raw-parts-mut": "memsafety",
     # Panic paths (panic_paths.py)
     "rust-panic-unwrap": "memsafety",
     "rust-panic-expect": "memsafety",
@@ -121,7 +136,7 @@ RULE_MAP = {
     "rust-unimplemented-in-production": "memsafety",
     "rust-unreachable-in-production": "memsafety",
     # Integer safety (integer_safety.py)
-    "rust-integer-high-risk-function": "intoverflow",
+    "rust-unchecked-arithmetic": "intoverflow",
     "rust-truncating-cast": "intoverflow",
     "rust-wrapping-arithmetic-used": "intoverflow",
     # Supply chain + crypto (supply_chain.py + crypto_weakness.py)
