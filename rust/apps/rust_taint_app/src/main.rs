@@ -15,7 +15,7 @@ mod handlers;
 mod models;
 mod network;
 mod traits;
-mod unsafe_ops;
+mod memory_ops;
 
 use actix_web::{web, App, HttpServer};
 use std::env;

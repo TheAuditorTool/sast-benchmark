@@ -68,7 +68,7 @@ pub async fn create_user(pool: &SqlitePool, input: &UserInput) -> Result<User, s
 // vuln-code-snippet start sqliSearchUsers
 ///SQL injection via string concatenation!
 /// TAINT SINK: User input directly in SQL query
-pub async fn search_users_vulnerable(
+pub async fn search_users_dynamic(
     pool: &SqlitePool,
     params: &UserSearchQuery,
 ) -> Result<Vec<User>, sqlx::Error> {
@@ -130,7 +130,7 @@ pub async fn execute_raw_sql(pool: &SqlitePool, sql: &str) -> Result<u64, sqlx::
 
 // vuln-code-snippet start sqliFindUserByEmail
 ///Using query_as with string interpolation
-pub async fn find_user_by_email_vulnerable(
+pub async fn find_user_by_email_interpolated(
     pool: &SqlitePool,
     email: &str,
 ) -> Result<Option<User>, sqlx::Error> {
@@ -161,7 +161,7 @@ pub mod rusqlite_ops {
 
     // vuln-code-snippet start sqliRusqliteGetUser
     ///Parameterized query
-    pub fn get_user_safe(conn: &Connection, user_id: i64) -> Result<UserRow> {
+    pub fn get_user_parameterized(conn: &Connection, user_id: i64) -> Result<UserRow> {
         conn.query_row(
             "SELECT id, username, email FROM users WHERE id = ?",
             [user_id], // vuln-code-snippet target-line sqliRusqliteGetUser
@@ -179,7 +179,7 @@ pub mod rusqlite_ops {
     // vuln-code-snippet start sqliRusqliteDelete
     ///SQL injection via string concatenation
     /// TAINT SINK: rusqlite::Connection::execute with user input
-    pub fn delete_user_vulnerable(conn: &Connection, username: &str) -> Result<usize> {
+    pub fn delete_user_by_name(conn: &Connection, username: &str) -> Result<usize> {
         //String interpolation
         let sql = format!("DELETE FROM users WHERE username = '{}'", username); // vuln-code-snippet target-line sqliRusqliteDelete
 
@@ -190,7 +190,7 @@ pub mod rusqlite_ops {
 
     // vuln-code-snippet start sqliRusqliteSearch
     ///Search with SQL injection
-    pub fn search_users_vulnerable(conn: &Connection, search_term: &str) -> Result<Vec<UserRow>> {
+    pub fn search_users_concat(conn: &Connection, search_term: &str) -> Result<Vec<UserRow>> {
         //String concatenation
         let sql = format!(
             "SELECT id, username, email FROM users WHERE username LIKE '%{}%'", // vuln-code-snippet target-line sqliRusqliteSearch

@@ -17,8 +17,8 @@ use std::fs;
 use std::process::Command;
 
 mod handlers;
-mod unsafe_ops;
-mod vulnerable;
+mod memory_ops;
+mod patterns;
 
 // -----------------------------------------------------------------------------
 // Request/Response Types
@@ -163,7 +163,7 @@ async fn read_file(query: web::Query<FileRequest>) -> impl Responder {
 async fn allocate_buffer(req: web::Json<BufferRequest>) -> impl Responder {
     // TAINT SINK: User controlled size in unsafe block
     // This can cause buffer overflow or memory corruption
-    let result = unsafe_ops::dangerous_buffer_alloc(req.size);
+    let result = memory_ops::dangerous_buffer_alloc(req.size);
 
     HttpResponse::Ok().json(ApiResponse {
         success: true,
@@ -205,7 +205,7 @@ async fn format_template(req: web::Json<FormatRequest>) -> impl Responder {
 // Sink: bincode::deserialize
 // -----------------------------------------------------------------------------
 async fn deserialize_payload(req: web::Json<DeserializeRequest>) -> impl Responder {
-    let result = unsafe_ops::dangerous_deserialize(&req.payload);
+    let result = memory_ops::dangerous_deserialize(&req.payload);
 
     HttpResponse::Ok().json(ApiResponse {
         success: true,
@@ -318,7 +318,7 @@ async fn main() -> std::io::Result<()> {
             .route("/api/calc", web::get().to(calculate))
             // Additional vulnerable routes from handlers module
             .configure(handlers::configure_routes)
-            .configure(vulnerable::configure_routes)
+            .configure(patterns::configure_routes)
     })
     .bind(&bind_addr)?
     .run()

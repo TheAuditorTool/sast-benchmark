@@ -26,7 +26,7 @@ pub fn execute_command(cmd: &str, args: &[String]) -> io::Result<String> {
 
 // vuln-code-snippet start cmdiExecuteCommand2
 ///Command name from allowlist only
-pub fn execute_command_safe(cmd_type: &str, args: &[String]) -> io::Result<String> {
+pub fn execute_command_allowlisted(cmd_type: &str, args: &[String]) -> io::Result<String> {
     let command = match cmd_type {
         "ls" => "ls",
         "cat" => "cat",
@@ -72,7 +72,7 @@ pub fn execute_shell_command(shell_cmd: &str) -> io::Result<String> {
 
 // vuln-code-snippet start cmdiExecuteShellCommand2
 ///Only allowlisted operations, no raw shell string
-pub fn execute_shell_command_safe(operation: &str, target: &str) -> io::Result<String> {
+pub fn execute_shell_operation(operation: &str, target: &str) -> io::Result<String> {
     let safe_cmd = match operation {
         "echo" => format!("echo {}", shell_escape(target)),
         "wc" => format!("wc -l {}", shell_escape(target)),
@@ -107,7 +107,7 @@ pub fn execute_in_directory(cmd: &str, working_dir: &str) -> io::Result<String> 
 
 // vuln-code-snippet start cmdiExecuteInDirectory2
 ///Working directory validated against base directory
-pub fn execute_in_directory_safe(cmd: &str, working_dir: &str, base_dir: &str) -> io::Result<String> {
+pub fn execute_in_directory_validated(cmd: &str, working_dir: &str, base_dir: &str) -> io::Result<String> {
     use std::path::Path;
     let canonical_base = Path::new(base_dir).canonicalize()?;
     let canonical_dir = Path::new(base_dir).join(working_dir).canonicalize()?;
@@ -196,7 +196,7 @@ pub fn run_command_with_arg(base_cmd: &str, user_arg: &str) -> io::Result<String
 
 // vuln-code-snippet start cmdiRunCommandWithArg2
 ///Argument validated for shell metacharacters
-pub fn run_command_with_arg_safe(base_cmd: &str, user_arg: &str) -> io::Result<String> {
+pub fn run_command_with_arg_checked(base_cmd: &str, user_arg: &str) -> io::Result<String> {
     if user_arg.contains(|c: char| matches!(c, ';' | '|' | '&' | '>' | '<' | '$' | '`' | '\\')) {
         return Err(io::Error::new(io::ErrorKind::InvalidInput, "Invalid characters in argument"));
     }
@@ -233,7 +233,7 @@ pub fn execute_allowed_command(cmd_type: &str, target: &str) -> io::Result<Strin
 
 // vuln-code-snippet start cmdiExecuteAllowedCommand2
 ///Both command and target validated
-pub fn execute_allowed_command_safe(cmd_type: &str, target: &str) -> io::Result<String> {
+pub fn execute_allowed_command_checked(cmd_type: &str, target: &str) -> io::Result<String> {
     let command = match cmd_type {
         "ping" => "ping",
         "nslookup" => "nslookup",

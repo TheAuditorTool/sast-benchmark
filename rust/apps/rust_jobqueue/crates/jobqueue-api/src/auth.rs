@@ -93,7 +93,7 @@ impl UserStore {
 
     // vuln-code-snippet start weakrandJobqueueToken2
     /// Token from OS-level cryptographic random bytes
-    fn generate_token_safe(&self, _user_id: &str) -> AuthToken {
+    fn generate_token_random(&self, _user_id: &str) -> AuthToken {
         // OsRng provides cryptographically secure random bytes from the OS
         let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet target-line weakrandJobqueueToken2
         let token = base64_encode(&format!("{:?}", random_bytes));
@@ -129,7 +129,7 @@ impl UserStore {
 
     // vuln-code-snippet start cryptoJobqueueArgon2Password
     ///Password hashed with strong algorithm (bcrypt-simulated)
-    fn hash_password_safe(password: &str) -> String {
+    fn hash_password_strong(password: &str) -> String {
         let cost: u32 = 12;
         let mut hash = [0u8; 32];
         for round in 0..cost {
@@ -228,7 +228,7 @@ impl ApiKeyAuth {
 
     // vuln-code-snippet start weakrandJobqueueApiKey2
     /// API key from OS-level cryptographic random bytes
-    pub fn generate_key_safe(&mut self, name: &str, permissions: Vec<String>) -> String {
+    pub fn generate_key_random(&mut self, name: &str, permissions: Vec<String>) -> String {
         // OsRng provides cryptographically secure random bytes — no user/time mixing
         let random_bytes: [u8; 32] = rand::rngs::OsRng.gen(); // vuln-code-snippet target-line weakrandJobqueueApiKey2
         let key = format!("jq_{}", base64_encode(&format!("{:?}", random_bytes)));
@@ -325,7 +325,7 @@ impl JwtToken {
 
     // vuln-code-snippet start cryptoJobqueueJwtHs256
     ///JWT signed with HS256 (HMAC-SHA256 simulated)
-    pub fn create_safe(user_id: &str, roles: Vec<String>, ttl_secs: u64) -> Self {
+    pub fn create_signed(user_id: &str, roles: Vec<String>, ttl_secs: u64) -> Self {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
         let header = JwtHeader { alg: "HS256".to_string(), typ: "JWT".to_string() }; // vuln-code-snippet target-line cryptoJobqueueJwtHs256
         let payload = JwtPayload {

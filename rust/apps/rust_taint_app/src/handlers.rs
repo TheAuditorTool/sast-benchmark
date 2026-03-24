@@ -7,7 +7,7 @@ use crate::models::{
     ApiResponse, CommandRequest, FileRequest, ProxyRequest, ShellCommandRequest,
     User, UserInput, UserSearchQuery,
 };
-use crate::{commands, database, files, network, unsafe_ops, AppState};
+use crate::{commands, database, files, network, memory_ops, AppState};
 
 /// TAINT SOURCE: web::Json extractor
 /// GET /users - List all users
@@ -60,7 +60,7 @@ pub async fn search_users(
     let search_params = query.into_inner();
 
     // TAINT FLOW: query params -> SQL query (VULNERABLE!)
-    match database::search_users_vulnerable(&state.db_pool, &search_params).await {
+    match database::search_users_dynamic(&state.db_pool, &search_params).await {
         Ok(users) => HttpResponse::Ok().json(ApiResponse::success(users)),
         Err(e) => HttpResponse::InternalServerError().json(ApiResponse::<Vec<User>>::error(&e.to_string())),
     }
@@ -184,7 +184,7 @@ pub async fn unsafe_transmute_handler(
     let data = body.into_inner();
 
     // TAINT FLOW: JSON body -> unsafe memory operation
-    match unsafe_ops::dangerous_transmute(&data) {
+    match memory_ops::dangerous_transmute(&data) {
         Ok(result) => HttpResponse::Ok().json(ApiResponse::success(result)),
         Err(e) => HttpResponse::InternalServerError().json(ApiResponse::<String>::error(&e)),
     }

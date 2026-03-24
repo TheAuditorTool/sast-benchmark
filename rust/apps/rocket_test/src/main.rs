@@ -78,7 +78,7 @@ pub struct AppState {
 // vuln-code-snippet start sqliRocketGetUser
 ///User ID directly concatenated into SQL query
 #[get("/users/<id>")]
-pub async fn get_user_vulnerable(id: String) -> Json<User> {
+pub async fn get_user_by_string(id: String) -> Json<User> {
     //SQL injection - user input directly in query
     let conn = rusqlite::Connection::open("app.db").unwrap();
     let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet target-line sqliRocketGetUser
@@ -108,7 +108,7 @@ pub struct CommandParams {
 // vuln-code-snippet start cmdiRocketListFiles
 ///Filename from query string used in shell command
 #[get("/files?<params..>")]
-pub fn list_files_vulnerable(params: CommandParams) -> String {
+pub fn list_files(params: CommandParams) -> String {
     //Command injection via filename parameter
     let output = Command::new("ls")
         .arg("-la")
@@ -132,7 +132,7 @@ pub struct FetchRequest {
 // vuln-code-snippet start ssrfRocketFetchUrl
 ///URL from request body used in HTTP request
 #[post("/fetch", data = "<request>")]
-pub async fn fetch_url_vulnerable(request: Json<FetchRequest>) -> String {
+pub async fn fetch_url(request: Json<FetchRequest>) -> String {
     //SSRF - user-controlled URL
     let client = reqwest::Client::new();
     let response = client.get(&request.url).send().await.unwrap(); // vuln-code-snippet target-line ssrfRocketFetchUrl
@@ -152,7 +152,7 @@ pub struct FileReadForm {
 // vuln-code-snippet start pathtraverRocketReadFile
 ///File path from form data used directly
 #[post("/read-file", data = "<form>")]
-pub fn read_file_vulnerable(form: Form<FileReadForm>) -> String {
+pub fn read_file(form: Form<FileReadForm>) -> String {
     //Path traversal - user input in file path
     std::fs::read_to_string(&form.path).unwrap_or_else(|_| "File not found".to_string()) // vuln-code-snippet target-line pathtraverRocketReadFile
 }
@@ -165,7 +165,7 @@ pub fn read_file_vulnerable(form: Form<FileReadForm>) -> String {
 // vuln-code-snippet start xssRocketGreet
 ///User input reflected in HTML without escaping
 #[get("/greet/<name>")]
-pub fn greet_vulnerable(name: String) -> RawHtml<String> {
+pub fn greet_raw(name: String) -> RawHtml<String> {
     //XSS - user input directly in HTML
     RawHtml(format!("<html><body><h1>Hello, {}!</h1></body></html>", name)) // vuln-code-snippet target-line xssRocketGreet
 }
@@ -173,8 +173,8 @@ pub fn greet_vulnerable(name: String) -> RawHtml<String> {
 
 // vuln-code-snippet start xssRocketGreet2
 ///HTML-escaped output prevents XSS
-#[get("/greet/safe/<name>")]
-pub fn greet_safe(name: String) -> RawHtml<String> {
+#[get("/greet/v2/<name>")]
+pub fn greet_escaped(name: String) -> RawHtml<String> {
     let escaped = name.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;"); // vuln-code-snippet target-line xssRocketGreet2
     RawHtml(format!("<html><body><h1>Hello, {}!</h1></body></html>", escaped))
 }
@@ -187,7 +187,7 @@ pub fn greet_safe(name: String) -> RawHtml<String> {
 // vuln-code-snippet start cryptoRocketMd5Login
 ///Using MD5 for password hashing
 #[post("/login", data = "<form>")]
-pub fn login_vulnerable(form: Form<LoginForm>) -> String {
+pub fn login_md5(form: Form<LoginForm>) -> String {
     //MD5 is cryptographically broken
     let digest = md5::compute(form.password.as_bytes()); // vuln-code-snippet target-line cryptoRocketMd5Login
     format!("Password hash: {:x}", digest)
@@ -196,8 +196,8 @@ pub fn login_vulnerable(form: Form<LoginForm>) -> String {
 
 // vuln-code-snippet start cryptoRocketArgon2Login
 ///Using bcrypt for password hashing instead of MD5
-#[post("/login/safe", data = "<form>")]
-pub fn login_safe(form: Form<LoginForm>) -> String {
+#[post("/login/v2", data = "<form>")]
+pub fn login_hashed(form: Form<LoginForm>) -> String {
     let cost = 12;
     let salt = format!("{:016x}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos());
     let salted = format!("{}:{}", salt, form.password);
@@ -217,8 +217,8 @@ pub fn login_safe(form: Form<LoginForm>) -> String {
 
 // vuln-code-snippet start sqliRocketGetUser2
 ///Using parameterized query with rusqlite
-#[get("/users/safe/<id>")]
-pub async fn get_user_safe(id: i64) -> Json<User> {
+#[get("/users/v2/<id>")]
+pub async fn get_user_by_id(id: i64) -> Json<User> {
     let conn = rusqlite::Connection::open("app.db").unwrap();
 
     //Parameterized query
@@ -242,7 +242,7 @@ pub async fn get_user_safe(id: i64) -> Json<User> {
 // vuln-code-snippet start sqliRocketCreateUser
 ///Input validated before use
 #[post("/users", data = "<request>")]
-pub async fn create_user_safe(request: Json<CreateUserRequest>) -> Result<Json<User>, Status> {
+pub async fn create_user(request: Json<CreateUserRequest>) -> Result<Json<User>, Status> {
     //Validation via validator crate
     if request.validate().is_err() {
         return Err(Status::BadRequest);
@@ -328,14 +328,14 @@ fn rocket() -> _ {
     rocket::build()
         .manage(state)
         .mount("/", routes![
-            get_user_vulnerable,
-            get_user_safe,
-            create_user_safe,
-            list_files_vulnerable,
-            fetch_url_vulnerable,
-            read_file_vulnerable,
-            greet_vulnerable,
-            login_vulnerable,
+            get_user_by_string,
+            get_user_by_id,
+            create_user,
+            list_files,
+            fetch_url,
+            read_file,
+            greet_raw,
+            login_md5,
             protected_endpoint,
             get_profile,
             set_cookie,

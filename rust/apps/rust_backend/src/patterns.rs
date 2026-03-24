@@ -49,7 +49,7 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
             .route("/race", web::get().to(race_condition))
             .route("/overflow", web::get().to(integer_overflow))
             .route("/format", web::get().to(format_string))
-            .route("/deserialize", web::post().to(unsafe_deserialize))
+            .route("/deserialize", web::post().to(deserialize_raw))
             .route("/memory", web::get().to(memory_corruption))
     );
 }
@@ -118,7 +118,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
 
 // vuln-code-snippet start redosBackendRegex
 ///Regex pattern validated for length and dangerous patterns
-async fn regex_safe(req: web::Json<RegexRequest>) -> impl Responder {
+async fn regex_validated(req: web::Json<RegexRequest>) -> impl Responder {
     use regex::Regex;
     if req.pattern.len() > 256 {
         return HttpResponse::BadRequest().json(VulnResponse {
@@ -262,7 +262,7 @@ async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Re
 // vuln-code-snippet end intoverflowBackendOverflow
 
 ///Checked arithmetic prevents overflow
-async fn integer_safe(query: web::Query<HashMap<String, String>>) -> impl Responder {
+async fn integer_checked(query: web::Query<HashMap<String, String>>) -> impl Responder {
     let a: i32 = query.get("a").and_then(|s| s.parse().ok()).unwrap_or(0);
     let b: i32 = query.get("b").and_then(|s| s.parse().ok()).unwrap_or(0);
     // vuln-code-snippet start intoverflowBackendCheckedArithmetic
@@ -307,7 +307,7 @@ async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Respo
 // Deserialization operations
 // -----------------------------------------------------------------------------
 // vuln-code-snippet start deserBackendUnsafeDeserialize
-async fn unsafe_deserialize(body: web::Bytes) -> impl Responder {
+async fn deserialize_raw(body: web::Bytes) -> impl Responder {
     // Deserializing request body
 
     // Try to deserialize as JSON (relatively safe)
@@ -324,7 +324,7 @@ async fn unsafe_deserialize(body: web::Bytes) -> impl Responder {
 
 // vuln-code-snippet start deserBackendDeserialize
 ///Typed deserialization with size limit
-async fn safe_deserialize(body: web::Bytes) -> impl Responder {
+async fn deserialize_typed(body: web::Bytes) -> impl Responder {
     #[derive(serde::Deserialize)]
     struct SafePayload { data: Option<String>, action: Option<String> }
     if body.len() > 1_048_576 {

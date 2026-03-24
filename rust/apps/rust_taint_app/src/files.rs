@@ -162,7 +162,7 @@ pub fn process_upload(filename: &str, content: &[u8], upload_dir: &str) -> io::R
 
 /// Upload with path validation
 // vuln-code-snippet start pathtraverProcessUpload2
-pub fn process_upload_safe(
+pub fn process_upload_validated(
     filename: &str,
     content: &[u8],
     upload_dir: &str,
