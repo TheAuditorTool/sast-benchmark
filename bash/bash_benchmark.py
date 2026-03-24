@@ -67,8 +67,11 @@ RULE_MAP = {
     # SSL/TLS bypass (CWE-295) — 2 rules
     "bash-ssl-bypass": "ssl_bypass",            # curl -k, wget --no-check-certificate, env var bypass
     "bash-ssh-hostkey-bypass": "ssl_bypass",    # SSH StrictHostKeyChecking=no
-    # Information disclosure (CWE-200) — 1 rule
+    # Information disclosure (CWE-200/209) — 4 rules
     "bash-debug-mode-leak": "infodisclosure",   # set -x / set -o xtrace
+    "bash-env-dump": "infodisclosure",             # env/printenv dumps secrets (CWE-200)
+    "bash-sensitive-in-error": "infodisclosure",   # echo/printf leaks sensitive vars (CWE-209)
+    "bash-json-response-injection": "infodisclosure",  # unescaped var in JSON response (CWE-209)
     # RCE pipe-to-shell (CWE-94) — 1 rule
     "bash-curl-pipe-bash": "rce",               # curl|bash, wget|bash
     # Insecure temp files (CWE-377) — NOT YET VERIFIED if rule fires

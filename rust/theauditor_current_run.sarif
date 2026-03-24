@@ -11296,38 +11296,16 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
+                  "uri": "testcode/cmdi_004.rs"
                 },
                 "region": {
-                  "startLine": 56
+                  "startLine": 9
                 }
               }
             }
           ],
           "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 63
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
+            "testCaseKey": "testcodeCmdi004"
           }
         },
         {
@@ -11378,6 +11356,28 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
+                  "uri": "testcode/cmdi_003.rs"
+                },
+                "region": {
+                  "startLine": 9
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCmdi003"
+          }
+        },
+        {
+          "ruleId": "cmdi",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-command-injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
                   "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
                 },
                 "region": {
@@ -11400,16 +11400,16 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "testcode/cmdi_004.rs"
+                  "uri": "apps/rust_taint_app/src/commands.rs"
                 },
                 "region": {
-                  "startLine": 9
+                  "startLine": 56
                 }
               }
             }
           ],
           "properties": {
-            "testCaseKey": "testcodeCmdi004"
+            "testCaseKey": "cmdiExecuteShellCommand"
           }
         },
         {
@@ -11422,16 +11422,16 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "testcode/cmdi_003.rs"
+                  "uri": "apps/rust_taint_app/src/commands.rs"
                 },
                 "region": {
-                  "startLine": 9
+                  "startLine": 63
                 }
               }
             }
           ],
           "properties": {
-            "testCaseKey": "testcodeCmdi003"
+            "testCaseKey": "cmdiExecuteShellCommand"
           }
         },
         {

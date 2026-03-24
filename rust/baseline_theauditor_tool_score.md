@@ -1,33 +1,33 @@
 # Rust Benchmark Scorecard: TheAuditor
 
-**Tool:** TheAuditor v3.5
+**Tool:** TheAuditor v3.6
 **Benchmark:** 268 test cases, 13 CWE categories, 4 frameworks
 **Scoring:** SARIF pipeline (`convert_theauditor.py` + `score_sarif.py`)
 
 ---
 
-## Current Score (2026-03-24, round 6)
+## Current Score (2026-03-25, round 8)
 
 ```
 Category         CWE    TP    FP    FN    TN      TPR     FPR   Score
 ----------------------------------------------------------------------
 cmdi             78     14    0     0     16   100.0%    0.0% +100.0%
-crypto           327    8     0     1     11    88.9%    0.0%  +88.9%
-deser            502    4     0     2     6     66.7%    0.0%  +66.7%
+crypto           327    9     0     0     11   100.0%    0.0% +100.0%
+deser            502    6     0     0     6    100.0%    0.0% +100.0%
 infodisclosure   200    8     0     0     8    100.0%    0.0% +100.0%
 inputval         20     4     0     0     6    100.0%    0.0% +100.0%
 intoverflow      190    3     0     2     7     60.0%    0.0%  +60.0%
-memsafety        119    1     0     7     12    12.5%    0.0%  +12.5%
+memsafety        119    8     0     0     12   100.0%    0.0% +100.0%
 pathtraver       22     14    0     0     14   100.0%    0.0% +100.0%
-redos            1333   4     0     1     5     80.0%    0.0%  +80.0%
+redos            1333   5     0     0     5    100.0%    0.0% +100.0%
 sqli             89     23    1     1     25    95.8%    3.8%  +92.0%
 ssrf             918    9     0     0     13   100.0%    0.0% +100.0%
 weakrand         330    7     0     0     9    100.0%    0.0% +100.0%
 xss              79     11    0     0     11   100.0%    0.0% +100.0%
 ----------------------------------------------------------------------
-TOTAL                   110   1     14    143   88.7%    0.7%  +88.0%
+TOTAL                   121   1     3     143   97.6%    0.7%  +96.9%
 
-MACRO AVERAGE (OWASP):  84.9%   0.3%  +84.6%
+MACRO AVERAGE (OWASP):  96.6%   0.3%  +96.3%
 ```
 
 Score = TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
