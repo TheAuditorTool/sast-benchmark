@@ -100,7 +100,7 @@ For each category with 0 TN, create **isomorphic safe variants** — functions t
 
 **Rules for safe variants:**
 1. Place in SAME file as the vulnerable version (or adjacent in same module)
-2. Function name must be similar: `search_users_vulnerable` / `search_users_safe`
+2. Function name must be implementation-descriptive: `search_users_dynamic` / `search_users_parameterized` (NEVER use `_vulnerable`/`_safe` suffixes)
 3. Same function signature where possible
 4. The ONLY difference is the security-relevant line
 5. Annotate with `vuln-code-snippet start/end` + `safe-line`

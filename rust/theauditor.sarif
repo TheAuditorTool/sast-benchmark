@@ -1151,7 +1151,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 121
@@ -1162,6 +1162,25 @@
           "properties": {
             "testCaseKey": "deserBackendDangerousDeserialize"
           }
+        },
+        {
+          "ruleId": "python-deserialization-taint",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: python-deserialization-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/job.rs"
+                },
+                "region": {
+                  "startLine": 68
+                }
+              }
+            }
+          ]
         },
         {
           "ruleId": "python-deserialization-taint",
@@ -1715,7 +1734,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 162
@@ -2168,7 +2187,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 133
@@ -2190,7 +2209,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 242
@@ -2448,7 +2467,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 134
@@ -2470,7 +2489,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 243
@@ -2483,10 +2502,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2502,10 +2521,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2521,10 +2540,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2540,10 +2559,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2559,10 +2578,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2578,10 +2597,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2597,10 +2616,32 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 207
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cryptoRocketArgon2Login"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2616,10 +2657,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2635,10 +2676,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2654,16 +2695,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 201
@@ -2673,10 +2714,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2692,10 +2733,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2711,10 +2752,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2730,10 +2771,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2749,10 +2790,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2768,10 +2809,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2787,10 +2828,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2806,10 +2847,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2825,10 +2866,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2844,10 +2885,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2863,10 +2904,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2882,10 +2923,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2901,10 +2942,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2920,10 +2961,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2939,10 +2980,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2958,10 +2999,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2977,10 +3018,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -2996,10 +3037,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3015,10 +3056,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3034,10 +3075,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3053,10 +3094,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3072,10 +3113,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3091,10 +3132,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3110,10 +3151,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3132,10 +3173,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3151,10 +3192,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3173,10 +3214,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3192,10 +3233,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3211,10 +3252,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3230,10 +3271,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3249,10 +3290,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3268,10 +3309,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3287,10 +3328,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3306,10 +3347,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3325,10 +3366,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3344,10 +3385,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3363,10 +3404,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3382,10 +3423,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3401,10 +3442,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3420,10 +3461,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3439,10 +3480,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3458,10 +3499,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3477,10 +3518,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3496,10 +3537,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3515,10 +3556,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3534,10 +3575,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3553,10 +3594,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3572,10 +3613,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3594,10 +3635,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3616,10 +3657,54 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/auth.rs"
+                },
+                "region": {
+                  "startLine": 124
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cryptoJobqueueMd5Password"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/auth.rs"
+                },
+                "region": {
+                  "startLine": 137
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cryptoJobqueueArgon2Password"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3635,10 +3720,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3654,10 +3739,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3673,10 +3758,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3695,10 +3780,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3717,10 +3802,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3736,10 +3821,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3755,10 +3840,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3774,10 +3859,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3793,10 +3878,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3812,10 +3897,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3831,10 +3916,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3850,10 +3935,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3869,10 +3954,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3888,10 +3973,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3907,10 +3992,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3926,10 +4011,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3945,10 +4030,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3964,10 +4049,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -3983,10 +4068,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4002,10 +4087,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4021,10 +4106,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4040,10 +4125,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4059,10 +4144,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4078,10 +4163,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4097,16 +4182,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 29
@@ -4119,16 +4204,16 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 152
@@ -4138,10 +4223,54 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/crypto_001.rs"
+                },
+                "region": {
+                  "startLine": 9
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCrypto001"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/crypto_002.rs"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCrypto002"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4160,10 +4289,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4182,10 +4311,32 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/crypto_008.rs"
+                },
+                "region": {
+                  "startLine": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCrypto008"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4204,10 +4355,10 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4226,10 +4377,32 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/weakrand_011.rs"
+                },
+                "region": {
+                  "startLine": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeWeakrand011"
+          }
+        },
+        {
+          "ruleId": "rust-unchecked-arithmetic",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4245,10 +4418,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4264,10 +4437,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4283,10 +4456,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4302,16 +4475,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 143
@@ -4324,16 +4497,16 @@
           }
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 195
@@ -4343,16 +4516,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 391
@@ -4362,16 +4535,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 392
@@ -4381,16 +4554,16 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 395
@@ -4400,10 +4573,10 @@
           ]
         },
         {
-          "ruleId": "intoverflow",
+          "ruleId": "rust-unchecked-arithmetic",
           "level": "error",
           "message": {
-            "text": "Finding from rule: rust-integer-high-risk-function"
+            "text": "Finding from rule: rust-unchecked-arithmetic"
           },
           "locations": [
             {
@@ -4507,7 +4680,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 387
@@ -4526,7 +4699,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 388
@@ -4545,7 +4718,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 389
@@ -4602,10 +4775,67 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/auth.rs"
+                },
+                "region": {
+                  "startLine": 176
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "intoverflow",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-truncating-cast"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-core/src/job.rs"
+                },
+                "region": {
+                  "startLine": 195
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "intoverflow",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-truncating-cast"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
                   "uri": "apps/rust_jobqueue/crates/jobqueue-core/src/metrics.rs"
                 },
                 "region": {
                   "startLine": 348
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "intoverflow",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-truncating-cast"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-core/src/metrics.rs"
+                },
+                "region": {
+                  "startLine": 349
                 }
               }
             }
@@ -4675,7 +4905,7 @@
           }
         },
         {
-          "ruleId": "rust-unsafe-from-raw",
+          "ruleId": "memsafety",
           "level": "error",
           "message": {
             "text": "Finding from rule: rust-unsafe-from-raw"
@@ -4694,7 +4924,7 @@
           ]
         },
         {
-          "ruleId": "rust-unsafe-from-raw",
+          "ruleId": "memsafety",
           "level": "error",
           "message": {
             "text": "Finding from rule: rust-unsafe-from-raw"
@@ -4713,7 +4943,48 @@
           ]
         },
         {
-          "ruleId": "rust-unsafe-from-raw",
+          "ruleId": "memsafety",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unsafe-from-raw"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
+                },
+                "region": {
+                  "startLine": 195
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "memsafetySliceFromRawParts"
+          }
+        },
+        {
+          "ruleId": "memsafety",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unsafe-from-raw"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
+                },
+                "region": {
+                  "startLine": 205
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "memsafety",
           "level": "error",
           "message": {
             "text": "Finding from rule: rust-unsafe-from-raw"
@@ -4732,7 +5003,7 @@
           ]
         },
         {
-          "ruleId": "rust-unsafe-from-raw",
+          "ruleId": "memsafety",
           "level": "error",
           "message": {
             "text": "Finding from rule: rust-unsafe-from-raw"
@@ -4751,48 +5022,7 @@
           ]
         },
         {
-          "ruleId": "rust-unsafe-from-raw",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-from-raw"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
-                },
-                "region": {
-                  "startLine": 195
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "memsafetySliceFromRawParts"
-          }
-        },
-        {
-          "ruleId": "rust-unsafe-from-raw",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-from-raw"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
-                },
-                "region": {
-                  "startLine": 205
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "rust-unsafe-from-raw",
+          "ruleId": "memsafety",
           "level": "error",
           "message": {
             "text": "Finding from rule: rust-unsafe-from-raw"
@@ -5321,7 +5551,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 201
@@ -6924,6 +7154,25 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 66
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "cmdi",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-command-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
                   "uri": "apps/rocket_test/src/main.rs"
                 },
                 "region": {
@@ -7001,6 +7250,82 @@
           "properties": {
             "testCaseKey": "testcodeCmdi004"
           }
+        },
+        {
+          "ruleId": "sqli",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 364
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sqli",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 370
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sqli",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 129
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sqli",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 133
+                }
+              }
+            }
+          ]
         },
         {
           "ruleId": "sqli",
@@ -7126,50 +7451,6 @@
           ],
           "properties": {
             "testCaseKey": "sqliRocketCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 195
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 200
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
           }
         },
         {
@@ -7431,6 +7712,25 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 72
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-path-traversal-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
                   "uri": "apps/rust_backend/src/handlers.rs"
                 },
                 "region": {
@@ -7441,6 +7741,28 @@
           ],
           "properties": {
             "testCaseKey": "pathtraverBackendUploadFile"
+          }
+        },
+        {
+          "ruleId": "pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-path-traversal-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_backend/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 138
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "pathtraverBackendIncludeFile"
           }
         },
         {
@@ -7561,25 +7883,6 @@
                 },
                 "region": {
                   "startLine": 217
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 370
                 }
               }
             }
@@ -7808,25 +8111,6 @@
                 },
                 "region": {
                   "startLine": 417
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 133
                 }
               }
             }
@@ -8426,33 +8710,17 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                  "uri": "apps/rust_taint_app/src/database.rs"
                 },
                 "region": {
-                  "startLine": 364
+                  "startLine": 200
                 }
               }
             }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 129
-                }
-              }
-            }
-          ]
+          ],
+          "properties": {
+            "testCaseKey": "sqliRusqliteSearch"
+          }
         },
         {
           "ruleId": "sqli",
@@ -8675,16 +8943,16 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "testcode/sqli_005.rs"
+                  "uri": "apps/rust_taint_app/src/database.rs"
                 },
                 "region": {
-                  "startLine": 12
+                  "startLine": 195
                 }
               }
             }
           ],
           "properties": {
-            "testCaseKey": "testcodeSqli005"
+            "testCaseKey": "sqliRusqliteSearch"
           }
         },
         {
@@ -9764,25 +10032,6 @@
                   "uri": "apps/deepflow-rust/src/pipeline.rs"
                 },
                 "region": {
-                  "startLine": 72
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
                   "startLine": 142
                 }
               }
@@ -10435,28 +10684,6 @@
           ],
           "properties": {
             "testCaseKey": "pathtraverRocketReadFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 138
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverBackendIncludeFile"
           }
         },
         {
@@ -11258,28 +11485,6 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 80
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiJobqueueExportSql"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
                   "uri": "testcode/cmdi_004.rs"
                 },
                 "region": {
@@ -11290,50 +11495,6 @@
           ],
           "properties": {
             "testCaseKey": "testcodeCmdi004"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 56
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 63
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
           }
         },
         {
@@ -11416,6 +11577,72 @@
           ],
           "properties": {
             "testCaseKey": "cmdiJobqueueImportSql"
+          }
+        },
+        {
+          "ruleId": "cmdi",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-command-injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/commands.rs"
+                },
+                "region": {
+                  "startLine": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cmdiExecuteShellCommand"
+          }
+        },
+        {
+          "ruleId": "cmdi",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-command-injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/commands.rs"
+                },
+                "region": {
+                  "startLine": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cmdiExecuteShellCommand"
+          }
+        },
+        {
+          "ruleId": "cmdi",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-command-injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
+                },
+                "region": {
+                  "startLine": 80
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cmdiJobqueueExportSql"
           }
         },
         {
@@ -11562,6 +11789,28 @@
               }
             }
           ]
+        },
+        {
+          "ruleId": "sqli",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-sql-injection-format"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/sqli_005.rs"
+                },
+                "region": {
+                  "startLine": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeSqli005"
+          }
         },
         {
           "ruleId": "sqli",
@@ -12028,7 +12277,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 121
@@ -12039,6 +12288,25 @@
           "properties": {
             "testCaseKey": "deserBackendDangerousDeserialize"
           }
+        },
+        {
+          "ruleId": "deser",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-insecure-deserialization"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/job.rs"
+                },
+                "region": {
+                  "startLine": 68
+                }
+              }
+            }
+          ]
         },
         {
           "ruleId": "deser",
@@ -12154,7 +12422,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 314
@@ -12202,25 +12470,6 @@
                 },
                 "region": {
                   "startLine": 279
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "deser",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-insecure-deserialization"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/job.rs"
-                },
-                "region": {
-                  "startLine": 68
                 }
               }
             }
@@ -12410,25 +12659,6 @@
                   "uri": "apps/deepflow-rust/src/advanced.rs"
                 },
                 "region": {
-                  "startLine": 221
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
                   "startLine": 371
                 }
               }
@@ -12445,26 +12675,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
-                  "startLine": 521
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 14
@@ -12486,7 +12697,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 30
@@ -12505,7 +12716,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 42
@@ -12524,7 +12735,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 65
@@ -12543,7 +12754,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 88
@@ -12565,7 +12776,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 104
@@ -12584,7 +12795,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 168
@@ -12603,7 +12814,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 363
@@ -12644,26 +12855,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 221
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 17
@@ -12685,7 +12877,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 64
@@ -12707,7 +12899,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 123
@@ -12726,7 +12918,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 133
@@ -12745,7 +12937,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 144
@@ -12764,7 +12956,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 155
@@ -12783,7 +12975,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 175
@@ -12805,7 +12997,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 185
@@ -12824,48 +13016,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
-                },
-                "region": {
-                  "startLine": 195
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "memsafetySliceFromRawParts"
-          }
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
-                },
-                "region": {
-                  "startLine": 205
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 214
@@ -12873,28 +13024,6 @@
               }
             }
           ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-no-safety-comment"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/memsafety_001.rs"
-                },
-                "region": {
-                  "startLine": 11
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeMemsafety001"
-          }
         },
         {
           "ruleId": "memsafety",
@@ -12944,7 +13073,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 8
@@ -12966,7 +13095,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 27
@@ -12985,7 +13114,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 41
@@ -13004,7 +13133,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 64
@@ -13023,7 +13152,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 85
@@ -13045,7 +13174,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 99
@@ -13064,7 +13193,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/unsafe_ops.rs"
+                  "uri": "apps/rust_backend/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 161
@@ -13083,26 +13212,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 216
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "memsafety",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-unsafe-in-public-api"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 11
@@ -13124,7 +13234,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 63
@@ -13146,7 +13256,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 121
@@ -13165,7 +13275,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 130
@@ -13184,7 +13294,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 142
@@ -13203,7 +13313,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 174
@@ -13225,7 +13335,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 184
@@ -13244,7 +13354,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 194
@@ -13266,7 +13376,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 204
@@ -13285,10 +13395,29 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/unsafe_ops.rs"
+                  "uri": "apps/rust_taint_app/src/memory_ops.rs"
                 },
                 "region": {
                   "startLine": 213
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "memsafety",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: rust-unsafe-in-public-api"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/traits.rs"
+                },
+                "region": {
+                  "startLine": 216
                 }
               }
             }
@@ -14677,7 +14806,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 46
@@ -14696,7 +14825,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 47
@@ -14715,7 +14844,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 48
@@ -14734,7 +14863,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 52
@@ -16016,7 +16145,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 105
@@ -16038,7 +16167,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 159
@@ -16060,7 +16189,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 235
@@ -16082,7 +16211,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 236
@@ -16104,7 +16233,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 266
@@ -16123,7 +16252,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 267
@@ -16142,7 +16271,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 288
@@ -16161,7 +16290,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 358
@@ -18799,7 +18928,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 61
@@ -18821,7 +18950,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 88
@@ -18843,7 +18972,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 155
@@ -19251,7 +19380,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/rust_backend/src/vulnerable.rs"
+                  "uri": "apps/rust_backend/src/patterns.rs"
                 },
                 "region": {
                   "startLine": 93
@@ -19350,6 +19479,82 @@
           "properties": {
             "testCaseKey": "testcodeRedos006"
           }
+        },
+        {
+          "ruleId": "sql-injection-taint",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 364
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sql-injection-taint",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 370
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sql-injection-taint",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 129
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "sql-injection-taint",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: sql-injection-taint"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 133
+                }
+              }
+            }
+          ]
         },
         {
           "ruleId": "sql-injection-taint",
@@ -19475,50 +19680,6 @@
           ],
           "properties": {
             "testCaseKey": "sqliRocketCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sql-injection-taint",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 195
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
-          }
-        },
-        {
-          "ruleId": "sql-injection-taint",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 200
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
           }
         },
         {
@@ -19799,25 +19960,6 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 370
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
                   "uri": "apps/deepflow-rust/src/closures.rs"
                 },
                 "region": {
@@ -20031,25 +20173,6 @@
                 },
                 "region": {
                   "startLine": 417
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 133
                 }
               }
             }
@@ -20570,33 +20693,17 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                  "uri": "apps/rust_taint_app/src/database.rs"
                 },
                 "region": {
-                  "startLine": 364
+                  "startLine": 200
                 }
               }
             }
-          ]
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 129
-                }
-              }
-            }
-          ]
+          ],
+          "properties": {
+            "testCaseKey": "sqliRusqliteSearch"
+          }
         },
         {
           "ruleId": "sql-injection-sink",
@@ -20635,94 +20742,6 @@
               }
             }
           ]
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/meal_repo.rs"
-                },
-                "region": {
-                  "startLine": 320
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateMeal"
-          }
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/schedule_repo.rs"
-                },
-                "region": {
-                  "startLine": 145
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateSchedule"
-          }
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/user_repo.rs"
-                },
-                "region": {
-                  "startLine": 128
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateUser"
-          }
-        },
-        {
-          "ruleId": "sql-injection-sink",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/workout_repo.rs"
-                },
-                "region": {
-                  "startLine": 261
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateWorkout"
-          }
         },
         {
           "ruleId": "sql-injection-sink",
@@ -20851,6 +20870,28 @@
           ],
           "properties": {
             "testCaseKey": "sqliRusqliteDelete"
+          }
+        },
+        {
+          "ruleId": "sql-injection-sink",
+          "level": "error",
+          "message": {
+            "text": "Finding from rule: sql-injection-sink"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_taint_app/src/database.rs"
+                },
+                "region": {
+                  "startLine": 195
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliRusqliteSearch"
           }
         },
         {

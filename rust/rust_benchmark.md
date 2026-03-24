@@ -43,7 +43,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 ### 1. rust_taint_app (actix-web + sqlx/rusqlite)
 **Purpose:** Intentional taint flow test app. Every handler is a taint source, downstream modules are sinks.
-**Architecture:** `handlers.rs` -> `database.rs` / `commands.rs` / `files.rs` / `network.rs` / `unsafe_ops.rs`
+**Architecture:** `handlers.rs` -> `database.rs` / `commands.rs` / `files.rs` / `network.rs` / `memory_ops.rs`
 **Security posture:** ~50% vulnerable, ~50% safe by design. Both patterns exist for SQL, file ops.
 **Test cases:** 23 (Phase 1)
 
@@ -55,7 +55,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 ### 3. rust_backend (actix-web)
 **Purpose:** Backend with intentional vulnerability categories (SQLi, ReDoS, weak crypto, race condition, integer overflow, deserialization, memory corruption).
-**Architecture:** `handlers.rs` -> `vulnerable.rs` + `unsafe_ops.rs`
+**Architecture:** `handlers.rs` -> `patterns.rs` + `memory_ops.rs`
 **Test cases:** 14 (Phase 1)
 
 ### 4. rocket_test (Rocket)
