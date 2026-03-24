@@ -1,6 +1,6 @@
-# Contributing to the Go/Rust/Bash SAST Benchmark
+# Contributing to the Go/Rust/Bash/PHP + Adversarial SAST Benchmark
 
-Thank you for your interest in improving SAST tool accuracy for Go, Rust, and Bash. This benchmark exists because no public ground truth existed for these languages. Every contribution helps the entire SAST ecosystem.
+Thank you for your interest in improving SAST tool accuracy. This benchmark exists because no public ground truth existed for Go, Rust, Bash, or PHP vulnerability detection -- or for adversarial evasion detection in any language. Every contribution helps the entire SAST ecosystem.
 
 ## How to Contribute
 
@@ -59,31 +59,67 @@ If you find a test case that is misclassified (vulnerable marked as safe or vice
 3. Why you believe it's wrong
 4. Evidence (code snippet + explanation)
 
+### Adding Adversarial Evasion Test Cases
+
+Adversarial test cases are fundamentally different from language benchmark tests. They test **concealment detection**, not vulnerability detection.
+
+**Structure:** Each test case uses `vuln-code-snippet` annotation markers:
+```
+// vuln-code-snippet start ADV-UC-001
+// ... code with invisible Unicode payload ...
+// vuln-code-snippet vuln-line ADV-UC-001
+// vuln-code-snippet end ADV-UC-001
+```
+
+**Requirements for adversarial test cases:**
+
+1. **Annotation markers required.** Every test case needs `start`/`end` markers plus either `vuln-line` (for TPs) or `safe-line` (for TNs).
+
+2. **CSV entry required.** Add to `adversarial/expectedresults-0.1.0.csv`:
+   ```
+   ADV-XX-NNN,category,true/false,CWE
+   ```
+
+3. **Real attack patterns only.** TPs must represent a documented attack technique or a direct extrapolation of one. Cite the campaign, CVE, or research paper.
+
+4. **Non-trivial true negatives.** TN cases must look functionally similar to TPs. A TN for `unicode_payload` should use legitimate Unicode (emoji, i18n text) -- not just ASCII code with no Unicode at all.
+
+5. **Cross-language preferred.** If the attack works in JavaScript, add Python and Go variants. Most evasion techniques are language-agnostic.
+
+6. **Categories:** `unicode_payload`, `visual_deception`, `dynamic_construction`, `supply_chain`, `ai_prompt_injection`, `c2_fingerprint`. Propose new categories via issue first.
+
+See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for detailed category descriptions and design philosophy.
+
 ### Improving Documentation
 
-Each language directory has a `*_benchmark.md` file. Improvements to scoring scripts, category descriptions, or pattern documentation are welcome.
+Each language directory has a `*_benchmark.md` file. The adversarial directory has `adversarial_benchmark.md`. Improvements to scoring scripts, category descriptions, or pattern documentation are welcome.
 
 ## Code Style
 
 - **Go:** Standard `gofmt` formatting. Package `testcode`. Use `shared.go` helpers.
 - **Rust:** Standard `rustfmt` formatting. Module structure per benchmark doc.
 - **Bash:** ShellCheck-clean. POSIX-compatible where possible.
+- **Adversarial:** Any language (JS/Python/Go). Code should look like realistic production code -- the concealment technique itself provides the test value, not the surrounding code structure.
 
 ## Validation
 
 Before submitting, run the validation script to ensure CSV/file consistency:
 
 ```bash
-python scripts/validate_go.py    # Go benchmark
-python scripts/validate_rust.py  # Rust benchmark
-python scripts/validate_bash.py  # Bash benchmark
+python scripts/validate_go.py           # Go benchmark
+python scripts/validate_rust.py         # Rust benchmark
+python scripts/validate_bash.py         # Bash benchmark
+python scripts/validate_php.py          # PHP benchmark
+python scripts/validate_adversarial.py  # Adversarial benchmark (L1-L5 fidelity)
 ```
 
 The validator checks:
-- Every CSV key has a matching test file
-- Every test file has a matching CSV entry
+- Every CSV key has a matching test file / annotation
+- Every test file / annotation has a matching CSV entry
 - No duplicate keys
 - Per-category TP/TN balance summary
+
+The adversarial validator runs 5 fidelity levels (L1-L5): structural integrity, roundtrip fidelity, schema validation, semantic fidelity (vuln-line/safe-line correctness), and scoring pipeline readiness.
 
 ## Scoring Your Tool
 

@@ -6915,5148 +6915,6 @@
           }
         },
         {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 299
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 66
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 113
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiRocketListFiles"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 102
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiWarpSearchFiles"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/cmdi_001.rs"
-                },
-                "region": {
-                  "startLine": 10
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeCmdi001"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/cmdi_004.rs"
-                },
-                "region": {
-                  "startLine": 11
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeCmdi004"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 364
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 370
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 129
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 133
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 180
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 187
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 84
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRocketGetUser"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 86
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRocketGetUser"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 287
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRocketCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 288
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRocketCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 77
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliWarpGetUser"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 79
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliWarpGetUser"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 226
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliWarpCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 227
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliWarpCookieProfile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/sqli_001.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSqli001"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/sqli_003.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSqli003"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/sqli_004.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSqli004"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 314
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 316
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 319
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 321
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 416
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 72
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 54
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverBackendUploadFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 138
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverBackendIncludeFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/pathtraver_001.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodePathtraver001"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/pathtraver_003.rs"
-                },
-                "region": {
-                  "startLine": 10
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodePathtraver003"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-taint"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/pathtraver_004.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodePathtraver004"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
-                  "startLine": 181
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 47
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 217
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 60
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 130
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 344
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 43
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 97
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 214
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 324
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 387
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 423
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/main.rs"
-                },
-                "region": {
-                  "startLine": 172
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 148
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 417
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 286
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 349
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 139
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 325
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 388
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 16
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/pool.rs"
-                },
-                "region": {
-                  "startLine": 43
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/workout_repo.rs"
-                },
-                "region": {
-                  "startLine": 208
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieSearchWorkouts"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/routes.rs"
-                },
-                "region": {
-                  "startLine": 275
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueHandlerExecuteSql"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/db.rs"
-                },
-                "region": {
-                  "startLine": 100
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/shell.rs"
-                },
-                "region": {
-                  "startLine": 52
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/migrations.rs"
-                },
-                "region": {
-                  "startLine": 23
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/migrations.rs"
-                },
-                "region": {
-                  "startLine": 143
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 90
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueSearchJobs"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 92
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueSearchJobs"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 113
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueGetJobsByTag"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 115
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueGetJobsByTag"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 137
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueListOrdered"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 139
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueListOrdered"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 422
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 429
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 537
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 542
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 553
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 558
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 9
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 103
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliSearchUsers"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 126
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliExecuteRawSql"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 144
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliFindUserByEmail"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 200
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 285
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/main.rs"
-                },
-                "region": {
-                  "startLine": 82
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/schedule_repo.rs"
-                },
-                "region": {
-                  "startLine": 145
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateSchedule"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/workout_repo.rs"
-                },
-                "region": {
-                  "startLine": 261
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateWorkout"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/queries.rs"
-                },
-                "region": {
-                  "startLine": 119
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 83
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueSearchJobs"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 108
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueGetJobsByTag"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 132
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueListOrdered"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 138
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliFindUserByEmail"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 184
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteDelete"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 195
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteSearch"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/sqli_005.rs"
-                },
-                "region": {
-                  "startLine": 12
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSqli005"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 35
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 55
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 79
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 96
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 118
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 141
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 167
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 171
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 177
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 181
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/db.rs"
-                },
-                "region": {
-                  "startLine": 29
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
-                  "startLine": 27
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
-                  "startLine": 387
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/advanced.rs"
-                },
-                "region": {
-                  "startLine": 768
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 79
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 161
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 180
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 246
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 295
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/async_flow.rs"
-                },
-                "region": {
-                  "startLine": 323
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 28
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 99
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 119
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 172
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 178
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 251
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 276
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 364
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/closures.rs"
-                },
-                "region": {
-                  "startLine": 413
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 213
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 28
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 70
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 109
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 137
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 148
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 168
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 249
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 281
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 307
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 334
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 335
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 371
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/iterators.rs"
-                },
-                "region": {
-                  "startLine": 414
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 80
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 271
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 363
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 385
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 389
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 393
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 408
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 425
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 456
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 468
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 484
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 532
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/patterns.rs"
-                },
-                "region": {
-                  "startLine": 619
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 142
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 190
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 252
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 299
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/pipeline.rs"
-                },
-                "region": {
-                  "startLine": 366
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 83
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 111
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 117
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 124
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 131
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 137
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 133
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 188
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 270
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 348
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/db.rs"
-                },
-                "region": {
-                  "startLine": 49
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/db.rs"
-                },
-                "region": {
-                  "startLine": 64
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 34
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverJobqueueCreateBackup"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 51
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverJobqueueRestoreBackup"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 145
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 180
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverJobqueueDeleteBackup"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 23
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverWriteFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 30
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 54
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverDeleteFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 61
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 67
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 73
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 106
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 157
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverProcessUpload"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/main.rs"
-                },
-                "region": {
-                  "startLine": 51
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/main.rs"
-                },
-                "region": {
-                  "startLine": 158
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/main.rs"
-                },
-                "region": {
-                  "startLine": 190
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 90
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 157
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverRocketReadFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/main.rs"
-                },
-                "region": {
-                  "startLine": 140
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-core/src/config.rs"
-                },
-                "region": {
-                  "startLine": 46
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 131
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 14
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverReadFile"
-          }
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 36
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 80
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 100
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/files.rs"
-                },
-                "region": {
-                  "startLine": 112
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/main.rs"
-                },
-                "region": {
-                  "startLine": 48
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/main.rs"
-                },
-                "region": {
-                  "startLine": 116
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "pathtraver",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-path-traversal-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 142
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverWarpReadFile"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/main.rs"
-                },
-                "region": {
-                  "startLine": 237
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 101
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfConnectTcp"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 128
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 204
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 138
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfRocketFetchUrl"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 313
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 36
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 65
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfPostToUrl"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 161
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfSendWebhook"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 196
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 122
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfWarpFetchUrl"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/ssrf_001.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSsrf001"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/ssrf_002.rs"
-                },
-                "region": {
-                  "startLine": 7
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeSsrf002"
-          }
-        },
-        {
-          "ruleId": "ssrf",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-ssrf-sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/network.rs"
-                },
-                "region": {
-                  "startLine": 246
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "ssrfFetchExternalOnly"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 41
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 54
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 68
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 89
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiBackendShellExec"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/main.rs"
-                },
-                "region": {
-                  "startLine": 106
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-worker/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 134
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 10
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 98
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteInDirectory"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 132
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 151
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 180
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 189
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiRunCommandWithArg"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 227
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteAllowedCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/warp_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 157
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiWarpExecuteCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 56
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/commands.rs"
-                },
-                "region": {
-                  "startLine": 63
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiExecuteShellCommand"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 20
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/sinks.rs"
-                },
-                "region": {
-                  "startLine": 28
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 105
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiJobqueueImportSql"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/cmdi_004.rs"
-                },
-                "region": {
-                  "startLine": 9
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeCmdi004"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "testcode/cmdi_003.rs"
-                },
-                "region": {
-                  "startLine": 9
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "testcodeCmdi003"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 80
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiJobqueueExportSql"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rocket_test/src/main.rs"
-                },
-                "region": {
-                  "startLine": 115
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "cmdiRocketListFiles"
-          }
-        },
-        {
-          "ruleId": "cmdi",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-command-injection"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/backup.rs"
-                },
-                "region": {
-                  "startLine": 160
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-format"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/anarchy_commerce/services/search/src/main.rs"
-                },
-                "region": {
-                  "startLine": 77
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliSearchElasticsearchInjection"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-format"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_backend/src/handlers.rs"
-                },
-                "region": {
-                  "startLine": 75
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "pathtraverBackendUploadFile"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-format"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/queries.rs"
-                },
-                "region": {
-                  "startLine": 93
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-format"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/queries.rs"
-                },
-                "region": {
-                  "startLine": 107
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueBuildSearch"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-format"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/queries.rs"
-                },
-                "region": {
-                  "startLine": 165
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/deepflow-rust/src/traits.rs"
-                },
-                "region": {
-                  "startLine": 186
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 32
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 52
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 76
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 93
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 115
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 138
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 163
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 168
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 174
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 178
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/db/migrations.rs"
-                },
-                "region": {
-                  "startLine": 182
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/schedule_repo.rs"
-                },
-                "region": {
-                  "startLine": 153
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateSchedule"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_calorie_app/src/repositories/workout_repo.rs"
-                },
-                "region": {
-                  "startLine": 269
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliCalorieUpdateWorkout"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/queries.rs"
-                },
-                "region": {
-                  "startLine": 71
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-db/src/sqlite.rs"
-                },
-                "region": {
-                  "startLine": 68
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueExecuteRaw"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-worker/src/worker.rs"
-                },
-                "region": {
-                  "startLine": 291
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_taint_app/src/database.rs"
-                },
-                "region": {
-                  "startLine": 187
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliRusqliteDelete"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/error.rs"
-                },
-                "region": {
-                  "startLine": 112
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "infodisclosureJobqueueErrorSql"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-api/src/routes.rs"
-                },
-                "region": {
-                  "startLine": 246
-                }
-              }
-            }
-          ],
-          "properties": {
-            "testCaseKey": "sqliJobqueueHandlerSearch"
-          }
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/job.rs"
-                },
-                "region": {
-                  "startLine": 49
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/job.rs"
-                },
-                "region": {
-                  "startLine": 253
-                }
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "sqli",
-          "level": "error",
-          "message": {
-            "text": "Finding from rule: rust-sql-injection-structural"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "apps/rust_jobqueue/crates/jobqueue-cli/src/commands/shell.rs"
-                },
-                "region": {
-                  "startLine": 60
-                }
-              }
-            }
-          ]
-        },
-        {
           "ruleId": "deser",
           "level": "error",
           "message": {
@@ -22365,6 +17223,690 @@
           ],
           "properties": {
             "testCaseKey": "testcodeXss018"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 370
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 133
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/sinks.rs"
+                },
+                "region": {
+                  "startLine": 187
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliRocketGetUser"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 288
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliRocketCookieProfile"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/warp_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 79
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliWarpGetUser"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/warp_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 227
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliWarpCookieProfile"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/async_flow.rs"
+                },
+                "region": {
+                  "startLine": 364
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 129
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/sinks.rs"
+                },
+                "region": {
+                  "startLine": 180
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 84
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliRocketGetUser"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 287
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliRocketCookieProfile"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/warp_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 77
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliWarpGetUser"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/warp_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 226
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "sqliWarpCookieProfile"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/sqli_001.rs"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeSqli001"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/sqli_003.rs"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeSqli003"
+          }
+        },
+        {
+          "ruleId": "taint:sqli",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: SQL Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/sqli_004.rs"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeSqli004"
+          }
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 299
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 66
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rocket_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 113
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cmdiRocketListFiles"
+          }
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/warp_test/src/main.rs"
+                },
+                "region": {
+                  "startLine": 102
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "cmdiWarpSearchFiles"
+          }
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/cmdi_001.rs"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCmdi001"
+          }
+        },
+        {
+          "ruleId": "taint:cmdi",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Command Injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/cmdi_004.rs"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodeCmdi004"
+          }
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 316
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 319
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 321
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 416
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/pipeline.rs"
+                },
+                "region": {
+                  "startLine": 72
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/rust_backend/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 54
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "pathtraverBackendUploadFile"
+          }
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/pathtraver_003.rs"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodePathtraver003"
+          }
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/pathtraver_004.rs"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodePathtraver004"
+          }
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apps/deepflow-rust/src/handlers.rs"
+                },
+                "region": {
+                  "startLine": 314
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "taint:pathtraver",
+          "level": "error",
+          "message": {
+            "text": "Taint flow: Path Traversal"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "testcode/pathtraver_001.rs"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "testCaseKey": "testcodePathtraver001"
           }
         }
       ]

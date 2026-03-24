@@ -1,6 +1,6 @@
-# OWASP-Style SAST Benchmark for Go, Rust, Bash, and PHP
+# OWASP-Style SAST Benchmark for Go, Rust, Bash, PHP + Adversarial Evasion
 
-The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, and **PHP** -- languages with zero existing public SAST benchmarks.
+The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, and **PHP** -- languages with zero existing public SAST benchmarks. Plus an **Adversarial Evasion** benchmark that tests an entirely different question: can your tool detect that someone is *hiding* something?
 
 ## Why This Exists
 
@@ -11,6 +11,14 @@ SAST tools need ground truth to measure accuracy. Without benchmarks, you can't 
 - **Is the tool getting better or worse over time?** (Regression detection)
 
 The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, Bash, or PHP. This project fills that gap.
+
+### Beyond Traditional SAST: Adversarial Evasion
+
+Traditional SAST benchmarks measure whether a tool can follow tainted data from source to sink. The **Adversarial Evasion** benchmark measures something no existing benchmark tests: can your tool detect **intentional concealment**?
+
+This matters because the real-world threat landscape has shifted. Attackers now hide malicious payloads inside invisible Unicode characters (the Glassworm campaign compromised 433 repos in March 2026), use Bidi overrides to make code *display* differently than it *executes* (Trojan Source, CVE-2021-42574), embed C2 channels in Google Calendar events and Solana transaction memos, and inject adversarial prompts targeting AI coding assistants. None of these attacks involve a traditional taint flow. AST analysis, regex matching, and dataflow tracking all see "normal" code. Detection requires new paradigms: byte-level Unicode scanning, visual deception analysis, behavioral intent modeling, and supply chain anomaly detection.
+
+The adversarial benchmark provides the first public ground truth for measuring these capabilities. See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for the full specification.
 
 ## Project Status
 
@@ -199,42 +207,56 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 ### Adversarial Evasion v0.1.0 -- 60 test cases, 6 categories, cross-language
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| unicode_payload | 506 | 5 | 5 | 10 |
-| visual_deception | 451 | 6 | 4 | 10 |
-| dynamic_construction | 506 | 6 | 4 | 10 |
-| supply_chain | 506 | 5 | 5 | 10 |
-| ai_prompt_injection | 1059 | 5 | 5 | 10 |
-| c2_fingerprint | 506 | 5 | 5 | 10 |
+**This is not a language benchmark. It is a detection paradigm benchmark.**
 
-Cross-language (JavaScript, Python, Go). Tests evasion detection rather than vulnerability detection: invisible Unicode payloads (Glassworm/Trojan Source), homoglyph identifier attacks, dynamic code construction, supply chain install hooks, AI prompt injection in comments, and non-standard C2 channels (Solana, Google Calendar, DNS TXT). Based on real-world campaigns from 2024-2026. TP/TN balance: 53/47.
+While Go/Rust/Bash/PHP benchmarks ask "can your tool find this vulnerability?", the adversarial benchmark asks: **"can your tool detect that someone is hiding something?"** Traditional SAST is structurally blind to these attack classes because the AST, regex, and taint analysis all see "normal" code.
+
+| Category | CWE | Vuln | Safe | Total | Detection Requires |
+|----------|-----|------|------|-------|--------------------|
+| unicode_payload | 506 | 5 | 5 | 10 | Byte-level scan |
+| visual_deception | 451 | 6 | 4 | 10 | Confusables DB + Bidi detection |
+| dynamic_construction | 506 | 6 | 4 | 10 | Taint through decode chains |
+| supply_chain | 506 | 5 | 5 | 10 | File context + intent analysis |
+| ai_prompt_injection | 1059 | 5 | 5 | 10 | NLP-level + tag-block scan |
+| c2_fingerprint | 506 | 5 | 5 | 10 | Unusual API pattern detection |
+
+Cross-language (JavaScript, Python, Go). Based on real-world campaigns: Glassworm (March 2026, 433 repos via Variation Selector encoding), os-info-checker-es6 (May 2025, VS steganography + Google Calendar C2), Trojan Source (CVE-2021-42574, Bidi overrides), and emerging AI prompt injection attacks targeting coding assistants. TP/TN balance: 53/47.
+
+See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for the full methodology, detection requirements matrix, and design philosophy.
 
 ## Combined Scale
 
-| Language | Tests | CWEs | TP/TN Balance |
-|----------|-------|------|---------------|
-| Go | 534 | 24 | 50/50 |
-| PHP | 369 | 25 | 50/50 |
-| Bash | 356 | 16 | 49/51 |
-| Rust | 268 | 13 | 46/54 |
-| Adversarial | 60 | 4 | 53/47 |
-| **Total** | **1,587** | **66 unique** | |
+| Benchmark | Tests | CWEs/Categories | TP/TN Balance | What It Tests |
+|-----------|-------|-----------------|---------------|---------------|
+| Go | 534 | 24 CWEs | 50/50 | Vulnerability detection |
+| PHP | 369 | 25 CWEs | 50/50 | Vulnerability detection |
+| Bash | 356 | 16 CWEs | 49/51 | Vulnerability detection |
+| Rust | 268 | 13 CWEs | 46/54 | Vulnerability detection |
+| Adversarial | 60 | 6 categories | 53/47 | Evasion/concealment detection |
+| **Total** | **1,587** | **66 unique CWEs + 6 evasion categories** | |
 
 ## How to Use
 
+**Language benchmarks (Go/Rust/Bash/PHP):**
 1. Point your SAST tool at a language directory
-2. Run the scoring script from the language's benchmark doc
-3. Compare against ground truth
+2. Export findings as SARIF (or use the tool-specific bridge script)
+3. Run `python scripts/score_sarif.py <results.sarif> <language>/expectedresults-*.csv`
 4. Root-cause every FN and FP
+
+**Adversarial evasion benchmark:**
+1. Point your tool at `adversarial/testcode/` (cross-language: JS, Python, Go)
+2. Run `python adversarial/adversarial_benchmark.py`
+3. Scoring uses the same Youden's J formula but maps findings through EIDL signal/rule/sink tracks
+4. Root-cause every FN -- each one represents an evasion technique your tool is blind to
 
 ## Limitations
 
 Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 1,527 across four languages. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 1,587 across four languages + adversarial. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
+- **Adversarial coverage**: The adversarial benchmark (60 tests) is intentionally smaller -- each test case represents a real-world attack pattern, not a synthetic variant. It does not yet cover slopsquatting (ecosystem-level), dependency confusion (registry-level), or AI polymorphic malware (runtime). These require fundamentally different testing infrastructure.
 
 We release this openly because imperfect ground truth that invites correction is more valuable than no ground truth at all.
 
