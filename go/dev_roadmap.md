@@ -77,7 +77,7 @@ Our benchmark: 256 test cases with varying signatures, varying source APIs, vary
 
 ## 3. Reference App Audit Summary
 
-### vulnerable-api (2,709 lines, 5 frameworks)
+### multi-api (2,709 lines, 5 frameworks)
 
 | Category | Vulns | Safe | Unique Patterns |
 |----------|-------|------|-----------------|

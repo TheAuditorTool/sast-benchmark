@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/gofiber/fiber/v2"
 	"github.com/labstack/echo/v4"
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // RouteRegistrar handles route registration for all frameworks
@@ -24,7 +24,7 @@ func SetupGinRoutes(r *gin.Engine, userRepo *repository.UserRepository, db *sql.
 	{
 		// User routes - GET handlers
 		v1.GET("/users", h.GetUser)
-		v1.GET("/users/:id", h.GetUserSecure)
+		v1.GET("/users/:id", h.GetUserAlt)
 		v1.GET("/users/by-username/:username", h.GetUserByUsername)
 
 		// User routes - POST/PUT/DELETE
@@ -56,8 +56,8 @@ func SetupGinRoutes(r *gin.Engine, userRepo *repository.UserRepository, db *sql.
 		c.Next()
 	})
 	{
-		admin.GET("/users/secure", h.GetUserSecure)
-		admin.GET("/cmd/secure", h.RunCommandSecure)
+		admin.GET("/users/secure", h.GetUserAlt)
+		admin.GET("/cmd/secure", h.RunCommandAlt)
 	}
 }
 
@@ -90,10 +90,10 @@ func SetupEchoRoutes(e *echo.Echo, userRepo *repository.UserRepository, db *sql.
 		api.GET("/reports", h.ReportEndpoint)
 	}
 
-	// Secure endpoints
+	// Alt endpoints
 	secure := e.Group("/secure")
 	{
-		secure.GET("/users", h.GetUserSecure)
+		secure.GET("/users", h.GetUserAlt)
 	}
 }
 
@@ -111,9 +111,9 @@ func SetupChiRoutes(r chi.Router, userRepo *repository.UserRepository, db *sql.D
 			r.Put("/{id}", h.UpdateUser)
 			r.Delete("/{id}", h.DeleteUser)
 
-			// Secure sub-routes
-			r.Get("/secure/{id}", h.GetUserSecure)
-			r.Post("/secure", h.CreateUserSecure)
+			// Alt sub-routes
+			r.Get("/secure/{id}", h.GetUserAlt)
+			r.Post("/secure", h.CreateUserAlt)
 		})
 
 		r.Route("/commands", func(r chi.Router) {
@@ -161,11 +161,11 @@ func SetupFiberRoutes(app *fiber.App, userRepo *repository.UserRepository, db *s
 		api.Post("/batch", h.BatchOperation)
 	}
 
-	// Secure endpoints
+	// Alt endpoints
 	secure := api.Group("/secure")
 	{
-		secure.Get("/users", h.GetUserSecure)
-		secure.Post("/users", h.CreateUserSecure)
+		secure.Get("/users", h.GetUserAlt)
+		secure.Post("/users", h.CreateUserAlt)
 	}
 }
 
@@ -200,7 +200,7 @@ func SetupNetHTTPRoutes(mux *http.ServeMux, userRepo *repository.UserRepository,
 	// Complex taint flow
 	mux.HandleFunc("/api/complex", h.ComplexHandler)
 
-	// Secure endpoints
-	mux.HandleFunc("/api/users/secure", h.GetUserSecure)
-	mux.HandleFunc("/api/users/secure/create", h.CreateUserSecure)
+	// Alt endpoints
+	mux.HandleFunc("/api/users/secure", h.GetUserAlt)
+	mux.HandleFunc("/api/users/secure/create", h.CreateUserAlt)
 }

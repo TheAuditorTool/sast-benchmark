@@ -28,7 +28,7 @@ func BenchSvcQueryUser(id string) error {
 	return nil
 }
 
-func BenchSvcQueryUserSafe(id string) error {
+func BenchSvcQueryUserV2(id string) error {
 	rows, err := DB.Query("SELECT * FROM users WHERE id = ?", id)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func BenchSvcExecCmd(cmd string) ([]byte, error) {
 	return exec.Command("sh", "-c", cmd).CombinedOutput()
 }
 
-func BenchSvcExecCmdSafe(host string) ([]byte, error) {
+func BenchSvcExecCmdV2(host string) ([]byte, error) {
 	return exec.Command("ping", "-c", "1", host).Output()
 }
 
@@ -54,7 +54,7 @@ func BenchSvcReadPath(name string) ([]byte, error) {
 	return os.ReadFile(path)
 }
 
-func BenchSvcReadPathSafe(name string) ([]byte, error) {
+func BenchSvcReadPathV2(name string) ([]byte, error) {
 	safeName := filepath.Base(name)
 	return os.ReadFile(filepath.Join("/var/data", safeName))
 }
@@ -101,7 +101,7 @@ func BenchSvcProcessStruct(req *BenchSvcRequest) error {
 	return nil
 }
 
-func BenchSvcProcessStructSafe(req *BenchSvcRequest) error {
+func BenchSvcProcessStructV2(req *BenchSvcRequest) error {
 	rows, err := DB.Query("SELECT * FROM data WHERE filter = ?", req.Query)
 	if err != nil {
 		return err
@@ -120,7 +120,7 @@ func (s *BenchSvcStore) FindUser(id string) error {
 	return nil
 }
 
-func (s *BenchSvcStore) FindUserSafe(id string) error {
+func (s *BenchSvcStore) FindUserV2(id string) error {
 	rows, err := s.db.Query("SELECT * FROM users WHERE id = ?", id)
 	if err != nil {
 		return err

@@ -55,14 +55,14 @@ MealRepository.ListForUser,internal/repository/meal_repository.go,48,61,sqli,tru
 MealRepository.ListForUserWithDateRange,internal/repository/meal_repository.go,64,85,sqli,true,89
 MealRepository.GetDailyMeals,internal/repository/meal_repository.go,88,93,sqli,false,89
 MealRepository.GetDailySummary,internal/repository/meal_repository.go,96,123,sqli,false,89
-MealRepository.SearchVulnerable,internal/repository/meal_repository.go,127,136,sqli,true,89
+MealRepository.Search,internal/repository/meal_repository.go,127,136,sqli,true,89
 MealRepository.GetCaloriesForDateRange,internal/repository/meal_repository.go,139,161,sqli,false,89
 # -- food_repository.go --
 FoodRepository.Create,internal/repository/food_repository.go,21,24,sqli,false,89
 FoodRepository.FindByID,internal/repository/food_repository.go,27,33,sqli,false,89
 FoodRepository.ListAll,internal/repository/food_repository.go,36,40,sqli,false,89
 FoodRepository.ListByCategory,internal/repository/food_repository.go,43,47,sqli,false,89
-FoodRepository.SearchVulnerable,internal/repository/food_repository.go,52,61,sqli,true,89
+FoodRepository.Search,internal/repository/food_repository.go,52,61,sqli,true,89
 FoodRepository.Delete,internal/repository/food_repository.go,64,66,sqli,false,89
 # -- workout_repository.go --
 WorkoutRepository.Create,internal/repository/workout_repository.go,22,24,sqli,false,89
@@ -75,7 +75,7 @@ WorkoutRepository.GetDailySummary,internal/repository/workout_repository.go,90,1
 WorkoutRepository.GetCaloriesBurnedForDateRange,internal/repository/workout_repository.go,111,133,sqli,false,89
 WorkoutRepository.ListExercises,internal/repository/workout_repository.go,136,140,sqli,false,89
 WorkoutRepository.FindExerciseByID,internal/repository/workout_repository.go,143,150,sqli,false,89
-WorkoutRepository.SearchExercisesVulnerable,internal/repository/workout_repository.go,154,163,sqli,true,89
+WorkoutRepository.SearchExercises,internal/repository/workout_repository.go,154,163,sqli,true,89
 # -- schedule_repository.go --
 ScheduleRepository.Create,internal/repository/schedule_repository.go,21,23,sqli,false,89
 ScheduleRepository.FindByID,internal/repository/schedule_repository.go,26,32,sqli,false,89
@@ -87,7 +87,7 @@ ScheduleRepository.ToggleActive,internal/repository/schedule_repository.go,77,89
 ScheduleRepository.CreateItem,internal/repository/schedule_repository.go,92,94,sqli,false,89
 ScheduleRepository.DeleteItem,internal/repository/schedule_repository.go,97,99,sqli,false,89
 ScheduleRepository.FindItemByID,internal/repository/schedule_repository.go,102,109,sqli,false,89
-ScheduleRepository.SearchVulnerable,internal/repository/schedule_repository.go,113,122,sqli,true,89
+ScheduleRepository.Search,internal/repository/schedule_repository.go,113,122,sqli,true,89
 # -- user_repository.go --
 UserRepository.Create,internal/repository/user_repository.go,21,23,sqli,false,89
 UserRepository.FindByID,internal/repository/user_repository.go,26,32,sqli,false,89
@@ -95,7 +95,7 @@ UserRepository.FindByEmail,internal/repository/user_repository.go,35,41,sqli,fal
 UserRepository.FindByUsername,internal/repository/user_repository.go,44,50,sqli,false,89
 UserRepository.Update,internal/repository/user_repository.go,53,55,sqli,false,89
 UserRepository.Delete,internal/repository/user_repository.go,58,60,sqli,false,89
-UserRepository.SearchVulnerable,internal/repository/user_repository.go,65,76,sqli,true,89
+UserRepository.Search,internal/repository/user_repository.go,65,76,sqli,true,89
 UserRepository.ExistsWithEmail,internal/repository/user_repository.go,79,83,sqli,false,89
 UserRepository.ExistsWithUsername,internal/repository/user_repository.go,86,90,sqli,false,89
 # -- analytics_repository.go --
@@ -105,7 +105,7 @@ AnalyticsRepository.CreateWeightLog,internal/repository/analytics_repository.go,
 AnalyticsRepository.GetWeightLogs,internal/repository/analytics_repository.go,60,67,sqli,false,89
 AnalyticsRepository.GetLatestWeight,internal/repository/analytics_repository.go,70,79,sqli,false,89
 AnalyticsRepository.GetWeightLogsInRange,internal/repository/analytics_repository.go,82,88,sqli,false,89
-AnalyticsRepository.CustomReportVulnerable,internal/repository/analytics_repository.go,92,134,sqli,true,89
+AnalyticsRepository.CustomReport,internal/repository/analytics_repository.go,92,134,sqli,true,89
 AnalyticsRepository.ExecuteRawQuery,internal/repository/analytics_repository.go,163,186,sqli,true,89
 # -- database.go --
 Database.ExecuteRaw,internal/repository/database.go,103,105,sqli,true,89
@@ -118,14 +118,14 @@ MealService.Update,internal/services/meal_service.go,74,113,sqli,false,89
 MealService.Delete,internal/services/meal_service.go,116,128,sqli,false,89
 MealService.ListForUser,internal/services/meal_service.go,132,142,sqli,true,89
 MealService.GetDailySummary,internal/services/meal_service.go,145,147,sqli,false,89
-MealService.SearchMealsVulnerable,internal/services/meal_service.go,151,154,sqli,true,89
+MealService.SearchMeals,internal/services/meal_service.go,151,154,sqli,true,89
 MealService.QuickLog,internal/services/meal_service.go,157,171,sqli,false,89
 # -- food_service.go --
 FoodService.Create,internal/services/food_service.go,28,55,sqli,false,89
 FoodService.FindByID,internal/services/food_service.go,58,67,sqli,false,89
 FoodService.ListAll,internal/services/food_service.go,70,72,sqli,false,89
 FoodService.ListByCategory,internal/services/food_service.go,75,77,sqli,false,89
-FoodService.SearchVulnerable,internal/services/food_service.go,81,84,sqli,true,89
+FoodService.Search,internal/services/food_service.go,81,84,sqli,true,89
 # -- workout_service.go --
 WorkoutService.Create,internal/services/workout_service.go,31,68,sqli,false,89
 WorkoutService.FindByID,internal/services/workout_service.go,71,80,sqli,false,89
@@ -149,12 +149,12 @@ UserService.Register,internal/services/user_service.go,31,66,sqli,false,89
 UserService.Login,internal/services/user_service.go,70,98,sqli,false,89
 UserService.FindByID,internal/services/user_service.go,101,110,sqli,false,89
 UserService.Update,internal/services/user_service.go,113,147,sqli,false,89
-UserService.SearchUsersVulnerable,internal/services/user_service.go,151,154,sqli,true,89
+UserService.SearchUsers,internal/services/user_service.go,151,154,sqli,true,89
 # -- analytics_service.go --
 AnalyticsService.GetDailySummary,internal/services/analytics_service.go,35,72,sqli,false,89
 AnalyticsService.GetWeeklySummary,internal/services/analytics_service.go,75,128,sqli,false,89
 AnalyticsService.GetProgress,internal/services/analytics_service.go,131,204,sqli,false,89
 AnalyticsService.LogWeight,internal/services/analytics_service.go,207,220,sqli,false,89
 AnalyticsService.LogWater,internal/services/analytics_service.go,223,226,sqli,false,89
-AnalyticsService.ExecuteRawQueryVulnerable,internal/services/analytics_service.go,230,233,sqli,true,89
-AnalyticsService.CustomReportVulnerable,internal/services/analytics_service.go,237,253,sqli,true,89
+AnalyticsService.ExecuteRawQuery,internal/services/analytics_service.go,230,233,sqli,true,89
+AnalyticsService.CustomReport,internal/services/analytics_service.go,237,253,sqli,true,89

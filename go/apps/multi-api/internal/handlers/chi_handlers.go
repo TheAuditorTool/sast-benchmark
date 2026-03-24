@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // ChiHandler handles HTTP requests using Chi router
@@ -241,8 +241,8 @@ func (h *ChiHandler) AuditLog(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-// GetUserSecure looks up a user with parameterized query
-func (h *ChiHandler) GetUserSecure(w http.ResponseWriter, r *http.Request) {
+// GetUserAlt looks up a user with parameterized query
+func (h *ChiHandler) GetUserAlt(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "id")
 
 	query := "SELECT * FROM users WHERE id = ?"
@@ -257,8 +257,8 @@ func (h *ChiHandler) GetUserSecure(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-// CreateUserSecure creates a user with prepared statement
-func (h *ChiHandler) CreateUserSecure(w http.ResponseWriter, r *http.Request) {
+// CreateUserAlt creates a user with prepared statement
+func (h *ChiHandler) CreateUserAlt(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`

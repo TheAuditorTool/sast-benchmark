@@ -10,10 +10,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/labstack/echo/v4"
-	"github.com/theauditor/vulnerable-api/internal/handlers"
-	"github.com/theauditor/vulnerable-api/internal/models"
-	"github.com/theauditor/vulnerable-api/internal/repository"
-	"github.com/theauditor/vulnerable-api/internal/services"
+	"github.com/theauditor/multi-api/internal/handlers"
+	"github.com/theauditor/multi-api/internal/models"
+	"github.com/theauditor/multi-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/services"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -65,7 +65,7 @@ func startGinServer(userRepo *repository.UserRepository, db *sql.DB) {
 	r := gin.Default()
 	h := handlers.NewGinHandler(userRepo, db)
 
-	// Vulnerable routes
+	// Routes
 	r.GET("/users", h.GetUser)
 	r.GET("/users/:username", h.GetUserByUsername)
 	r.POST("/users/search", h.SearchUsers)
@@ -79,9 +79,9 @@ func startGinServer(userRepo *repository.UserRepository, db *sql.DB) {
 	r.POST("/save", h.SaveFile)
 	r.POST("/complex", h.ComplexFlow)
 
-	// Secure routes
-	r.GET("/users/secure", h.GetUserSecure)
-	r.GET("/cmd/secure", h.RunCommandSecure)
+	// Alt routes
+	r.GET("/users/secure", h.GetUserAlt)
+	r.GET("/cmd/secure", h.RunCommandAlt)
 
 	fmt.Println("Gin server starting on :8081")
 	r.Run(":8081")
@@ -92,7 +92,7 @@ func startEchoServer(userRepo *repository.UserRepository, db *sql.DB) {
 	e := echo.New()
 	h := handlers.NewEchoHandler(userRepo, db)
 
-	// Vulnerable routes
+	// Routes
 	e.GET("/users", h.GetUser)
 	e.GET("/users/:username", h.GetUserByUsername)
 	e.POST("/users/search", h.SearchUsers)
@@ -105,8 +105,8 @@ func startEchoServer(userRepo *repository.UserRepository, db *sql.DB) {
 	e.POST("/process", h.ProcessRequest)
 	e.GET("/reports", h.ReportEndpoint)
 
-	// Secure routes
-	e.GET("/users/secure", h.GetUserSecure)
+	// Alt routes
+	e.GET("/users/secure", h.GetUserAlt)
 
 	fmt.Println("Echo server starting on :8082")
 	e.Start(":8082")
@@ -120,7 +120,7 @@ func startChiServer(userRepo *repository.UserRepository, db *sql.DB) {
 
 	h := handlers.NewChiHandler(userRepo, db)
 
-	// Vulnerable routes
+	// Routes
 	r.Get("/users/{id}", h.GetUser)
 	r.Get("/users/by-username/{username}", h.GetUserByUsername)
 	r.Get("/users/search", h.SearchUsers)
@@ -133,9 +133,9 @@ func startChiServer(userRepo *repository.UserRepository, db *sql.DB) {
 	r.Post("/upload", h.UploadFile)
 	r.Post("/audit/{action}", h.AuditLog)
 
-	// Secure routes
-	r.Get("/users/secure/{id}", h.GetUserSecure)
-	r.Post("/users/secure", h.CreateUserSecure)
+	// Alt routes
+	r.Get("/users/secure/{id}", h.GetUserAlt)
+	r.Post("/users/secure", h.CreateUserAlt)
 
 	fmt.Println("Chi server starting on :8083")
 	http.ListenAndServe(":8083", r)
@@ -145,7 +145,7 @@ func startChiServer(userRepo *repository.UserRepository, db *sql.DB) {
 func startNetHTTPServer(userRepo *repository.UserRepository, db *sql.DB) {
 	h := handlers.NewNetHTTPHandler(userRepo, db)
 
-	// Vulnerable routes
+	// Routes
 	http.HandleFunc("/users", h.GetUser)
 	http.HandleFunc("/users/search", h.SearchUsers)
 	http.HandleFunc("/users/create", h.CreateUser)
@@ -162,9 +162,9 @@ func startNetHTTPServer(userRepo *repository.UserRepository, db *sql.DB) {
 	http.HandleFunc("/cookie", h.ProcessCookie)
 	http.HandleFunc("/complex", h.ComplexHandler)
 
-	// Secure routes
-	http.HandleFunc("/users/secure", h.GetUserSecure)
-	http.HandleFunc("/users/secure/create", h.CreateUserSecure)
+	// Alt routes
+	http.HandleFunc("/users/secure", h.GetUserAlt)
+	http.HandleFunc("/users/secure/create", h.CreateUserAlt)
 
 	fmt.Println("net/http server starting on :8084")
 	http.ListenAndServe(":8084", nil)

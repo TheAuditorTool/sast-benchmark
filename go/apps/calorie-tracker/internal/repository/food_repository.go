@@ -47,8 +47,8 @@ func (r *FoodRepository) ListByCategory(category string) ([]models.Food, error) 
 	return foods, err
 }
 
-// SearchVulnerable searches foods by term
-func (r *FoodRepository) SearchVulnerable(searchTerm string) ([]models.Food, error) {
+// Search searches foods by term
+func (r *FoodRepository) Search(searchTerm string) ([]models.Food, error) {
 	var foods []models.Food
 	query := fmt.Sprintf(
 		"SELECT * FROM foods WHERE name LIKE '%%%s%%' OR brand LIKE '%%%s%%' OR category LIKE '%%%s%%'",

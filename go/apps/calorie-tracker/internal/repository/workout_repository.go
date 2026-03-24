@@ -147,8 +147,8 @@ func (r *WorkoutRepository) FindExerciseByID(id string) (*models.Exercise, error
 	return &exercise, nil
 }
 
-// SearchExercisesVulnerable searches exercises by term
-func (r *WorkoutRepository) SearchExercisesVulnerable(searchTerm string) ([]models.Exercise, error) {
+// SearchExercises searches exercises by term
+func (r *WorkoutRepository) SearchExercises(searchTerm string) ([]models.Exercise, error) {
 	var exercises []models.Exercise
 	query := fmt.Sprintf(
 		"SELECT * FROM exercises WHERE name LIKE '%%%s%%' OR category LIKE '%%%s%%'",

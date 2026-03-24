@@ -144,9 +144,9 @@ func (s *UserService) Update(userID string, req models.UpdateUserRequest) (*mode
 	return user, nil
 }
 
-// SearchUsersVulnerable searches users by term
-func (s *UserService) SearchUsersVulnerable(searchTerm string) ([]models.User, error) {
-	return s.repo.SearchVulnerable(searchTerm)
+// SearchUsers searches users by term
+func (s *UserService) SearchUsers(searchTerm string) ([]models.User, error) {
+	return s.repo.Search(searchTerm)
 }
 
 // ValidationError represents validation errors

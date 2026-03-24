@@ -96,8 +96,8 @@ func Default() *Config {
 	}
 }
 
-// LoadFromEnvUnsafe loads config entirely from environment variables
-func LoadFromEnvUnsafe() *Config {
+// LoadFromEnv loads config entirely from environment variables
+func LoadFromEnv() *Config {
 	cfg := Default()
 
 	// All these can be user-controlled via environment

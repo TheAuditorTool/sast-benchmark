@@ -1,4 +1,4 @@
-# Ground Truth CSV for vulnerable-api Go benchmark
+# Ground Truth CSV for multi-api Go benchmark
 # Format: function,file,start_line,end_line,category,vulnerable,CWE
 # Categories: sqli=SQL Injection, cmdi=Command Injection, pathtraver=Path Traversal, xss=XSS, cors=CORS Reflection
 # vulnerable: true=unparameterized/unsanitized taint flow, false=parameterized/validated
@@ -24,8 +24,8 @@ GinHandler.DownloadFile,internal/handlers/gin_handlers.go,207,224,pathtraver,tru
 GinHandler.ReadConfig,internal/handlers/gin_handlers.go,228,240,pathtraver,true,22
 GinHandler.SaveFile,internal/handlers/gin_handlers.go,244,261,pathtraver,true,22
 GinHandler.ComplexFlow,internal/handlers/gin_handlers.go,269,287,sqli,true,89
-GinHandler.GetUserSecure,internal/handlers/gin_handlers.go,306,319,sqli,false,89
-GinHandler.RunCommandSecure,internal/handlers/gin_handlers.go,322,336,cmdi,false,78
+GinHandler.GetUserAlt,internal/handlers/gin_handlers.go,306,319,sqli,false,89
+GinHandler.RunCommandAlt,internal/handlers/gin_handlers.go,322,336,cmdi,false,78
 # ========================
 # echo_handlers.go
 # ========================
@@ -40,7 +40,7 @@ EchoHandler.ServeFile,internal/handlers/echo_handlers.go,195,209,pathtraver,true
 EchoHandler.DeleteFile,internal/handlers/echo_handlers.go,212,226,pathtraver,true,22
 EchoHandler.ProcessRequest,internal/handlers/echo_handlers.go,233,248,sqli,true,89
 EchoHandler.ReportEndpoint,internal/handlers/echo_handlers.go,255,272,sqli,true,89
-EchoHandler.GetUserSecure,internal/handlers/echo_handlers.go,291,303,sqli,false,89
+EchoHandler.GetUserAlt,internal/handlers/echo_handlers.go,291,303,sqli,false,89
 # ========================
 # chi_handlers.go
 # ========================
@@ -55,8 +55,8 @@ ChiHandler.SystemInfo,internal/handlers/chi_handlers.go,213,225,cmdi,true,78
 ChiHandler.ServeFile,internal/handlers/chi_handlers.go,233,249,pathtraver,true,22
 ChiHandler.UploadFile,internal/handlers/chi_handlers.go,252,281,pathtraver,true,22
 ChiHandler.AuditLog,internal/handlers/chi_handlers.go,288,307,sqli,true,89
-ChiHandler.GetUserSecure,internal/handlers/chi_handlers.go,314,328,sqli,false,89
-ChiHandler.CreateUserSecure,internal/handlers/chi_handlers.go,331,357,sqli,false,89
+ChiHandler.GetUserAlt,internal/handlers/chi_handlers.go,314,328,sqli,false,89
+ChiHandler.CreateUserAlt,internal/handlers/chi_handlers.go,331,357,sqli,false,89
 # ========================
 # fiber_handlers.go
 # ========================
@@ -73,8 +73,8 @@ FiberHandler.DownloadFile,internal/handlers/fiber_handlers.go,247,256,pathtraver
 FiberHandler.ProcessHeaders,internal/handlers/fiber_handlers.go,263,283,sqli,true,89
 FiberHandler.ProcessCookies,internal/handlers/fiber_handlers.go,286,303,sqli,true,89
 FiberHandler.BatchOperation,internal/handlers/fiber_handlers.go,310,341,sqli,true,89
-FiberHandler.GetUserSecure,internal/handlers/fiber_handlers.go,348,362,sqli,false,89
-FiberHandler.CreateUserSecure,internal/handlers/fiber_handlers.go,365,394,sqli,false,89
+FiberHandler.GetUserAlt,internal/handlers/fiber_handlers.go,348,362,sqli,false,89
+FiberHandler.CreateUserAlt,internal/handlers/fiber_handlers.go,365,394,sqli,false,89
 # ========================
 # nethttp_handlers.go
 # ========================
@@ -93,8 +93,8 @@ NetHTTPHandler.WriteFile,internal/handlers/nethttp_handlers.go,291,306,pathtrave
 NetHTTPHandler.LogRequest,internal/handlers/nethttp_handlers.go,313,333,sqli,true,89
 NetHTTPHandler.ProcessCookie,internal/handlers/nethttp_handlers.go,336,356,sqli,true,89
 NetHTTPHandler.ComplexHandler,internal/handlers/nethttp_handlers.go,363,384,sqli,true,89
-NetHTTPHandler.GetUserSecure,internal/handlers/nethttp_handlers.go,409,423,sqli,false,89
-NetHTTPHandler.CreateUserSecure,internal/handlers/nethttp_handlers.go,426,446,sqli,false,89
+NetHTTPHandler.GetUserAlt,internal/handlers/nethttp_handlers.go,409,423,sqli,false,89
+NetHTTPHandler.CreateUserAlt,internal/handlers/nethttp_handlers.go,426,446,sqli,false,89
 # ========================
 # multihop_handlers.go (handler entry points -- sinks are in data_service.go)
 # ========================
@@ -147,6 +147,6 @@ UserRepository.UpdateRole,internal/repository/user_repository.go,67,71,sqli,true
 UserRepository.FindByIDRaw,internal/repository/user_repository.go,78,85,sqli,true,89
 UserRepository.GetUsersByRoleRaw,internal/repository/user_repository.go,88,106,sqli,true,89
 UserRepository.FindByUsernameSqlx,internal/repository/user_repository.go,113,119,sqli,true,89
-UserRepository.NamedQueryVulnerable,internal/repository/user_repository.go,122,127,sqli,true,89
-UserRepository.FindByIDSecure,internal/repository/user_repository.go,134,139,sqli,false,89
-UserRepository.FindByEmailSecure,internal/repository/user_repository.go,142,147,sqli,false,89
+UserRepository.NamedQuery,internal/repository/user_repository.go,122,127,sqli,true,89
+UserRepository.FindByIDAlt,internal/repository/user_repository.go,134,139,sqli,false,89
+UserRepository.FindByEmailAlt,internal/repository/user_repository.go,142,147,sqli,false,89

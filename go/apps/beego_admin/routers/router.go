@@ -37,8 +37,8 @@ func Init() {
 		beego.NSRouter("/files/upload", &controllers.UserController{}, "post:UploadFile"),
 		beego.NSRouter("/config/:name", &controllers.UserController{}, "get:ReadConfig"),
 
-		// Secure routes - for comparison
-		beego.NSRouter("/users/secure/:id", &controllers.UserController{}, "get:GetUserSecure"),
+		// Alt routes - for comparison
+		beego.NSRouter("/users/secure/:id", &controllers.UserController{}, "get:GetUserAlt"),
 	)
 
 	beego.AddNamespace(ns)

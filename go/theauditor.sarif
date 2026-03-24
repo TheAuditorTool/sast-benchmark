@@ -173,7 +173,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/async_service.go"
+                  "uri": "apps/multi-api/internal/services/async_service.go"
                 },
                 "region": {
                   "startLine": 52
@@ -667,7 +667,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 290
@@ -1256,7 +1256,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 46
@@ -1275,7 +1275,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -1294,7 +1294,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 162
@@ -1313,7 +1313,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 180
@@ -1332,7 +1332,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -1351,7 +1351,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 300
@@ -1370,7 +1370,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 319
@@ -1389,7 +1389,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 242
@@ -1408,7 +1408,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 265
@@ -1427,7 +1427,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 275
@@ -1446,7 +1446,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 294
@@ -1465,7 +1465,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -1484,7 +1484,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -1503,7 +1503,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 191
@@ -1522,7 +1522,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 326
@@ -1541,7 +1541,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 348
@@ -1598,7 +1598,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 201
@@ -1617,7 +1617,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 221
@@ -1636,7 +1636,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 168
@@ -1655,7 +1655,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 183
@@ -1674,7 +1674,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 160
@@ -1693,7 +1693,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 328
@@ -1712,7 +1712,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 230
@@ -1731,7 +1731,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 245
@@ -1921,7 +1921,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 238
@@ -1940,7 +1940,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 241
@@ -1959,7 +1959,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 268
@@ -1978,7 +1978,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -1997,7 +1997,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 217
@@ -2016,7 +2016,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 220
@@ -2035,7 +2035,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 213
@@ -2054,7 +2054,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 216
@@ -2073,7 +2073,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 233
@@ -2092,7 +2092,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -2111,7 +2111,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 262
@@ -2130,7 +2130,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 265
@@ -2149,7 +2149,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 281
@@ -2168,7 +2168,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 299
@@ -4467,7 +4467,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 104
@@ -4486,7 +4486,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 129
@@ -4505,7 +4505,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 94
@@ -4524,7 +4524,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 132
@@ -4543,7 +4543,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 350
@@ -4562,7 +4562,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 44
@@ -4581,7 +4581,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 63
@@ -4600,7 +4600,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 85
@@ -4619,7 +4619,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 118
@@ -4638,7 +4638,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 148
@@ -4657,7 +4657,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 296
@@ -4676,7 +4676,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 37
@@ -4695,7 +4695,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 43
@@ -4714,7 +4714,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 64
@@ -4733,7 +4733,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 86
@@ -4752,7 +4752,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 124
@@ -4771,7 +4771,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 158
@@ -4790,7 +4790,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 177
@@ -4809,7 +4809,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 195
@@ -4828,7 +4828,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 196
@@ -4847,7 +4847,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -4866,7 +4866,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 333
@@ -4885,7 +4885,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 349
@@ -4904,7 +4904,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 353
@@ -4923,7 +4923,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 386
@@ -4942,7 +4942,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 41
@@ -4961,7 +4961,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 47
@@ -4980,7 +4980,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 84
@@ -4999,7 +4999,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 119
@@ -5018,7 +5018,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 136
@@ -5037,7 +5037,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 137
@@ -5056,7 +5056,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 174
@@ -5075,7 +5075,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 175
@@ -5094,7 +5094,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 191
@@ -5113,7 +5113,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 230
@@ -5132,7 +5132,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -5151,7 +5151,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 280
@@ -5170,7 +5170,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 307
@@ -5189,7 +5189,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 311
@@ -5208,7 +5208,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 324
@@ -5227,7 +5227,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 36
@@ -5246,7 +5246,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 52
@@ -5265,7 +5265,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 53
@@ -5284,7 +5284,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 54
@@ -5303,7 +5303,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 55
@@ -5322,7 +5322,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 91
@@ -5341,7 +5341,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 107
@@ -5360,7 +5360,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 143
@@ -5379,7 +5379,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 144
@@ -5398,7 +5398,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 45
@@ -5417,7 +5417,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 73
@@ -5436,7 +5436,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 102
@@ -5455,7 +5455,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 132
@@ -5474,7 +5474,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 169
@@ -5493,7 +5493,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 377
@@ -5512,7 +5512,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 414
@@ -5531,7 +5531,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 439
@@ -5550,7 +5550,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 84
@@ -5569,7 +5569,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 112
@@ -5588,7 +5588,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 146
@@ -5607,7 +5607,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 37
@@ -5626,7 +5626,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 46
@@ -5645,7 +5645,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 55
@@ -5664,7 +5664,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 63
@@ -5683,7 +5683,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 70
@@ -5702,7 +5702,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 82
@@ -5721,7 +5721,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 91
@@ -5740,7 +5740,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 137
@@ -5759,7 +5759,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 145
@@ -5778,7 +5778,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 151
@@ -5797,7 +5797,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 156
@@ -5816,7 +5816,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 161
@@ -5835,7 +5835,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/async_service.go"
+                  "uri": "apps/multi-api/internal/services/async_service.go"
                 },
                 "region": {
                   "startLine": 210
@@ -5854,7 +5854,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 38
@@ -5873,7 +5873,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 57
@@ -5892,7 +5892,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 77
@@ -5911,7 +5911,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 107
@@ -5930,7 +5930,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 129
@@ -5949,7 +5949,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 142
@@ -5968,7 +5968,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 154
@@ -5987,7 +5987,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 174
@@ -6006,7 +6006,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 191
@@ -6025,7 +6025,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 217
@@ -6044,7 +6044,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 220
@@ -6063,7 +6063,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 241
@@ -6082,7 +6082,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 260
@@ -6101,7 +6101,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 280
@@ -6728,7 +6728,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 199
@@ -6747,7 +6747,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 216
@@ -6766,7 +6766,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 140
@@ -6785,7 +6785,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 212
@@ -6804,7 +6804,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 145
@@ -7697,7 +7697,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 200
@@ -7716,7 +7716,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 203
@@ -7735,7 +7735,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 233
@@ -7754,7 +7754,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 236
@@ -7773,7 +7773,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 252
@@ -7792,7 +7792,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 149
@@ -7811,7 +7811,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 150
@@ -7830,7 +7830,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 183
@@ -7849,7 +7849,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 185
@@ -8362,7 +8362,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 84
@@ -8381,7 +8381,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 85
@@ -8400,7 +8400,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 197
@@ -8419,7 +8419,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 198
@@ -8438,7 +8438,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 343
@@ -8457,7 +8457,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 378
@@ -8476,7 +8476,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 253
@@ -8495,7 +8495,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 289
@@ -8514,7 +8514,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 329
@@ -8533,7 +8533,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 345
@@ -8552,7 +8552,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 361
@@ -8571,7 +8571,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 39
@@ -8590,7 +8590,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 116
@@ -8609,7 +8609,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 208
@@ -8628,7 +8628,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 209
@@ -8647,7 +8647,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 239
@@ -8666,7 +8666,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 259
@@ -8685,7 +8685,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 293
@@ -8704,7 +8704,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 365
@@ -8723,7 +8723,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 366
@@ -8742,7 +8742,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 367
@@ -8761,7 +8761,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 410
@@ -8780,7 +8780,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 432
@@ -18318,7 +18318,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 179
@@ -18337,7 +18337,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 180
@@ -18356,7 +18356,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 194
@@ -20655,7 +20655,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 71
@@ -20674,7 +20674,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 72
@@ -20693,7 +20693,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 79
@@ -20712,7 +20712,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 80
@@ -20731,7 +20731,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 98
@@ -20750,7 +20750,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 99
@@ -20769,7 +20769,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 100
@@ -20788,7 +20788,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 102
@@ -20807,7 +20807,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 104
@@ -20826,7 +20826,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 105
@@ -20845,7 +20845,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 127
@@ -20864,7 +20864,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 128
@@ -20883,7 +20883,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 129
@@ -20902,7 +20902,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 133
@@ -20921,7 +20921,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 134
@@ -20940,7 +20940,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 138
@@ -20959,7 +20959,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 31
@@ -20978,7 +20978,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 32
@@ -20997,7 +20997,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 45
@@ -21016,7 +21016,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 48
@@ -21035,7 +21035,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 74
@@ -21054,7 +21054,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 75
@@ -21073,7 +21073,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 76
@@ -21092,7 +21092,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 80
@@ -21111,7 +21111,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 84
@@ -21130,7 +21130,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 87
@@ -21149,7 +21149,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 110
@@ -21168,7 +21168,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 111
@@ -21187,7 +21187,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 112
@@ -21206,7 +21206,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 116
@@ -21225,7 +21225,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 126
@@ -21244,7 +21244,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 129
@@ -21263,7 +21263,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 143
@@ -21282,7 +21282,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 144
@@ -21301,7 +21301,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 145
@@ -21320,7 +21320,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 146
@@ -21339,7 +21339,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 150
@@ -21358,7 +21358,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 157
@@ -21377,7 +21377,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 161
@@ -21396,7 +21396,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 168
@@ -21586,7 +21586,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 238
@@ -21605,7 +21605,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 241
@@ -21624,7 +21624,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 268
@@ -21643,7 +21643,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -21662,7 +21662,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 217
@@ -21681,7 +21681,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 220
@@ -21700,7 +21700,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 213
@@ -21719,7 +21719,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 216
@@ -21738,7 +21738,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 233
@@ -21757,7 +21757,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -21776,7 +21776,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 262
@@ -21795,7 +21795,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 265
@@ -21814,7 +21814,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 281
@@ -21833,7 +21833,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 299
@@ -21928,7 +21928,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 70
@@ -21947,7 +21947,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 97
@@ -21966,7 +21966,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 125
@@ -21985,7 +21985,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 28
@@ -22004,7 +22004,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 73
@@ -22023,7 +22023,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 109
@@ -22042,7 +22042,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 142
@@ -22099,7 +22099,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 70
@@ -22118,7 +22118,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 97
@@ -22137,7 +22137,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 125
@@ -22156,7 +22156,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 28
@@ -22175,7 +22175,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 73
@@ -22194,7 +22194,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 109
@@ -22213,7 +22213,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 142
@@ -22916,7 +22916,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 46
@@ -22935,7 +22935,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -22954,7 +22954,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 162
@@ -22973,7 +22973,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 180
@@ -22992,7 +22992,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -23011,7 +23011,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 300
@@ -23030,7 +23030,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 319
@@ -23049,7 +23049,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 242
@@ -23068,7 +23068,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 265
@@ -23087,7 +23087,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 275
@@ -23106,7 +23106,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 294
@@ -23125,7 +23125,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -23144,7 +23144,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -23163,7 +23163,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 191
@@ -23182,7 +23182,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 326
@@ -23201,7 +23201,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 348
@@ -25500,7 +25500,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 104
@@ -25519,7 +25519,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/cmd/server/main.go"
+                  "uri": "apps/multi-api/cmd/server/main.go"
                 },
                 "region": {
                   "startLine": 129
@@ -25538,7 +25538,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 94
@@ -25557,7 +25557,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 132
@@ -25576,7 +25576,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 350
@@ -25595,7 +25595,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 44
@@ -25614,7 +25614,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 63
@@ -25633,7 +25633,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 85
@@ -25652,7 +25652,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 118
@@ -25671,7 +25671,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 148
@@ -25690,7 +25690,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 296
@@ -25709,7 +25709,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 37
@@ -25728,7 +25728,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 43
@@ -25747,7 +25747,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 64
@@ -25766,7 +25766,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 86
@@ -25785,7 +25785,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 124
@@ -25804,7 +25804,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 158
@@ -25823,7 +25823,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 177
@@ -25842,7 +25842,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 195
@@ -25861,7 +25861,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 196
@@ -25880,7 +25880,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -25899,7 +25899,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 333
@@ -25918,7 +25918,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 349
@@ -25937,7 +25937,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 353
@@ -25956,7 +25956,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 386
@@ -25975,7 +25975,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 41
@@ -25994,7 +25994,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 47
@@ -26013,7 +26013,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 84
@@ -26032,7 +26032,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 119
@@ -26051,7 +26051,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 136
@@ -26070,7 +26070,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 137
@@ -26089,7 +26089,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 174
@@ -26108,7 +26108,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 175
@@ -26127,7 +26127,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 191
@@ -26146,7 +26146,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 230
@@ -26165,7 +26165,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -26184,7 +26184,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 280
@@ -26203,7 +26203,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 307
@@ -26222,7 +26222,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 311
@@ -26241,7 +26241,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 324
@@ -26260,7 +26260,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 36
@@ -26279,7 +26279,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 52
@@ -26298,7 +26298,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 53
@@ -26317,7 +26317,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 54
@@ -26336,7 +26336,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 55
@@ -26355,7 +26355,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 91
@@ -26374,7 +26374,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 107
@@ -26393,7 +26393,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 143
@@ -26412,7 +26412,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/multihop_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/multihop_handlers.go"
                 },
                 "region": {
                   "startLine": 144
@@ -26431,7 +26431,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 45
@@ -26450,7 +26450,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 73
@@ -26469,7 +26469,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 102
@@ -26488,7 +26488,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 132
@@ -26507,7 +26507,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 169
@@ -26526,7 +26526,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 377
@@ -26545,7 +26545,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 414
@@ -26564,7 +26564,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 439
@@ -26583,7 +26583,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 84
@@ -26602,7 +26602,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 112
@@ -26621,7 +26621,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/routes.go"
+                  "uri": "apps/multi-api/internal/handlers/routes.go"
                 },
                 "region": {
                   "startLine": 146
@@ -26640,7 +26640,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 37
@@ -26659,7 +26659,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 46
@@ -26678,7 +26678,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 55
@@ -26697,7 +26697,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 63
@@ -26716,7 +26716,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 70
@@ -26735,7 +26735,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 82
@@ -26754,7 +26754,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 91
@@ -26773,7 +26773,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 137
@@ -26792,7 +26792,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 145
@@ -26811,7 +26811,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 151
@@ -26830,7 +26830,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 156
@@ -26849,7 +26849,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/repository/user_repository.go"
+                  "uri": "apps/multi-api/internal/repository/user_repository.go"
                 },
                 "region": {
                   "startLine": 161
@@ -26868,7 +26868,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/async_service.go"
+                  "uri": "apps/multi-api/internal/services/async_service.go"
                 },
                 "region": {
                   "startLine": 210
@@ -26887,7 +26887,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 38
@@ -26906,7 +26906,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 57
@@ -26925,7 +26925,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 77
@@ -26944,7 +26944,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 107
@@ -26963,7 +26963,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 129
@@ -26982,7 +26982,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 142
@@ -27001,7 +27001,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 154
@@ -27020,7 +27020,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 174
@@ -27039,7 +27039,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 191
@@ -27058,7 +27058,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 217
@@ -27077,7 +27077,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 220
@@ -27096,7 +27096,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 241
@@ -27115,7 +27115,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 260
@@ -27134,7 +27134,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/services/data_service.go"
+                  "uri": "apps/multi-api/internal/services/data_service.go"
                 },
                 "region": {
                   "startLine": 280
@@ -27153,7 +27153,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 179
@@ -27172,7 +27172,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 180
@@ -27191,7 +27191,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 194
@@ -27742,7 +27742,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 46
@@ -27761,7 +27761,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -27780,7 +27780,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 162
@@ -27799,7 +27799,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 180
@@ -27818,7 +27818,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 271
@@ -27837,7 +27837,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 300
@@ -27856,7 +27856,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 319
@@ -27875,7 +27875,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 242
@@ -27894,7 +27894,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 265
@@ -27913,7 +27913,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 275
@@ -27932,7 +27932,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/fiber_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/fiber_handlers.go"
                 },
                 "region": {
                   "startLine": 294
@@ -27951,7 +27951,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 67
@@ -27970,7 +27970,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 249
@@ -27989,7 +27989,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 191
@@ -28008,7 +28008,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 326
@@ -28027,7 +28027,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 348
@@ -28084,7 +28084,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 201
@@ -28103,7 +28103,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/chi_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/chi_handlers.go"
                 },
                 "region": {
                   "startLine": 221
@@ -28122,7 +28122,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 168
@@ -28141,7 +28141,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/echo_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/echo_handlers.go"
                 },
                 "region": {
                   "startLine": 183
@@ -28160,7 +28160,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 160
@@ -28179,7 +28179,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/gin_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/gin_handlers.go"
                 },
                 "region": {
                   "startLine": 328
@@ -28198,7 +28198,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 230
@@ -28217,7 +28217,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "apps/vulnerable-api/internal/handlers/nethttp_handlers.go"
+                  "uri": "apps/multi-api/internal/handlers/nethttp_handlers.go"
                 },
                 "region": {
                   "startLine": 245

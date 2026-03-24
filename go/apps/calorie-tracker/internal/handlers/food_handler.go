@@ -74,7 +74,7 @@ func (h *FoodHandler) SearchFoods(c *gin.Context) {
 		return
 	}
 
-	foods, err := h.foodService.SearchVulnerable(searchTerm)
+	foods, err := h.foodService.Search(searchTerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Search failed"))
 		return

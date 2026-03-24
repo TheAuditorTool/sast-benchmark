@@ -138,7 +138,7 @@ func (h *DashboardHandler) RawQuery(c *gin.Context) {
 		return
 	}
 
-	results, err := h.analyticsService.ExecuteRawQueryVulnerable(req.Query)
+	results, err := h.analyticsService.ExecuteRawQuery(req.Query)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Query failed: "+err.Error()))
 		return
@@ -164,7 +164,7 @@ func (h *DashboardHandler) CustomReport(c *gin.Context) {
 		return
 	}
 
-	results, err := h.analyticsService.CustomReportVulnerable(
+	results, err := h.analyticsService.CustomReport(
 		userID,
 		req.Table,
 		req.Columns,

@@ -11,7 +11,7 @@ func BenchmarkTest00337(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewDecoder(r.Body).Decode(&input)
 	req := &BenchSvcRequest{Query: input.Query}
-	err := BenchSvcProcessStructSafe(req)
+	err := BenchSvcProcessStructV2(req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

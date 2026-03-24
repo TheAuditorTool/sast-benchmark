@@ -87,8 +87,8 @@ func (r *AnalyticsRepository) GetWeightLogsInRange(userID string, startDate, end
 	return logs, err
 }
 
-// CustomReportVulnerable builds a custom report from dynamic parameters
-func (r *AnalyticsRepository) CustomReportVulnerable(
+// CustomReport builds a custom report from dynamic parameters
+func (r *AnalyticsRepository) CustomReport(
 	table string,
 	columns string,
 	whereClause string,

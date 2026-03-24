@@ -224,13 +224,13 @@ func (s *AnalyticsService) LogWater(userID string, req models.WaterLogRequest) (
 	return s.analyticsRepo.UpdateWaterLog(userID, date, req.AmountMl)
 }
 
-// ExecuteRawQueryVulnerable executes raw SQL
-func (s *AnalyticsService) ExecuteRawQueryVulnerable(query string) ([]map[string]interface{}, error) {
+// ExecuteRawQuery executes raw SQL
+func (s *AnalyticsService) ExecuteRawQuery(query string) ([]map[string]interface{}, error) {
 	return s.analyticsRepo.ExecuteRawQuery(query)
 }
 
-// CustomReportVulnerable builds a custom report
-func (s *AnalyticsService) CustomReportVulnerable(
+// CustomReport builds a custom report
+func (s *AnalyticsService) CustomReport(
 	userID string,
 	table string,
 	columns string,
@@ -244,7 +244,7 @@ func (s *AnalyticsService) CustomReportVulnerable(
 		whereClause += " AND " + filter
 	}
 
-	return s.analyticsRepo.CustomReportVulnerable(table, columns, whereClause, groupBy, orderBy)
+	return s.analyticsRepo.CustomReport(table, columns, whereClause, groupBy, orderBy)
 }
 
 func max(a, b int) int {

@@ -283,7 +283,7 @@ OVERALL
 
 ## Reference App Inventory (apps/)
 
-### 1. vulnerable-api
+### 1. multi-api
 
 **Purpose:** Multi-framework API with intentional SQL injection, command injection, path traversal, XSS across 6 Go web frameworks.
 

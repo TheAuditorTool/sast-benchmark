@@ -179,7 +179,7 @@ func (h *MealHandler) SearchMeals(c *gin.Context) {
 		return
 	}
 
-	meals, err := h.mealService.SearchMealsVulnerable(userID, searchTerm)
+	meals, err := h.mealService.SearchMeals(userID, searchTerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Search failed"))
 		return

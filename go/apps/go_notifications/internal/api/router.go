@@ -95,9 +95,9 @@ func NewRouter(h *Handlers, gh *GorillaHandlers, apiKey string) *mux.Router {
 	// Regex path params
 	api.HandleFunc("/users/pattern/{pattern:[a-z]+}", gh.GetUserByPattern).Methods("GET")
 
-	// Secure endpoints for comparison
-	api.HandleFunc("/users/secure/{id}", gh.GetUserSecure).Methods("GET")
-	api.HandleFunc("/users/secure/{id}", gh.UpdateUserSecure).Methods("PUT")
+	// Alt endpoints for comparison
+	api.HandleFunc("/users/secure/{id}", gh.GetUserAlt).Methods("GET")
+	api.HandleFunc("/users/secure/{id}", gh.UpdateUserAlt).Methods("PUT")
 
 	return r
 }

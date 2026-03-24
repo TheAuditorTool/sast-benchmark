@@ -144,9 +144,9 @@ func (s *MealService) GetDailySummary(userID, date string) (*models.DailyMealSum
 	return s.repo.GetDailySummary(userID, date)
 }
 
-// SearchMealsVulnerable searches meals by term
-func (s *MealService) SearchMealsVulnerable(userID, searchTerm string) ([]models.Meal, error) {
-	return s.repo.SearchVulnerable(userID, searchTerm)
+// SearchMeals searches meals by term
+func (s *MealService) SearchMeals(userID, searchTerm string) ([]models.Meal, error) {
+	return s.repo.Search(userID, searchTerm)
 }
 
 // QuickLog creates a quick meal entry

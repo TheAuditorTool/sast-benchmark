@@ -1,4 +1,4 @@
-# Vulnerable Go API - TheAuditor Test Fixture
+# Multi-Framework Go API - TheAuditor Test Fixture
 
 This project is a comprehensive Go test fixture for TheAuditor's taint analysis, rule detection, and graph strategy testing.
 
@@ -38,7 +38,7 @@ This fixture is designed to exercise all Go-related features of TheAuditor:
 ## Project Structure
 
 ```
-vulnerable-api/
+multi-api/
 ├── go.mod                          # Module definition
 ├── cmd/
 │   └── server/
@@ -127,7 +127,7 @@ vulnerable-api/
 
 ```bash
 # Index the project
-cd tests/go/vulnerable-api
+cd tests/go/multi-api
 aud full --index
 
 # Run taint analysis

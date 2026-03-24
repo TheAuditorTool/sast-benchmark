@@ -16,12 +16,12 @@ RunShellCommand,controllers/user_controller.go,361,375,cmdi,TRUE,78
 DownloadFile,controllers/user_controller.go,384,400,pathtraver,TRUE,22
 UploadFile,controllers/user_controller.go,404,425,pathtraver,TRUE,22
 ReadConfig,controllers/user_controller.go,429,443,pathtraver,TRUE,22
-GetUserSecure,controllers/user_controller.go,450,465,sqli,FALSE,89
-CreateUserVulnerable,services/user_service.go,32,52,sqli,TRUE,89
-SearchUsersVulnerable,services/user_service.go,56,80,sqli,TRUE,89
-FindByIDVulnerable,services/user_service.go,84,96,sqli,TRUE,89
-UpdateUserVulnerable,services/user_service.go,100,108,sqli,TRUE,89
-DeleteUserVulnerable,services/user_service.go,112,116,sqli,TRUE,89
+GetUserAlt,controllers/user_controller.go,450,465,sqli,FALSE,89
+CreateUser,services/user_service.go,32,52,sqli,TRUE,89
+SearchUsers,services/user_service.go,56,80,sqli,TRUE,89
+FindByID,services/user_service.go,84,96,sqli,TRUE,89
+UpdateUser,services/user_service.go,100,108,sqli,TRUE,89
+DeleteUser,services/user_service.go,112,116,sqli,TRUE,89
 GenerateReport,services/user_service.go,125,177,sqli,TRUE,89
 GenerateReport,services/user_service.go,125,177,pathtraver,TRUE,22
 ProcessBatchJob,services/user_service.go,182,201,sqli,TRUE,89
@@ -29,5 +29,5 @@ ProcessBatchJob,services/user_service.go,182,201,cmdi,TRUE,78
 ProcessUserData,services/user_service.go,209,217,sqli,TRUE,89
 ValidateAndStore,services/user_service.go,229,237,sqli,TRUE,89
 storeUserInput,services/user_service.go,241,245,sqli,TRUE,89
-CreateUserSecure,services/user_service.go,252,267,sqli,FALSE,89
-SearchUsersSecure,services/user_service.go,270,289,sqli,FALSE,89
+CreateUserAlt,services/user_service.go,252,267,sqli,FALSE,89
+SearchUsersAlt,services/user_service.go,270,289,sqli,FALSE,89

@@ -25,8 +25,8 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-// FindByIDVulnerable finds user by ID using string formatting
-func (r *UserRepository) FindByIDVulnerable(id string) (*User, error) {
+// FindByID finds user by ID using string formatting
+func (r *UserRepository) FindByID(id string) (*User, error) {
 	query := fmt.Sprintf("SELECT id, username, email, role, created_at FROM users WHERE id = %s", id)
 
 	row := r.db.QueryRow(query)
@@ -39,8 +39,8 @@ func (r *UserRepository) FindByIDVulnerable(id string) (*User, error) {
 	return &user, nil
 }
 
-// FindByUsernameVulnerable finds user by username using concatenation
-func (r *UserRepository) FindByUsernameVulnerable(username string) (*User, error) {
+// FindByUsername finds user by username using concatenation
+func (r *UserRepository) FindByUsername(username string) (*User, error) {
 	query := "SELECT id, username, email, role FROM users WHERE username = '" + username + "'"
 
 	row := r.db.QueryRow(query)
@@ -53,8 +53,8 @@ func (r *UserRepository) FindByUsernameVulnerable(username string) (*User, error
 	return &user, nil
 }
 
-// SearchVulnerable searches users using string formatting
-func (r *UserRepository) SearchVulnerable(searchTerm, filter string) ([]User, error) {
+// Search searches users using string formatting
+func (r *UserRepository) Search(searchTerm, filter string) ([]User, error) {
 	query := fmt.Sprintf(
 		"SELECT id, username, email, role FROM users WHERE username LIKE '%%%s%%' AND role = '%s'",
 		searchTerm, filter,
@@ -78,8 +78,8 @@ func (r *UserRepository) SearchVulnerable(searchTerm, filter string) ([]User, er
 	return users, nil
 }
 
-// CreateVulnerable creates a user using string formatting
-func (r *UserRepository) CreateVulnerable(username, email, password, role string) (*User, error) {
+// Create creates a user using string formatting
+func (r *UserRepository) Create(username, email, password, role string) (*User, error) {
 	query := fmt.Sprintf(
 		"INSERT INTO users (username, email, password, role) VALUES ('%s', '%s', '%s', '%s') RETURNING id",
 		username, email, password, role,
@@ -94,8 +94,8 @@ func (r *UserRepository) CreateVulnerable(username, email, password, role string
 	return &User{ID: id, Username: username, Email: email, Role: role}, nil
 }
 
-// UpdateVulnerable updates a user using string formatting
-func (r *UserRepository) UpdateVulnerable(id, username, email, role string) error {
+// Update updates a user using string formatting
+func (r *UserRepository) Update(id, username, email, role string) error {
 	query := fmt.Sprintf(
 		"UPDATE users SET username = '%s', email = '%s', role = '%s' WHERE id = %s",
 		username, email, role, id,
@@ -105,23 +105,23 @@ func (r *UserRepository) UpdateVulnerable(id, username, email, role string) erro
 	return err
 }
 
-// DeleteVulnerable deletes a user by string ID
-func (r *UserRepository) DeleteVulnerable(id string) error {
+// Delete deletes a user by string ID
+func (r *UserRepository) Delete(id string) error {
 	query := fmt.Sprintf("DELETE FROM users WHERE id = %s", id)
 	_, err := r.db.Exec(query)
 	return err
 }
 
-// UpdateFieldVulnerable updates a specific field by name
-func (r *UserRepository) UpdateFieldVulnerable(id, field, value string) error {
+// UpdateField updates a specific field by name
+func (r *UserRepository) UpdateField(id, field, value string) error {
 	query := fmt.Sprintf("UPDATE users SET %s = '%s' WHERE id = %s", field, value, id)
 
 	_, err := r.db.Exec(query)
 	return err
 }
 
-// BulkDeleteVulnerable deletes multiple users by ID
-func (r *UserRepository) BulkDeleteVulnerable(ids []string) error {
+// BulkDelete deletes multiple users by ID
+func (r *UserRepository) BulkDelete(ids []string) error {
 	for _, id := range ids {
 		query := fmt.Sprintf("DELETE FROM users WHERE id = %s", id)
 		r.db.Exec(query)
@@ -129,8 +129,8 @@ func (r *UserRepository) BulkDeleteVulnerable(ids []string) error {
 	return nil
 }
 
-// FindByIDSecure finds user by ID with parameterized query
-func (r *UserRepository) FindByIDSecure(id string) (*User, error) {
+// FindByIDAlt finds user by ID with query binding
+func (r *UserRepository) FindByIDAlt(id string) (*User, error) {
 	query := "SELECT id, username, email, role, created_at FROM users WHERE id = ?"
 
 	row := r.db.QueryRow(query, id)
@@ -143,8 +143,8 @@ func (r *UserRepository) FindByIDSecure(id string) (*User, error) {
 	return &user, nil
 }
 
-// SearchSecure searches users with parameterized query
-func (r *UserRepository) SearchSecure(searchTerm, filter string) ([]User, error) {
+// SearchAlt searches users with query binding
+func (r *UserRepository) SearchAlt(searchTerm, filter string) ([]User, error) {
 	query := "SELECT id, username, email, role FROM users WHERE username LIKE ? AND role = ?"
 
 	rows, err := r.db.Query(query, "%"+searchTerm+"%", filter)
@@ -165,8 +165,8 @@ func (r *UserRepository) SearchSecure(searchTerm, filter string) ([]User, error)
 	return users, nil
 }
 
-// CreateSecure creates a user with prepared statement
-func (r *UserRepository) CreateSecure(username, email, password, role string) (*User, error) {
+// CreateAlt creates a user with prepared statement
+func (r *UserRepository) CreateAlt(username, email, password, role string) (*User, error) {
 	stmt, err := r.db.Prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		return nil, err

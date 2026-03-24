@@ -16,8 +16,8 @@ GetUserSession,internal/api/gorilla_handlers.go,311,331,sqli,true,89
 UpdateResource,internal/api/gorilla_handlers.go,340,361,sqli,true,89
 ProcessUserData,internal/api/gorilla_handlers.go,369,386,sqli,true,89
 GetUserByPattern,internal/api/gorilla_handlers.go,400,411,sqli,true,89
-GetUserSecure,internal/api/gorilla_handlers.go,418,432,sqli,false,89
-UpdateUserSecure,internal/api/gorilla_handlers.go,435,449,sqli,false,89
+GetUserAlt,internal/api/gorilla_handlers.go,418,432,sqli,false,89
+UpdateUserAlt,internal/api/gorilla_handlers.go,435,449,sqli,false,89
 # ===== HANDLERS (handlers.go) =====
 SendNotification,internal/api/handlers.go,70,120,ssrf,true,918
 SendBatchNotification,internal/api/handlers.go,123,168,ssrf,true,918

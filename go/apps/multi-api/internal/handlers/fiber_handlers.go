@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // FiberHandler handles HTTP requests using Fiber framework
@@ -270,8 +270,8 @@ func (h *FiberHandler) BatchOperation(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "batch completed"})
 }
 
-// GetUserSecure looks up a user with parameterized query
-func (h *FiberHandler) GetUserSecure(c *fiber.Ctx) error {
+// GetUserAlt looks up a user with parameterized query
+func (h *FiberHandler) GetUserAlt(c *fiber.Ctx) error {
 	userID := c.Query("id")
 
 	query := "SELECT * FROM users WHERE id = ?"
@@ -286,8 +286,8 @@ func (h *FiberHandler) GetUserSecure(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
-// CreateUserSecure creates a user with prepared statement
-func (h *FiberHandler) CreateUserSecure(c *fiber.Ctx) error {
+// CreateUserAlt creates a user with prepared statement
+func (h *FiberHandler) CreateUserAlt(c *fiber.Ctx) error {
 	var input struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`

@@ -75,7 +75,7 @@ func (s *FoodService) ListByCategory(category string) ([]models.Food, error) {
 	return s.repo.ListByCategory(category)
 }
 
-// SearchVulnerable searches foods by term
-func (s *FoodService) SearchVulnerable(searchTerm string) ([]models.Food, error) {
-	return s.repo.SearchVulnerable(searchTerm)
+// Search searches foods by term
+func (s *FoodService) Search(searchTerm string) ([]models.Food, error) {
+	return s.repo.Search(searchTerm)
 }

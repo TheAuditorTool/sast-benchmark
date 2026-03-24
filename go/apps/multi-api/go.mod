@@ -1,4 +1,4 @@
-module github.com/theauditor/vulnerable-api
+module github.com/theauditor/multi-api
 
 go 1.21
 

@@ -168,7 +168,7 @@ grep -rn "TAINT|VULNERABLE|VULN:|SECURE:|SOURCE:|SINK" go/testcode/ -- 0 results
 
 ### App Integration
 - Ground truth CSVs for 5 reference apps (395 classified functions total)
-- vulnerable-api: 115 entries
+- multi-api: 115 entries
 - calorie-tracker: 137 entries
 - go_notifications: 87 entries
 - beego_admin: 32 entries

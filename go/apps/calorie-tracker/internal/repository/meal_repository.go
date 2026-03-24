@@ -120,8 +120,8 @@ func (r *MealRepository) GetDailySummary(userID, date string) (*models.DailyMeal
 	return summary, nil
 }
 
-// SearchVulnerable searches meals by term
-func (r *MealRepository) SearchVulnerable(userID, searchTerm string) ([]models.Meal, error) {
+// Search searches meals by term
+func (r *MealRepository) Search(userID, searchTerm string) ([]models.Meal, error) {
 	var meals []models.Meal
 	query := fmt.Sprintf(
 		"SELECT * FROM meals WHERE user_id = '%s' AND (name LIKE '%%%s%%' OR description LIKE '%%%s%%')",

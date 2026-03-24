@@ -314,8 +314,8 @@ func (h *GorillaHandlers) GetUserByPattern(w http.ResponseWriter, r *http.Reques
 	respondJSON(w, http.StatusOK, map[string]string{"status": "found"})
 }
 
-// GetUserSecure uses parameterized query
-func (h *GorillaHandlers) GetUserSecure(w http.ResponseWriter, r *http.Request) {
+// GetUserAlt uses parameterized query
+func (h *GorillaHandlers) GetUserAlt(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 
@@ -331,8 +331,8 @@ func (h *GorillaHandlers) GetUserSecure(w http.ResponseWriter, r *http.Request) 
 	respondJSON(w, http.StatusOK, map[string]string{"status": "success"})
 }
 
-// UpdateUserSecure uses prepared statement
-func (h *GorillaHandlers) UpdateUserSecure(w http.ResponseWriter, r *http.Request) {
+// UpdateUserAlt uses prepared statement
+func (h *GorillaHandlers) UpdateUserAlt(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 

@@ -108,8 +108,8 @@ func (r *ScheduleRepository) FindItemByID(itemID string) (*models.ScheduleItem, 
 	return &item, nil
 }
 
-// SearchVulnerable searches schedules by term
-func (r *ScheduleRepository) SearchVulnerable(userID, searchTerm string) ([]models.Schedule, error) {
+// Search searches schedules by term
+func (r *ScheduleRepository) Search(userID, searchTerm string) ([]models.Schedule, error) {
 	var schedules []models.Schedule
 	query := fmt.Sprintf(
 		"SELECT * FROM schedules WHERE user_id = '%s' AND (name LIKE '%%%s%%' OR description LIKE '%%%s%%')",

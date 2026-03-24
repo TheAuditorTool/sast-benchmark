@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/theauditor/vulnerable-api/internal/models"
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/models"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // GinHandler handles HTTP requests using Gin framework
@@ -228,8 +228,8 @@ func buildQuery(value string) string {
 	return fmt.Sprintf("INSERT INTO logs (value) VALUES ('%s')", value)
 }
 
-// GetUserSecure looks up a user with parameterized query
-func (h *GinHandler) GetUserSecure(c *gin.Context) {
+// GetUserAlt looks up a user with parameterized query
+func (h *GinHandler) GetUserAlt(c *gin.Context) {
 	userID := c.Query("id")
 
 	query := "SELECT * FROM users WHERE id = ?"
@@ -243,8 +243,8 @@ func (h *GinHandler) GetUserSecure(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
-// RunCommandSecure executes ping with user-provided host
-func (h *GinHandler) RunCommandSecure(c *gin.Context) {
+// RunCommandAlt executes ping with user-provided host
+func (h *GinHandler) RunCommandAlt(c *gin.Context) {
 	host := c.Query("host")
 
 	// Validate host is IP or hostname only (no special chars)

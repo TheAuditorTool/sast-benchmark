@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/labstack/echo/v4"
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // EchoHandler handles HTTP requests using Echo framework
@@ -218,8 +218,8 @@ func (h *EchoHandler) constructQuery(table, filters string) string {
 	return fmt.Sprintf("SELECT * FROM %s WHERE %s", table, filters)
 }
 
-// GetUserSecure looks up a user with parameterized query
-func (h *EchoHandler) GetUserSecure(c echo.Context) error {
+// GetUserAlt looks up a user with parameterized query
+func (h *EchoHandler) GetUserAlt(c echo.Context) error {
 	userID := c.QueryParam("id")
 
 	query := "SELECT * FROM users WHERE id = ?"

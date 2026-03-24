@@ -20,8 +20,8 @@ func NewUserService(db *sql.DB) *UserService {
 	return &UserService{db: db}
 }
 
-// CreateUserVulnerable creates user with string-formatted SQL
-func (s *UserService) CreateUserVulnerable(username, email, role string) (*models.User, error) {
+// CreateUser creates user with string-formatted SQL
+func (s *UserService) CreateUser(username, email, role string) (*models.User, error) {
 	query := fmt.Sprintf(
 		"INSERT INTO users (username, email, role) VALUES ('%s', '%s', '%s') RETURNING id",
 		username, email, role,
@@ -41,8 +41,8 @@ func (s *UserService) CreateUserVulnerable(username, email, role string) (*model
 	}, nil
 }
 
-// SearchUsersVulnerable searches users with string-formatted SQL
-func (s *UserService) SearchUsersVulnerable(searchTerm, filter string) ([]models.User, error) {
+// SearchUsers searches users with string-formatted SQL
+func (s *UserService) SearchUsers(searchTerm, filter string) ([]models.User, error) {
 	query := fmt.Sprintf(
 		"SELECT id, username, email, role FROM users WHERE username LIKE '%%%s%%' AND role = '%s'",
 		searchTerm, filter,
@@ -66,8 +66,8 @@ func (s *UserService) SearchUsersVulnerable(searchTerm, filter string) ([]models
 	return users, nil
 }
 
-// FindByIDVulnerable finds user by ID with string-formatted SQL
-func (s *UserService) FindByIDVulnerable(id string) (*models.User, error) {
+// FindByID finds user by ID with string-formatted SQL
+func (s *UserService) FindByID(id string) (*models.User, error) {
 	query := fmt.Sprintf("SELECT id, username, email, role FROM users WHERE id = %s", id)
 
 	row := s.db.QueryRow(query)
@@ -80,16 +80,16 @@ func (s *UserService) FindByIDVulnerable(id string) (*models.User, error) {
 	return &user, nil
 }
 
-// UpdateUserVulnerable updates user with string-formatted SQL
-func (s *UserService) UpdateUserVulnerable(id, field, value string) error {
+// UpdateUser updates user with string-formatted SQL
+func (s *UserService) UpdateUser(id, field, value string) error {
 	query := fmt.Sprintf("UPDATE users SET %s = '%s' WHERE id = %s", field, value, id)
 
 	_, err := s.db.Exec(query)
 	return err
 }
 
-// DeleteUserVulnerable deletes user by string ID
-func (s *UserService) DeleteUserVulnerable(id string) error {
+// DeleteUser deletes user by string ID
+func (s *UserService) DeleteUser(id string) error {
 	query := fmt.Sprintf("DELETE FROM users WHERE id = %s", id)
 	_, err := s.db.Exec(query)
 	return err
@@ -191,8 +191,8 @@ func (s *UserService) storeUserInput(userID, input string) error {
 	return err
 }
 
-// CreateUserSecure creates user with parameterized query
-func (s *UserService) CreateUserSecure(username, email, role string) (*models.User, error) {
+// CreateUserAlt creates user with parameterized query
+func (s *UserService) CreateUserAlt(username, email, role string) (*models.User, error) {
 	query := "INSERT INTO users (username, email, role) VALUES (?, ?, ?) RETURNING id"
 
 	var id int64
@@ -209,8 +209,8 @@ func (s *UserService) CreateUserSecure(username, email, role string) (*models.Us
 	}, nil
 }
 
-// SearchUsersSecure searches with parameterized query
-func (s *UserService) SearchUsersSecure(searchTerm, filter string) ([]models.User, error) {
+// SearchUsersAlt searches with parameterized query
+func (s *UserService) SearchUsersAlt(searchTerm, filter string) ([]models.User, error) {
 	query := "SELECT id, username, email, role FROM users WHERE username LIKE ? AND role = ?"
 
 	rows, err := s.db.Query(query, "%"+searchTerm+"%", filter)

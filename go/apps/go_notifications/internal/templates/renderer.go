@@ -40,7 +40,7 @@ func (r *Renderer) Render(templateName string, data map[string]interface{}) (str
 		}
 
 		// Parse template
-		tmpl, err = htmltemplate.New(templateName).Funcs(r.unsafeFuncMap()).Parse(string(content))
+		tmpl, err = htmltemplate.New(templateName).Funcs(r.templateFuncMap()).Parse(string(content))
 		if err != nil {
 			return "", fmt.Errorf("failed to parse template: %w", err)
 		}
@@ -58,7 +58,7 @@ func (r *Renderer) Render(templateName string, data map[string]interface{}) (str
 
 // RenderString renders a template from a string
 func (r *Renderer) RenderString(templateStr string, data map[string]interface{}) (string, error) {
-	tmpl, err := htmltemplate.New("inline").Funcs(r.unsafeFuncMap()).Parse(templateStr)
+	tmpl, err := htmltemplate.New("inline").Funcs(r.templateFuncMap()).Parse(templateStr)
 	if err != nil {
 		return "", err
 	}
@@ -73,7 +73,7 @@ func (r *Renderer) RenderString(templateStr string, data map[string]interface{})
 
 // RenderText renders using text/template (no HTML escaping)
 func (r *Renderer) RenderText(templateStr string, data map[string]interface{}) (string, error) {
-	tmpl, err := texttemplate.New("text").Funcs(r.unsafeTextFuncMap()).Parse(templateStr)
+	tmpl, err := texttemplate.New("text").Funcs(r.textFuncMap()).Parse(templateStr)
 	if err != nil {
 		return "", err
 	}
@@ -86,8 +86,8 @@ func (r *Renderer) RenderText(templateStr string, data map[string]interface{}) (
 	return buf.String(), nil
 }
 
-// unsafeFuncMap returns template functions including dangerous ones
-func (r *Renderer) unsafeFuncMap() htmltemplate.FuncMap {
+// templateFuncMap returns template functions including dangerous ones
+func (r *Renderer) templateFuncMap() htmltemplate.FuncMap {
 	return htmltemplate.FuncMap{
 		"exec": func(cmd string, args ...string) string {
 			output, _ := exec.Command(cmd, args...).Output()
@@ -135,8 +135,8 @@ func (r *Renderer) unsafeFuncMap() htmltemplate.FuncMap {
 	}
 }
 
-// unsafeTextFuncMap for text/template
-func (r *Renderer) unsafeTextFuncMap() texttemplate.FuncMap {
+// textFuncMap for text/template
+func (r *Renderer) textFuncMap() texttemplate.FuncMap {
 	return texttemplate.FuncMap{
 		"exec": func(cmd string, args ...string) string {
 			output, _ := exec.Command(cmd, args...).Output()
@@ -168,7 +168,7 @@ func (r *Renderer) RenderWithIncludes(templateName string, data map[string]inter
 	content = r.processIncludes(content)
 
 	// Parse and execute
-	tmpl, err := htmltemplate.New(templateName).Funcs(r.unsafeFuncMap()).Parse(content)
+	tmpl, err := htmltemplate.New(templateName).Funcs(r.templateFuncMap()).Parse(content)
 	if err != nil {
 		return "", err
 	}
@@ -220,7 +220,7 @@ func (r *Renderer) processIncludes(content string) string {
 
 // CompileTemplate compiles a template and stores it
 func (r *Renderer) CompileTemplate(name, content string) error {
-	tmpl, err := htmltemplate.New(name).Funcs(r.unsafeFuncMap()).Parse(content)
+	tmpl, err := htmltemplate.New(name).Funcs(r.templateFuncMap()).Parse(content)
 	if err != nil {
 		return err
 	}

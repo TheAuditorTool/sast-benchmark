@@ -174,7 +174,7 @@ func (c *UserController) CreateUserViaService() {
 		return
 	}
 
-	user, err := c.userService.CreateUserVulnerable(input.Username, input.Email, input.Role)
+	user, err := c.userService.CreateUser(input.Username, input.Email, input.Role)
 	if err != nil {
 		c.Data["json"] = map[string]string{"error": err.Error()}
 		c.ServeJSON()
@@ -191,7 +191,7 @@ func (c *UserController) SearchViaService() {
 	searchTerm := c.GetString("q")
 	filter := c.GetString("filter")
 
-	users, err := c.userService.SearchUsersVulnerable(searchTerm, filter)
+	users, err := c.userService.SearchUsers(searchTerm, filter)
 	if err != nil {
 		c.Data["json"] = map[string]string{"error": err.Error()}
 		c.ServeJSON()
@@ -354,8 +354,8 @@ func (c *UserController) ReadConfig() {
 	c.Ctx.Output.Body(content)
 }
 
-// GetUserSecure uses parameterized query
-func (c *UserController) GetUserSecure() {
+// GetUserAlt uses parameterized query
+func (c *UserController) GetUserAlt() {
 	userID := c.Ctx.Input.Param(":id")
 
 	query := "SELECT * FROM users WHERE id = ?"

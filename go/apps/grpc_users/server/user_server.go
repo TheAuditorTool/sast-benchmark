@@ -261,7 +261,7 @@ func (s *UserServer) GenerateReport(ctx context.Context, req *ReportRequest) (*R
 func (s *UserServer) GetUserViaRepo(ctx context.Context, req *GetUserRequest) (*UserResponse, error) {
 	userID := req.Id
 
-	user, err := s.userRepo.FindByIDVulnerable(userID)
+	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return &UserResponse{Error: err.Error()}, nil
 	}
@@ -279,7 +279,7 @@ func (s *UserServer) SearchViaRepo(ctx context.Context, req *SearchUsersRequest)
 	searchTerm := req.Query
 	filter := req.Filter
 
-	users, err := s.userRepo.SearchVulnerable(searchTerm, filter)
+	users, err := s.userRepo.Search(searchTerm, filter)
 	if err != nil {
 		return &SearchUsersResponse{Error: err.Error()}, nil
 	}

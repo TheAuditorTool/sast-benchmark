@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/theauditor/vulnerable-api/internal/models"
+	"github.com/theauditor/multi-api/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -98,22 +98,22 @@ func (r *UserRepository) FindByUsernameSqlx(username string) (*models.User, erro
 	return &user, err
 }
 
-// NamedQueryVulnerable uses NamedExec with dynamic table/column names
-func (r *UserRepository) NamedQueryVulnerable(tableName, column, value string) error {
+// NamedQuery uses NamedExec with dynamic table/column names
+func (r *UserRepository) NamedQuery(tableName, column, value string) error {
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (:value)", tableName, column)
 	_, err := r.sqlxDB.NamedExec(query, map[string]interface{}{"value": value})
 	return err
 }
 
-// FindByIDSecure looks up a user by ID
-func (r *UserRepository) FindByIDSecure(id uint) (*models.User, error) {
+// FindByIDAlt looks up a user by ID
+func (r *UserRepository) FindByIDAlt(id uint) (*models.User, error) {
 	var user models.User
 	err := r.db.Where("id = ?", id).First(&user).Error
 	return &user, err
 }
 
-// FindByEmailSecure looks up a user by email
-func (r *UserRepository) FindByEmailSecure(email string) (*models.User, error) {
+// FindByEmailAlt looks up a user by email
+func (r *UserRepository) FindByEmailAlt(email string) (*models.User, error) {
 	var user models.User
 	err := r.db.Where(&models.User{Email: email}).First(&user).Error
 	return &user, err

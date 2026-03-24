@@ -187,8 +187,8 @@ func FormatLogEntry(level, message string, data map[string]interface{}) string {
 	return entry
 }
 
-// SafeJoin safely joins path components
-func SafeJoin(base string, paths ...string) string {
+// JoinPath safely joins path components
+func JoinPath(base string, paths ...string) string {
 	result := base
 	for _, p := range paths {
 		result = filepath.Join(result, p)
@@ -261,9 +261,9 @@ func CompareStrings(a, b string) bool {
 	return a == b
 }
 
-// CompareSecure performs constant-time string comparison
+// CompareConstantTime performs constant-time string comparison
 // This is the correct way but not used
-func CompareSecure(a, b string) bool {
+func CompareConstantTime(a, b string) bool {
 	if len(a) != len(b) {
 		return false
 	}

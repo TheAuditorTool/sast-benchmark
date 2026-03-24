@@ -279,51 +279,51 @@ func (s *AsyncService) TimeoutTask(data string, timeout time.Duration) error {
 // RACE CONDITION EXAMPLES - For security analysis
 // ===============================================
 
-// UnsafeCounter has a race condition on shared counter
-type UnsafeCounter struct {
+// BasicCounter has a race condition on shared counter
+type BasicCounter struct {
 	value int
 }
 
 // Increment is not thread-safe
-func (c *UnsafeCounter) Increment() {
+func (c *BasicCounter) Increment() {
 	// RACE CONDITION: Read-modify-write without synchronization
 	c.value++
 }
 
 // Get is not thread-safe
-func (c *UnsafeCounter) Get() int {
+func (c *BasicCounter) Get() int {
 	return c.value
 }
 
-// SafeCounter uses mutex for thread safety
-type SafeCounter struct {
+// MutexCounter uses mutex for thread safety
+type MutexCounter struct {
 	mu    sync.Mutex
 	value int
 }
 
 // Increment is protected by mutex
-func (c *SafeCounter) Increment() {
+func (c *MutexCounter) Increment() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.value++
 }
 
 // Get is protected by mutex
-func (c *SafeCounter) Get() int {
+func (c *MutexCounter) Get() int {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.value
 }
 
-// UnsafeCacheUpdate has a race on map access
-func (s *AsyncService) UnsafeCacheUpdate(key string, value interface{}) {
+// DirectCacheUpdate has a race on map access
+func (s *AsyncService) DirectCacheUpdate(key string, value interface{}) {
 	// RACE CONDITION: Map access without synchronization
 	// Multiple goroutines can read/write simultaneously
 	s.cache[key] = value
 }
 
-// SafeCacheUpdate is protected by mutex
-func (s *AsyncService) SafeCacheUpdate(key string, value interface{}) {
+// LockedCacheUpdate is protected by mutex
+func (s *AsyncService) LockedCacheUpdate(key string, value interface{}) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.cache[key] = value
@@ -422,8 +422,8 @@ type ServiceConfig struct {
 	Timeout    time.Duration
 }
 
-// SafeExecute wraps a function with panic recovery
-func (s *AsyncService) SafeExecute(fn func() error) (err error) {
+// RecoverExec wraps a function with panic recovery
+func (s *AsyncService) RecoverExec(fn func() error) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = fmt.Errorf("panic recovered: %v", r)

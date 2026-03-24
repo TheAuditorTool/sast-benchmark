@@ -10,7 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/theauditor/vulnerable-api/internal/repository"
+	"github.com/theauditor/multi-api/internal/repository"
 )
 
 // NetHTTPHandler handles HTTP requests using standard net/http
@@ -320,8 +320,8 @@ func buildInsertQuery(table, field, value string) string {
 	return fmt.Sprintf("INSERT INTO %s (%s) VALUES ('%s')", table, field, value)
 }
 
-// GetUserSecure looks up a user by ID with parameterized query
-func (h *NetHTTPHandler) GetUserSecure(w http.ResponseWriter, r *http.Request) {
+// GetUserAlt looks up a user by ID with parameterized query
+func (h *NetHTTPHandler) GetUserAlt(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("id")
 
 	query := "SELECT * FROM users WHERE id = ?"
@@ -336,8 +336,8 @@ func (h *NetHTTPHandler) GetUserSecure(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-// CreateUserSecure creates a user with prepared statement
-func (h *NetHTTPHandler) CreateUserSecure(w http.ResponseWriter, r *http.Request) {
+// CreateUserAlt creates a user with prepared statement
+func (h *NetHTTPHandler) CreateUserAlt(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	username := r.FormValue("username")
 	email := r.FormValue("email")

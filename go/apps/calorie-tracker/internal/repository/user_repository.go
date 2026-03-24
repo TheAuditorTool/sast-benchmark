@@ -62,8 +62,8 @@ func (r *UserRepository) Delete(id string) error {
 	return r.db.Delete(&models.User{}, "id = ?", id).Error
 }
 
-// SearchVulnerable searches users by term
-func (r *UserRepository) SearchVulnerable(searchTerm string) ([]models.User, error) {
+// Search searches users by term
+func (r *UserRepository) Search(searchTerm string) ([]models.User, error) {
 	var users []models.User
 	query := fmt.Sprintf(
 		"SELECT * FROM users WHERE username LIKE '%%%s%%' OR email LIKE '%%%s%%'",
