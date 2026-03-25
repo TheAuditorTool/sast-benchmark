@@ -3,6 +3,7 @@
 **/.pf/
 *.db
 *.db-journal
+*.sarif
 
 # Virtual environments
 .env
