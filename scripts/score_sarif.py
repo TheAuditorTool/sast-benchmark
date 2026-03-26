@@ -209,6 +209,33 @@ def compute_detections_annotation(expected, findings, annotations):
     return detected
 
 
+def compute_detections_filename_cataware(expected, sarif_path):
+    """Filename-based matching with category awareness (OWASP standard).
+
+    A test case is "detected" only if a SARIF finding references its filename
+    AND the finding's ruleId category matches the test case's expected category.
+    """
+    with open(sarif_path, "r", encoding="utf-8") as f:
+        sarif = json.load(f)
+
+    test_cats = {name: info["category"] for name, info in expected.items()}
+    detected = set()
+
+    for run in sarif.get("runs", []):
+        for result in run.get("results", []):
+            rule_id = result.get("ruleId", "")
+            finding_cat = rule_id.replace("taint:", "")
+
+            for loc in result.get("locations", []):
+                uri = loc.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
+                if uri:
+                    name = extract_test_name_from_uri(uri)
+                    if name and name in test_cats and finding_cat == test_cats[name]:
+                        detected.add(name)
+
+    return detected
+
+
 def compute_scores(expected, detected):
     """Compute per-category and overall scores."""
     categories = sorted(set(e["category"] for e in expected.values()))

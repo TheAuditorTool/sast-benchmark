@@ -17,29 +17,37 @@ We built this benchmark and we ran our own tool against it. Here are the results
 ```
 Category         CWE    TP    FP    FN    TN      TPR     FPR   Score
 ---------------------------------------------------------------------------
-cmdi             78     23    19    7     11      76.7%   63.3%  +13.3%
-deserial         502    1     1     3     3       25.0%   25.0%   +0.0%
-ldapi            90     4     4     0     0      100.0%  100.0%   +0.0%
-loginjection     117    1     0     3     4       25.0%    0.0%  +25.0%
-nosql            943    4     4     0     0      100.0%  100.0%   +0.0%
-pathtraver       22     22    20    3     10      88.0%   66.7%  +21.3%
-redirect         601    0     0     8     8        0.0%    0.0%   +0.0%
-securecookie     614    0     0     8     8        0.0%    0.0%   +0.0%
-sqli             89     49    21    16    37      75.4%   36.2%  +39.2%
-ssrf             918    0     0     10    10       0.0%    0.0%   +0.0%
-tlsverify        295    3     0     2     5       60.0%    0.0%  +60.0%
-trustbound       501    0     0     4     4        0.0%    0.0%   +0.0%
-weakcipher       327    4     0     4     8       50.0%    0.0%  +50.0%
-weakhash         328    10    1     0     9      100.0%   10.0%  +90.0%
-weakrand         330    8     2     2     8       80.0%   20.0%  +60.0%
-xss              79     6     1     7     14      46.2%    6.7%  +39.5%
+authnfailure     287    0     1     6     5        0.0%   16.7%  -16.7%
+authzfailure     862    1     0     6     6       14.3%    0.0%  +14.3%
+cmdi             78     30    16    0     14     100.0%   53.3%  +46.7%
+codeinj          94     3     1     3     5       50.0%   16.7%  +33.3%
+csrf             352    0     0     7     6        0.0%    0.0%   +0.0%
+deserial         502    6     0     0     6      100.0%    0.0% +100.0%
+fileupload       434    4     4     0     0      100.0%  100.0%   +0.0%
+hardcodedcreds   798    1     3     5     3       16.7%   50.0%  -33.3%
+inputval         20     1     1     3     3       25.0%   25.0%   +0.0%
+ldapi            90     6     1     0     5      100.0%   16.7%  +83.3%
+loginjection     117    6     5     0     2      100.0%   71.4%  +28.6%
+nosql            943    6     0     0     7      100.0%    0.0% +100.0%
+pathtraver       22     25    24    0     6      100.0%   80.0%  +20.0%
+race_condition   362    5     1     0     4      100.0%   20.0%  +80.0%
+redirect         601    7     3     1     5       87.5%   37.5%  +50.0%
+securecookie     614    8     0     0     8      100.0%    0.0% +100.0%
+sqli             89     61    20    4     38      93.8%   34.5%  +59.4%
+ssrf             918    9     2     1     8       90.0%   20.0%  +70.0%
+tlsverify        295    5     0     0     5      100.0%    0.0% +100.0%
+trustbound       501    5     2     1     4       83.3%   33.3%  +50.0%
+weakcipher       327    7     1     1     7       87.5%   12.5%  +75.0%
+weakhash         328    10    0     0     10     100.0%    0.0% +100.0%
+weakrand         330    10    0     0     10     100.0%    0.0% +100.0%
+xss              79     13    2     0     13     100.0%   13.3%  +86.7%
 ---------------------------------------------------------------------------
-OVERALL                 135   73    77    139     63.7%   34.4%  +29.2%
+OVERALL                 229   87    38    180     85.8%   32.6%  +53.2%
 ```
 
-**Flat Score: +29.2%** (Youden's J = TPR - FPR)
+**Flat Score: +53.2%** (Youden's J = TPR - FPR)
 
-**Category-Averaged Score: +24.9%** (OWASP standard -- each category weighted equally)
+**Category-Averaged Score: +52.0%** (OWASP standard -- each category weighted equally)
 
 Note: The category-averaged score is lower because categories where TheAuditor has 0% detection (redirect, securecookie, ssrf, trustbound) each count as a full 0% TPR in the average rather than being diluted by larger categories. This is a more honest representation of tool capability across all vulnerability classes. The v0.3.1 benchmark adds 5 new CWE categories (hardcodedcreds, authnfailure, authzfailure, csrf, codeinj) which are not reflected in this baseline -- a re-run is needed for a complete v0.3.1 scorecard.
 

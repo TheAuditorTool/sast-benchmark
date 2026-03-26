@@ -45,6 +45,9 @@ RULE_MAP = {
     "bash-environment-injection": "cmdi",       # LD_PRELOAD, LD_LIBRARY_PATH
     "bash-path-modification": "cmdi",           # PATH=./bin:$PATH
     "bash-arithmetic-injection": "cmdi",        # $(( )) arithmetic expansion with variable
+    "bash-unquoted-cmd-injection": "cmdi",     # Unquoted expansion in dangerous commands (rm, ssh, git, etc)
+    "bash-xargs-injection": "cmdi",            # xargs with -I flag or unsafe pipeline splitting
+    "bash-mail-injection": "cmdi",             # mail/sendmail with variable expansion
     # Code injection (CWE-94) — 7 rules
     "bash-source-injection": "codeinj",         # source/dot with variable path
     "bash-bash-c-injection": "codeinj",         # bash -c with variable expansion

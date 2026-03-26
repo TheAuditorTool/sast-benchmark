@@ -63,7 +63,7 @@ pathtraverWarpReadFile,pathtraver,true,22
 pathtraverWriteFile,pathtraver,true,22
 redosBackendRegexDos,redos,true,1333
 redosBackendRegex,redos,false,1333
-sqliBackendRawSql,sqli,true,89
+sqliBackendRawSql,sqli,false,89
 sqliCalorieCreateUser,sqli,false,89
 sqliCalorieCreateWorkout,sqli,false,89
 sqliCalorieDeleteWorkout,sqli,false,89

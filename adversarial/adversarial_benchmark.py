@@ -40,6 +40,8 @@ RULE_MAP = {
     "eidl-resource-payload": "supply_chain",
     "eidl-prompt-injection": "ai_prompt_injection",
     "eidl-c2-fingerprint": "c2_fingerprint",
+    # Existing rules that detect adversarial patterns
+    "code-obfuscation-charcode": ["dynamic_construction", "unicode_payload"],
 }
 
 # Taint vulnerability_type -> benchmark category
@@ -176,9 +178,12 @@ def main():
         c.execute("SELECT file, line, rule FROM pattern_findings")
         for f, ln, r in c.fetchall():
             if r not in NOISE_RULES:
-                cat = RULE_MAP.get(r)
-                if cat:
-                    findings[f].add((ln, cat))
+                cats = RULE_MAP.get(r)
+                if cats:
+                    if isinstance(cats, str):
+                        cats = [cats]
+                    for cat in cats:
+                        findings[f].add((ln, cat))
     except sqlite3.OperationalError:
         pass
 

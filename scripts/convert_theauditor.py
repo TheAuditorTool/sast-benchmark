@@ -35,8 +35,11 @@ RULE_MAP = {
     "go-command-injection": "cmdi",
     "go-path-traversal": "pathtraver",
     "go-xss-template-bypass": "xss",
+    "xss-template-sink": "xss",
     "go-weak-random": "weakrand",
     "go-weak-hash": "weakhash",
+    "go-weak-hash-MD5": "weakhash",
+    "go-weak-hash-SHA1": "weakhash",
     "go-weak-cipher": "weakcipher",
     "go-insecure-cookie": "securecookie",
     "go-insecure-tls": "tlsverify",
@@ -47,6 +50,7 @@ RULE_MAP = {
     "go-ssrf": "ssrf",
     "go-deserialization": "deserial",
     "go-trust-boundary": "trustbound",
+    "go-trust-boundary-taint": "trustbound",
     "go-hardcoded-credential": "hardcodedcreds",
     "go-jwt-none-algorithm": "authnfailure",
     "go-missing-auth": "authnfailure",
@@ -241,6 +245,7 @@ SINK_MAP = {
     "Mass Assignment": "massassign",
     "Server-Side Template Injection": "ssti",
     "XXE": "xxe",
+    "Trust Boundary Violation": "trustbound",
 }
 
 NOISE_RULES = {
@@ -357,6 +362,7 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
 
     results = []
     seen = set()
+    rule_covered_categories = set()
 
     # Pattern findings
     try:
@@ -365,6 +371,8 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
             if rule in NOISE_RULES:
                 continue
             category = RULE_MAP.get(rule, rule)
+            if rule.endswith("-taint") or rule.endswith("-sink"):
+                rule_covered_categories.add(category)
             dedup_key = (file_path, line, category)
             if dedup_key in seen:
                 continue
@@ -392,7 +400,7 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
     except sqlite3.OperationalError:
         pass
 
-    # Taint flow findings
+    # Taint flow findings (skip categories already handled by taint rules)
     try:
         c.execute(
             "SELECT sink_file, sink_line, vulnerability_type "
@@ -400,6 +408,8 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
         )
         for sink_file, sink_line, vuln_type in c.fetchall():
             category = SINK_MAP.get(vuln_type, vuln_type)
+            if category in rule_covered_categories:
+                continue
             dedup_key = (sink_file, sink_line, category)
             if dedup_key in seen:
                 continue
