@@ -113,9 +113,9 @@ Maps each benchmark category to SAST rules that detect it.
 
 See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for full scorecard and version history.
 
-Score via the standardized SARIF pipeline (see [SCORING.md](SCORING.md)):
+Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
-python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir .
+python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir . > theauditor.sarif
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
     --annotations-dir apps --annotations-dir testcode
 ```
@@ -125,6 +125,8 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
 ## Scoring
 
 See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-based, works with any SAST tool).
+
+**Matching is CWE-based** — SARIF ruleId must be a CWE number. No hand-maintained RULE_MAP.
 
 ### Quick Start (any tool)
 
@@ -143,15 +145,6 @@ python ../scripts/convert_theauditor.py .pf/repo_index.db \
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
     --annotations-dir apps --annotations-dir testcode
 ```
-
-### Legacy Embedded Script — DELETED
-
-The embedded TheAuditor-specific scoring script was removed in v0.3.2. All scoring now goes through the standard SARIF pipeline:
-
-1. `python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir .`
-2. `python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv --annotations-dir apps --annotations-dir testcode`
-
-See `SCORING.md` for full documentation.
 
 ---
 

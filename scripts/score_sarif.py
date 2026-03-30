@@ -51,14 +51,20 @@ def load_expected_results(csv_path):
 
 
 def extract_test_name_from_uri(uri):
-    """Extract BenchmarkTestNNNNN from a SARIF URI (Go filename mode).
+    """Extract BenchmarkTestNNNNN from a SARIF URI.
 
     Handles:
-      testcode/benchmark_test_00001.go
+      testcode/benchmark_test_00001.go  (Go — lowercase with underscores)
+      testcode/BenchmarkTest00001.py    (Python/Java — CamelCase)
       /abs/path/testcode/benchmark_test_00001.go
-      C:\\Users\\...\\benchmark_test_00001.go
+      C:\\Users\\...\\BenchmarkTest00001.py
     """
+    # Go/Rust/Bash/PHP: lowercase with underscores
     m = re.search(r"benchmark_test_(\d{5})\.\w+", uri)
+    if m:
+        return "BenchmarkTest" + m.group(1)
+    # Python/Java: CamelCase
+    m = re.search(r"BenchmarkTest(\d{5})\.\w+", uri)
     if m:
         return "BenchmarkTest" + m.group(1)
     return None
@@ -171,7 +177,7 @@ def compute_detections_annotation(expected, findings, annotations):
 
     A test case is "detected" if a SARIF finding's (file, line) falls
     within the annotation's (file, start_line, end_line) range AND the
-    finding's ruleId category matches the test case's expected category.
+    finding's ruleId CWE matches the test case's expected CWE.
     This follows the OWASP standard: correct CWE classification required.
     """
     detected = set()
@@ -188,7 +194,7 @@ def compute_detections_annotation(expected, findings, annotations):
         if not ann:
             continue
 
-        expected_cat = info["category"]
+        expected_cwe = info["cwe"]
         ann_file = ann["file"]
         ann_start = ann["start"]
         ann_end = ann["end"]
@@ -198,9 +204,13 @@ def compute_detections_annotation(expected, findings, annotations):
             if fpath.endswith(ann_file) or ann_file.endswith(fpath) or fpath == ann_file:
                 for line, rule_id in line_rules:
                     if ann_start <= line <= ann_end:
-                        # Category-aware: strip "taint:" prefix and match
-                        finding_cat = rule_id.replace("taint:", "")
-                        if finding_cat == expected_cat:
+                        # CWE-aware: strip "taint:" prefix, parse CWE number
+                        cwe_str = rule_id.replace("taint:", "")
+                        try:
+                            finding_cwe = int(cwe_str)
+                        except (ValueError, TypeError):
+                            continue
+                        if finding_cwe == expected_cwe:
                             detected.add(key)
                             break
                 if key in detected:
@@ -210,27 +220,33 @@ def compute_detections_annotation(expected, findings, annotations):
 
 
 def compute_detections_filename_cataware(expected, sarif_path):
-    """Filename-based matching with category awareness (OWASP standard).
+    """Filename-based matching with CWE awareness (OWASP standard).
 
     A test case is "detected" only if a SARIF finding references its filename
-    AND the finding's ruleId category matches the test case's expected category.
+    AND the finding's ruleId CWE matches the test case's expected CWE.
+    SARIF ruleId is a CWE number (e.g., "89" or "taint:89").
     """
     with open(sarif_path, "r", encoding="utf-8") as f:
         sarif = json.load(f)
 
-    test_cats = {name: info["category"] for name, info in expected.items()}
+    test_cwes = {name: info["cwe"] for name, info in expected.items()}
     detected = set()
 
     for run in sarif.get("runs", []):
         for result in run.get("results", []):
             rule_id = result.get("ruleId", "")
-            finding_cat = rule_id.replace("taint:", "")
+            # Strip "taint:" prefix, parse CWE number
+            cwe_str = rule_id.replace("taint:", "")
+            try:
+                finding_cwe = int(cwe_str)
+            except (ValueError, TypeError):
+                continue
 
             for loc in result.get("locations", []):
                 uri = loc.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
                 if uri:
                     name = extract_test_name_from_uri(uri)
-                    if name and name in test_cats and finding_cat == test_cats[name]:
+                    if name and name in test_cwes and finding_cwe == test_cwes[name]:
                         detected.add(name)
 
     return detected
@@ -447,8 +463,8 @@ def main():
         print("  SARIF findings: %d" % len(findings))
         detected = compute_detections_annotation(expected, findings, annotations)
     else:
-        print("Mode: filename-based matching (Go)")
-        detected = load_sarif_detections_filename(sarif_path)
+        print("Mode: filename-based matching with CWE awareness")
+        detected = compute_detections_filename_cataware(expected, sarif_path)
 
     print()
     per_cat = compute_scores(expected, detected)

@@ -418,13 +418,13 @@ Score range: -100% to +100%. 0% = random guessing.
 
 ## Scoring
 
-Run any SAST tool, export SARIF 2.1.0, then score:
+Run any SAST tool, export SARIF 2.1.0, then score. **Matching is CWE-based** — SARIF ruleId must be a CWE number (e.g., "89") and is matched against the CSV CWE column.
 
 ```bash
 # Run your tool and export SARIF
 your-tool scan ./testcode/ --output results.sarif
 
-# Score against ground truth
+# Score against ground truth (CWE-based matching)
 python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
 ```
 
@@ -438,8 +438,8 @@ See [SCORING.md](SCORING.md) for full instructions, tool-specific SARIF export c
 # Run TheAuditor
 aud full --offline
 
-# Convert proprietary DB to SARIF, then score
-python ../scripts/convert_theauditor.py .pf/repo_index.db > theauditor.sarif
+# Convert DB to CWE-based SARIF, then score
+python ../scripts/convert_theauditor.py .pf/repo_index.db --language go > theauditor.sarif
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 

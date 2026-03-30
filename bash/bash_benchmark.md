@@ -187,15 +187,12 @@ python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.3.1.csv
 ### Path 2: TheAuditor Database-First (for TheAuditor users)
 
 ```bash
-# Option A: Direct DB scoring
-python3 bash_benchmark.py
-
-# Option B: Convert to SARIF first, then use the standard scorer
-python3 ../scripts/convert_theauditor.py .pf/repo_index.db --language bash --benchmark-dir . > results.sarif
-python3 ../scripts/score_sarif.py results.sarif expectedresults-0.3.1.csv
+# Convert DB to CWE-based SARIF, then score
+python3 ../scripts/convert_theauditor.py .pf/repo_index.db --language bash --benchmark-dir . > theauditor.sarif
+python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.1.csv
 ```
 
-Both paths produce identical scoring. The SARIF path is the OWASP standard.
+Scoring uses CWE numbers as the join key. SARIF ruleId is the CWE number. No RULE_MAP.
 
 Score formula: `Score = TPR - FPR` (Youden's J statistic)
 - **TPR** = TP / (TP + FN) — sensitivity, recall

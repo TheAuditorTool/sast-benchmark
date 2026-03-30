@@ -5,14 +5,20 @@ Usage:
     python convert_theauditor.py <db_path> --language go
     python convert_theauditor.py <db_path> --language bash --benchmark-dir ../bash
     python convert_theauditor.py <db_path> --language rust --benchmark-dir ../rust
+    python convert_theauditor.py <db_path> --language python
     python convert_theauditor.py <db_path>   # auto-detect from rule prefixes
 
 Then score:
     python score_sarif.py output.sarif expectedresults.csv
 
-For Go: findings match test cases by filename (benchmark_test_NNNNN.go).
-For Bash/Rust: findings are resolved to test case keys via vuln-code-snippet
-annotations, then embedded in SARIF properties.testCaseKey for the scorer.
+Matching strategy: CWE-based. SARIF ruleId is the CWE number (e.g., "89").
+The scorer matches this against the CSV CWE column. No hand-maintained
+RULE_MAP needed -- CWE comes directly from pattern_findings.cwe column
+and from VULN_TYPE_TO_CWE for taint flows.
+
+For Go/Python/Java: findings match test cases by filename.
+For Bash/Rust/PHP: findings are resolved to test case keys via
+vuln-code-snippet annotations.
 
 Zero external dependencies -- stdlib only.
 """
@@ -25,227 +31,48 @@ import sys
 from collections import defaultdict
 
 # ============================================================================
-# Rule Maps (all languages combined — prefixes prevent collisions)
+# CWE Mapping for taint flows (industry-standard, ~25 entries)
+#
+# resolved_flow_audit stores vulnerability_type as human-readable strings.
+# This maps them to CWE numbers. Stable -- CWE IDs don't change.
 # ============================================================================
 
-RULE_MAP = {
-    # --- Go rules ---
-    "go-sql-injection-format": "sqli",
-    "go-sql-injection-concat": "sqli",
-    "go-command-injection": "cmdi",
-    "go-path-traversal": "pathtraver",
-    "go-xss-template-bypass": "xss",
-    "xss-template-sink": "xss",
-    "go-weak-random": "weakrand",
-    "go-weak-hash": "weakhash",
-    "go-weak-hash-MD5": "weakhash",
-    "go-weak-hash-SHA1": "weakhash",
-    "go-weak-cipher": "weakcipher",
-    "go-insecure-cookie": "securecookie",
-    "go-insecure-tls": "tlsverify",
-    "go-ldap-injection": "ldapi",
-    "go-nosql-injection": "nosql",
-    "go-log-injection": "loginjection",
-    "go-open-redirect": "redirect",
-    "go-ssrf": "ssrf",
-    "go-deserialization": "deserial",
-    "go-trust-boundary": "trustbound",
-    "go-trust-boundary-taint": "trustbound",
-    "go-hardcoded-credential": "hardcodedcreds",
-    "go-jwt-none-algorithm": "authnfailure",
-    "go-missing-auth": "authnfailure",
-    "go-missing-authz": "authzfailure",
-    "go-csrf-missing": "csrf",
-    "go-template-injection": "codeinj",
-    # --- Bash rules ---
-    "bash-eval-injection": "cmdi",
-    "bash-exec-injection": "cmdi",
-    "bash-command-injection-taint": "cmdi",
-    "bash-read-without-r": "cmdi",
-    "bash-ifs-modified": "cmdi",
-    "bash-printf-format-injection": "cmdi",
-    "bash-sudo-variable": "cmdi",
-    "bash-variable-as-command": "cmdi",
-    "bash-variable-command": "cmdi",
-    "bash-backtick-injection": "cmdi",
-    "bash-indirect-expansion": "cmdi",
-    "bash-environment-injection": "cmdi",
-    "bash-path-modification": "cmdi",
-    "bash-source-injection": "codeinj",
-    "bash-unquoted-expansion": "unquoted",
-    "bash-unquoted-dangerous": "unquoted",
-    "bash-hardcoded-credential": "hardcoded_creds",
-    "secret-hardcoded-assignment": "hardcoded_creds",
-    "bash-weak-crypto": "weakcrypto",
-    "bash-chmod-777": "insecure_perms",
-    "bash-chmod-666": "insecure_perms",
-    "bash-ssl-bypass": "ssl_bypass",
-    "bash-debug-mode-leak": "infodisclosure",
-    "bash-curl-pipe-bash": "rce",
-    "bash-unsafe-temp": "insecure_temp",
-    "bash-weak-random": "weakrand",
-    "bash-toctou-race": "race_condition",
-    "bash-missing-auth-check": "auth_bypass",
-    "bash-env-auth-bypass": "auth_bypass",
-    # --- Rust rules ---
-    # Weak random (crypto_analyze.py)
-    "rust-weak-random": "weakrand",
-    # Taint injection (rust_injection_analyze.py)
-    "rust-command-injection-taint": "cmdi",
-    "rust-sql-injection-taint": "sqli",
-    "rust-path-traversal-taint": "pathtraver",
-    "rust-path-traversal-sink": "pathtraver",
-    "rust-ssrf-taint": "ssrf",
-    "rust-ssrf-sink": "ssrf",
-    "express-ssrf-taint": "ssrf",
-    # Structural injection (rust_injection_analyze.py)
-    "rust-command-injection": "cmdi",
-    "rust-sql-injection-format": "sqli",
-    "rust-sql-injection-sink": "sqli",
-    "rust-sql-injection-structural": "sqli",
-    # Polyglot taint rules
-    "path-traversal-taint": "pathtraver",
-    "ssrf-taint": "ssrf",
-    # Memory safety (memory_safety.py + unsafe_analysis.py + ffi_boundary.py)
-    "rust-dangerous-import": "memsafety",
-    "rust-unsafe-no-safety-comment": "memsafety",
-    "rust-unsafe-in-public-api": "memsafety",
-    "rust-unsafe-trait-impl": "memsafety",
-    "rust-unsafe-public-fn": "memsafety",
-    "rust-ffi-variadic": "memsafety",
-    "rust-ffi-raw-pointer-param": "memsafety",
-    "rust-ffi-raw-pointer-return": "memsafety",
-    "rust-ffi-extern-block": "memsafety",
-    "rust-ffi-panic-across-boundary": "memsafety",
-    # Unsafe block operations (memory_safety.py dynamic rules)
-    "rust-unsafe-from-raw": "memsafety",
-    "rust-unsafe-leak": "memsafety",
-    "rust-unsafe-into-raw": "memsafety",
-    "rust-unsafe-ManuallyDrop-new": "memsafety",
-    "rust-unsafe-ManuallyDrop-into-inner": "memsafety",
-    "rust-unsafe-ManuallyDrop-drop": "memsafety",
-    "rust-unsafe-ManuallyDrop-take": "memsafety",
-    "rust-unsafe-set-len": "memsafety",
-    "rust-unsafe-get-unchecked": "memsafety",
-    "rust-unsafe-get-unchecked-mut": "memsafety",
-    "rust-unsafe-transmute": "memsafety",
-    "rust-unsafe-transmute-copy": "memsafety",
-    "rust-unsafe-from-raw-parts": "memsafety",
-    "rust-unsafe-from-raw-parts-mut": "memsafety",
-    # Panic paths (panic_paths.py)
-    "rust-panic-unwrap": "memsafety",
-    "rust-panic-expect": "memsafety",
-    "rust-panic-in-production": "memsafety",
-    "rust-todo-in-production": "memsafety",
-    "rust-unimplemented-in-production": "memsafety",
-    "rust-unreachable-in-production": "memsafety",
-    # Integer safety (integer_safety.py)
-    "rust-unchecked-arithmetic": "intoverflow",
-    "rust-truncating-cast": "intoverflow",
-    "rust-wrapping-arithmetic-used": "intoverflow",
-    # Supply chain + crypto (supply_chain.py + crypto_weakness.py)
-    "rust-weak-crypto-dependency": "crypto",
-    "rust-deprecated-dependency": "crypto",
-    "rust-weak-crypto-call": "crypto",
-    "rust-weak-crypto-macro": "crypto",
-    "rust-weak-hash-output": "crypto",
-    "rust-jwt-algorithm-none": "crypto",
-    # Hardcoded secrets
-    "hardcoded-credential": "infodisclosure",
-    "hardcoded-secret": "infodisclosure",
-    # Info disclosure (info_disclosure_analyze.py)
-    "rust-error-details-exposed": "infodisclosure",
-    "rust-env-vars-dump": "infodisclosure",
-    "rust-sensitive-config-exposed": "infodisclosure",
-    "rust-hardcoded-secret-fallback": "infodisclosure",
-    "rust-sql-in-error-response": "infodisclosure",
-    "rust-sensitive-data-logged": "infodisclosure",
-    "rust-hardcoded-api-key": "infodisclosure",
-    # XSS (xss_analyze.py)
-    "xss-taint": "xss",
-    "xss-sink": "xss",
-    "xss-postmessage-origin": "xss",
-    # Deserialization (rust_insecure_deserialization.py)
-    "rust-insecure-deserialization": "deser",
-    # Input validation (input_validation_analyze.py)
-    "rust-missing-input-validation": "inputval",
-    # ReDoS (redos_analyze.py)
-    "redos-taint": "redos",
-    "redos-dynamic-regex": "redos",
-    # --- PHP rules ---
-    "php-sql-injection": "sqli",
-    "php-sql-injection-concat": "sqli",
-    "php-sql-injection-taint": "sqli",
-    "php-command-injection": "cmdi",
-    "php-command-injection-taint": "cmdi",
-    "php-code-injection": "codeinj",
-    "php-file-inclusion": "fileinclusion",
-    "php-file-inclusion-taint": "fileinclusion",
-    "php-path-traversal": "pathtraver",
-    "php-path-traversal-taint": "pathtraver",
-    "php-xss": "xss",
-    "php-xss-taint": "xss",
-    "php-ssrf": "ssrf",
-    "php-ssrf-taint": "ssrf",
-    "php-deserialization": "deserial",
-    "php-insecure-deserialization": "deserial",
-    "php-xxe": "xxe",
-    "php-type-juggling": "typejuggling",
-    "php-extract-injection": "extract",
-    "php-variable-variables": "variablevars",
-    "php-unsafe-reflection": "unsafereflect",
-    "php-file-upload": "fileupload",
-    "php-open-redirect": "redirect",
-    "php-weak-hash": "weakhash",
-    "php-weak-random": "weakrand",
-    "php-weak-cipher": "weakcipher",
-    "php-hardcoded-credential": "hardcodedcreds",
-    "php-csrf-missing": "csrf",
-    "php-header-injection": "headerinj",
-    "php-ldap-injection": "ldapi",
-    "php-insecure-cookie": "securecookie",
-    "php-mass-assignment": "massassign",
-    "php-template-injection": "ssti",
-}
-
-SINK_MAP = {
-    "SQL Injection": "sqli",
-    "Command Injection": "cmdi",
-    "Path Traversal": "pathtraver",
-    "Cross-Site Scripting (XSS)": "xss",
-    "Server-Side Request Forgery (SSRF)": "ssrf",
-    "NoSQL Injection": "nosql",
-    "LDAP Injection": "ldapi",
-    "Open Redirect": "redirect",
-    "Log Injection": "loginjection",
-    "Deserialization": "deserial",
-    "Template Injection": "codeinj",
-    "Information Disclosure": "infodisclosure",
-    "Weak Cryptography": "weakcrypto",
-    "Remote Code Execution": "rce",
-    "Code Injection": "codeinj",
-    "Weak Randomness": "weakrand",
-    "Race Condition": "race_condition",
-    "Authentication Bypass": "auth_bypass",
-    # Rust-specific sink types
-    "Cross-Site Scripting": "xss",
-    "Server-Side Request Forgery": "ssrf",
-    "SSRF": "ssrf",
-    "Memory Safety": "memsafety",
-    "Insecure Deserialization": "deser",
-    "ReDoS": "redos",
-    # PHP-specific sink types
-    "File Inclusion": "fileinclusion",
-    "Type Juggling": "typejuggling",
-    "Variable Extraction": "extract",
-    "Variable Variables": "variablevars",
-    "Unsafe Reflection": "unsafereflect",
-    "Unrestricted Upload": "fileupload",
-    "Header Injection": "headerinj",
-    "Mass Assignment": "massassign",
-    "Server-Side Template Injection": "ssti",
-    "XXE": "xxe",
-    "Trust Boundary Violation": "trustbound",
+VULN_TYPE_TO_CWE = {
+    "SQL Injection": 89,
+    "Command Injection": 78,
+    "Path Traversal": 22,
+    "Cross-Site Scripting (XSS)": 79,
+    "Cross-Site Scripting": 79,
+    "Server-Side Request Forgery (SSRF)": 918,
+    "Server-Side Request Forgery": 918,
+    "SSRF": 918,
+    "NoSQL Injection": 943,
+    "LDAP Injection": 90,
+    "Open Redirect": 601,
+    "Log Injection": 117,
+    "Insecure Deserialization": 502,
+    "Deserialization": 502,
+    "Code Injection": 94,
+    "Template Injection": 94,
+    "Server-Side Template Injection (SSTI)": 94,
+    "Server-Side Template Injection": 94,
+    "XPath Injection": 643,
+    "XML External Entity (XXE)": 611,
+    "XXE": 611,
+    "Trust Boundary Violation": 501,
+    "Weak Cryptography": 327,
+    "Weak Randomness": 330,
+    "Race Condition": 362,
+    "Memory Safety": 119,
+    "ReDoS": 1333,
+    "Information Disclosure": 200,
+    "Data Exposure": 200,
+    "Unvalidated Input": 20,
+    "Authentication Bypass": 287,
+    "Remote Code Execution": 94,
+    "Prototype Pollution": 1321,
+    "HTTP Header Injection": 113,
+    "File Inclusion": 98,
 }
 
 NOISE_RULES = {
@@ -259,8 +86,16 @@ NOISE_RULES = {
 }
 
 
+def _parse_cwe_number(cwe_str):
+    """Extract integer CWE number from 'CWE-89' format. Returns None if invalid."""
+    if not cwe_str:
+        return None
+    m = re.match(r"CWE-(\d+)", cwe_str)
+    return int(m.group(1)) if m else None
+
+
 # ============================================================================
-# Annotation Scanner (for Bash/Rust — resolves file+line to test case key)
+# Annotation Scanner (for Bash/Rust/PHP — resolves file+line to test case key)
 # ============================================================================
 
 PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
@@ -341,13 +176,20 @@ def detect_language(db_path):
     bash_count = sum(1 for r in rules if r.startswith("bash-"))
     rust_count = sum(1 for r in rules if r.startswith("rust-"))
     php_count = sum(1 for r in rules if r.startswith("php-"))
+    python_count = sum(1 for r in rules if r.startswith("python-") or r.startswith("flask-"))
 
-    counts = {"go": go_count, "bash": bash_count, "rust": rust_count, "php": php_count}
+    counts = {"go": go_count, "bash": bash_count, "rust": rust_count,
+              "php": php_count, "python": python_count}
     return max(counts, key=counts.get)
 
 
 def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
-    """Read TheAuditor DB and produce SARIF dict."""
+    """Read TheAuditor DB and produce SARIF dict.
+
+    Uses CWE numbers as ruleId instead of category strings.
+    CWE comes from pattern_findings.cwe column (already populated by rules)
+    and from VULN_TYPE_TO_CWE for resolved_flow_audit taint flows.
+    """
     if language is None:
         language = detect_language(db_path)
 
@@ -362,24 +204,28 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
 
     results = []
     seen = set()
-    rule_covered_categories = set()
+    cwe_covered_by_rules = set()  # CWEs already covered by pattern rules
 
-    # Pattern findings
+    # Pattern findings -- use CWE from DB directly
     try:
-        c.execute("SELECT file, line, rule FROM pattern_findings")
-        for file_path, line, rule in c.fetchall():
+        c.execute("SELECT file, line, rule, cwe FROM pattern_findings")
+        for file_path, line, rule, cwe_str in c.fetchall():
             if rule in NOISE_RULES:
                 continue
-            category = RULE_MAP.get(rule, rule)
+            cwe_num = _parse_cwe_number(cwe_str)
+            if cwe_num is None:
+                continue  # No CWE = not a scoreable finding
+
             if rule.endswith("-taint") or rule.endswith("-sink"):
-                rule_covered_categories.add(category)
-            dedup_key = (file_path, line, category)
+                cwe_covered_by_rules.add(cwe_num)
+
+            dedup_key = (file_path, line, cwe_num)
             if dedup_key in seen:
                 continue
             seen.add(dedup_key)
 
             result = {
-                "ruleId": category,
+                "ruleId": str(cwe_num),
                 "level": "error",
                 "message": {"text": "Finding from rule: %s" % rule},
                 "locations": [{
@@ -400,23 +246,50 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
     except sqlite3.OperationalError:
         pass
 
-    # Taint flow findings (skip categories already handled by taint rules)
+    # Taint flow findings
     try:
         c.execute(
-            "SELECT sink_file, sink_line, vulnerability_type "
+            "SELECT sink_file, sink_line, source_file, source_line, vulnerability_type "
             "FROM resolved_flow_audit WHERE status = 'VULNERABLE'"
         )
-        for sink_file, sink_line, vuln_type in c.fetchall():
-            category = SINK_MAP.get(vuln_type, vuln_type)
-            if category in rule_covered_categories:
+        for sink_file, sink_line, source_file, source_line, vuln_type in c.fetchall():
+            cwe_num = VULN_TYPE_TO_CWE.get(vuln_type)
+            if cwe_num is None:
+                continue  # Unknown vuln type -- skip rather than emit garbage
+
+            # Cross-file VULNERABLE flows: also emit at source for scoring attribution
+            is_cross_file = source_file and source_file != sink_file
+            if is_cross_file:
+                src_dedup = (source_file, source_line, cwe_num)
+                if src_dedup not in seen:
+                    seen.add(src_dedup)
+                    src_result = {
+                        "ruleId": str(cwe_num),
+                        "level": "error",
+                        "message": {"text": "Taint flow: %s (cross-file)" % vuln_type},
+                        "locations": [{
+                            "physicalLocation": {
+                                "artifactLocation": {"uri": source_file},
+                                "region": {"startLine": source_line or 1},
+                            }
+                        }],
+                    }
+                    if file_ranges:
+                        tc_key = resolve_finding_to_key(source_file, source_line or 1, file_ranges)
+                        if tc_key:
+                            src_result["properties"] = {"testCaseKey": tc_key}
+                    results.append(src_result)
+
+            # Skip if pattern rules already cover this CWE
+            if cwe_num in cwe_covered_by_rules:
                 continue
-            dedup_key = (sink_file, sink_line, category)
+            dedup_key = (sink_file, sink_line, cwe_num)
             if dedup_key in seen:
                 continue
             seen.add(dedup_key)
 
             result = {
-                "ruleId": "taint:%s" % category,
+                "ruleId": "taint:%d" % cwe_num,
                 "level": "error",
                 "message": {"text": "Taint flow: %s" % vuln_type},
                 "locations": [{
@@ -461,8 +334,8 @@ def main():
         print("Usage: python convert_theauditor.py <db_path> [options]", file=sys.stderr)
         print(file=sys.stderr)
         print("Options:", file=sys.stderr)
-        print("  --language go|bash|rust|php  Language (auto-detected if omitted)", file=sys.stderr)
-        print("  --benchmark-dir <path>    Benchmark directory (required for bash/rust)", file=sys.stderr)
+        print("  --language go|bash|rust|php|python  Language (auto-detected if omitted)", file=sys.stderr)
+        print("  --benchmark-dir <path>    Benchmark directory (required for bash/rust/php)", file=sys.stderr)
         print(file=sys.stderr)
         print("Examples:", file=sys.stderr)
         print("  python convert_theauditor.py go/.pf/repo_index.db > go.sarif", file=sys.stderr)
