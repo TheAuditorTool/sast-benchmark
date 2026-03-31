@@ -1,6 +1,6 @@
-# OWASP-Style SAST Benchmark for Go, Rust, Bash, PHP + Adversarial Evasion
+# OWASP-Style SAST Benchmark for Go, Rust, Bash, PHP, Ruby + Adversarial Evasion
 
-The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, and **PHP** -- languages with zero existing public SAST benchmarks. Plus an **Adversarial Evasion** benchmark that tests an entirely different question: can your tool detect that someone is *hiding* something?
+The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, **PHP**, and **Ruby** -- languages with zero existing public SAST benchmarks. Plus an **Adversarial Evasion** benchmark that tests an entirely different question: can your tool detect that someone is *hiding* something?
 
 ## Why This Exists
 
@@ -10,7 +10,7 @@ SAST tools need ground truth to measure accuracy. Without benchmarks, you can't 
 - **Does the tool cry wolf on safe code?** (False Positive Rate)
 - **Is the tool getting better or worse over time?** (Regression detection)
 
-The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, Bash, or PHP. This project fills that gap.
+The [OWASP Benchmark for Java](https://owasp.org/www-project-benchmark/) (2,740 test cases) and [OWASP Benchmark for Python](https://github.com/OWASP-Benchmark/BenchmarkPython) (1,230 test cases) proved this model works. No equivalent exists for Go, Rust, Bash, PHP, or Ruby. This project fills that gap.
 
 ### Beyond Traditional SAST: Adversarial Evasion
 
@@ -89,6 +89,13 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     testcode/                # 251 standalone test files
     apps/                    # 4 annotated applications
+  ruby/                    # Ruby benchmark (318 tests, 25 CWEs)
+    expectedresults-0.1.0.csv  # Answer key (318 test cases, OWASP CSV format)
+    ruby_benchmark.md        # Full benchmark specification
+    SCORING.md               # Scoring methodology and tool instructions
+    CHANGELOG.md             # Version history
+    testcode/                # 256 standalone test files
+    apps/                    # 3 annotated applications (rack_app, rails_api, sinatra_app)
   adversarial/             # Adversarial evasion benchmark (60 tests, 6 categories)
     expectedresults-0.1.0.csv  # Answer key (60 test cases, OWASP CSV format)
     adversarial_benchmark.py   # Scoring script (EIDL-aware)
@@ -205,6 +212,38 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 251 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
+### Ruby v0.1.0 -- 318 test cases, 25 CWEs, 3 frameworks
+
+| Category | CWE | Vuln | Safe | Total |
+|----------|-----|------|------|-------|
+| sqli | 89 | 19 | 19 | 38 |
+| xss | 79 | 14 | 14 | 28 |
+| cmdi | 78 | 12 | 12 | 24 |
+| pathtraver | 22 | 9 | 9 | 18 |
+| deserial | 502 | 8 | 8 | 16 |
+| massassign | 915 | 7 | 7 | 14 |
+| codeinj | 94 | 6 | 6 | 12 |
+| csrf | 352 | 6 | 6 | 12 |
+| fileupload | 434 | 6 | 6 | 12 |
+| hardcodedcreds | 798 | 6 | 6 | 12 |
+| redirect | 601 | 6 | 6 | 12 |
+| ssrf | 918 | 6 | 6 | 12 |
+| ssti | 1336 | 6 | 6 | 12 |
+| weakhash | 328 | 6 | 6 | 12 |
+| fileinclusion | 98 | 5 | 5 | 10 |
+| securecookie | 614 | 5 | 5 | 10 |
+| dynmethod | 94 | 4 | 4 | 8 |
+| headerinj | 113 | 4 | 4 | 8 |
+| unsafereflect | 470 | 4 | 4 | 8 |
+| weakrand | 330 | 4 | 4 | 8 |
+| xxe | 611 | 4 | 4 | 8 |
+| ldapi | 90 | 3 | 3 | 6 |
+| loginjection | 117 | 3 | 3 | 6 |
+| regex | 1333 | 3 | 3 | 6 |
+| weakcipher | 327 | 3 | 3 | 6 |
+
+256 standalone test files in `testcode/` + 3 annotated applications (rack_app, rails_api, sinatra_app). Frameworks: Raw Ruby/Rack, Rails 7, Sinatra 3. TP/TN balance: 50/50. Ruby-specific CWEs: mass assignment via strong params bypass (CWE-915), dynamic method dispatch (CWE-94), SSTI via ERB.new (CWE-1336), unsafe reflection via const_get/send (CWE-470), ReDoS (CWE-1333).
+
 ### Adversarial Evasion v0.1.0 -- 60 test cases, 6 categories, cross-language
 
 **This is not a language benchmark. It is a detection paradigm benchmark.**
@@ -231,6 +270,7 @@ See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md)
 | Go | 534 | 24 CWEs | 50/50 | Vulnerability detection |
 | PHP | 369 | 25 CWEs | 50/50 | Vulnerability detection |
 | Bash | 356 | 16 CWEs | 49/51 | Vulnerability detection |
+| Ruby | 318 | 25 CWEs | 50/50 | Vulnerability detection |
 | Rust | 268 | 13 CWEs | 46/54 | Vulnerability detection |
 | Adversarial | 60 | 6 categories | 53/47 | Evasion/concealment detection |
 | **Total** | **1,587** | **66 unique CWEs + 6 evasion categories** | |

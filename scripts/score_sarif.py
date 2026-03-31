@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score a SAST tool's SARIF output against the Go/Rust/Bash/PHP SAST Benchmark.
+"""Score a SAST tool's SARIF output against the Go/Rust/Bash/PHP/Ruby SAST Benchmark.
 
 Usage:
     python score_sarif.py <tool_output.sarif> [expectedresults.csv]
@@ -130,7 +130,7 @@ def scan_annotations(source_dirs):
     """Scan source files for vuln-code-snippet annotations.
 
     Returns dict of {key: {"file": relative_path, "start": line, "end": line}}.
-    Works for Rust (.rs) and Bash (.sh) annotation-based benchmarks.
+    Works for Rust (.rs), Bash (.sh), PHP (.php), and Ruby (.rb) annotation-based benchmarks.
     """
     pat_start = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
     pat_end = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
@@ -140,7 +140,7 @@ def scan_annotations(source_dirs):
         for root, dirs, files in os.walk(source_dir):
             dirs[:] = [d for d in dirs if d not in ("target", ".git", "node_modules", ".auditor_venv")]
             for fn in files:
-                if not (fn.endswith(".rs") or fn.endswith(".sh") or fn.endswith(".php")):
+                if not (fn.endswith(".rs") or fn.endswith(".sh") or fn.endswith(".php") or fn.endswith(".rb")):
                     continue
                 fpath = os.path.join(root, fn)
                 try:
@@ -415,7 +415,7 @@ def main():
         print("  tool_output.sarif      SARIF 2.1.0 file from any SAST tool")
         print("  expectedresults.csv    Ground truth CSV (default: auto-detect)")
         print("  --annotations-dir DIR  Source directory with vuln-code-snippet annotations")
-        print("                         (required for Rust/Bash/PHP; Go uses filename matching)")
+        print("                         (required for Rust/Bash/PHP/Ruby; Go uses filename matching)")
         print()
         print("Examples:")
         print("  # Go (filename-based matching)")
@@ -456,7 +456,7 @@ def main():
                 annotations_dirs.append(candidate)
 
     if use_annotations:
-        print("Mode: annotation-based matching (Rust/Bash/PHP)")
+        print("Mode: annotation-based matching (Rust/Bash/PHP/Ruby)")
         annotations = scan_annotations(annotations_dirs)
         print("  Annotations found: %d" % len(annotations))
         findings = load_sarif_findings(sarif_path)

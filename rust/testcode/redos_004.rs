@@ -2,9 +2,8 @@
 
 use regex::Regex;
 
-const EMAIL_PATTERN: &str = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"; // vuln-code-snippet target-line testcodeRedos004
-
 // vuln-code-snippet start testcodeRedos004
+const EMAIL_PATTERN: &str = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"; // vuln-code-snippet target-line testcodeRedos004
 pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
     let input = req.param("email");
 

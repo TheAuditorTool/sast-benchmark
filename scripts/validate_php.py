@@ -299,8 +299,13 @@ def check_semantics(csv_entries, annotations, vuln_lines, safe_lines):
 # ============================================================================
 # L5: Scoring Pipeline Readiness
 # ============================================================================
-def check_scoring_pipeline(all_categories):
-    """Verify all benchmark categories are in convert_theauditor.py's RULE_MAP or SINK_MAP."""
+def check_scoring_pipeline(csv_entries):
+    """Verify all CWEs in the benchmark have coverage in convert_theauditor.py.
+
+    The refactored converter uses CWE numbers directly (from pattern_findings.cwe
+    and VULN_TYPE_TO_CWE). We check that every CWE in the CSV has at least one
+    mapping in VULN_TYPE_TO_CWE, and that 'php' is in the annotation-language set.
+    """
     if not CONVERTER_PY.exists():
         warnings.append("L5 convert_theauditor.py not found - cannot verify scoring pipeline")
         return
@@ -308,16 +313,35 @@ def check_scoring_pipeline(all_categories):
     with open(CONVERTER_PY, "r", encoding="utf-8") as f:
         converter_content = f.read()
 
-    mapped_categories = set()
-    for m in re.finditer(r':\s*"([a-z_]+)"', converter_content):
-        mapped_categories.add(m.group(1))
+    # Extract CWE numbers from VULN_TYPE_TO_CWE dict values
+    mapped_cwes = set()
+    for m in re.finditer(r":\s*(\d+)", converter_content):
+        mapped_cwes.add(int(m.group(1)))
 
-    for cat in sorted(all_categories):
-        if cat not in mapped_categories:
+    # Collect unique CWEs from benchmark CSV
+    benchmark_cwes = set()
+    for key, info in csv_entries.items():
+        cwe = info.get("cwe")
+        if cwe and cwe > 0:
+            benchmark_cwes.add(cwe)
+
+    for cwe in sorted(benchmark_cwes):
+        if cwe not in mapped_cwes:
             warnings.append(
-                "L5 Category '%s' exists in ground truth but is not mapped "
-                "in convert_theauditor.py RULE_MAP or SINK_MAP" % cat
+                "L5 CWE %d exists in ground truth but has no VULN_TYPE_TO_CWE "
+                "mapping in convert_theauditor.py (taint flows for this CWE "
+                "won't be converted)" % cwe
             )
+
+    # Verify PHP is in the annotation-language set
+    if '"php"' not in converter_content:
+        warnings.append(
+            "L5 'php' not found in convert_theauditor.py annotation-language set"
+        )
+    if '".php"' not in converter_content:
+        warnings.append(
+            "L5 '.php' extension not found in convert_theauditor.py extension map"
+        )
 
 
 # ============================================================================
@@ -424,10 +448,10 @@ def main():
     print()
 
     # --- L5: Scoring Pipeline Readiness ---
-    print("[L5] Scoring Pipeline Readiness (RULE_MAP/SINK_MAP coverage)")
-    check_scoring_pipeline(all_categories)
+    print("[L5] Scoring Pipeline Readiness (CWE coverage + annotation support)")
+    check_scoring_pipeline(csv_entries)
     l5_warnings = len(warnings)
-    print("  Checks: every category has a mapping in convert_theauditor.py")
+    print("  Checks: every CWE has VULN_TYPE_TO_CWE mapping, PHP in annotation set")
     print("  Result: %d warnings" % l5_warnings)
     print()
 

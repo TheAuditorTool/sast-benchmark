@@ -53,9 +53,9 @@ VULN_TYPE_TO_CWE = {
     "Insecure Deserialization": 502,
     "Deserialization": 502,
     "Code Injection": 94,
-    "Template Injection": 94,
-    "Server-Side Template Injection (SSTI)": 94,
-    "Server-Side Template Injection": 94,
+    "Template Injection": 1336,
+    "Server-Side Template Injection (SSTI)": 1336,
+    "Server-Side Template Injection": 1336,
     "XPath Injection": 643,
     "XML External Entity (XXE)": 611,
     "XXE": 611,
@@ -177,9 +177,10 @@ def detect_language(db_path):
     rust_count = sum(1 for r in rules if r.startswith("rust-"))
     php_count = sum(1 for r in rules if r.startswith("php-"))
     python_count = sum(1 for r in rules if r.startswith("python-") or r.startswith("flask-"))
+    ruby_count = sum(1 for r in rules if r.startswith("ruby-"))
 
     counts = {"go": go_count, "bash": bash_count, "rust": rust_count,
-              "php": php_count, "python": python_count}
+              "php": php_count, "python": python_count, "ruby": ruby_count}
     return max(counts, key=counts.get)
 
 
@@ -195,8 +196,8 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None):
 
     # For annotation-based languages, scan source files
     file_ranges = {}
-    if language in ("bash", "rust", "php") and benchmark_dir:
-        ext = {"bash": ".sh", "rust": ".rs", "php": ".php"}[language]
+    if language in ("bash", "rust", "php", "ruby") and benchmark_dir:
+        ext = {"bash": ".sh", "rust": ".rs", "php": ".php", "ruby": ".rb"}[language]
         file_ranges = scan_annotations(benchmark_dir, extensions=(ext,))
 
     conn = sqlite3.connect(db_path)
@@ -359,7 +360,7 @@ def main():
             i += 1
 
     # Auto-detect benchmark dir if not provided
-    if benchmark_dir is None and language in ("bash", "rust", "php"):
+    if benchmark_dir is None and language in ("bash", "rust", "php", "ruby"):
         parent = os.path.dirname(os.path.dirname(os.path.abspath(db_path)))
         if os.path.isdir(os.path.join(parent, "testcode")):
             benchmark_dir = parent

@@ -99,6 +99,7 @@ Each language directory has a `*_benchmark.md` file. The adversarial directory h
 - **Go:** Standard `gofmt` formatting. Package `testcode`. Use `shared.go` helpers.
 - **Rust:** Standard `rustfmt` formatting. Module structure per benchmark doc.
 - **Bash:** ShellCheck-clean. POSIX-compatible where possible.
+- **Ruby:** Standard Ruby style. Use `require_relative 'shared'`. Annotation format uses `#` comments: `# vuln-code-snippet start KEY`. Prefer idiomatic patterns: string interpolation for TP sqli, array form of `system()` for TN cmdi. Backticks always go through shell (no safe form). `YAML.load` is TP; `YAML.safe_load` is TN. `Marshal.load` is always TP -- TN uses `JSON.parse` instead.
 - **Adversarial:** Any language (JS/Python/Go). Code should look like realistic production code -- the concealment technique itself provides the test value, not the surrounding code structure.
 
 ## Validation
@@ -110,6 +111,7 @@ python scripts/validate_go.py           # Go benchmark
 python scripts/validate_rust.py         # Rust benchmark
 python scripts/validate_bash.py         # Bash benchmark
 python scripts/validate_php.py          # PHP benchmark
+python scripts/validate_ruby.py         # Ruby benchmark
 python scripts/validate_adversarial.py  # Adversarial benchmark (L1-L5 fidelity)
 ```
 

@@ -6,7 +6,7 @@ Modeled after TheAuditor's multi-level fidelity system:
   L2 — Roundtrip fidelity (file paths, line markers, snippet content)
   L3 — Schema validation (required fields, valid CWEs, valid categories)
   L4 — Semantic fidelity (vuln-line vs safe-line correctness, overlap detection)
-  L5 — Scoring pipeline readiness (RULE_MAP/SINK_MAP coverage)
+  L5 — Scoring pipeline readiness (bash_benchmark.py + CWE coverage)
 
 Exit 0 if all checks pass, 1 if any ERRORS, 2 if only WARNINGS.
 No dependencies — stdlib only.
@@ -289,26 +289,45 @@ def check_semantics(yaml_entries, annotations, vuln_lines, safe_lines):
 # ============================================================================
 # L5: Scoring Pipeline Readiness
 # ============================================================================
-def check_scoring_pipeline(all_categories):
-    """Verify all benchmark categories are in bash_benchmark.py's RULE_MAP or SINK_MAP."""
-    if not BENCHMARK_PY.exists():
-        warnings.append("L5 bash_benchmark.py not found - cannot verify scoring pipeline")
-        return
+def check_scoring_pipeline(csv_entries, all_categories):
+    """Verify scoring pipeline coverage: bash_benchmark.py categories + converter CWEs."""
+    # Check 1: bash_benchmark.py has category mappings (bash-specific scorer)
+    if BENCHMARK_PY.exists():
+        with open(BENCHMARK_PY, "r", encoding="utf-8") as f:
+            scoring_content = f.read()
+        mapped_categories = set()
+        for m in re.finditer(r':\s*"([a-z_]+)"', scoring_content):
+            mapped_categories.add(m.group(1))
+        for cat in sorted(all_categories):
+            if cat not in mapped_categories:
+                warnings.append(
+                    f"L5 Category '{cat}' exists in ground truth but is not mapped "
+                    f"in bash_benchmark.py"
+                )
+    else:
+        warnings.append("L5 bash_benchmark.py not found - cannot verify bash-specific scorer")
 
-    with open(BENCHMARK_PY, "r", encoding="utf-8") as f:
-        scoring_content = f.read()
-
-    # Extract categories from RULE_MAP and SINK_MAP values
-    mapped_categories = set()
-    for m in re.finditer(r':\s*"([a-z_]+)"', scoring_content):
-        mapped_categories.add(m.group(1))
-
-    for cat in sorted(all_categories):
-        if cat not in mapped_categories:
-            warnings.append(
-                f"L5 Category '{cat}' exists in ground truth but is not mapped "
-                f"in bash_benchmark.py RULE_MAP or SINK_MAP"
-            )
+    # Check 2: convert_theauditor.py has CWE coverage (universal scorer)
+    converter_py = SCRIPT_DIR / "convert_theauditor.py"
+    if converter_py.exists():
+        with open(converter_py, "r", encoding="utf-8") as f:
+            converter_content = f.read()
+        mapped_cwes = set()
+        for m in re.finditer(r":\s*(\d+)", converter_content):
+            mapped_cwes.add(int(m.group(1)))
+        benchmark_cwes = set()
+        for key, info in csv_entries.items():
+            cwe = info.get("cwe")
+            if cwe and cwe > 0:
+                benchmark_cwes.add(cwe)
+        for cwe in sorted(benchmark_cwes):
+            if cwe not in mapped_cwes:
+                warnings.append(
+                    f"L5 CWE {cwe} exists in ground truth but has no VULN_TYPE_TO_CWE "
+                    f"mapping in convert_theauditor.py"
+                )
+        if '"bash"' not in converter_content:
+            warnings.append("L5 'bash' not found in convert_theauditor.py annotation-language set")
 
 
 # ============================================================================
@@ -417,10 +436,10 @@ def main():
     print()
 
     # --- L5: Scoring Pipeline Readiness ---
-    print("[L5] Scoring Pipeline Readiness (RULE_MAP/SINK_MAP coverage)")
-    check_scoring_pipeline(all_categories)
+    print("[L5] Scoring Pipeline Readiness (bash_benchmark.py + CWE coverage)")
+    check_scoring_pipeline(csv_entries, all_categories)
     l5_warnings = len(warnings)
-    print(f"  Checks: every category has a mapping in bash_benchmark.py")
+    print(f"  Checks: category mappings in bash_benchmark.py, CWE coverage in converter")
     print(f"  Result: {l5_warnings} warnings")
     print()
 
