@@ -23,6 +23,7 @@ Two scoring methods are computed:
 Zero external dependencies -- stdlib only.
 """
 
+import hashlib
 import json
 import os
 import re
@@ -414,16 +415,15 @@ def main():
         print("Arguments:")
         print("  tool_output.sarif      SARIF 2.1.0 file from any SAST tool")
         print("  expectedresults.csv    Ground truth CSV (default: auto-detect)")
-        print("  --annotations-dir DIR  Source directory with vuln-code-snippet annotations")
-        print("                         (required for Rust/Bash/PHP/Ruby; Go uses filename matching)")
+        print("  --annotations-dir DIR  Extra source directory with vuln-code-snippet annotations")
+        print("                         (apps/ and testcode/ next to CSV are always auto-included)")
         print()
         print("Examples:")
-        print("  # Go (filename-based matching)")
-        print("  python score_sarif.py results.sarif go/expectedresults-0.3.2.csv")
+        print("  # Annotation-based (Rust/Bash/PHP/Ruby) -- simplest, auto-detects dirs:")
+        print("  python score_sarif.py theauditor.sarif php/expectedresults-0.1.0.csv")
         print()
-        print("  # Rust (annotation-based matching)")
-        print("  python score_sarif.py results.sarif rust/expectedresults-0.3.2.csv \\")
-        print("      --annotations-dir rust/apps --annotations-dir rust/testcode")
+        print("  # Go (filename-based matching, no annotations needed):")
+        print("  python score_sarif.py results.sarif go/expectedresults-0.3.2.csv")
         sys.exit(1)
 
     sarif_path = positional[0]
@@ -447,13 +447,36 @@ def main():
     # Determine matching mode
     use_annotations = annotations_dirs or detect_annotation_mode(expected)
 
-    if use_annotations and not annotations_dirs:
-        # Auto-detect: look for apps/ and testcode/ next to CSV
+    if use_annotations:
+        # Always ensure apps/ and testcode/ next to CSV are included.
+        # Passing --annotations-dir for only ONE of them (e.g. testcode
+        # but not apps) silently drops test cases and produces wrong scores.
         csv_dir = os.path.dirname(os.path.abspath(csv_path))
+        existing = set(os.path.abspath(d) for d in annotations_dirs)
         for subdir in ["apps", "testcode"]:
             candidate = os.path.join(csv_dir, subdir)
-            if os.path.isdir(candidate):
+            if os.path.isdir(candidate) and os.path.abspath(candidate) not in existing:
                 annotations_dirs.append(candidate)
+
+    # Check SARIF integrity if it has TheAuditor metadata
+    try:
+        with open(sarif_path, "r", encoding="utf-8") as _sf:
+            _sarif_data = json.load(_sf)
+        _integrity = _sarif_data.get("runs", [{}])[0].get("properties", {}).get("integrity")
+        if _integrity and _integrity.get("csv_sha256"):
+            _h = hashlib.sha256()
+            with open(csv_path, "rb") as _cf:
+                for _chunk in iter(lambda: _cf.read(65536), b""):
+                    _h.update(_chunk)
+            if _h.hexdigest() != _integrity["csv_sha256"]:
+                print("WARNING: SARIF was generated against a different CSV version.",
+                      file=sys.stderr)
+                print("  SARIF CSV hash: %s" % _integrity["csv_sha256"][:16], file=sys.stderr)
+                print("  Current CSV:    %s" % _h.hexdigest()[:16], file=sys.stderr)
+                print("  Re-run convert_theauditor.py to regenerate.", file=sys.stderr)
+                print(file=sys.stderr)
+    except (json.JSONDecodeError, OSError):
+        pass
 
     if use_annotations:
         print("Mode: annotation-based matching (Rust/Bash/PHP/Ruby)")

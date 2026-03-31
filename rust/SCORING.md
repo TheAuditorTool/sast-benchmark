@@ -8,7 +8,6 @@ your-tool scan ./apps/ ./testcode/ --output results.sarif
 
 # 2. Score against ground truth
 python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
 ```
 
 The scorer outputs two tables: **Category-Averaged** (OWASP standard) and **Flat Aggregate** (for comparison).
@@ -32,7 +31,6 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored.
 ```bash
 semgrep --config auto --sarif --output results.sarif ./apps/ ./testcode/
 python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
 ```
 
 ### CodeQL
@@ -43,7 +41,6 @@ codeql database analyze rust-bench-db codeql/rust-queries \
     --format=sarifv2.1.0 --output=results.sarif
 
 python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
 ```
 
 ### TheAuditor
@@ -55,12 +52,10 @@ TheAuditor uses a proprietary database format. Use the bridge script:
 aud full --offline
 
 # Convert to SARIF
-python ../scripts/convert_theauditor.py .pf/repo_index.db \
-    --language rust --benchmark-dir .
+python ../scripts/convert_theauditor.py .pf/repo_index.db
 
 # Score
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 
 ---
@@ -125,7 +120,7 @@ sqliSearchUsersVulnerable,sqli,true,89
 
 1. Run your tool on the `rust/` directory
 2. Export findings as SARIF 2.1.0
-3. Score: `python scripts/score_sarif.py <output.sarif> rust/expectedresults-0.3.2.csv --annotations-dir rust/apps --annotations-dir rust/testcode`
+3. Score: `python scripts/score_sarif.py <output.sarif> rust/expectedresults-0.3.2.csv`
 4. Submit a PR adding `baseline_<toolname>_score.md` to `rust/` with the full scorecard
 
 Include tool name, version, date, and whether benchmark-specific tuning was applied.

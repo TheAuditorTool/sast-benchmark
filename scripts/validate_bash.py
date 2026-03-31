@@ -12,6 +12,8 @@ Exit 0 if all checks pass, 1 if any ERRORS, 2 if only WARNINGS.
 No dependencies — stdlib only.
 """
 
+import hashlib
+import json
 import os
 import re
 import sys
@@ -441,6 +443,33 @@ def main():
     l5_warnings = len(warnings)
     print(f"  Checks: category mappings in bash_benchmark.py, CWE coverage in converter")
     print(f"  Result: {l5_warnings} warnings")
+    print()
+
+    # --- L6: SARIF Integrity ---
+    print("[L6] SARIF Integrity (theauditor.sarif freshness)")
+    sarif_path = BASH_DIR / "theauditor.sarif"
+    if not sarif_path.exists():
+        print("  theauditor.sarif not found -- skipping (run converter to generate)")
+    else:
+        try:
+            with open(sarif_path, "r", encoding="utf-8") as sf:
+                sarif_data = json.load(sf)
+            integrity = sarif_data.get("runs", [{}])[0].get("properties", {}).get("integrity")
+            if integrity is None:
+                warnings.append("L6 theauditor.sarif has no integrity metadata (legacy file, regenerate with converter v2.0+)")
+            else:
+                h = hashlib.sha256()
+                with open(CSV_FILE, "rb") as cf:
+                    for chunk in iter(lambda: cf.read(65536), b""):
+                        h.update(chunk)
+                if h.hexdigest() != integrity.get("csv_sha256"):
+                    warnings.append("L6 theauditor.sarif is STALE: CSV hash mismatch (re-run convert_theauditor.py)")
+                else:
+                    print("  SARIF integrity: CURRENT (CSV hash matches)")
+        except (json.JSONDecodeError, OSError) as e:
+            warnings.append(f"L6 Could not read theauditor.sarif: {e}")
+    l6_warnings = len(warnings) - l5_warnings
+    print(f"  Result: {l6_warnings} warnings")
     print()
 
     # --- Summary ---

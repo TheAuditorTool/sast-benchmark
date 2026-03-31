@@ -6,9 +6,8 @@
 # 1. Run your SAST tool on php/ and export SARIF 2.1.0
 your-tool --output results.sarif php/
 
-# 2. Score against ground truth
-python scripts/score_sarif.py results.sarif php/expectedresults-0.1.0.csv \
-    --annotations-dir php/apps --annotations-dir php/testcode
+# 2. Score against ground truth (apps/ and testcode/ auto-detected from CSV path)
+python scripts/score_sarif.py results.sarif php/expectedresults-0.1.0.csv
 ```
 
 ## Detection Method: Annotation-Based Matching
@@ -70,9 +69,13 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored. Tool-specific instructions
 ```bash
 cd php/
 aud full --offline
-python ../scripts/convert_theauditor.py .pf/repo_index.db --language php --benchmark-dir . > theauditor.sarif
+python ../scripts/convert_theauditor.py .pf/repo_index.db
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.0.csv
 ```
+
+The converter auto-detects language and benchmark directory from the DB path,
+writes `theauditor.sarif` with integrity hashes, and skips regeneration if
+DB+CSV haven't changed. Use `--force` to regenerate unconditionally.
 
 ### Semgrep
 ```bash

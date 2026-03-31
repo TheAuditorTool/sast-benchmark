@@ -14,4 +14,4 @@
 ## Notes
 
 This file will be populated after the first TheAuditor run against the completed Ruby benchmark.
-Run: `cd ruby/ && aud full --offline && python ../scripts/convert_theauditor.py .pf/repo_index.db --language ruby --benchmark-dir . > theauditor.sarif && python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.0.csv`
+Run: `cd ruby/ && aud full --offline && python ../scripts/convert_theauditor.py .pf/repo_index.db && python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.0.csv`

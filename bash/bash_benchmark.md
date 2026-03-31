@@ -188,7 +188,7 @@ python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.3.1.csv
 
 ```bash
 # Convert DB to CWE-based SARIF, then score
-python3 ../scripts/convert_theauditor.py .pf/repo_index.db --language bash --benchmark-dir . > theauditor.sarif
+python3 ../scripts/convert_theauditor.py .pf/repo_index.db
 python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.1.csv
 ```
 

@@ -81,6 +81,6 @@ cd C:\Users\santa\Desktop\open_tests\gorustbash_benchmark\go
 aud full --offline
 
 # Convert and score
-python ../scripts/convert_theauditor.py .pf/repo_index.db > theauditor.sarif
+python ../scripts/convert_theauditor.py .pf/repo_index.db
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```

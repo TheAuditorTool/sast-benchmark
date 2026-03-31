@@ -115,9 +115,8 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 
 Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
-python ../scripts/convert_theauditor.py .pf/repo_index.db --language rust --benchmark-dir . > theauditor.sarif
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
+python ../scripts/convert_theauditor.py .pf/repo_index.db
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 
 ---
@@ -132,18 +131,15 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
+python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
 ```
 
 ### TheAuditor (database-first path)
 
 ```bash
 aud full --offline
-python ../scripts/convert_theauditor.py .pf/repo_index.db \
-    --language rust --benchmark-dir . > theauditor.sarif
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv \
-    --annotations-dir apps --annotations-dir testcode
+python ../scripts/convert_theauditor.py .pf/repo_index.db
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 
 ---

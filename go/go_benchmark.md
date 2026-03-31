@@ -439,7 +439,7 @@ See [SCORING.md](SCORING.md) for full instructions, tool-specific SARIF export c
 aud full --offline
 
 # Convert DB to CWE-based SARIF, then score
-python ../scripts/convert_theauditor.py .pf/repo_index.db --language go > theauditor.sarif
+python ../scripts/convert_theauditor.py .pf/repo_index.db
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 ```
 

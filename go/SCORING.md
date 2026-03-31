@@ -71,10 +71,11 @@ TheAuditor uses a proprietary database format. Use the bridge script:
 aud full --offline
 
 # Convert to SARIF
-python ../scripts/convert_theauditor.py .pf/repo_index.db > theauditor.sarif
+python ../scripts/convert_theauditor.py .pf/repo_index.db
 
 # Score
 python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+# Converter auto-detects language, writes theauditor.sarif with integrity hashes
 ```
 
 ---
