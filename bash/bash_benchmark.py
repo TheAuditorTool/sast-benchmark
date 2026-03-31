@@ -77,7 +77,7 @@ RULE_MAP = {
     "bash-json-response-injection": "infodisclosure",  # unescaped var in JSON response (CWE-209)
     # RCE pipe-to-shell (CWE-94) — 1 rule
     "bash-curl-pipe-bash": "rce",               # curl|bash, wget|bash
-    # Insecure temp files (CWE-377) — NOT YET VERIFIED if rule fires
+    # Insecure temp files (CWE-377)
     "bash-unsafe-temp": "insecure_temp",        # predictable /tmp paths
     # Weak randomness (CWE-330) — v0.3.1
     "bash-weak-random": "weakrand",             # $RANDOM for security-sensitive values

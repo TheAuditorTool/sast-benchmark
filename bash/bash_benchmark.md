@@ -3,7 +3,7 @@
 **Created:** 2026-03-19 | **Updated:** 2026-03-22 (v0.3.1 — 356 test cases, 5 apps, 16 CWEs, 49/51 TP/TN)
 **Team:** Bash (of 3: Go, Rust, Bash)
 **Version:** v0.3.1
-**Status:** OWASP rebalancing complete. 16 CWE categories. Awaiting first SAST tool baseline run.
+**Status:** OWASP rebalancing complete. 356 test cases, 16 CWE categories, 5 apps. Baseline score: see `baseline_theauditor_tool_score.md`.
 
 ---
 
@@ -17,7 +17,7 @@ The Java OWASP benchmark (2,740 test cases, independently written) forced 3 majo
 
 ## App Under Test: DevOps CI/CD Pipeline Manager
 
-The original bash project (`C:\Users\santa\Desktop\bash\`) is a production-style DevOps pipeline orchestrator with 10 shell scripts across 3 layers:
+The original bash project is a production-style DevOps pipeline orchestrator with 10 shell scripts across 3 layers:
 
 | File | Purpose | Lines | Test Cases |
 |------|---------|-------|------------|
@@ -32,7 +32,7 @@ The original bash project (`C:\Users\santa\Desktop\bash\`) is a production-style
 | `scripts/migrate.sh` | DB schema migrations, seed data | 346 | 7 |
 | `scripts/webhook.sh` | CGI-style webhook handler (GitHub/GitLab/Slack) | 540 | 8 |
 
-**Vulnerability profile** (from existing `Desktop/bash/.pf/repo_index.db`):
+**Vulnerability profile** (from analysis database):
 - 107 pattern findings (rule detections)
 - 106 VULNERABLE taint flows (IFDS-confirmed)
 - 109 SANITIZED flows (properly defended)
@@ -43,7 +43,7 @@ The original bash project (`C:\Users\santa\Desktop\bash\`) is a production-style
 
 ## SAST Engine Capabilities (Reference Analysis)
 
-### Pipeline Architecture (from correctness_sop.md)
+### Pipeline Architecture
 
 ```
 Source Code -> AST Extractor (bash_impl.py, tree-sitter)
@@ -227,7 +227,7 @@ Score formula: `Score = TPR - FPR` (Youden's J statistic)
 
 ## Detection Coverage Matrix
 
-Maps each benchmark category to expected detection mechanism. See `coverage_cve_gaps.md` in the repo root for detailed gap analysis.
+Maps each benchmark category to expected detection mechanism.
 
 | Category | Expected Detection | Taint Analysis Available? | Expected FN Count | Key Gaps |
 |----------|-------------------|--------------------|-------------------|----------|
@@ -251,19 +251,7 @@ Maps each benchmark category to expected detection mechanism. See `coverage_cve_
 
 ## Current Scorecard
 
-**Status: AWAITING FIRST RUN**
-
-Run your SAST tool on this directory, then execute the scoring script.
-
-```
-Category             CWE    TP    FP    FN    TN      TPR     FPR   Score
-------------------------------------------------------------------------------
-(awaiting first run)
-------------------------------------------------------------------------------
-OVERALL                     ?     ?     ?     ?      ?.?%    ?.?%   +?.?%
-```
-
-**Expected baseline prediction** (before running): Given 17 gaps, structural rules should cover cmdi/hardcoded_creds/weakcrypto/insecure_perms/ssl_bypass/unquoted/rce well. sqli/pathtraver/ssrf will score ~0% (no rule reads IFDS flows). Overall score likely 30-50%.
+See `baseline_theauditor_tool_score.md` for the current baseline scorecard.
 
 ---
 
@@ -271,7 +259,7 @@ OVERALL                     ?     ?     ?     ?      ?.?%    ?.?%   +?.?%
 
 - **2026-03-19**: Initial benchmark creation. 158 test cases across 13 categories.
 - **2026-03-19**: Iteration 2 — due diligence. Engine analysis, rule inventory, RULE_MAP fixed with 27 real rule names.
-- **2026-03-19**: Iteration 3 — full rules audit. Detection coverage matrix. 17 gaps in coverage_cve_gaps.md.
+- **2026-03-19**: Iteration 3 — full rules audit. Detection coverage matrix. 17 gaps identified.
 - **2026-03-19**: Phase 1 — Fixed 1 annotation placement (heredoc marker). Verified 3 audit false alarms (arithmetic expansion IS vulnerable, other markers were already correct).
 - **2026-03-19**: Phase 2 — Added 14 Tier 1 test cases. find -exec injection, eval+$(curl), source+<(), argument injection, multi-step eval chain, printf %q sanitizer, TOCTOU race, credentials in heredoc. Each verified exploitable.
 - **2026-03-19**: Phase 3 — Added 7 Tier 2 test cases. ${var@Q} sanitizer, NODE_TLS_REJECT_UNAUTHORIZED, tar member traversal, ORDER BY injection. Quality over quantity — dropped patterns that failed manual source code verification.

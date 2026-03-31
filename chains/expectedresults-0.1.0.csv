@@ -1,0 +1,21 @@
+# test name,category,chain exploitable,CWE,Benchmark version: 0.1.0,2026-03-31
+# Authentication Bypass -> Injection Chains
+chain_auth_sqli_vuln,unauth_injection,true,89
+chain_auth_sqli_safe,unauth_injection,false,89
+chain_auth_cmdi_vuln,unauth_injection,true,78
+chain_auth_cmdi_safe,unauth_injection,false,78
+# SSRF Pivot Chains
+chain_ssrf_metadata_vuln,ssrf_pivot,true,918
+chain_ssrf_metadata_safe,ssrf_pivot,false,918
+chain_ssrf_admin_vuln,ssrf_pivot,true,918
+chain_ssrf_admin_safe,ssrf_pivot,false,918
+# Compound Injection Chains
+chain_sqli_xss_vuln,compound_injection,true,79
+chain_sqli_xss_safe,compound_injection,false,79
+chain_deser_rce_vuln,compound_injection,true,502
+chain_deser_rce_safe,compound_injection,false,502
+# Multi-Stage Attack Chains
+chain_upload_rce_vuln,multi_stage,true,434
+chain_upload_rce_safe,multi_stage,false,434
+chain_log_xss_vuln,multi_stage,true,79
+chain_log_xss_safe,multi_stage,false,79

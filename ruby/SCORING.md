@@ -95,4 +95,8 @@ python scripts/score_sarif.py semgrep.sarif ruby/expectedresults-0.1.0.csv
 python scripts/validate_ruby.py
 ```
 
-Runs L1-L5 fidelity checks: structural integrity, roundtrip fidelity, schema validation, semantic fidelity, and scoring pipeline readiness.
+Runs L1-L6 fidelity checks: structural integrity, roundtrip fidelity, schema validation, semantic fidelity, scoring pipeline readiness, and SARIF integrity.
+
+### CWE-94 Disambiguation (codeinj vs dynmethod)
+
+Both `codeinj` and `dynmethod` categories use CWE-94. The scorer distinguishes them by **annotation key prefix**, not by CWE number. A SARIF finding with CWE-94 is matched to the test case whose annotation range contains the finding location. Since `codeinj` and `dynmethod` test cases are in separate files with non-overlapping annotation ranges, the CWE collision does not affect scoring accuracy.

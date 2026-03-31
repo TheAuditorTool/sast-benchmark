@@ -167,8 +167,8 @@ grep -rn "TAINT|VULNERABLE|VULN:|SECURE:|SOURCE:|SINK" go/testcode/ -- 0 results
 - bytes.Buffer concat, closure capture, int round-trip, Sprintf propagation (289-292)
 
 ### App Integration
-- Ground truth CSVs for 5 reference apps (395 classified functions total)
-- multi-api: 115 entries
+- Ground truth CSVs for 5 reference apps (394 classified functions total)
+- multi-api: 114 entries
 - calorie-tracker: 137 entries
 - go_notifications: 87 entries
 - beego_admin: 32 entries

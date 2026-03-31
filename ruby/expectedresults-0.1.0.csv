@@ -1,6 +1,6 @@
 # test name,category,real vulnerability,CWE
 # Ruby SAST Benchmark v0.1.0
-# 316 test cases (158 TP / 158 TN), 25 CWE categories, 3 frameworks (Raw Ruby/Rack, Rails, Sinatra)
+# 318 test cases (159 TP / 159 TN), 25 CWE categories, 3 frameworks (Raw Ruby/Rack, Rails, Sinatra)
 # Categories: cmdi, codeinj, csrf, deserial, dynmethod, fileinclusion, fileupload, hardcodedcreds, headerinj, ldapi, loginjection, massassign, pathtraver, redirect, regex, securecookie, sqli, ssrf, ssti, unsafereflect, weakcipher, weakhash, weakrand, xss, xxe
 ruby_cmdi_backtick,cmdi,true,78
 ruby_cmdi_system_concat,cmdi,true,78

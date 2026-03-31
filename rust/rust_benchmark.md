@@ -11,22 +11,22 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 | Category | CWE | TP | TN | Total | Balance |
 |----------|-----|----|----|-------|---------|
-| sqli | 89 | 24 | 26 | 50 | 48/52 |
+| sqli | 89 | 23 | 27 | 50 | 46/54 |
 | cmdi | 78 | 14 | 16 | 30 | 47/53 |
 | pathtraver | 22 | 14 | 14 | 28 | 50/50 |
 | ssrf | 918 | 9 | 13 | 22 | 41/59 |
+| xss | 79 | 11 | 11 | 22 | 50/50 |
 | memsafety | 119 | 8 | 12 | 20 | 40/60 |
 | crypto | 327 | 9 | 11 | 20 | 45/55 |
 | weakrand | 330 | 7 | 9 | 16 | 44/56 |
-| xss | 79 | 5 | 11 | 16 | 31/69 |
-| infodisclosure | 200+ | 8 | 8 | 16 | 50/50 |
+| infodisclosure | 200 | 8 | 8 | 16 | 50/50 |
 | deser | 502 | 6 | 6 | 12 | 50/50 |
 | intoverflow | 190 | 5 | 7 | 12 | 42/58 |
 | redos | 1333 | 5 | 5 | 10 | 50/50 |
 | inputval | 20 | 4 | 6 | 10 | 40/60 |
-| **TOTAL** | | **118** | **144** | **262** | **45/55** |
+| **TOTAL** | | **123** | **145** | **268** | **46/54** |
 
-**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 45/55 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
+**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 46/54 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
 
 ### Frameworks Covered
 
@@ -105,7 +105,7 @@ Maps each benchmark category to SAST rules that detect it.
 | infodisclosure | 200+ | NONE | - | **GAP** |
 | inputval | 20 | `security/input_validation_analyze.py` | structural | FULL |
 
-**22 of 262 test cases (8%) are in gap categories** -- expected to show as FN in baseline scoring.
+**76 of 268 test cases (28%) are in gap categories** (xss=22, weakrand=16, infodisclosure=16, deser=12, redos=10) -- expected to show as FN in baseline scoring.
 
 ---
 
@@ -152,7 +152,7 @@ For every FN (missed detection) and FP (false alarm), document:
 |---------------|----------|--------|----------------|------------|
 | sqliXxx | TP | FN | ? | ? |
 
-Pipeline stages (from correctness_sop.md):
+Pipeline stages:
 1. AST Extractor (rust_impl.py)
 2. Post-Processor (indexer/extractors/rust.py)
 3. Graph Strategy (graph/strategies/rust_web.py)

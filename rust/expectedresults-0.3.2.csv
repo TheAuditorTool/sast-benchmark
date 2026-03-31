@@ -1,6 +1,6 @@
 # test name,category,real vulnerability,CWE
 # Rust SAST Benchmark v0.3.2
-# 268 test cases (124 TP, 144 TN), 13 categories, 4 frameworks (actix-web, axum, rocket, warp)
+# 268 test cases (123 TP, 145 TN), 13 categories, 4 frameworks (actix-web, axum, rocket, warp)
 cmdiBackendShellExec,cmdi,true,78
 cmdiExecuteAllowedCommand,cmdi,true,78
 cmdiExecuteAllowedCommand2,cmdi,false,78

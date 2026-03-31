@@ -21,7 +21,7 @@ Added 6 new XSS True Positive test cases, each a genuinely distinct CWE-79 varia
 | xss_017.rs | testcodeXss017 | data: URI in iframe src | URI scheme + iframe context |
 | xss_018.rs | testcodeXss018 | Error path reflection | Error branch taint flow |
 
-**Result:** XSS now 11 TP + 11 TN = 50/50. Total benchmark: 268 test cases (124 TP, 144 TN).
+**Result:** XSS now 11 TP + 11 TN = 50/50. Total benchmark: 268 test cases (123 TP, 145 TN).
 
 ---
 

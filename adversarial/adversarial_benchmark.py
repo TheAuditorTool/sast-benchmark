@@ -2,7 +2,7 @@
 """
 Adversarial Evasion Benchmark Scoring Script
 =============================================
-Scores SAST tools against expectedresults-0.1.0.csv for evasion detection.
+Scores SAST tools against expectedresults-0.2.0.csv for evasion detection.
 
 Usage:
     python3 adversarial_benchmark.py
@@ -23,11 +23,12 @@ from pathlib import Path
 # ============================================================================
 BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
-GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.1.0.csv"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.2.0.csv"
 
 # EIDL signal -> benchmark category mapping
 SIGNAL_MAP = {
     "PAYLOAD_CAMOUFLAGE": "unicode_payload",
+    "CHARSET_MAPPING": "charset_mapping",
 }
 
 # Pattern rule -> benchmark category mapping
@@ -42,12 +43,20 @@ RULE_MAP = {
     "eidl-c2-fingerprint": "c2_fingerprint",
     # Existing rules that detect adversarial patterns
     "code-obfuscation-charcode": ["dynamic_construction", "unicode_payload"],
+    # v0.2.0: new category rules
+    "eidl-charset-mapping": "charset_mapping",
+    "eidl-stego-payload": "steganographic_payload",
+    "eidl-slopsquatting": "slopsquatting",
+    "eidl-llm-code-exec": "llm_code_generation",
+    "eidl-shai-hulud-pattern": "supply_chain",
 }
 
 # Taint vulnerability_type -> benchmark category
 SINK_MAP = {
     "Code Injection": "dynamic_construction",
     "Command Injection": "supply_chain",
+    "Steganographic Payload": "steganographic_payload",
+    "LLM Code Execution": "llm_code_generation",
 }
 
 # Rules to ignore
@@ -89,7 +98,7 @@ def scan_annotations(root_dir):
 
     for dirpath, _, filenames in os.walk(root_dir):
         for fn in filenames:
-            if fn.endswith((".py", ".js", ".go", ".rs", ".php", ".sh", ".json", ".txt")):
+            if fn.endswith((".py", ".js", ".go", ".rs", ".php", ".rb", ".sh", ".json", ".txt")):
                 fp = os.path.join(dirpath, fn)
                 rel = os.path.relpath(fp, root_dir).replace("\\", "/")
 

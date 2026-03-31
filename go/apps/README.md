@@ -10,11 +10,11 @@ These apps complement the standalone `testcode/` benchmark by testing SAST tools
 
 | App | Framework | Files | Ground Truth Entries | Primary Patterns |
 |-----|-----------|-------|---------------------|------------------|
-| multi-api | gin, echo, chi, fiber, net/http | 13 | ~60 | Multi-framework SQLi, CmdI, PathTrav, XSS, cross-file flows |
-| calorie-tracker | gin, GORM | 30 | ~15 | GORM Raw() vs Where() discrimination |
-| go_notifications | gorilla/mux | 16 | ~30 | SQLi, SSRF, CmdI, template injection, log injection |
-| beego_admin | beego | 5 | ~25 | Multi-hop controller->service chains, column injection |
-| grpc_users | gRPC | 3 | ~20 | Protobuf field taint, arbitrary SQL execution |
+| multi-api | gin, echo, chi, fiber, net/http | 13 | 114 | Multi-framework SQLi, CmdI, PathTrav, XSS, cross-file flows |
+| calorie-tracker | gin, GORM | 30 | 137 | GORM Raw() vs Where() discrimination |
+| go_notifications | gorilla/mux | 16 | 87 | SQLi, SSRF, CmdI, template injection, log injection |
+| beego_admin | beego | 5 | 32 | Multi-hop controller->service chains, column injection |
+| grpc_users | gRPC | 3 | 24 | Protobuf field taint, arbitrary SQL execution |
 | cobra_cli_test | cobra | 1 | 0 | No attack surface (excluded) |
 
 ## Ground Truth Format

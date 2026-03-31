@@ -102,7 +102,7 @@ See [SCORING.md](SCORING.md) for full methodology and tool-specific instructions
 python scripts/validate_ruby.py
 ```
 
-Runs L1-L5 fidelity checks matching the PHP/Rust/Bash validation standard.
+Runs L1-L6 fidelity checks: structural integrity, roundtrip fidelity, schema validation, semantic fidelity, scoring pipeline readiness, and SARIF integrity.
 
 ## Ruby-Unique CWEs
 

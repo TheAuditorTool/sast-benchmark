@@ -2,7 +2,7 @@
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories** with 50/50 vulnerable/safe split (267/267). Plus 5 reference apps with 395 classified functions.
+OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories** with 50/50 vulnerable/safe split (267/267). Plus 5 reference apps with 394 classified functions.
 
 **Design principles**:
 - Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities
@@ -65,15 +65,7 @@ gorustbash_benchmark/go/
 
 ## Current Scorecard
 
-**Baseline: Not yet established. Run `aud full --offline` and score.**
-
-```
-Category         CWE    TP    FP    FN    TN      TPR     FPR   Score
-----------------------------------------------------------------------
-(pending first run)
-----------------------------------------------------------------------
-OVERALL
-```
+See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against this benchmark.
 
 ---
 
@@ -303,7 +295,7 @@ OVERALL
 
 **Key patterns:** fmt.Sprintf, string concat, strings.Builder, fake sanitizer, multi-hop cross-file, struct field taint, map iteration, conditional branches, loop batch, goroutine closure.
 
-**Annotations:** All functions annotated with TAINT SOURCE/PROPAGATION/SINK comments.
+**Ground truth:** All functions classified in `ground_truth.csv` per app directory.
 
 ### 2. calorie-tracker
 
@@ -418,13 +410,13 @@ Score range: -100% to +100%. 0% = random guessing.
 
 ## Scoring
 
-Run any SAST tool, export SARIF 2.1.0, then score. **Matching is CWE-based** — SARIF ruleId must be a CWE number (e.g., "89") and is matched against the CSV CWE column.
+Run any SAST tool, export SARIF 2.1.0, then score. **Matching is filename-based** — the scorer checks whether the SARIF result's location URI contains the test filename (e.g., `benchmark_test_00042.go`).
 
 ```bash
 # Run your tool and export SARIF
 your-tool scan ./testcode/ --output results.sarif
 
-# Score against ground truth (CWE-based matching)
+# Score against ground truth (filename-based matching)
 python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
 ```
 
@@ -449,4 +441,4 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-**Current: v0.3.1** -- 476 test cases, 21 CWE categories, 8 frameworks, 5 reference apps with 395 classified functions. Tool-agnostic SARIF scoring.
+**Current: v0.3.2** -- 534 test cases, 24 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.

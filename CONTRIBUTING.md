@@ -1,4 +1,4 @@
-# Contributing to the Go/Rust/Bash/PHP + Adversarial SAST Benchmark
+# Contributing to the Go/Rust/Bash/PHP/Ruby + Adversarial + Chain Detection SAST Benchmark
 
 Thank you for your interest in improving SAST tool accuracy. This benchmark exists because no public ground truth existed for Go, Rust, Bash, or PHP vulnerability detection -- or for adversarial evasion detection in any language. Every contribution helps the entire SAST ecosystem.
 
@@ -29,7 +29,7 @@ Each test case is a single source file with one function. The function does some
 
 Use existing categories where possible. If adding a new CWE category, update the language's benchmark documentation file with the new category, CWE number, and description.
 
-Current Go categories: sqli(89), cmdi(78), pathtraver(22), xss(79), ssrf(918), weakrand(330), weakhash(328), weakcipher(327), securecookie(614), redirect(601), tlsverify(295), deserial(502), loginjection(117), nosql(943), ldapi(90), trustbound(501)
+Current Go categories: sqli(89), cmdi(78), pathtraver(22), xss(79), ssrf(918), weakrand(330), weakhash(328), weakcipher(327), securecookie(614), redirect(601), tlsverify(295), deserial(502), loginjection(117), nosql(943), ldapi(90), trustbound(501), hardcodedcreds(798), authnfailure(287), codeinj(94), race_condition(362), authzfailure(862), csrf(352), fileupload(434), inputval(20)
 
 ### Test Case Design Principles
 
@@ -75,7 +75,7 @@ Adversarial test cases are fundamentally different from language benchmark tests
 
 1. **Annotation markers required.** Every test case needs `start`/`end` markers plus either `vuln-line` (for TPs) or `safe-line` (for TNs).
 
-2. **CSV entry required.** Add to `adversarial/expectedresults-0.1.0.csv`:
+2. **CSV entry required.** Add to `adversarial/expectedresults-0.2.0.csv`:
    ```
    ADV-XX-NNN,category,true/false,CWE
    ```
@@ -86,9 +86,37 @@ Adversarial test cases are fundamentally different from language benchmark tests
 
 5. **Cross-language preferred.** If the attack works in JavaScript, add Python and Go variants. Most evasion techniques are language-agnostic.
 
-6. **Categories:** `unicode_payload`, `visual_deception`, `dynamic_construction`, `supply_chain`, `ai_prompt_injection`, `c2_fingerprint`. Propose new categories via issue first.
+6. **Categories:** `unicode_payload`, `visual_deception`, `dynamic_construction`, `supply_chain`, `ai_prompt_injection`, `c2_fingerprint`, `charset_mapping`, `steganographic_payload`, `slopsquatting`, `llm_code_generation`. Propose new categories via issue first.
 
 See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for detailed category descriptions and design philosophy.
+
+### Adding Chain Detection Test Cases
+
+Chain test cases are fundamentally different from both language and adversarial tests. They test **compositional reasoning**: correlating multiple findings across files into compound exploit paths.
+
+**Structure:** Each chain scenario is a directory with `vuln/` (exploitable chain) and `safe/` (mitigated chain) variants containing multi-file Flask applications.
+
+**Requirements for chain test cases:**
+
+1. **Scenario directory required.** Create `chains/scenarios/<name>/vuln/` and `chains/scenarios/<name>/safe/` with 2-5 source files each.
+
+2. **Annotation at chain endpoint.** Add `vuln-code-snippet` markers at the final sink (chain endpoint) in the main app file. Use `chain_<shortname>_vuln` and `chain_<shortname>_safe` as keys.
+
+3. **Safe variant changes exactly one file.** All other files must be byte-identical between vuln and safe. This tests whether the tool detects chain exploitability, not individual findings.
+
+4. **Real attack patterns only.** Chain scenarios must be based on documented exploits (CVEs, breach reports, security advisories).
+
+5. **Individual findings must be low/medium.** The chain must elevate severity to high/critical. If the endpoint is already critical without the chain, it does not test chain detection.
+
+6. **CSV entries required.** Add to `chains/expectedresults-0.1.0.csv`:
+   ```
+   chain_<shortname>_vuln,<category>,true,<CWE>
+   chain_<shortname>_safe,<category>,false,<CWE>
+   ```
+
+7. **Categories:** `unauth_injection`, `ssrf_pivot`, `compound_injection`, `multi_stage`. Propose new categories via issue first.
+
+See [chains/chain_benchmark.md](chains/chain_benchmark.md) for detailed methodology and scenario design rules.
 
 ### Improving Documentation
 
@@ -113,6 +141,7 @@ python scripts/validate_bash.py         # Bash benchmark
 python scripts/validate_php.py          # PHP benchmark
 python scripts/validate_ruby.py         # Ruby benchmark
 python scripts/validate_adversarial.py  # Adversarial benchmark (L1-L5 fidelity)
+python scripts/validate_chains.py      # Chain detection benchmark (L1-L5 fidelity)
 ```
 
 The validator checks:

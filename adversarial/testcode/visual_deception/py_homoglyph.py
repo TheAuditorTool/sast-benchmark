@@ -37,7 +37,7 @@ def validate_input(data):
 
 # This function name uses Cyrillic 'a' (U+0430) instead of Latin 'a'
 # It looks identical to "validate_input" in most fonts but is a different symbol
-def v\u0430lidate_input(data):  # vuln-code-snippet vuln-line homoglyph_function
+def vаlidate_input(data):  # vuln-code-snippet vuln-line homoglyph_function
     """Shadow function -- returns unsanitized input."""
     return data
 # vuln-code-snippet end homoglyph_function

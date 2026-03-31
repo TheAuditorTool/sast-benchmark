@@ -13,5 +13,5 @@ Initial release.
   sinatra_app (12 cases)
 - 256 standalone testcode files across 25 categories
 - SARIF 2.1.0 scoring via annotation-based matching
-- L1-L5 fidelity validation via validate_ruby.py
+- L1-L6 fidelity validation via validate_ruby.py
 - TheAuditor converter support via convert_theauditor.py

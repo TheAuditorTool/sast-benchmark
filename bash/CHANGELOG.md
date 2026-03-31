@@ -70,7 +70,7 @@ The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "
 - L1-L5 fidelity PASS, 356/356, 0 duplicate keys
 
 ### Known Limitations (remaining from v0.3)
-- No baseline scorecard yet (awaiting first SAST tool run)
+- Baseline scorecard established (see `baseline_theauditor_tool_score.md`)
 - All new CWE category TP cases are tagged [EXPECTED_FN] — no engine rules exist yet for these patterns
 - IFDS taint analysis still only consumed for Command Injection in the reference tool
 - Self-authored benchmark (bias risk documented)
@@ -112,6 +112,5 @@ The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "
 
 ### Known Limitations
 - TP/TN split 68/32 (OWASP Java is 52/48)
-- No baseline scorecard yet (awaiting first SAST tool run)
 - IFDS taint analysis only consumed for Command Injection in the reference tool — 91 confirmed data flows for SQL Injection, SSRF, Path Traversal, Information Disclosure available but not yet surfaced as rule findings
 - Self-authored benchmark (bias risk documented)

@@ -61,6 +61,10 @@ ehthumbs.db
 tmp/
 temp/
 
-# Claude / AI
+# Claude / AI agent internal files (not part of benchmark)
 .claude/
 .codex/
+AGENTS.md
+**/AGENTS.md
+**/CLAUDE.md
+**/.ruff_cache/

@@ -6,46 +6,15 @@
 
 ---
 
-## Current State (verified)
+## Current State (v0.3.2)
 
-### What's built and verified correct
-- **98 test case annotations** across 20 `.rs` files in 7 apps — 30/30 spot-checked, all correct
-- **98 ground truth entries** (YAML) — 1:1 match with annotations, zero orphans in either direction
-- **Scoring script** (Python, inline in rust_benchmark.md) — annotation-based, parses source at runtime
-- **8 apps** copied from original Rust project, originals untouched
-- **App catalog** — architecture, data flow, security posture documented for all 8 apps
-- **Rule coverage gap analysis** — 8 gaps verified by reading engine rule source code
-- **Pattern quality** — `taint/patterns/rust.py` audited clean (no defects DC-1 through DC-11)
-
-### What's structurally wrong (vs Java gold standard)
-
-| Problem | Impact | Severity |
-|---------|--------|----------|
-| **TN deficit** — 79/21 TP/TN ratio (Java: 52/48) | FPR unmeasurable for 9 of 13 categories | CRITICAL |
-| **No isomorphic safe variants** — Safe code looks obviously different from vulnerable code | FP testing is trivial, not adversarial | HIGH |
-| **Scale** — 97 test cases (Java: 2,740) | Not statistically significant per category | HIGH |
-| **Annotation fragility** — Test identity in mutable source comments | Silent test case loss on refactor | MEDIUM |
-| **No CSV answer key** — YAML + annotations require dual sync | Maintenance burden, audit complexity | MEDIUM |
-| **6 CWE categories have no engine rules** — 21 test cases will always FN | Score ceiling limited by engine, not benchmark | KNOWN LIMITATION |
-| **Scoring script untested** — Never run against real DB | May have bugs | LOW (fixable in M1) |
-
-### Category health
-
-| Category | CWE | TP | TN | Rule? | Status |
-|----------|-----|----|----|-------|--------|
-| sqli | 89 | 20 | 15 | YES | Healthy — 57/43 balance, taint+structural rule |
-| memsafety | 119 | 7 | 4 | YES | Adequate — 64/36 balance, 3 structural rules |
-| cmdi | 78 | 11 | 0 | YES | **Needs TN** — rule exists, no safe test cases |
-| pathtraver | 22 | 11 | 1 | YES | **Needs TN** — rule exists, 1 safe test case |
-| ssrf | 918 | 7 | 0 | YES | **Needs TN** — rule exists, no safe test cases |
-| crypto | 327 | 5 | 0 | PARTIAL | **Needs TN + code-level rule** — dep-level only |
-| weakrand | 330 | 3 | 0 | NO | **Needs TN + rule** |
-| xss | 79 | 2 | 0 | NO | **Needs TN + rule** |
-| infodisclosure | 200+ | 5 | 0 | NO | **Needs TN + rule** |
-| deser | 502 | 2 | 0 | NO | **Needs TN + rule** |
-| intoverflow | 190 | 2 | 0 | PARTIAL | **Needs TN** — rule exists for crypto context only |
-| redos | 1333 | 1 | 0 | NO (.rs missing) | **Needs TN + .rs in target_extensions** |
-| inputval | 20 | 1 | 0 | NO | **Needs TN + rule** |
+- **268 test cases** (123 TP, 145 TN) across 13 CWE categories
+- **CSV ground truth** (`expectedresults-0.3.2.csv`) is the sole scoring authority
+- **149 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
+- **All 13 categories** have both TP and TN test cases
+- **TP/TN balance:** 46/54 (all categories within 40-60 range)
+- **4 frameworks:** actix-web, axum, Rocket, Warp
+- **Scoring:** SARIF-based via `scripts/score_sarif.py`, Youden's J per category
 
 ---
 

@@ -24,7 +24,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 ADV_DIR = BENCH_ROOT / "adversarial"
-CSV_FILE = ADV_DIR / "expectedresults-0.1.0.csv"
+CSV_FILE = ADV_DIR / "expectedresults-0.2.0.csv"
 BENCHMARK_PY = ADV_DIR / "adversarial_benchmark.py"
 SCAN_DIRS = [ADV_DIR / "testcode"]
 
@@ -34,14 +34,14 @@ PAT_VULN_LINE = re.compile(r"vuln-code-snippet\s+vuln-line\s+(\S+)")
 PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
 
 # File extensions to scan (cross-language benchmark)
-SCAN_EXTENSIONS = {".js", ".py", ".go", ".rs", ".php", ".sh", ".json", ".txt", ".md", ".toml", ".yaml", ".yml"}
+SCAN_EXTENSIONS = {".js", ".py", ".go", ".rs", ".php", ".rb", ".sh", ".json", ".txt", ".md", ".toml", ".yaml", ".yml"}
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
-    20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 116, 117, 119, 190, 200, 269,
-    276, 287, 295, 306, 327, 328, 330, 352, 362, 367, 377, 434, 451, 494,
-    501, 502, 506, 532, 601, 611, 614, 643, 732, 798, 862, 863, 918, 943,
-    1059, 1333,
+    20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 116, 117, 119, 176, 190, 200,
+    269, 276, 287, 295, 306, 327, 328, 330, 352, 362, 367, 377, 434, 451,
+    494, 501, 502, 506, 532, 601, 611, 614, 643, 732, 798, 829, 838, 862,
+    863, 918, 943, 1059, 1333,
 }
 
 VALID_CATEGORIES = {
@@ -51,6 +51,10 @@ VALID_CATEGORIES = {
     "supply_chain",
     "ai_prompt_injection",
     "c2_fingerprint",
+    "charset_mapping",
+    "steganographic_payload",
+    "slopsquatting",
+    "llm_code_generation",
 }
 
 errors = []

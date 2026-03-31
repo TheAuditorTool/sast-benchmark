@@ -2,31 +2,20 @@
 
 > **Created**: 2026-03-19
 > **Team**: Bash
-> **Status**: Phase 0 complete (foundation). Phases 1-5 pending.
+> **Status**: v0.3.1 shipped. All phases complete.
 > **Goal**: Public OWASP-style benchmark for bash shell script SAST. World-first.
 
 ---
 
-## Current State (Honest Assessment)
+## Current State (v0.3.1)
 
-**What exists**: 158 test cases (112 TP / 46 TN) across 13 CWE categories, annotated source files, scoring script, engine analysis documentation, 17 verified coverage gaps.
+- **356 test cases** (175 TP / 181 TN) across 16 CWE categories
+- **TP/TN balance:** 49/51
+- **5 annotated applications** + 16 standalone testcode files
+- **CSV ground truth** (`expectedresults-0.3.1.csv`) is the sole scoring authority
+- **Baseline score** established (see `baseline_theauditor_tool_score.md`)
 
-**What's wrong**:
-1. **1 classification error**: `cmdi_arithmetic_expansion` incorrectly marked vulnerable
-2. **3 annotation placement issues**: markers on wrong lines in 3 test cases
-3. **~25 missing attack patterns** that any serious bash SAST benchmark needs
-4. **TP/TN imbalance**: 70.9%/29.1% (target: ~55/45)
-5. **Zero baseline scores** — haven't run a SAST tool against the benchmark yet
-6. **No FN/FP root cause analysis** — can't do until baseline exists
-
-**What's good**:
-- Original file annotations: 100% verified correct (58/58 across 9 files)
-- Ground truth YAML: 158/158 keys match source annotations
-- Scoring script: Loads correctly, RULE_MAP verified against real DB
-- Engine analysis: 27 rules documented, 17 gaps with CWE/pipeline-stage/fix-complexity
-- Coverage gaps shared in root `coverage_cve_gaps.md` with Go/Rust teams
-
-**Completion estimate**: ~25% done. Phases below bring it to production quality.
+The phases below document the development history from initial 158 test cases to current 356.
 
 ---
 
@@ -195,8 +184,8 @@ Each new test case follows the pattern: vulnerable function + safe variant, both
 - Update detection coverage matrix with new test cases
 - Update changelog
 
-### 4.5 coverage_cve_gaps.md Update
-- Update gap counts
+### 4.5 Coverage Gap Review
+- Review gap counts against updated benchmark categories
 - Mark any gaps that new test cases now cover
 
 ---
@@ -220,8 +209,8 @@ For EVERY false negative:
 - Which test case key?
 - What CWE?
 - Why wasn't it detected? (Rule gap? Taint gap? AST extractor gap?)
-- Which pipeline stage (from correctness_sop.md)?
-- Is this already documented in coverage_cve_gaps.md?
+- Which pipeline stage?
+- Is this already documented as a known gap?
 
 ### 5.5 FP Root Cause Analysis
 For EVERY false positive:

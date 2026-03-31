@@ -1,8 +1,9 @@
 # Go SAST Benchmark -- Development Roadmap
 
-> **Status**: Prototype (~25% of OWASP-quality benchmark)
-> **Last updated**: 2026-03-19
+> **Status**: v0.3.2 shipped. 534 test cases, 24 CWEs, 8 frameworks, 5 apps with 394 classified functions.
+> **Last updated**: 2026-03-31
 > **Owner**: Team Go
+> **Note**: This document is a historical development roadmap. Sections below describe the state at various phases of development. Current benchmark state is documented in `go_benchmark.md`.
 
 ---
 
@@ -294,7 +295,7 @@ This is the most complex workstream -- each app needs its own expectedresults.cs
 - Add 45-60 discrimination pattern tests
 - Fix existing 256 for compilation and consistency
 - Target: 300+ tests, all compile, OWASP-style FP discrimination
-- **This is the minimum for not getting laughed at**
+- **Minimum viable benchmark quality target**
 
 ### v0.3 -- Framework Diversity (WS-2 + WS-3)
 - Add 33 framework-specific tests
@@ -349,4 +350,4 @@ Each workstream becomes a separate plan-mode session:
 | 4 | Quality Hardening | COMPLETE | 0 | 1 (00074 init hack) |
 | 5 | Missing CWEs | COMPLETE | 32 (4 new categories) | 0 |
 | 6 | Scale Expansion | COMPLETE | 50 (GORM,sqlx,zip,syscall,WS,SSE) | 0 |
-| 7 | App Integration | COMPLETE | 395 functions across 5 apps | 0 |
+| 7 | App Integration | COMPLETE | 394 functions across 5 apps | 0 |

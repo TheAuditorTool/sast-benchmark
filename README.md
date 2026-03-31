@@ -1,6 +1,6 @@
-# OWASP-Style SAST Benchmark for Go, Rust, Bash, PHP, Ruby + Adversarial Evasion
+# OWASP-Style SAST Benchmark for Go, Rust, Bash, PHP, Ruby + Adversarial Evasion + Chain Detection
 
-The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, **PHP**, and **Ruby** -- languages with zero existing public SAST benchmarks. Plus an **Adversarial Evasion** benchmark that tests an entirely different question: can your tool detect that someone is *hiding* something?
+The first public Static Application Security Testing (SAST) benchmark suite for **Go**, **Rust**, **Bash**, **PHP**, and **Ruby** -- languages with zero existing public SAST benchmarks. Plus an **Adversarial Evasion** benchmark that tests whether your tool can detect that someone is *hiding* something, and a **Chain Detection** benchmark that tests whether your tool can correlate multiple findings into compound exploit paths.
 
 ## Why This Exists
 
@@ -61,6 +61,7 @@ gorustbash_benchmark/
     validate_go.py           # Go CSV/file consistency checker
     validate_php.py          # PHP CSV/annotation consistency checker
     validate_adversarial.py  # Adversarial CSV/annotation consistency checker
+    validate_chains.py       # Chain detection CSV/annotation consistency checker
   go/                      # Go benchmark (534 tests, 24 CWEs)
     expectedresults-0.3.2.csv
     go_benchmark.md
@@ -73,14 +74,14 @@ gorustbash_benchmark/
     rust_benchmark.md        # Scoring script + methodology
     CHANGELOG.md
     dev_roadmap.md
-    testcode/                # 144 standalone test files
+    testcode/                # 149 standalone test files
     apps/                    # 8 annotated applications
   bash/                    # Bash benchmark (356 tests, 16 CWEs)
-    expectedresults-0.3.2.csv  # Answer key (356 test cases, OWASP CSV format)
+    expectedresults-0.3.1.csv  # Answer key (356 test cases, OWASP CSV format)
     bash_benchmark.py        # Automated scoring script
-    BENCHMARK.md             # Methodology, engine analysis, scorecard
+    bash_benchmark.md        # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
-    apps/                    # 4 annotated applications
+    apps/                    # 5 annotated applications
     testcode/                # 16 standalone CWE test files
   php/                     # PHP benchmark (369 tests, 25 CWEs)
     expectedresults-0.1.0.csv  # Answer key (369 test cases, OWASP CSV format)
@@ -96,12 +97,18 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     testcode/                # 256 standalone test files
     apps/                    # 3 annotated applications (rack_app, rails_api, sinatra_app)
-  adversarial/             # Adversarial evasion benchmark (60 tests, 6 categories)
-    expectedresults-0.1.0.csv  # Answer key (60 test cases, OWASP CSV format)
+  adversarial/             # Adversarial evasion benchmark (123 tests, 10 categories)
+    expectedresults-0.2.0.csv  # Answer key (123 test cases, OWASP CSV format)
     adversarial_benchmark.py   # Scoring script (EIDL-aware)
     adversarial_benchmark.md   # Methodology and category descriptions
     CHANGELOG.md               # Version history
     testcode/                  # Cross-language test cases (JS, Python, Go)
+  chains/                    # Chain detection benchmark (16 tests, 4 categories)
+    expectedresults-0.1.0.csv  # Answer key (16 test cases, OWASP CSV format)
+    chain_benchmark.py         # Scoring script (chain-aware)
+    chain_benchmark.md         # Methodology and scenario descriptions
+    CHANGELOG.md               # Version history
+    scenarios/                 # Multi-file Flask applications (vuln/safe pairs)
 ```
 
 ## Language Benchmarks
@@ -141,7 +148,7 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
-| sqli | 89 | 24 | 26 | 50 |
+| sqli | 89 | 23 | 27 | 50 |
 | cmdi | 78 | 14 | 16 | 30 |
 | pathtraver | 22 | 14 | 14 | 28 |
 | ssrf | 918 | 9 | 13 | 22 |
@@ -157,7 +164,7 @@ Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, 
 
 Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 standalone test files in `testcode/`. TP/TN balance: 46/54. All 13 categories have both vulnerable and safe test cases. v0.3.2: XSS rebalanced to 50/50, all source code hints stripped, SARIF scoring consolidated.
 
-### Bash v0.3.2 -- 356 test cases, 16 CWEs
+### Bash v0.3.1 -- 356 test cases, 16 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -244,7 +251,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 
 256 standalone test files in `testcode/` + 3 annotated applications (rack_app, rails_api, sinatra_app). Frameworks: Raw Ruby/Rack, Rails 7, Sinatra 3. TP/TN balance: 50/50. Ruby-specific CWEs: mass assignment via strong params bypass (CWE-915), dynamic method dispatch (CWE-94), SSTI via ERB.new (CWE-1336), unsafe reflection via const_get/send (CWE-470), ReDoS (CWE-1333).
 
-### Adversarial Evasion v0.1.0 -- 60 test cases, 6 categories, cross-language
+### Adversarial Evasion v0.2.0 -- 123 test cases, 10 categories, cross-language
 
 **This is not a language benchmark. It is a detection paradigm benchmark.**
 
@@ -255,13 +262,34 @@ While Go/Rust/Bash/PHP benchmarks ask "can your tool find this vulnerability?", 
 | unicode_payload | 506 | 5 | 5 | 10 | Byte-level scan |
 | visual_deception | 451 | 6 | 4 | 10 | Confusables DB + Bidi detection |
 | dynamic_construction | 506 | 6 | 4 | 10 | Taint through decode chains |
-| supply_chain | 506 | 5 | 5 | 10 | File context + intent analysis |
-| ai_prompt_injection | 1059 | 5 | 5 | 10 | NLP-level + tag-block scan |
+| supply_chain | 506 | 8 | 8 | 16 | File context + intent analysis |
+| ai_prompt_injection | 1059 | 13 | 13 | 26 | NLP-level + config file scan |
 | c2_fingerprint | 506 | 5 | 5 | 10 | Unusual API pattern detection |
+| charset_mapping | 838 | 5 | 5 | 10 | CP mapping DB + byte scan |
+| steganographic_payload | 506 | 5 | 5 | 10 | Binary->exec pattern detection |
+| slopsquatting | 829 | 5 | 5 | 10 | Package existence DB |
+| llm_code_generation | 506 | 4 | 4 | 8 | LLM response->exec pattern |
 
-Cross-language (JavaScript, Python, Go). Based on real-world campaigns: Glassworm (March 2026, 433 repos via Variation Selector encoding), os-info-checker-es6 (May 2025, VS steganography + Google Calendar C2), Trojan Source (CVE-2021-42574, Bidi overrides), and emerging AI prompt injection attacks targeting coding assistants. TP/TN balance: 53/47.
+Cross-language (JavaScript, Python, Go). Based on real-world campaigns: Glassworm (March 2026), Trojan Source (CVE-2021-42574), os-info-checker-es6 (May 2025), WorstFit (CVE-2024-4577), buildrunner-dev (February 2026), Shai-Hulud v2 (November 2025), Unit 42 LLM assembly (January 2026), and the Trend Micro slopsquatting dataset (March 2025). TP/TN balance: 52/48.
 
 See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for the full methodology, detection requirements matrix, and design philosophy.
+
+### Chain Detection v0.1.0 -- 16 test cases, 4 categories, 8 multi-file scenarios
+
+**This is not a vulnerability benchmark. It is a compositional reasoning benchmark.**
+
+While all other benchmarks test whether a tool can detect a single finding, this benchmark tests: **"can your tool correlate multiple low-severity findings across files into a compound exploit path whose severity exceeds any individual component?"** No public benchmark for this capability exists. This is the first.
+
+| Category | Scenarios | Vuln | Safe | Total | Chain Pattern |
+|----------|-----------|------|------|-------|---------------|
+| unauth_injection | 2 | 2 | 2 | 4 | Auth bypass + injection = unauthenticated attack |
+| ssrf_pivot | 2 | 2 | 2 | 4 | SSRF + internal service = network boundary bypass |
+| compound_injection | 2 | 2 | 2 | 4 | Injection A enables injection B |
+| multi_stage | 2 | 2 | 2 | 4 | Multi-hop attack requiring 2+ vuln types |
+
+Each scenario is a multi-file Flask application with `vuln/` (exploitable chain) and `safe/` (mitigated chain) variants. Safe variants differ by exactly one file. Based on real-world patterns: Capital One (2019), CVE-2023-22515, CVE-2024-23897, CVE-2015-7501.
+
+See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodology, scenario descriptions, and safe variant design rules.
 
 ## Combined Scale
 
@@ -272,8 +300,9 @@ See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md)
 | Bash | 356 | 16 CWEs | 49/51 | Vulnerability detection |
 | Ruby | 318 | 25 CWEs | 50/50 | Vulnerability detection |
 | Rust | 268 | 13 CWEs | 46/54 | Vulnerability detection |
-| Adversarial | 60 | 6 categories | 53/47 | Evasion/concealment detection |
-| **Total** | **1,587** | **66 unique CWEs + 6 evasion categories** | |
+| Adversarial | 123 | 10 categories | 52/48 | Evasion/concealment detection |
+| Chains | 16 | 4 categories | 50/50 | Compound exploit chain detection |
+| **Total** | **1,984** | **66 unique CWEs + 14 detection categories** | |
 
 ## How to Use
 
@@ -289,14 +318,21 @@ See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md)
 3. Scoring uses the same Youden's J formula but maps findings through EIDL signal/rule/sink tracks
 4. Root-cause every FN -- each one represents an evasion technique your tool is blind to
 
+**Chain detection benchmark:**
+1. Point your tool at `chains/scenarios/` (multi-file Python/Flask apps)
+2. Run `python chains/chain_benchmark.py`
+3. Scoring counts only chain-specific findings (not individual sqli/cmdi/xss)
+4. Root-cause every FN -- each one represents a compound exploit path your tool missed
+
 ## Limitations
 
 Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 1,587 across four languages + adversarial. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 1,984 across five languages + adversarial + chains. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
-- **Adversarial coverage**: The adversarial benchmark (60 tests) is intentionally smaller -- each test case represents a real-world attack pattern, not a synthetic variant. It does not yet cover slopsquatting (ecosystem-level), dependency confusion (registry-level), or AI polymorphic malware (runtime). These require fundamentally different testing infrastructure.
+- **Adversarial coverage**: 123 test cases across 10 categories. Dependency confusion (registry-level) and true AI polymorphic malware (runtime) are not yet covered as they require infrastructure beyond static source files.
+- **Chain coverage**: 16 test cases across 4 categories. Python/Flask only for v0.1.0. Cross-language and longer chains planned for future releases.
 
 We release this openly because imperfect ground truth that invites correction is more valuable than no ground truth at all.
 

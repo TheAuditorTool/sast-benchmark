@@ -61,10 +61,10 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 | App | Framework | Test Cases | Description |
 |-----|-----------|------------|-------------|
-| vuln_blog | Raw PHP/PDO | ~50 | Blog with auth, posts, comments, uploads, search |
-| laravel_api | Laravel-style | ~40 | REST API with Eloquent ORM, Blade templates |
-| wp_plugin | WordPress | ~30 | Plugin with $wpdb, nonces, shortcodes, AJAX |
-| symfony_app | Symfony-style | ~30 | Forms with Doctrine, Twig, LDAP auth |
+| vuln_blog | Raw PHP/PDO | 40 | Blog with auth, posts, comments, uploads, search |
+| laravel_api | Laravel-style | 30 | REST API with Eloquent ORM, Blade templates |
+| wp_plugin | WordPress | 24 | Plugin with $wpdb, nonces, shortcodes, AJAX |
+| symfony_app | Symfony-style | 24 | Forms with Doctrine, Twig, LDAP auth |
 
 ## Annotation Format
 
