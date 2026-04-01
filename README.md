@@ -99,13 +99,13 @@ gorustbash_benchmark/
     apps/                    # 3 annotated applications (rack_app, rails_api, sinatra_app)
   adversarial/             # Adversarial evasion benchmark (123 tests, 10 categories)
     expectedresults-0.2.0.csv  # Answer key (123 test cases, OWASP CSV format)
-    adversarial_benchmark.py   # Scoring script (EIDL-aware)
+    baseline_theauditor_tool_score.md  # TheAuditor baseline results
     adversarial_benchmark.md   # Methodology and category descriptions
     CHANGELOG.md               # Version history
     testcode/                  # Cross-language test cases (JS, Python, Go)
   chains/                    # Chain detection benchmark (16 tests, 4 categories)
     expectedresults-0.1.0.csv  # Answer key (16 test cases, OWASP CSV format)
-    chain_benchmark.py         # Scoring script (chain-aware)
+    baseline_theauditor_tool_score.md  # TheAuditor baseline results
     chain_benchmark.md         # Methodology and scenario descriptions
     CHANGELOG.md               # Version history
     scenarios/                 # Multi-file Flask applications (vuln/safe pairs)
@@ -313,15 +313,15 @@ See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodol
 4. Root-cause every FN and FP
 
 **Adversarial evasion benchmark:**
-1. Point your tool at `adversarial/testcode/` (cross-language: JS, Python, Go)
-2. Run `python adversarial/adversarial_benchmark.py`
-3. Scoring uses the same Youden's J formula but maps findings through EIDL signal/rule/sink tracks
+1. Point your SAST tool at `adversarial/` (cross-language: JS, Python, Go, Ruby, Bash)
+2. Run `python scripts/convert_theauditor.py adversarial/.pf/repo_index.db`
+3. Run `python scripts/score_sarif.py adversarial/theauditor.sarif adversarial/expectedresults-0.2.0.csv`
 4. Root-cause every FN -- each one represents an evasion technique your tool is blind to
 
 **Chain detection benchmark:**
-1. Point your tool at `chains/scenarios/` (multi-file Python/Flask apps)
-2. Run `python chains/chain_benchmark.py`
-3. Scoring counts only chain-specific findings (not individual sqli/cmdi/xss)
+1. Point your SAST tool at `chains/` (multi-file Python/Flask apps)
+2. Run `python scripts/convert_theauditor.py chains/.pf/repo_index.db`
+3. Run `python scripts/score_sarif.py chains/theauditor.sarif chains/expectedresults-0.1.0.csv`
 4. Root-cause every FN -- each one represents a compound exploit path your tool missed
 
 ## Limitations

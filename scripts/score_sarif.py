@@ -141,7 +141,7 @@ def scan_annotations(source_dirs):
         for root, dirs, files in os.walk(source_dir):
             dirs[:] = [d for d in dirs if d not in ("target", ".git", "node_modules", ".auditor_venv")]
             for fn in files:
-                if not (fn.endswith(".rs") or fn.endswith(".sh") or fn.endswith(".php") or fn.endswith(".rb")):
+                if not (fn.endswith(".rs") or fn.endswith(".sh") or fn.endswith(".php") or fn.endswith(".rb") or fn.endswith(".py") or fn.endswith(".js") or fn.endswith(".go")):
                     continue
                 fpath = os.path.join(root, fn)
                 try:
@@ -453,7 +453,7 @@ def main():
         # but not apps) silently drops test cases and produces wrong scores.
         csv_dir = os.path.dirname(os.path.abspath(csv_path))
         existing = set(os.path.abspath(d) for d in annotations_dirs)
-        for subdir in ["apps", "testcode"]:
+        for subdir in ["apps", "testcode", "scenarios"]:
             candidate = os.path.join(csv_dir, subdir)
             if os.path.isdir(candidate) and os.path.abspath(candidate) not in existing:
                 annotations_dirs.append(candidate)

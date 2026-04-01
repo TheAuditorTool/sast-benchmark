@@ -115,6 +115,71 @@ NOISE_RULES = {
     "bash-relative-sensitive-cmd",
 }
 
+# ============================================================================
+# Adversarial evasion: rule -> CWE mapping
+# These rules use eidl-* prefixes and map to adversarial CWEs, not standard ones.
+# ============================================================================
+
+ADVERSARIAL_RULE_TO_CWE = {
+    "eidl-bidi-override": 451,
+    "eidl-homoglyph-identifier": 451,
+    "eidl-dynamic-code-build": 506,
+    "eidl-install-hook-exec": 506,
+    "eidl-resource-payload": 506,
+    "eidl-prompt-injection": 1059,
+    "eidl-c2-fingerprint": 506,
+    "eidl-charset-mapping": 838,
+    "eidl-stego-payload": 506,
+    "eidl-slopsquatting": 829,
+    "eidl-llm-code-exec": 506,
+    "eidl-shai-hulud-pattern": 506,
+    "code-obfuscation-charcode": 506,
+}
+
+# ============================================================================
+# Chain detection: rule -> CWE mapping
+# These rules use chain-* prefixes.
+# ============================================================================
+
+CHAIN_RULE_TO_CWE = {
+    "chain-unauth-injection": 89,
+    "chain-unauth-sqli": 89,
+    "chain-unauth-cmdi": 78,
+    "chain-ssrf-pivot": 918,
+    "chain-ssrf-internal": 918,
+    "chain-ssrf-metadata": 918,
+    "chain-compound-injection": 79,
+    "chain-second-order-xss": 79,
+    "chain-deser-to-rce": 502,
+    "chain-multi-stage": 434,
+    "chain-upload-rce": 434,
+    "chain-log-xss": 79,
+}
+
+# EIDL signal columns in evasion_findings -> CWE
+EIDL_SIGNAL_TO_CWE = {
+    "has_payload_camouflage": 506,
+    "has_charset_mapping": 838,
+}
+
+# Chain-specific taint vulnerability types -> CWE
+CHAIN_VULN_TYPE_TO_CWE = {
+    "Unauthenticated Injection": 89,
+    "SSRF to Internal Service": 918,
+    "Second-Order Injection": 79,
+    "Multi-Stage RCE": 434,
+}
+
+# Categories that identify adversarial vs chain benchmarks (for auto-detection)
+ADVERSARIAL_CATEGORIES = {
+    "unicode_payload", "visual_deception", "dynamic_construction", "supply_chain",
+    "ai_prompt_injection", "c2_fingerprint", "charset_mapping",
+    "steganographic_payload", "slopsquatting", "llm_code_generation",
+}
+CHAIN_CATEGORIES = {
+    "unauth_injection", "ssrf_pivot", "compound_injection", "multi_stage",
+}
+
 
 # ============================================================================
 # Integrity -- SHA256 hashing for staleness detection
@@ -203,6 +268,7 @@ def scan_annotations(benchmark_dir, extensions=(".sh",)):
     scan_dirs = [
         os.path.join(benchmark_dir, "apps"),
         os.path.join(benchmark_dir, "testcode"),
+        os.path.join(benchmark_dir, "scenarios"),
     ]
 
     for scan_dir in scan_dirs:
@@ -252,6 +318,30 @@ def resolve_finding_to_key(file_path, line, file_ranges):
 # Converter
 # ============================================================================
 
+def detect_benchmark_type(csv_path):
+    """Detect if this is an adversarial, chain, or language benchmark from CSV categories."""
+    if csv_path is None:
+        return None
+    try:
+        with open(csv_path, "r", encoding="utf-8") as f:
+            categories = set()
+            for line in f:
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#"):
+                    continue
+                parts = stripped.split(",")
+                if len(parts) >= 2:
+                    categories.add(parts[1].strip())
+    except OSError:
+        return None
+
+    if categories & ADVERSARIAL_CATEGORIES:
+        return "adversarial"
+    if categories & CHAIN_CATEGORIES:
+        return "chains"
+    return None
+
+
 def detect_language(db_path):
     """Auto-detect language from rule prefixes in the database."""
     conn = sqlite3.connect(db_path)
@@ -275,19 +365,31 @@ def detect_language(db_path):
     return max(counts, key=counts.get)
 
 
-def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=None):
+def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=None,
+                        benchmark_type=None):
     """Read TheAuditor DB and produce SARIF dict with integrity metadata.
 
     Uses CWE numbers as ruleId instead of category strings.
     CWE comes from pattern_findings.cwe column (already populated by rules)
     and from VULN_TYPE_TO_CWE for resolved_flow_audit taint flows.
+
+    For adversarial/chain benchmarks, also queries evasion_findings and
+    chain_findings tables, and uses specialized rule-to-CWE mappings.
     """
     if language is None:
         language = detect_language(db_path)
 
+    # Detect benchmark type from CSV if not explicitly set
+    if benchmark_type is None and csv_path:
+        benchmark_type = detect_benchmark_type(csv_path)
+
     # For annotation-based languages, scan source files
     file_ranges = {}
-    if language in ("bash", "rust", "php", "ruby") and benchmark_dir:
+    if benchmark_type in ("adversarial", "chains") and benchmark_dir:
+        # Adversarial/chain: scan all languages
+        all_exts = (".py", ".js", ".go", ".rs", ".php", ".rb", ".sh")
+        file_ranges = scan_annotations(benchmark_dir, extensions=all_exts)
+    elif language in ("bash", "rust", "php", "ruby") and benchmark_dir:
         ext = {"bash": ".sh", "rust": ".rs", "php": ".php", "ruby": ".rb"}[language]
         file_ranges = scan_annotations(benchmark_dir, extensions=(ext,))
 
@@ -298,13 +400,24 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
     seen = set()
     cwe_covered_by_rules = set()
 
-    # Pattern findings -- use CWE from DB directly
+    # Determine which CWE override map to use
+    rule_cwe_override = {}
+    if benchmark_type == "adversarial":
+        rule_cwe_override = ADVERSARIAL_RULE_TO_CWE
+    elif benchmark_type == "chains":
+        rule_cwe_override = CHAIN_RULE_TO_CWE
+
+    # Pattern findings -- use CWE from DB directly (or override for adversarial/chain rules)
     try:
         c.execute("SELECT file, line, rule, cwe FROM pattern_findings")
         for file_path, line, rule, cwe_str in c.fetchall():
             if rule in NOISE_RULES:
                 continue
-            cwe_num = _parse_cwe_number(cwe_str)
+
+            # Check for adversarial/chain rule CWE override
+            cwe_num = rule_cwe_override.get(rule)
+            if cwe_num is None:
+                cwe_num = _parse_cwe_number(cwe_str)
             if cwe_num is None:
                 continue
 
@@ -398,6 +511,108 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
     except sqlite3.OperationalError:
         pass
 
+    # Adversarial: evasion_findings (EIDL signals)
+    if benchmark_type == "adversarial":
+        try:
+            signal_cols = list(EIDL_SIGNAL_TO_CWE.keys())
+            c.execute("SELECT file, line, %s FROM evasion_findings" % ", ".join(signal_cols))
+            for row in c.fetchall():
+                file_path, line_num = row[0], row[1]
+                for idx, col_name in enumerate(signal_cols):
+                    if row[2 + idx]:
+                        cwe_num = EIDL_SIGNAL_TO_CWE[col_name]
+                        dedup_key = (file_path, line_num, cwe_num, col_name)
+                        if dedup_key in seen:
+                            continue
+                        seen.add(dedup_key)
+                        result = {
+                            "ruleId": str(cwe_num),
+                            "level": "error",
+                            "message": {"text": "EIDL signal: %s" % col_name},
+                            "locations": [{
+                                "physicalLocation": {
+                                    "artifactLocation": {"uri": file_path},
+                                    "region": {"startLine": line_num},
+                                }
+                            }],
+                        }
+                        if file_ranges:
+                            tc_key = resolve_finding_to_key(file_path, line_num, file_ranges)
+                            if tc_key:
+                                result["properties"] = {"testCaseKey": tc_key}
+                        results.append(result)
+        except sqlite3.OperationalError:
+            pass
+
+    # Chains: chain_findings table (dedicated chain output)
+    if benchmark_type == "chains":
+        try:
+            c.execute(
+                "SELECT endpoint_file, endpoint_line, chain_category "
+                "FROM chain_findings"
+            )
+            for ep_file, ep_line, chain_cat in c.fetchall():
+                # Map chain_category to CWE via CHAIN_RULE_TO_CWE
+                cwe_num = CHAIN_RULE_TO_CWE.get("chain-%s" % chain_cat.replace("_", "-"))
+                if cwe_num is None:
+                    continue
+                dedup_key = (ep_file, ep_line, cwe_num, "chain")
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+                result = {
+                    "ruleId": str(cwe_num),
+                    "level": "error",
+                    "message": {"text": "Chain finding: %s" % chain_cat},
+                    "locations": [{
+                        "physicalLocation": {
+                            "artifactLocation": {"uri": ep_file},
+                            "region": {"startLine": ep_line},
+                        }
+                    }],
+                }
+                if file_ranges:
+                    tc_key = resolve_finding_to_key(ep_file, ep_line, file_ranges)
+                    if tc_key:
+                        result["properties"] = {"testCaseKey": tc_key}
+                results.append(result)
+        except sqlite3.OperationalError:
+            pass
+
+    # Chains: chain-specific taint vulnerability types
+    if benchmark_type == "chains":
+        try:
+            c.execute(
+                "SELECT sink_file, sink_line, vulnerability_type "
+                "FROM resolved_flow_audit WHERE status = 'VULNERABLE'"
+            )
+            for sink_file, sink_line, vuln_type in c.fetchall():
+                cwe_num = CHAIN_VULN_TYPE_TO_CWE.get(vuln_type)
+                if cwe_num is None:
+                    continue
+                dedup_key = (sink_file, sink_line, cwe_num, "chain-taint")
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+                result = {
+                    "ruleId": str(cwe_num),
+                    "level": "error",
+                    "message": {"text": "Chain taint: %s" % vuln_type},
+                    "locations": [{
+                        "physicalLocation": {
+                            "artifactLocation": {"uri": sink_file},
+                            "region": {"startLine": sink_line},
+                        }
+                    }],
+                }
+                if file_ranges:
+                    tc_key = resolve_finding_to_key(sink_file, sink_line, file_ranges)
+                    if tc_key:
+                        result["properties"] = {"testCaseKey": tc_key}
+                results.append(result)
+        except sqlite3.OperationalError:
+            pass
+
     conn.close()
 
     # Build integrity block
@@ -487,15 +702,8 @@ def main():
     # Canonical output path
     sarif_path = os.path.join(benchmark_dir, "theauditor.sarif")
 
-    # Staleness check (skip if --force or --stdout)
-    if not force and not use_stdout and os.path.isfile(sarif_path) and csv_path:
-        is_current, reason = check_staleness(sarif_path, db_path, csv_path)
-        if is_current:
-            print("SARIF is current (%s), skipping. Use --force to regenerate." % reason,
-                  file=sys.stderr)
-            sys.exit(0)
-        else:
-            print("Stale SARIF detected: %s. Regenerating..." % reason, file=sys.stderr)
+    # Always regenerate SARIF -- staleness check disabled.
+    # The DB hash doesn't capture rule-layer changes that affect findings.
 
     # Convert
     sarif = convert_db_to_sarif(db_path, language=language, benchmark_dir=benchmark_dir,

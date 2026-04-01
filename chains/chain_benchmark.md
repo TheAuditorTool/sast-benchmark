@@ -72,7 +72,12 @@ FPR = FP / (FP + TN)
 | 0% | Random guessing |
 | -100% | Flags mitigated chains, misses exploitable chains |
 
-Run: `python chain_benchmark.py`
+Scoring uses the same unified pipeline as all other benchmarks:
+
+```bash
+python ../scripts/convert_theauditor.py .pf/repo_index.db
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.0.csv
+```
 
 ---
 

@@ -237,14 +237,14 @@ FPR = FP / (FP + TN)
 | 0% | Random guessing -- no better than flipping a coin |
 | -100% | Flags legitimate code, misses all evasion |
 
-Run: `python adversarial_benchmark.py`
+Scoring uses the same unified pipeline as all other benchmarks:
 
-The scoring script reads findings from three tracks:
-1. **EIDL signals** (`evasion_findings` table) -- byte-level and structural analysis
-2. **Pattern rules** (`pattern_findings` table) -- rule-based detection mapped via RULE_MAP
-3. **Taint flows** (`resolved_flow_audit` table) -- dataflow-confirmed evasion patterns
+```bash
+python ../scripts/convert_theauditor.py .pf/repo_index.db
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.2.0.csv
+```
 
-Findings are matched to ground truth via `vuln-code-snippet` annotations in the source files.
+The converter reads findings from pattern rules, taint flows, and EIDL evasion signals, then exports them as standard SARIF. The scorer matches findings to ground truth via `vuln-code-snippet` annotations and CWE-based matching.
 
 ---
 
