@@ -25,7 +25,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 ADV_DIR = BENCH_ROOT / "adversarial"
 CSV_FILE = ADV_DIR / "expectedresults-0.2.0.csv"
-BENCHMARK_PY = ADV_DIR / "adversarial_benchmark.py"
+BENCHMARK_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCAN_DIRS = [ADV_DIR / "testcode"]
 
 PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
@@ -300,23 +300,24 @@ def check_semantics(csv_entries, annotations, vuln_lines, safe_lines):
 # L5: Scoring Pipeline Readiness
 # ============================================================================
 def check_scoring_pipeline(all_categories):
-    """Verify all benchmark categories are mapped in adversarial_benchmark.py."""
+    """Verify all benchmark categories are mapped in convert_theauditor.py."""
     if not BENCHMARK_PY.exists():
-        warnings.append("L5 adversarial_benchmark.py not found - cannot verify scoring pipeline")
+        warnings.append("L5 convert_theauditor.py not found - cannot verify scoring pipeline")
         return
 
     with open(BENCHMARK_PY, "r", encoding="utf-8") as f:
         scoring_content = f.read()
 
     mapped_categories = set()
-    for m in re.finditer(r':\s*"([a-z0-9_]+)"', scoring_content):
+    # Match category names in string literals (dict values, set members, comments)
+    for m in re.finditer(r'"([a-z][a-z0-9_]+)"', scoring_content):
         mapped_categories.add(m.group(1))
 
     for cat in sorted(all_categories):
         if cat not in mapped_categories:
             warnings.append(
                 f"L5 Category '{cat}' exists in ground truth but is not mapped "
-                f"in adversarial_benchmark.py SIGNAL_MAP, RULE_MAP, or SINK_MAP"
+                f"in convert_theauditor.py ADVERSARIAL_RULE_TO_CWE or EIDL_SIGNAL_TO_CWE"
             )
 
 
@@ -427,7 +428,7 @@ def main():
     print("[L5] Scoring Pipeline Readiness (SIGNAL_MAP/RULE_MAP coverage)")
     check_scoring_pipeline(all_categories)
     l5_warnings = len(warnings)
-    print(f"  Checks: every category has a mapping in adversarial_benchmark.py")
+    print(f"  Checks: every category has a mapping in convert_theauditor.py")
     print(f"  Result: {l5_warnings} warnings")
     print()
 

@@ -72,12 +72,14 @@ FPR = FP / (FP + TN)
 | 0% | Random guessing |
 | -100% | Flags mitigated chains, misses exploitable chains |
 
-Scoring uses the same unified pipeline as all other benchmarks:
+Run your SAST tool, export SARIF 2.1.0, then score:
 
 ```bash
-python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.1.0.csv
+your-tool scan scenarios/ --format sarif -o results.sarif
+python ../scripts/score_sarif.py results.sarif expectedresults-0.1.0.csv
 ```
+
+Any tool that produces standard SARIF can be scored.
 
 ---
 

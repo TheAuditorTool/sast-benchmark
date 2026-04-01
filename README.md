@@ -306,23 +306,35 @@ See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodol
 
 ## How to Use
 
-**Language benchmarks (Go/Rust/Bash/PHP):**
-1. Point your SAST tool at a language directory
-2. Export findings as SARIF (or use the tool-specific bridge script)
-3. Run `python scripts/score_sarif.py <results.sarif> <language>/expectedresults-*.csv`
-4. Root-cause every FN and FP
+Score any SAST tool that exports SARIF 2.1.0 (Checkmarx, Semgrep, CodeQL, Snyk, etc.):
+
+```bash
+# 1. Run your tool and export SARIF
+your-tool scan <benchmark_dir> --format sarif -o results.sarif
+
+# 2. Score against ground truth
+python scripts/score_sarif.py results.sarif <benchmark_dir>/expectedresults-*.csv
+```
+
+**Language benchmarks (Go/Rust/Bash/PHP/Ruby):**
+```bash
+your-tool scan go/testcode/ --format sarif -o results.sarif
+python scripts/score_sarif.py results.sarif go/expectedresults-0.3.2.csv
+```
 
 **Adversarial evasion benchmark:**
-1. Point your SAST tool at `adversarial/` (cross-language: JS, Python, Go, Ruby, Bash)
-2. Run `python scripts/convert_theauditor.py adversarial/.pf/repo_index.db`
-3. Run `python scripts/score_sarif.py adversarial/theauditor.sarif adversarial/expectedresults-0.2.0.csv`
-4. Root-cause every FN -- each one represents an evasion technique your tool is blind to
+```bash
+your-tool scan adversarial/testcode/ --format sarif -o results.sarif
+python scripts/score_sarif.py results.sarif adversarial/expectedresults-0.2.0.csv
+```
 
 **Chain detection benchmark:**
-1. Point your SAST tool at `chains/` (multi-file Python/Flask apps)
-2. Run `python scripts/convert_theauditor.py chains/.pf/repo_index.db`
-3. Run `python scripts/score_sarif.py chains/theauditor.sarif chains/expectedresults-0.1.0.csv`
-4. Root-cause every FN -- each one represents a compound exploit path your tool missed
+```bash
+your-tool scan chains/scenarios/ --format sarif -o results.sarif
+python scripts/score_sarif.py results.sarif chains/expectedresults-0.1.0.csv
+```
+
+Root-cause every FN (missed vulnerability) and FP (false alarm). That's where the benchmark earns its value.
 
 ## Limitations
 

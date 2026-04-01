@@ -27,7 +27,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 CHAINS_DIR = BENCH_ROOT / "chains"
 CSV_FILE = CHAINS_DIR / "expectedresults-0.1.0.csv"
-BENCHMARK_PY = CHAINS_DIR / "chain_benchmark.py"
+BENCHMARK_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCENARIOS_DIR = CHAINS_DIR / "scenarios"
 
 PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
@@ -304,7 +304,7 @@ def check_scoring_pipeline(all_categories):
         scoring_content = f.read()
 
     mapped_categories = set()
-    for m in re.finditer(r':\s*"([a-z0-9_]+)"', scoring_content):
+    for m in re.finditer(r'"([a-z][a-z0-9_]+)"', scoring_content):
         mapped_categories.add(m.group(1))
 
     for cat in sorted(all_categories):

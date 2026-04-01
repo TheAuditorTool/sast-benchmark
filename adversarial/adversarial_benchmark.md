@@ -237,14 +237,14 @@ FPR = FP / (FP + TN)
 | 0% | Random guessing -- no better than flipping a coin |
 | -100% | Flags legitimate code, misses all evasion |
 
-Scoring uses the same unified pipeline as all other benchmarks:
+Run your SAST tool, export SARIF 2.1.0, then score:
 
 ```bash
-python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.2.0.csv
+your-tool scan testcode/ --format sarif -o results.sarif
+python ../scripts/score_sarif.py results.sarif expectedresults-0.2.0.csv
 ```
 
-The converter reads findings from pattern rules, taint flows, and EIDL evasion signals, then exports them as standard SARIF. The scorer matches findings to ground truth via `vuln-code-snippet` annotations and CWE-based matching.
+The scorer matches findings to ground truth via `vuln-code-snippet` annotations and CWE-based matching. Any tool that produces standard SARIF can be scored.
 
 ---
 
