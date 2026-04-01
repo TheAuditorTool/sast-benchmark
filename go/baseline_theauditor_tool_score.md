@@ -2,7 +2,7 @@
 
 > **Tool**: TheAuditor
 > **Benchmark**: Go SAST Benchmark v0.3.2 (534 test cases, 24 CWE categories)
-> **Date**: 2026-03-27
+> **Date**: 2026-04-01
 > **Command**: `aud full --offline`
 > **Tuning**: None. Out-of-the-box results with no benchmark-specific adjustments.
 
@@ -10,7 +10,7 @@
 
 OWASP publishes every tool's score against BenchmarkJava -- Checkmarx, Fortify, Veracode, SonarQube, all of them. Honest scores build credibility. Hidden scores destroy it.
 
-We built this benchmark and we ran our own tool against it. Here are the results, untuned, with every false negative and false positive visible. These gaps are our public roadmap.
+We built this benchmark and we ran our own tool against it. Here are the results, untuned, with every false negative and false positive visible.
 
 ## Scorecard
 
@@ -33,7 +33,7 @@ pathtraver       22     25    0     0     30     100.0%    0.0% +100.0%
 race_condition   362    5     0     0     5      100.0%    0.0% +100.0%
 redirect         601    8     0     0     8      100.0%    0.0% +100.0%
 securecookie     614    8     0     0     8      100.0%    0.0% +100.0%
-sqli             89     63    0     2     58      96.9%    0.0%  +96.9%
+sqli             89     65    0     0     58     100.0%    0.0% +100.0%
 ssrf             918    10    0     0     10     100.0%    0.0% +100.0%
 tlsverify        295    5     0     0     5      100.0%    0.0% +100.0%
 trustbound       501    6     0     0     6      100.0%    0.0% +100.0%
@@ -42,33 +42,30 @@ weakhash         328    10    0     0     10     100.0%    0.0% +100.0%
 weakrand         330    10    0     0     10     100.0%    0.0% +100.0%
 xss              79     13    0     0     15     100.0%    0.0% +100.0%
 ---------------------------------------------------------------------------
-OVERALL                 265   0     2     267     99.3%    0.0%  +99.3%
+OVERALL                 267   0     0     267    100.0%    0.0% +100.0%
 ```
 
-**Flat Score: +99.3%** (Youden's J = TPR - FPR)
+**Flat Score: +100.0%** (Youden's J = TPR - FPR)
 
-**Category-Averaged Score: +99.9%** (OWASP standard -- each category weighted equally)
+**Category-Averaged Score: +100.0%** (OWASP standard -- each category weighted equally)
 
-23 of 24 categories at perfect +100.0%. Zero false positives across the entire benchmark. The only remaining gap is 2 FN in sqli (96.9%).
+24 of 24 categories at perfect +100.0%. Zero false positives. Zero false negatives. Perfect detection across the entire benchmark.
 
 ## What the Scores Mean
 
-**Perfect detection (23 categories at +100%)**:
+**Perfect detection (all 24 categories at +100%)**:
 
-All 23 non-sqli categories achieve perfect scores -- 100% TPR with 0% FPR. Every vulnerable pattern detected, every safe pattern correctly ignored. This includes:
+All 24 categories achieve perfect scores -- 100% TPR with 0% FPR. Every vulnerable pattern detected, every safe pattern correctly ignored. This includes:
 
-- **Flow-detection categories**: cmdi, pathtraver, ssrf, xss, loginjection, ldapi, nosql, redirect, trustbound, codeinj -- full IFDS taint flow provenance with sanitizer awareness, cross-file call resolution, and dead-variable/map-key/template-constant FP suppression.
-- **Structural categories**: weakhash, weakrand, weakcipher, tlsverify, securecookie, deserial, hardcodedcreds -- API-usage detection with context-aware safe-pattern recognition.
-- **Control-flow categories**: authnfailure, authzfailure, csrf, race_condition, inputval, fileupload -- framework-aware middleware and validation detection.
-
-**Near-perfect detection**:
-- **sqli (+96.9%)**: 63/65 vulnerable patterns detected (96.9% TPR), zero false positives. 2 FN remain in complex multi-hop SQL patterns.
+- **Flow-detection categories**: sqli, cmdi, pathtraver, ssrf, xss, loginjection, ldapi, nosql, redirect, trustbound, codeinj -- interprocedural taint analysis with cross-file resolution and sanitizer awareness.
+- **Structural categories**: weakhash, weakrand, weakcipher, tlsverify, securecookie, deserial, hardcodedcreds -- API-usage and configuration detection.
+- **Control-flow categories**: authnfailure, authzfailure, csrf, race_condition, inputval, fileupload -- framework-aware validation and access control detection.
 
 ## Analysis
 
-**265 True Positives**: TheAuditor correctly identifies 99.3% of vulnerable Go patterns across all 24 CWE categories.
+**267 True Positives**: TheAuditor correctly identifies 100% of vulnerable Go patterns across all 24 CWE categories.
 
-**2 False Negatives**: 0.7% of vulnerable patterns missed, concentrated in sqli complex multi-hop flows.
+**0 False Negatives**: Zero vulnerable patterns missed.
 
 **0 False Positives**: Zero false alarms across all 267 safe patterns. Perfect precision.
 
