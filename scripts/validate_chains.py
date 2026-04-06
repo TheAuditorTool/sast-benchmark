@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 CHAINS_DIR = BENCH_ROOT / "chains"
-CSV_FILE = CHAINS_DIR / "expectedresults-0.1.0.csv"
+CSV_FILE = CHAINS_DIR / "expectedresults-0.2.0.csv"
 BENCHMARK_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCENARIOS_DIR = CHAINS_DIR / "scenarios"
 
@@ -38,8 +38,8 @@ PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
 SCAN_EXTENSIONS = {".js", ".py", ".go", ".html", ".json", ".yaml", ".yml"}
 
 VALID_CWES = {
-    22, 78, 79, 89, 94, 200, 269, 276, 287, 306, 327, 352, 362,
-    434, 502, 601, 611, 732, 798, 862, 863, 918,
+    22, 78, 79, 89, 94, 113, 200, 269, 276, 287, 306, 327, 352, 362,
+    384, 434, 502, 601, 611, 732, 798, 862, 863, 915, 918, 942,
 }
 
 VALID_CATEGORIES = {
@@ -47,6 +47,22 @@ VALID_CATEGORIES = {
     "ssrf_pivot",
     "compound_injection",
     "multi_stage",
+    "privesc_chain",
+    "idor_data_leak",
+    "race_condition_bypass",
+    "path_traversal_to_read",
+    "open_redirect_to_phish",
+    "xxe_to_file_read",
+    "csrf_to_state_change",
+    "header_injection_to_cache_poison",
+    "weak_crypto_to_forge",
+    "mass_assign_to_privesc",
+    "info_leak_to_account_takeover",
+    "template_injection_to_rce",
+    "hardcoded_creds_to_access",
+    "insecure_file_perms_to_tamper",
+    "cors_miscfg_to_data_theft",
+    "session_fixation_to_hijack",
 }
 
 errors = []

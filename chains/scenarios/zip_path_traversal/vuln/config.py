@@ -1,0 +1,9 @@
+"""Application configuration for the archive extraction service.
+
+This file is IDENTICAL between vuln/ and safe/ variants.
+"""
+SECRET_KEY = "dev-secret-key-do-not-use-in-prod"
+EXTRACT_BASE_DIR = "/var/app/extracts"
+UPLOAD_DIR = "/var/app/uploads"
+DB_PASSWORD = "prod-db-pass-do-not-commit"
+JWT_SECRET = "jwt-signing-secret-prod"

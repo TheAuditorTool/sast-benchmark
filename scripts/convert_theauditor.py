@@ -185,6 +185,13 @@ ADVERSARIAL_CATEGORIES = {
 }
 CHAIN_CATEGORIES = {
     "unauth_injection", "ssrf_pivot", "compound_injection", "multi_stage",
+    "privesc_chain", "idor_data_leak", "race_condition_bypass",
+    "path_traversal_to_read", "open_redirect_to_phish", "xxe_to_file_read",
+    "csrf_to_state_change", "header_injection_to_cache_poison",
+    "weak_crypto_to_forge", "mass_assign_to_privesc",
+    "info_leak_to_account_takeover", "template_injection_to_rce",
+    "hardcoded_creds_to_access", "insecure_file_perms_to_tamper",
+    "cors_miscfg_to_data_theft", "session_fixation_to_hijack",
 }
 
 

@@ -2,6 +2,7 @@
 
 **Tool:** TheAuditor (java-support branch)
 **Benchmark:** Chain Detection Benchmark v0.1.0 (16 test cases, 8 scenarios, 4 categories)
+**Note:** Benchmark expanded to v0.2.0 (500 test cases, 250 scenarios, 20 categories) on 2026-04-07. Baseline re-evaluation pending.
 **Date:** 2026-04-01
 **Configuration:** `aud full --offline` (default rules, no tuning)
 
