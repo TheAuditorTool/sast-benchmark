@@ -1,0 +1,17 @@
+//! CWE-798: AES encryption key defined as a fixed byte array constant.
+
+// vuln-code-snippet start testcodeHardcodedcreds008
+const AES_KEY: [u8; 32] = [ // vuln-code-snippet target-line testcodeHardcodedcreds008
+    0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+    0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+    0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+    0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+];
+
+pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
+    let plaintext = req.param("data");
+    // Simulates: aes_gcm::Aes256Gcm::new(&AES_KEY.into())
+    let encrypted = format!("enc({})", plaintext);
+    super::shared::BenchmarkResponse::ok(&format!("Encrypted: {}", encrypted))
+}
+// vuln-code-snippet end testcodeHardcodedcreds008

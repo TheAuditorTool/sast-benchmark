@@ -1,18 +1,18 @@
 # Rust SAST Benchmark — Development Roadmap
 
-> **Version:** 0.3.2 (2026-03-23)
-> **Status:** v0.3.2 shipped. Phase 1: 12 misclassification fixes. Phase 2: testcode/ hint removal. Phase 2.5: apps/ hint purge. Phase 3: XSS rebalance (31/69 → 50/50, +6 TPs). SARIF scoring consolidated. CSV is sole ground truth. 268 test cases, all categories within 40-60 balance.
+> **Version:** 0.4.0 (2026-04-07)
+> **Status:** v0.4.0 shipped. Major expansion: 268 → 491 test cases, 13 → 20 CWE categories. 7 new categories (hardcodedcreds, race_condition, loginjection, securecookie, redirect, fileupload, tlsverify). All categories at 10+ TP/TN minimum. 2 CWE-798 reclassifications from infodisclosure to hardcodedcreds. TP/TN balance: 49/51.
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---
 
-## Current State (v0.3.2)
+## Current State (v0.4.0)
 
-- **268 test cases** (123 TP, 145 TN) across 13 CWE categories
-- **CSV ground truth** (`expectedresults-0.3.2.csv`) is the sole scoring authority
-- **149 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
-- **All 13 categories** have both TP and TN test cases
-- **TP/TN balance:** 46/54 (all categories within 40-60 range)
+- **491 test cases** (243 TP, 248 TN) across 20 CWE categories
+- **CSV ground truth** (`expectedresults-0.4.0.csv`) is the sole scoring authority
+- **~372 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
+- **All 20 categories** have both TP and TN test cases, minimum 10/10
+- **TP/TN balance:** 49/51 (all categories within 45-55 range)
 - **4 frameworks:** actix-web, axum, Rocket, Warp
 - **Scoring:** SARIF-based via `scripts/score_sarif.py`, Youden's J per category
 

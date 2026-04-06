@@ -4,6 +4,93 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-04-07 — v0.4.0: Major Expansion (268 → 491 test cases, 13 → 20 CWEs)
+
+### Context
+OWASP Foundation submission requires comprehensive CWE coverage and statistical significance per category. v0.3.2 had 268 tests across 13 CWEs but several categories were below the 10 TP / 10 TN minimum threshold. This release nearly doubles the benchmark and adds 7 new CWE categories present in Go/PHP/Ruby benchmarks.
+
+### Pre-Flight Due Diligence
+- All 7 new CWE numbers verified against MITRE CWE database (cwe.mitre.org)
+- Cross-benchmark consistency audit against Go, PHP, Ruby, and Java gold standard
+- TP/TN classification corrections applied from security audit (DashMap entry() API, Rocket add_private, tracing JSON subscriber, zip slip ZipFile::name)
+
+### Phase A: Reclassifications (2 entries)
+
+| Entry | Old | New | Rationale |
+|-------|-----|-----|-----------|
+| infodisclosureCalorieJwtSecret | infodisclosure,true,798 | hardcodedcreds,true,798 | Hardcoded JWT secret is textbook CWE-798 |
+| infodisclosurePaymentsHardcodedKey | infodisclosure,true,798 | hardcodedcreds,true,798 | Hardcoded Stripe key is textbook CWE-798 |
+
+### Phase B: Expand Existing 13 CWEs (+83 test files)
+
+All existing categories brought to minimum 12 TP / 12 TN:
+
+| Category | Before | After | New Files |
+|----------|--------|-------|-----------|
+| ssrf | 9/13=22 | 12/13=25 | +3 TP |
+| xss | 11/11=22 | 12/12=24 | +1 TP, +1 TN |
+| memsafety | 8/12=20 | 12/12=24 | +4 TP |
+| crypto | 9/11=20 | 12/12=24 | +3 TP, +1 TN |
+| weakrand | 7/9=16 | 12/12=24 | +5 TP, +3 TN |
+| infodisclosure | 6/8=14* | 12/12=24 | +6 TP, +4 TN |
+| deser | 6/6=12 | 12/12=24 | +6 TP, +6 TN |
+| intoverflow | 5/7=12 | 12/12=24 | +7 TP, +5 TN |
+| redos | 5/5=10 | 12/12=24 | +7 TP, +7 TN |
+| inputval | 4/6=10 | 12/12=24 | +8 TP, +6 TN |
+
+*After reclassifying 2 CWE-798 entries to hardcodedcreds
+
+### Phase C: 7 New CWE Categories (+140 test files)
+
+| Category | CWE | TP | TN | Total | Justification |
+|----------|-----|----|----|-------|---------------|
+| hardcodedcreds | 798 | 12* | 10 | 22 | OWASP A07, present in Go/PHP/Ruby/Bash |
+| race_condition | 362 | 10 | 10 | 20 | Present in Go/Bash, Rust-specific logic races |
+| loginjection | 117 | 10 | 10 | 20 | OWASP A09, present in Go/Ruby |
+| securecookie | 614 | 10 | 10 | 20 | Java gold standard, Go/PHP/Ruby |
+| redirect | 601 | 10 | 10 | 20 | OWASP A01, Go/PHP/Ruby |
+| fileupload | 434 | 10 | 10 | 20 | OWASP A04, Go/PHP/Ruby |
+| tlsverify | 295 | 10 | 10 | 20 | Present in Go/Bash |
+
+*Includes 2 reclassified from infodisclosure + 10 new
+
+### Phase D: Infrastructure Updates
+
+- `expectedresults-0.4.0.csv` — 491 entries (new file)
+- `scripts/validate_rust.py` — VALID_CWES +6, VALID_CATEGORIES +7, CSV ref updated
+- `rust/rust_benchmark.md` — inventory table, category count (13→20)
+- `rust/SCORING.md` — CSV filename reference
+- `rust/dev_roadmap.md` — milestone update
+- `README.md` — Rust section updated (268→491, 13→20)
+
+### Final Inventory
+
+| Category | CWE | TP | TN | Total | Balance |
+|----------|-----|----|----|-------|---------|
+| sqli | 89 | 23 | 27 | 50 | 46/54 |
+| cmdi | 78 | 14 | 16 | 30 | 47/53 |
+| pathtraver | 22 | 14 | 14 | 28 | 50/50 |
+| ssrf | 918 | 12 | 13 | 25 | 48/52 |
+| xss | 79 | 12 | 12 | 24 | 50/50 |
+| memsafety | 119 | 12 | 12 | 24 | 50/50 |
+| crypto | 327* | 12 | 12 | 24 | 50/50 |
+| weakrand | 330 | 12 | 12 | 24 | 50/50 |
+| infodisclosure | 200* | 12 | 12 | 24 | 50/50 |
+| deser | 502 | 12 | 12 | 24 | 50/50 |
+| intoverflow | 190 | 12 | 12 | 24 | 50/50 |
+| redos | 1333 | 12 | 12 | 24 | 50/50 |
+| inputval | 20 | 12 | 12 | 24 | 50/50 |
+| hardcodedcreds | 798 | 12 | 10 | 22 | 55/45 |
+| race_condition | 362 | 10 | 10 | 20 | 50/50 |
+| loginjection | 117 | 10 | 10 | 20 | 50/50 |
+| securecookie | 614 | 10 | 10 | 20 | 50/50 |
+| redirect | 601 | 10 | 10 | 20 | 50/50 |
+| fileupload | 434 | 10 | 10 | 20 | 50/50 |
+| tlsverify | 295 | 10 | 10 | 20 | 50/50 |
+| **TOTAL** | | **243** | **248** | **491** | **49/51** |
+
+---
+
 ## 2026-03-23 — v0.3.2: XSS Category Rebalance
 
 ### Context

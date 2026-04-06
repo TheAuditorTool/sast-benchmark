@@ -4,7 +4,7 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.3.2.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
+**Ground truth**: `expectedresults-0.4.0.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
 ### Test Case Inventory
@@ -14,19 +14,28 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 | sqli | 89 | 23 | 27 | 50 | 46/54 |
 | cmdi | 78 | 14 | 16 | 30 | 47/53 |
 | pathtraver | 22 | 14 | 14 | 28 | 50/50 |
-| ssrf | 918 | 9 | 13 | 22 | 41/59 |
-| xss | 79 | 11 | 11 | 22 | 50/50 |
-| memsafety | 119 | 8 | 12 | 20 | 40/60 |
-| crypto | 327 | 9 | 11 | 20 | 45/55 |
-| weakrand | 330 | 7 | 9 | 16 | 44/56 |
-| infodisclosure | 200 | 8 | 8 | 16 | 50/50 |
-| deser | 502 | 6 | 6 | 12 | 50/50 |
-| intoverflow | 190 | 5 | 7 | 12 | 42/58 |
-| redos | 1333 | 5 | 5 | 10 | 50/50 |
-| inputval | 20 | 4 | 6 | 10 | 40/60 |
-| **TOTAL** | | **123** | **145** | **268** | **46/54** |
+| ssrf | 918 | 12 | 13 | 25 | 48/52 |
+| xss | 79 | 12 | 12 | 24 | 50/50 |
+| memsafety | 119 | 12 | 12 | 24 | 50/50 |
+| crypto | 327* | 12 | 12 | 24 | 50/50 |
+| weakrand | 330 | 12 | 12 | 24 | 50/50 |
+| infodisclosure | 200* | 12 | 12 | 24 | 50/50 |
+| deser | 502 | 12 | 12 | 24 | 50/50 |
+| intoverflow | 190 | 12 | 12 | 24 | 50/50 |
+| redos | 1333 | 12 | 12 | 24 | 50/50 |
+| inputval | 20 | 12 | 12 | 24 | 50/50 |
+| hardcodedcreds | 798 | 12 | 10 | 22 | 55/45 |
+| race_condition | 362 | 10 | 10 | 20 | 50/50 |
+| loginjection | 117 | 10 | 10 | 20 | 50/50 |
+| securecookie | 614 | 10 | 10 | 20 | 50/50 |
+| redirect | 601 | 10 | 10 | 20 | 50/50 |
+| fileupload | 434 | 10 | 10 | 20 | 50/50 |
+| tlsverify | 295 | 10 | 10 | 20 | 50/50 |
+| **TOTAL** | | **243** | **248** | **491** | **49/51** |
 
-**All 13 categories have TP AND TN.** Every category can measure both TPR and FPR. TP/TN ratio: 46/54 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
+*crypto has 2 entries with CWE-347 (JWT); infodisclosure has entries with CWE-200/209/532
+
+**All 20 categories have TP AND TN.** Every category has minimum 10 TP and 10 TN. TP/TN ratio: 49/51 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
 
 ### Frameworks Covered
 
@@ -104,8 +113,15 @@ Maps each benchmark category to SAST rules that detect it.
 | intoverflow | 190 | `rust/integer_safety.py` | structural | **PARTIAL** (crypto/financial only) |
 | infodisclosure | 200+ | NONE | - | **GAP** |
 | inputval | 20 | `security/input_validation_analyze.py` | structural | FULL |
+| hardcodedcreds | 798 | NONE | - | **GAP** |
+| race_condition | 362 | NONE | - | **GAP** |
+| loginjection | 117 | NONE | - | **GAP** |
+| securecookie | 614 | NONE | - | **GAP** |
+| redirect | 601 | NONE | - | **GAP** |
+| fileupload | 434 | NONE | - | **GAP** |
+| tlsverify | 295 | NONE | - | **GAP** |
 
-**76 of 268 test cases (28%) are in gap categories** (xss=22, weakrand=16, infodisclosure=16, deser=12, redos=10) -- expected to show as FN in baseline scoring.
+**218 of 491 test cases (44%) are in gap categories** (xss=24, weakrand=24, infodisclosure=24, deser=24, redos=24, hardcodedcreds=22, race_condition=20, loginjection=20, securecookie=20, redirect=20, fileupload=20, tlsverify=20) -- expected to show as FN in baseline scoring.
 
 ---
 
@@ -116,7 +132,7 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 ```
 
 ---
@@ -131,7 +147,7 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 ### TheAuditor (database-first path)
@@ -139,7 +155,7 @@ python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
 ```bash
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 ```
 
 ---

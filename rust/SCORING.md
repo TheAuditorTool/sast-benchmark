@@ -7,7 +7,7 @@
 your-tool scan ./apps/ ./testcode/ --output results.sarif
 
 # 2. Score against ground truth
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv \
 ```
 
 The scorer outputs two tables: **Category-Averaged** (OWASP standard) and **Flat Aggregate** (for comparison).
@@ -30,7 +30,7 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored.
 
 ```bash
 semgrep --config auto --sarif --output results.sarif ./apps/ ./testcode/
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv \
 ```
 
 ### CodeQL
@@ -40,7 +40,7 @@ codeql database create rust-bench-db --language=rust --source-root=.
 codeql database analyze rust-bench-db codeql/rust-queries \
     --format=sarifv2.1.0 --output=results.sarif
 
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv \
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv \
 ```
 
 ### TheAuditor
@@ -55,7 +55,7 @@ aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
 
 # Score
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 ```
 
 ---
@@ -86,7 +86,7 @@ FPR = FP / (FP + TN)    Fall-out (false alarm rate)
 Score = TPR - FPR        Youden's J statistic
 ```
 
-Overall score is the **macro average** across all 13 categories. Each category weighted equally regardless of test count.
+Overall score is the **macro average** across all 20 categories. Each category weighted equally regardless of test count.
 
 ### Score Interpretation
 
@@ -100,7 +100,7 @@ Overall score is the **macro average** across all 13 categories. Each category w
 
 ## Ground Truth Format
 
-The expected results CSV (`expectedresults-0.3.2.csv`) has four fields per line:
+The expected results CSV (`expectedresults-0.4.0.csv`) has four fields per line:
 
 ```
 # test name,category,real vulnerability,CWE
@@ -120,7 +120,7 @@ sqliSearchUsersVulnerable,sqli,true,89
 
 1. Run your tool on the `rust/` directory
 2. Export findings as SARIF 2.1.0
-3. Score: `python scripts/score_sarif.py <output.sarif> rust/expectedresults-0.3.2.csv`
+3. Score: `python scripts/score_sarif.py <output.sarif> rust/expectedresults-0.4.0.csv`
 4. Submit a PR adding `baseline_<toolname>_score.md` to `rust/` with the full scorecard
 
 Include tool name, version, date, and whether benchmark-specific tuning was applied.
