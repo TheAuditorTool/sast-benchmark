@@ -109,3 +109,29 @@ serve_user_file() {
     cat "$resolved"  # vuln-code-snippet safe-line pathtraver_readlink
 }
 # vuln-code-snippet end pathtraver_readlink
+
+# vuln-code-snippet start pathtraver_ln_user_path
+create_user_symlink() {
+    local user_target="$1"
+    local link_name="$2"
+    # Creates a symlink from user-controlled target — attacker supplies
+    # /etc/shadow as target, link appears in a trusted directory.
+    ln -sf "$user_target" "${DATA_DIR}/${link_name}"  # vuln-code-snippet vuln-line pathtraver_ln_user_path
+}
+# vuln-code-snippet end pathtraver_ln_user_path
+
+# vuln-code-snippet start pathtraver_realpath_before_symlink
+create_checked_symlink() {
+    local user_target="$1"
+    local link_name="$2"
+    # realpath resolves the target path, then prefix check ensures it
+    # stays within DATA_DIR — blocks symlink-based escapes.
+    local resolved
+    resolved=$(realpath -m "$user_target")
+    if [[ "$resolved" != "${DATA_DIR}/"* ]]; then
+        echo "Path traversal blocked" >&2
+        return 1
+    fi
+    ln -sf "$resolved" "${DATA_DIR}/${link_name}"  # vuln-code-snippet safe-line pathtraver_realpath_before_symlink
+}
+# vuln-code-snippet end pathtraver_realpath_before_symlink

@@ -117,3 +117,104 @@ generate_token_python() {
     echo "$token"
 }
 # vuln-code-snippet end weakrand_python_secrets
+
+# vuln-code-snippet start weakrand_shuf_token
+generate_shuf_token() {
+    # shuf uses a Mersenne Twister PRNG seeded from /dev/urandom by
+    # default, but when combined with a small alphabet and short length,
+    # the output space is tiny. More importantly, shuf is not designed
+    # for security-sensitive random generation.
+    local token
+    token=$(shuf -zer -n 16 {a..z} {0..9} | tr -d '\0')  # vuln-code-snippet vuln-line weakrand_shuf_token
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_shuf_token
+
+# vuln-code-snippet start weakrand_awk_rand_otp
+generate_awk_otp() {
+    # awk's rand() is a C library rand() — not cryptographically secure.
+    # Seed is time-based by default, predictable.
+    local otp
+    otp=$(awk 'BEGIN{srand(); printf "%06d", int(rand()*1000000)}')  # vuln-code-snippet vuln-line weakrand_awk_rand_otp
+    echo "$otp"
+}
+# vuln-code-snippet end weakrand_awk_rand_otp
+
+# vuln-code-snippet start weakrand_date_sha_combo
+generate_date_hash_key() {
+    # date+sha256 looks random but the input entropy is just the
+    # timestamp — public and predictable via NTP/response headers.
+    local key
+    key=$(date +%s%N | sha256sum | head -c 32)  # vuln-code-snippet vuln-line weakrand_date_sha_combo
+    echo "$key"
+}
+# vuln-code-snippet end weakrand_date_sha_combo
+
+# vuln-code-snippet start weakrand_random_xor_pid
+generate_xor_token() {
+    # $RANDOM (15-bit LCG) XOR $$ (PID, readable from /proc).
+    # Both values are predictable — XOR of two predictable values
+    # is still predictable.
+    local token=$(( RANDOM ^ $$ ))  # vuln-code-snippet vuln-line weakrand_random_xor_pid
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_random_xor_pid
+
+# vuln-code-snippet start weakrand_perl_rand
+generate_perl_token() {
+    # Perl's rand() is the C library's drand48 — a 48-bit LCG.
+    # Not cryptographically secure.
+    local token
+    token=$(perl -e 'print int(rand(2**32))')  # vuln-code-snippet vuln-line weakrand_perl_rand
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_perl_rand
+
+# vuln-code-snippet start weakrand_dd_urandom
+generate_dd_token() {
+    # dd from /dev/urandom — kernel CSPRNG. 32 bytes = 256 bits.
+    local token
+    token=$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | xxd -p -c 64)  # vuln-code-snippet safe-line weakrand_dd_urandom
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_dd_urandom
+
+# vuln-code-snippet start weakrand_openssl_base64
+generate_openssl_b64() {
+    # openssl rand uses the OpenSSL CSPRNG seeded from /dev/urandom.
+    # base64 output is URL-safe after tr.
+    local token
+    token=$(openssl rand -base64 32 | tr -d '=+/' | head -c 32)  # vuln-code-snippet safe-line weakrand_openssl_base64
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_openssl_base64
+
+# vuln-code-snippet start weakrand_uuidgen
+generate_uuid() {
+    # uuidgen generates a v4 UUID using /dev/urandom (122 bits of
+    # randomness). Standard for non-secret unique identifiers.
+    local uuid
+    uuid=$(uuidgen)  # vuln-code-snippet safe-line weakrand_uuidgen
+    echo "$uuid"
+}
+# vuln-code-snippet end weakrand_uuidgen
+
+# vuln-code-snippet start weakrand_gpg_random
+generate_gpg_token() {
+    # gpg --gen-random 2 = quality level 2 (very strong), 32 bytes.
+    # Uses the GnuPG CSPRNG backed by /dev/random.
+    local token
+    token=$(gpg --gen-random --armor 2 32 | head -c 32)  # vuln-code-snippet safe-line weakrand_gpg_random
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_gpg_random
+
+# vuln-code-snippet start weakrand_python_secrets_urlsafe
+generate_urlsafe_token() {
+    # Python's secrets.token_urlsafe uses os.urandom (CSPRNG) and
+    # produces URL-safe base64 output — ideal for API keys.
+    local token
+    token=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')  # vuln-code-snippet safe-line weakrand_python_secrets_urlsafe
+    echo "$token"
+}
+# vuln-code-snippet end weakrand_python_secrets_urlsafe

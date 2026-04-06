@@ -1,5 +1,44 @@
 # Bash SAST Benchmark — Changelog
 
+## v0.4.0 (2026-04-07)
+
+526 test cases across 20 categories, 5 applications, 56 shell scripts. **CWE expansion + 10/10 floor release.**
+
+### 4 New CWE Categories (MITRE pre-flight verified)
+- **loginjection (CWE-117)**: 10 TP + 10 TN. User input in log files without control char neutralization. echo/printf/logger/tee/heredoc. Safe: printf %q, tr -d, jq, allowlist, base64.
+- **privilege_escalation (CWE-250)**: 10 TP + 10 TN. Execution with unnecessary privileges. sudo/su/docker --privileged/nsenter/pkexec/setcap with user-controlled args. Safe: hardcoded commands, capability drops, rootless containers.
+- **dos (CWE-770)**: 10 TP + 10 TN. Allocation of resources without limits. Unbounded loops, fork bombs, tar bombs, unlimited xargs. Safe: ulimit, timeout, cgroup limits, bounded retries.
+- **cleartext_tx (CWE-319)**: 10 TP + 10 TN. Cleartext transmission. http://, FTP, telnet, nc, mysql/redis without TLS. Safe: https://, SFTP, SSH, ncat --ssl, --ssl-mode=REQUIRED.
+
+**CWE Pre-Flight**: CWE-269 (Privilege Escalation) rejected — Class-level, mapping DISCOURAGED. Replaced with CWE-250 (Base-level, Allowed). CWE-400 (DoS) rejected — Class-level, mapping DISCOURAGED. Replaced with CWE-770 (Base-level, Allowed). Sources: cwe.mitre.org definitions 250, 269, 400, 770.
+
+### All 16 Existing Categories Expanded to 10/10 Floor
+- insecure_temp: 4/4 -> 10/10 (+6V/+6S)
+- auth_bypass: 4/4 -> 10/10 (+6V/+6S)
+- rce: 5/5 -> 10/10 (+5V/+5S)
+- weakrand: 5/5 -> 10/10 (+5V/+5S)
+- race_condition: 5/5 -> 10/10 (+5V/+5S)
+- insecure_perms: 5/7 -> 10/10 (+5V/+3S)
+- weakcrypto: 6/6 -> 10/10 (+4V/+4S)
+- ssl_bypass: 6/7 -> 10/10 (+4V/+3S)
+- hardcoded_creds: 7/7 -> 10/10 (+3V/+3S)
+- infodisclosure: 6/9 -> 10/10 (+4V/+1S)
+- pathtraver: 9/9 -> 10/10 (+1V/+1S)
+
+### Metrics
+- 526 test cases (263 TP / 263 TN) — **exact 50.0% / 50.0% balance**
+- 20 CWE categories (was 16)
+- All 20 categories at minimum 10V/10S
+- 170 new test cases added (88 TP + 82 TN)
+
+### Metadata Updates
+- `expectedresults-0.4.0.csv` — new ground truth (526 entries)
+- `bash_benchmark.py` — GROUND_TRUTH_PATH, RULE_MAP, SINK_MAP updated for 4 new categories
+- `scripts/validate_bash.py` — CSV reference updated, CWEs 250/319/770 added to VALID_CWES
+- `scripts/convert_theauditor.py` — VULN_TYPE_TO_CWE entries for 4 new categories
+
+---
+
 ## v0.3.1 (2026-03-22)
 
 356 test cases across 16 categories, 5 applications, 52 shell scripts. **OWASP rebalancing release.**

@@ -1,9 +1,9 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-03-22 (v0.3.1 — 356 test cases, 5 apps, 16 CWEs, 49/51 TP/TN)
+**Created:** 2026-03-19 | **Updated:** 2026-04-07 (v0.4.0 — 526 test cases, 5 apps, 20 CWEs, 50/50 TP/TN)
 **Team:** Bash (of 3: Go, Rust, Bash)
-**Version:** v0.3.1
-**Status:** OWASP rebalancing complete. 356 test cases, 16 CWE categories, 5 apps. Baseline score: see `baseline_theauditor_tool_score.md`.
+**Version:** v0.4.0
+**Status:** CWE expansion complete. 526 test cases, 20 CWE categories, 5 apps, all categories at 10/10 minimum. Baseline score: see `baseline_theauditor_tool_score.md`.
 
 ---
 
@@ -134,8 +134,8 @@ gorustbash_benchmark/bash/
 |   +-- deepflow-ops/              # Operations suite with SAFE_MODE (7 files, 20 test cases)
 |   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
 |   +-- securepipeline/            # CI/CD pipeline (7 files, 55 TN-only cases)
-+-- testcode/                      # 16 standalone CWE test files (165 test cases)
-+-- expectedresults-0.3.1.csv      # Answer key (356 test cases, OWASP CSV format)
++-- testcode/                      # 20 standalone CWE test files (335 test cases)
++-- expectedresults-0.4.0.csv      # Answer key (526 test cases, OWASP CSV format)
 +-- bash_benchmark.py              # Scoring script
 +-- BENCHMARK.md                   # This file
 +-- CHANGELOG.md                   # Version history
@@ -151,25 +151,29 @@ gorustbash_benchmark/bash/
 | sqli | 89 | 42 | 21 | 21 |
 | codeinj | 94 | 36 | 18 | 18 |
 | ssrf | 918 | 22 | 11 | 11 |
+| auth_bypass | 287 | 20 | 10 | 10 |
+| cleartext_tx | 319 | 20 | 10 | 10 |
+| dos | 770 | 20 | 10 | 10 |
+| hardcoded_creds | 798 | 20 | 10 | 10 |
+| insecure_perms | 732 | 20 | 10 | 10 |
+| insecure_temp | 377 | 20 | 10 | 10 |
+| loginjection | 117 | 20 | 10 | 10 |
+| pathtraver | 22 | 20 | 10 | 10 |
+| privilege_escalation | 250 | 20 | 10 | 10 |
+| race_condition | 362 | 20 | 10 | 10 |
+| rce | 94 | 20 | 10 | 10 |
+| ssl_bypass | 295 | 20 | 10 | 10 |
 | unquoted | 78 | 20 | 10 | 10 |
-| pathtraver | 22 | 18 | 9 | 9 |
-| infodisclosure | 200 | 15 | 6 | 9 |
-| hardcoded_creds | 798 | 14 | 7 | 7 |
-| ssl_bypass | 295 | 13 | 6 | 7 |
-| weakcrypto | 327 | 12 | 6 | 6 |
-| insecure_perms | 732 | 12 | 5 | 7 |
-| rce | 94 | 10 | 5 | 5 |
-| weakrand | 330 | 10 | 5 | 5 |
-| race_condition | 362 | 10 | 5 | 5 |
-| insecure_temp | 377 | 8 | 4 | 4 |
-| auth_bypass | 287 | 8 | 4 | 4 |
-| **TOTAL** | | **356** | **175** | **181** |
+| weakrand | 330 | 20 | 10 | 10 |
+| weakcrypto | 327 | 20 | 10 | 10 |
+| infodisclosure | 200 | 20 | 10 | 10 |
+| **TOTAL** | | **526** | **263** | **263** |
 
-**TP/TN split: 49.2% / 50.8%** — Balanced per-category to match OWASP methodology. A tool that flags everything scores ~50% TPR, not the inflated 68% of v0.3.
+**TP/TN split: 50.0% / 50.0%** — Exact balance. A tool that flags everything scores ~50% TPR, not the inflated 68% of v0.3.
 
 **5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (CI/CD pipeline with 55 TN-only cases).
 
-For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 49/51 is within OWASP's acceptable range.
+For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 50/50 is within OWASP's acceptable range.
 
 ---
 
@@ -181,7 +185,7 @@ Two scoring paths are supported:
 
 ```bash
 # Any SAST tool that produces SARIF 2.1.0 output:
-python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.3.1.csv
+python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.4.0.csv
 ```
 
 ### Path 2: TheAuditor Database-First (for TheAuditor users)
@@ -189,7 +193,7 @@ python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.3.1.csv
 ```bash
 # Convert DB to CWE-based SARIF, then score
 python3 ../scripts/convert_theauditor.py .pf/repo_index.db
-python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.1.csv
+python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 ```
 
 Scoring uses CWE numbers as the join key. SARIF ruleId is the CWE number. No RULE_MAP.

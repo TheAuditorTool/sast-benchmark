@@ -59,3 +59,68 @@ start_node_secure() {
     node "${app_dir}/server.js"  # vuln-code-snippet safe-line ssl_node_tls_default
 }
 # vuln-code-snippet end ssl_node_tls_default
+
+# vuln-code-snippet start ssl_git_ssl_no_verify_env
+clone_with_env_bypass() {
+    local repo_url="$1"
+    local dest="$2"
+    # GIT_SSL_NO_VERIFY=true exported for all subsequent git operations —
+    # disables certificate verification globally for the session.
+    export GIT_SSL_NO_VERIFY=true
+    git clone "$repo_url" "$dest"  # vuln-code-snippet vuln-line ssl_git_ssl_no_verify_env
+}
+# vuln-code-snippet end ssl_git_ssl_no_verify_env
+
+# vuln-code-snippet start ssl_npm_strict_ssl_false
+install_npm_packages() {
+    local project_dir="$1"
+    # npm strict-ssl=false disables TLS verification for ALL npm registry
+    # requests — MITM can serve malicious packages.
+    cd "$project_dir" && npm install --strict-ssl=false  # vuln-code-snippet vuln-line ssl_npm_strict_ssl_false
+}
+# vuln-code-snippet end ssl_npm_strict_ssl_false
+
+# vuln-code-snippet start ssl_pip_trusted_host
+install_pip_no_verify() {
+    local package="$1"
+    # --trusted-host disables TLS verification for the specified host.
+    # MITM can serve tampered packages from that host.
+    pip install --trusted-host pypi.internal "$package"  # vuln-code-snippet vuln-line ssl_pip_trusted_host
+}
+# vuln-code-snippet end ssl_pip_trusted_host
+
+# vuln-code-snippet start ssl_pythonhttpsverify_disabled
+run_python_no_verify() {
+    local script="$1"
+    # PYTHONHTTPSVERIFY=0 disables certificate verification for ALL
+    # urllib and requests calls in the Python process.
+    PYTHONHTTPSVERIFY=0 python3 "$script"  # vuln-code-snippet vuln-line ssl_pythonhttpsverify_disabled
+}
+# vuln-code-snippet end ssl_pythonhttpsverify_disabled
+
+# vuln-code-snippet start ssl_git_sslcainfo
+clone_with_custom_ca() {
+    local repo_url="$1"
+    local dest="$2"
+    # git http.sslCAInfo points to a custom CA bundle — verification
+    # is still enabled, just uses a different trust anchor.
+    git -c http.sslCAInfo=/etc/ssl/internal-ca.pem clone "$repo_url" "$dest"  # vuln-code-snippet safe-line ssl_git_sslcainfo
+}
+# vuln-code-snippet end ssl_git_sslcainfo
+
+# vuln-code-snippet start ssl_pip_cert
+install_pip_custom_cert() {
+    local package="$1"
+    # --cert points to a PEM bundle for verification — TLS is still active
+    # and certificates are validated against the custom CA.
+    pip install --cert /etc/ssl/internal-ca.pem "$package"  # vuln-code-snippet safe-line ssl_pip_cert
+}
+# vuln-code-snippet end ssl_pip_cert
+
+# vuln-code-snippet start ssl_npm_cafile
+install_npm_custom_ca() {
+    local project_dir="$1"
+    # npm cafile sets a custom CA — TLS verification remains enabled.
+    cd "$project_dir" && npm install --cafile=/etc/ssl/internal-ca.pem  # vuln-code-snippet safe-line ssl_npm_cafile
+}
+# vuln-code-snippet end ssl_npm_cafile

@@ -101,6 +101,13 @@ VULN_TYPE_TO_CWE = {
     "Incorrect Permission Assignment": 732,
     "Hard-Coded Credentials": 798,
     "Hardcoded Credentials": 798,
+    "Execution with Unnecessary Privileges": 250,
+    "Privilege Escalation": 250,
+    "Allocation of Resources Without Limits": 770,
+    "Resource Exhaustion": 770,
+    "Denial of Service": 770,
+    "Cleartext Transmission": 319,
+    "Cleartext Transmission of Sensitive Information": 319,
     "Missing Authorization": 862,
     "Mass Assignment": 915,
 }

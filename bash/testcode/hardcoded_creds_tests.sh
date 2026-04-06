@@ -118,3 +118,63 @@ deploy_via_ssh_key() {
         'systemctl restart app'  # vuln-code-snippet safe-line hardcoded_creds_keyfile
 }
 # vuln-code-snippet end hardcoded_creds_keyfile
+
+# vuln-code-snippet start hardcoded_pgpassword_export
+connect_postgres() {
+    local host="$1"
+    # PGPASSWORD exported with hardcoded value — visible in /proc/environ
+    # and any child process inherits it.
+    export PGPASSWORD="Sup3rS3cretDB!"
+    psql -h "$host" -U admin -d production  # vuln-code-snippet vuln-line hardcoded_pgpassword_export
+}
+# vuln-code-snippet end hardcoded_pgpassword_export
+
+# vuln-code-snippet start hardcoded_aws_secret_key
+configure_aws_inline() {
+    # AWS_SECRET_ACCESS_KEY hardcoded in script — anyone with read access
+    # to this file has full AWS API access for this IAM user.
+    export AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE"
+    export AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"  # vuln-code-snippet vuln-line hardcoded_aws_secret_key
+    aws s3 ls
+}
+# vuln-code-snippet end hardcoded_aws_secret_key
+
+# vuln-code-snippet start hardcoded_htpasswd_inline
+create_htpasswd_file() {
+    local user="$1"
+    # -b flag takes password from command line — visible in process list
+    # (ps aux) AND hardcoded in source.
+    htpasswd -bc /etc/nginx/.htpasswd "$user" "WebAdmin2025!"  # vuln-code-snippet vuln-line hardcoded_htpasswd_inline
+}
+# vuln-code-snippet end hardcoded_htpasswd_inline
+
+# vuln-code-snippet start hardcoded_vault_dynamic
+get_dynamic_credential() {
+    local role="$1"
+    # Vault generates a short-lived credential on demand — no secret
+    # stored in source code. Credential auto-expires.
+    local cred
+    cred=$(vault read -field=password "database/creds/${role}")  # vuln-code-snippet safe-line hardcoded_vault_dynamic
+    echo "$cred"
+}
+# vuln-code-snippet end hardcoded_vault_dynamic
+
+# vuln-code-snippet start hardcoded_ssm_parameter
+get_secret_from_ssm() {
+    local param_name="$1"
+    # AWS SSM Parameter Store retrieves secrets at runtime — not in code.
+    local secret
+    secret=$(aws ssm get-parameter --name "$param_name" \
+        --with-decryption --query "Parameter.Value" --output text)  # vuln-code-snippet safe-line hardcoded_ssm_parameter
+    echo "$secret"
+}
+# vuln-code-snippet end hardcoded_ssm_parameter
+
+# vuln-code-snippet start hardcoded_htpasswd_prompt
+create_htpasswd_interactive() {
+    local user="$1"
+    # Without -b flag, htpasswd prompts interactively for the password.
+    # Password never appears in source code or process list.
+    htpasswd /etc/nginx/.htpasswd "$user"  # vuln-code-snippet safe-line hardcoded_htpasswd_prompt
+}
+# vuln-code-snippet end hardcoded_htpasswd_prompt

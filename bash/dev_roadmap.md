@@ -2,20 +2,21 @@
 
 > **Created**: 2026-03-19
 > **Team**: Bash
-> **Status**: v0.3.1 shipped. All phases complete.
+> **Status**: v0.4.0 shipped. All phases complete.
 > **Goal**: Public OWASP-style benchmark for bash shell script SAST. World-first.
 
 ---
 
-## Current State (v0.3.1)
+## Current State (v0.4.0)
 
-- **356 test cases** (175 TP / 181 TN) across 16 CWE categories
-- **TP/TN balance:** 49/51
-- **5 annotated applications** + 16 standalone testcode files
-- **CSV ground truth** (`expectedresults-0.3.1.csv`) is the sole scoring authority
+- **526 test cases** (263 TP / 263 TN) across 20 CWE categories
+- **TP/TN balance:** 50/50 (exact)
+- **5 annotated applications** + 20 standalone testcode files
+- **CSV ground truth** (`expectedresults-0.4.0.csv`) is the sole scoring authority
 - **Baseline score** established (see `baseline_theauditor_tool_score.md`)
+- **All 20 categories at minimum 10V/10S**
 
-The phases below document the development history from initial 158 test cases to current 356.
+The phases below document the development history from initial 158 test cases to current 526.
 
 ---
 
@@ -247,9 +248,14 @@ Document surprises — categories that scored better or worse than expected.
 | 11 | New CWE: auth_bypass (CWE-287/306) | DONE | 8 (4+4) | env bypass, empty cred, missing webhook sig |
 | 12 | Scoring script updates | DONE | 0 | RULE_MAP/SINK_MAP for 3 new categories |
 | 13 | Final documentation + v0.3.1 release | DONE | 0 | All stats finalized |
+| 14 | New CWE: loginjection (CWE-117) | DONE | 20 (10+10) | echo/printf/logger/tee to log files |
+| 15 | New CWE: privilege_escalation (CWE-250) | DONE | 20 (10+10) | sudo/docker --privileged/su/nsenter/pkexec |
+| 16 | New CWE: dos (CWE-770) | DONE | 20 (10+10) | unbounded loops, fork bombs, tar bombs |
+| 17 | New CWE: cleartext_tx (CWE-319) | DONE | 20 (10+10) | http/ftp/telnet/nc vs https/sftp/ssh |
+| 18 | 10/10 floor expansion (11 categories) | DONE | 90 | insecure_temp, auth_bypass, rce, weakrand, race_condition, insecure_perms, weakcrypto, ssl_bypass, hardcoded_creds, infodisclosure, pathtraver |
 
-**Current state (v0.3.1)**: 356 test cases (175 TP / 181 TN = 49.2% / 50.8%). 52 files, 5 apps, 16 CWE categories.
-**Agent classification corrections**: 2 false-positive corrections in dataforge healthcheck.sh (check_process and check_database are SAFE, not vulnerable — manual verification).
+**Current state (v0.4.0)**: 526 test cases (263 TP / 263 TN = 50.0% / 50.0%). 56 files, 5 apps, 20 CWE categories.
+**CWE pre-flight corrections**: CWE-269 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-250. CWE-400 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-770.
 
 ---
 

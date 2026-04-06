@@ -24,7 +24,7 @@ from pathlib import Path
 # ============================================================================
 BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
-GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.3.1.csv"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.4.0.csv"
 
 # Rule name -> benchmark category mapping
 # VERIFIED against actual Desktop/bash/.pf/repo_index.db (2026-03-19)
@@ -91,6 +91,17 @@ RULE_MAP = {
     "bash-timing-unsafe-compare": "auth_bypass",    # [[ == ]] on secrets without constant-time
     # JSON body injection (CWE-94) — curl -d with unescaped variable expansion
     "bash-json-body-injection": "codeinj",
+    # Log injection (CWE-117) — v0.4.0
+    "bash-log-injection": "loginjection",
+    # Privilege escalation (CWE-250) — v0.4.0
+    "bash-privilege-escalation": "privilege_escalation",
+    "bash-sudo-user-input": "privilege_escalation",
+    # Denial of service (CWE-770) — v0.4.0
+    "bash-resource-exhaustion": "dos",
+    "bash-unbounded-operation": "dos",
+    # Cleartext transmission (CWE-319) — v0.4.0
+    "bash-cleartext-transmission": "cleartext_tx",
+    "bash-http-credentials": "cleartext_tx",
     # Cross-category taint rules
     "ssrf-taint": "ssrf",                          # SSRF only — codeinj covered by bash-json-body-injection
 }
@@ -119,6 +130,13 @@ SINK_MAP = {
     "Weak Randomness": "weakrand",
     "Race Condition": "race_condition",
     "Authentication Bypass": "auth_bypass",
+    # v0.4.0 additions
+    "Log Injection": "loginjection",
+    "Execution with Unnecessary Privileges": "privilege_escalation",
+    "Privilege Escalation": "privilege_escalation",
+    "Resource Exhaustion": "dos",
+    "Denial of Service": "dos",
+    "Cleartext Transmission": "cleartext_tx",
 }
 
 # ============================================================================

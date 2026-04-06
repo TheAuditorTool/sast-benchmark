@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 BASH_DIR = BENCH_ROOT / "bash"
-CSV_FILE = BASH_DIR / "expectedresults-0.3.1.csv"
+CSV_FILE = BASH_DIR / "expectedresults-0.4.0.csv"
 BENCHMARK_PY = BASH_DIR / "bash_benchmark.py"
 SCAN_DIRS = [BASH_DIR / "apps", BASH_DIR / "testcode"]
 
@@ -37,9 +37,10 @@ PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
-    20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 117, 119, 190, 200, 269, 276,
-    287, 295, 306, 327, 328, 330, 352, 362, 367, 377, 434, 494, 501, 502,
-    532, 601, 611, 614, 643, 732, 798, 862, 863, 918, 943, 1333,
+    20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 117, 119, 190, 200, 250, 269,
+    276, 287, 295, 306, 319, 327, 328, 330, 352, 362, 367, 377, 434, 494,
+    501, 502, 532, 601, 611, 614, 643, 732, 770, 798, 862, 863, 918, 943,
+    1333,
 }
 
 errors = []

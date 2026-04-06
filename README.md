@@ -69,20 +69,20 @@ gorustbash_benchmark/
     CHANGELOG.md
     testcode/
     apps/
-  rust/                    # Rust benchmark (268 tests, 13 CWEs)
-    expectedresults-0.3.2.csv  # Answer key (scoring authority)
+  rust/                    # Rust benchmark (491 tests, 20 CWEs)
+    expectedresults-0.4.0.csv  # Answer key (scoring authority)
     rust_benchmark.md        # Scoring script + methodology
     CHANGELOG.md
     dev_roadmap.md
     testcode/                # 149 standalone test files
     apps/                    # 8 annotated applications
-  bash/                    # Bash benchmark (356 tests, 16 CWEs)
-    expectedresults-0.3.1.csv  # Answer key (356 test cases, OWASP CSV format)
+  bash/                    # Bash benchmark (526 tests, 20 CWEs)
+    expectedresults-0.4.0.csv  # Answer key (526 test cases, OWASP CSV format)
     bash_benchmark.py        # Automated scoring script
     bash_benchmark.md        # Methodology, engine analysis, scorecard
     CHANGELOG.md             # Version history
     apps/                    # 5 annotated applications
-    testcode/                # 16 standalone CWE test files
+    testcode/                # 20 standalone CWE test files
   php/                     # PHP benchmark (369 tests, 25 CWEs)
     expectedresults-0.1.0.csv  # Answer key (369 test cases, OWASP CSV format)
     php_benchmark.md         # Full benchmark specification
@@ -144,27 +144,34 @@ gorustbash_benchmark/
 
 Plus 5 reference apps with 395 classified functions. Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. Includes OWASP-style discrimination patterns, cross-file flows, GORM/sqlx/syscall/WebSocket/zip-slip patterns.
 
-### Rust v0.3.2 -- 268 test cases, 13 CWEs, 4 frameworks
+### Rust v0.4.0 -- 491 test cases, 20 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
 | sqli | 89 | 23 | 27 | 50 |
 | cmdi | 78 | 14 | 16 | 30 |
 | pathtraver | 22 | 14 | 14 | 28 |
-| ssrf | 918 | 9 | 13 | 22 |
-| memsafety | 119 | 8 | 12 | 20 |
-| crypto | 327 | 9 | 11 | 20 |
-| weakrand | 330 | 7 | 9 | 16 |
-| xss | 79 | 11 | 11 | 22 |
-| infodisclosure | 200 | 8 | 8 | 16 |
-| deser | 502 | 6 | 6 | 12 |
-| intoverflow | 190 | 5 | 7 | 12 |
-| redos | 1333 | 5 | 5 | 10 |
-| inputval | 20 | 4 | 6 | 10 |
+| ssrf | 918 | 12 | 13 | 25 |
+| xss | 79 | 12 | 12 | 24 |
+| memsafety | 119 | 12 | 12 | 24 |
+| crypto | 327 | 12 | 12 | 24 |
+| weakrand | 330 | 12 | 12 | 24 |
+| infodisclosure | 200 | 12 | 12 | 24 |
+| deser | 502 | 12 | 12 | 24 |
+| intoverflow | 190 | 12 | 12 | 24 |
+| redos | 1333 | 12 | 12 | 24 |
+| inputval | 20 | 12 | 12 | 24 |
+| hardcodedcreds | 798 | 12 | 10 | 22 |
+| race_condition | 362 | 10 | 10 | 20 |
+| loginjection | 117 | 10 | 10 | 20 |
+| securecookie | 614 | 10 | 10 | 20 |
+| redirect | 601 | 10 | 10 | 20 |
+| fileupload | 434 | 10 | 10 | 20 |
+| tlsverify | 295 | 10 | 10 | 20 |
 
-Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 standalone test files in `testcode/`. TP/TN balance: 46/54. All 13 categories have both vulnerable and safe test cases. v0.3.2: XSS rebalanced to 50/50, all source code hints stripped, SARIF scoring consolidated.
+Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + ~372 standalone test files in `testcode/`. TP/TN balance: 49/51. All 20 categories have minimum 10 TP and 10 TN. v0.4.0: 7 new CWEs (hardcodedcreds, race_condition, loginjection, securecookie, redirect, fileupload, tlsverify), all existing categories expanded to 12/12, 2 CWE-798 reclassifications.
 
-### Bash v0.3.1 -- 356 test cases, 16 CWEs
+### Bash v0.4.0 -- 526 test cases, 20 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -172,20 +179,24 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 149 sta
 | sqli | 89 | 21 | 21 | 42 |
 | codeinj | 94 | 18 | 18 | 36 |
 | ssrf | 918 | 11 | 11 | 22 |
+| auth_bypass | 287 | 10 | 10 | 20 |
+| cleartext_tx | 319 | 10 | 10 | 20 |
+| dos | 770 | 10 | 10 | 20 |
+| hardcoded_creds | 798 | 10 | 10 | 20 |
+| infodisclosure | 200 | 10 | 10 | 20 |
+| insecure_perms | 732 | 10 | 10 | 20 |
+| insecure_temp | 377 | 10 | 10 | 20 |
+| loginjection | 117 | 10 | 10 | 20 |
+| pathtraver | 22 | 10 | 10 | 20 |
+| privilege_escalation | 250 | 10 | 10 | 20 |
+| race_condition | 362 | 10 | 10 | 20 |
+| rce | 94 | 10 | 10 | 20 |
+| ssl_bypass | 295 | 10 | 10 | 20 |
 | unquoted | 78 | 10 | 10 | 20 |
-| pathtraver | 22 | 9 | 9 | 18 |
-| infodisclosure | 200 | 6 | 9 | 15 |
-| hardcoded_creds | 798 | 7 | 7 | 14 |
-| ssl_bypass | 295 | 6 | 7 | 13 |
-| weakcrypto | 327 | 6 | 6 | 12 |
-| insecure_perms | 732 | 5 | 7 | 12 |
-| rce | 94 | 5 | 5 | 10 |
-| weakrand | 330 | 5 | 5 | 10 |
-| race_condition | 362 | 5 | 5 | 10 |
-| insecure_temp | 377 | 4 | 4 | 8 |
-| auth_bypass | 287 | 4 | 4 | 8 |
+| weakrand | 330 | 10 | 10 | 20 |
+| weakcrypto | 327 | 10 | 10 | 20 |
 
-5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 13 adversarial CWE test files. TP/TN split: 49/51.
+5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 20 standalone CWE test files. TP/TN split: 50/50.
 
 ### PHP v0.1.0 -- 369 test cases, 25 CWEs, 4 frameworks
 
@@ -297,12 +308,12 @@ See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodol
 |-----------|-------|-----------------|---------------|---------------|
 | Go | 534 | 24 CWEs | 50/50 | Vulnerability detection |
 | PHP | 369 | 25 CWEs | 50/50 | Vulnerability detection |
-| Bash | 356 | 16 CWEs | 49/51 | Vulnerability detection |
+| Bash | 526 | 20 CWEs | 50/50 | Vulnerability detection |
 | Ruby | 318 | 25 CWEs | 50/50 | Vulnerability detection |
-| Rust | 268 | 13 CWEs | 46/54 | Vulnerability detection |
+| Rust | 491 | 20 CWEs | 49/51 | Vulnerability detection |
 | Adversarial | 123 | 10 categories | 52/48 | Evasion/concealment detection |
 | Chains | 16 | 4 categories | 50/50 | Compound exploit chain detection |
-| **Total** | **1,984** | **66 unique CWEs + 14 detection categories** | |
+| **Total** | **2,377** | **77 unique CWEs + 14 detection categories** | |
 
 ## How to Use
 
