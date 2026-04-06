@@ -22,7 +22,7 @@ The adversarial benchmark provides the first public ground truth for measuring t
 
 ## Project Status
 
-This benchmark is under active development and released as open source to invite community contribution and iteration. Building ground truth for four languages simultaneously is a massive undertaking. We have done our best to classify every test case correctly, but acknowledge that some classifications may need adjustment as the community reviews them. That is the point of open-sourcing it -- no single team can perfectly write their own exam and grade it too.
+This benchmark is under active development and released as open source to invite community contribution and iteration. Building ground truth for five languages simultaneously is a massive undertaking. We have done our best to classify every test case correctly, but acknowledge that some classifications may need adjustment as the community reviews them. That is the point of open-sourcing it -- no single team can perfectly write their own exam and grade it too.
 
 If you find a misclassification, please open an issue. Every correction makes the benchmark more valuable for everyone.
 
@@ -83,19 +83,19 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     apps/                    # 5 annotated applications
     testcode/                # 20 standalone CWE test files
-  php/                     # PHP benchmark (369 tests, 25 CWEs)
-    expectedresults-0.1.0.csv  # Answer key (369 test cases, OWASP CSV format)
+  php/                     # PHP benchmark (562 tests, 25 CWEs)
+    expectedresults-0.2.0.csv  # Answer key (562 test cases, OWASP CSV format)
     php_benchmark.md         # Full benchmark specification
     SCORING.md               # Scoring methodology and tool instructions
     CHANGELOG.md             # Version history
-    testcode/                # 251 standalone test files
+    testcode/                # 444 standalone test files
     apps/                    # 4 annotated applications
-  ruby/                    # Ruby benchmark (318 tests, 25 CWEs)
-    expectedresults-0.1.0.csv  # Answer key (318 test cases, OWASP CSV format)
+  ruby/                    # Ruby benchmark (573 tests, 27 CWEs)
+    expectedresults-0.2.0.csv  # Answer key (573 test cases, OWASP CSV format)
     ruby_benchmark.md        # Full benchmark specification
     SCORING.md               # Scoring methodology and tool instructions
     CHANGELOG.md             # Version history
-    testcode/                # 256 standalone test files
+    testcode/                # 511 standalone test files
     apps/                    # 3 annotated applications (rack_app, rails_api, sinatra_app)
   adversarial/             # Adversarial evasion benchmark (123 tests, 10 categories)
     expectedresults-0.2.0.csv  # Answer key (123 test cases, OWASP CSV format)
@@ -198,7 +198,7 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + ~372 st
 
 5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 20 standalone CWE test files. TP/TN split: 50/50.
 
-### PHP v0.1.0 -- 369 test cases, 25 CWEs, 4 frameworks
+### PHP v0.2.0 -- 562 test cases, 25 CWEs, 4 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
@@ -206,61 +206,63 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + ~372 st
 | xss | 79 | 20 | 19 | 39 |
 | cmdi | 78 | 12 | 12 | 24 |
 | pathtraver | 22 | 12 | 11 | 23 |
-| fileinclusion | 98 | 10 | 9 | 19 |
-| typejuggling | 697 | 7 | 7 | 14 |
-| ssrf | 918 | 7 | 7 | 14 |
-| deserial | 502 | 7 | 7 | 14 |
-| codeinj | 94 | 6 | 6 | 12 |
-| csrf | 352 | 6 | 6 | 12 |
-| fileupload | 434 | 6 | 6 | 12 |
-| hardcodedcreds | 798 | 6 | 6 | 12 |
-| xxe | 611 | 6 | 6 | 12 |
-| extract | 621 | 5 | 5 | 10 |
-| massassign | 915 | 5 | 5 | 10 |
-| redirect | 601 | 5 | 5 | 10 |
-| ssti | 1336 | 5 | 5 | 10 |
-| weakhash | 328 | 5 | 5 | 10 |
-| weakrand | 330 | 5 | 5 | 10 |
-| headerinj | 113 | 4 | 4 | 8 |
-| ldapi | 90 | 4 | 4 | 8 |
-| securecookie | 614 | 4 | 4 | 8 |
-| unsafereflect | 470 | 4 | 4 | 8 |
-| variablevars | 627 | 4 | 4 | 8 |
-| weakcipher | 327 | 3 | 3 | 6 |
+| codeinj | 94 | 10 | 10 | 20 |
+| csrf | 352 | 10 | 10 | 20 |
+| deserial | 502 | 10 | 10 | 20 |
+| extract | 621 | 10 | 10 | 20 |
+| fileinclusion | 98 | 10 | 10 | 20 |
+| fileupload | 434 | 10 | 10 | 20 |
+| hardcodedcreds | 798 | 10 | 10 | 20 |
+| headerinj | 113 | 10 | 10 | 20 |
+| ldapi | 90 | 10 | 10 | 20 |
+| massassign | 915 | 10 | 10 | 20 |
+| redirect | 601 | 10 | 10 | 20 |
+| securecookie | 614 | 10 | 10 | 20 |
+| ssrf | 918 | 10 | 10 | 20 |
+| ssti | 1336 | 10 | 10 | 20 |
+| typejuggling | 697 | 10 | 10 | 20 |
+| unsafereflect | 470 | 10 | 10 | 20 |
+| variablevars | 627 | 10 | 10 | 20 |
+| weakcipher | 327 | 10 | 10 | 20 |
+| weakhash | 328 | 10 | 10 | 20 |
+| weakrand | 330 | 10 | 10 | 20 |
+| xxe | 611 | 10 | 10 | 20 |
 
-251 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
+444 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. All 25 categories have minimum 10 TP + 10 TN. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
-### Ruby v0.1.0 -- 318 test cases, 25 CWEs, 3 frameworks
+### Ruby v0.2.0 -- 573 test cases, 27 CWEs, 3 frameworks
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
 | sqli | 89 | 19 | 19 | 38 |
 | xss | 79 | 14 | 14 | 28 |
 | cmdi | 78 | 12 | 12 | 24 |
-| pathtraver | 22 | 9 | 9 | 18 |
-| deserial | 502 | 8 | 8 | 16 |
-| massassign | 915 | 7 | 7 | 14 |
-| codeinj | 94 | 6 | 6 | 12 |
-| csrf | 352 | 6 | 6 | 12 |
-| fileupload | 434 | 6 | 6 | 12 |
-| hardcodedcreds | 798 | 6 | 6 | 12 |
-| redirect | 601 | 6 | 6 | 12 |
-| ssrf | 918 | 6 | 6 | 12 |
-| ssti | 1336 | 6 | 6 | 12 |
-| weakhash | 328 | 6 | 6 | 12 |
-| fileinclusion | 98 | 5 | 5 | 10 |
-| securecookie | 614 | 5 | 5 | 10 |
-| dynmethod | 94 | 4 | 4 | 8 |
-| headerinj | 113 | 4 | 4 | 8 |
-| unsafereflect | 470 | 4 | 4 | 8 |
-| weakrand | 330 | 4 | 4 | 8 |
-| xxe | 611 | 4 | 4 | 8 |
-| ldapi | 90 | 3 | 3 | 6 |
-| loginjection | 117 | 3 | 3 | 6 |
-| regex | 1333 | 3 | 3 | 6 |
-| weakcipher | 327 | 3 | 3 | 6 |
+| fileupload | 434 | 10 | 12 | 22 |
+| csrf | 352 | 10 | 11 | 21 |
+| authnfailure | 287 | 10 | 10 | 20 |
+| authzfailure | 862 | 10 | 10 | 20 |
+| codeinj | 94 | 10 | 10 | 20 |
+| deserial | 502 | 10 | 10 | 20 |
+| dynmethod | 94 | 10 | 10 | 20 |
+| fileinclusion | 98 | 10 | 10 | 20 |
+| hardcodedcreds | 798 | 10 | 10 | 20 |
+| headerinj | 113 | 10 | 10 | 20 |
+| ldapi | 90 | 10 | 10 | 20 |
+| loginjection | 117 | 10 | 10 | 20 |
+| massassign | 915 | 10 | 10 | 20 |
+| pathtraver | 22 | 10 | 10 | 20 |
+| redirect | 601 | 10 | 10 | 20 |
+| regex | 1333 | 10 | 10 | 20 |
+| securecookie | 614 | 10 | 10 | 20 |
+| ssrf | 918 | 10 | 10 | 20 |
+| ssti | 1336 | 10 | 10 | 20 |
+| unsafereflect | 470 | 10 | 10 | 20 |
+| weakcipher | 327 | 10 | 10 | 20 |
+| weakhash | 328 | 10 | 10 | 20 |
+| weakrand | 330 | 10 | 10 | 20 |
+| xxe | 611 | 10 | 10 | 20 |
 
-256 standalone test files in `testcode/` + 3 annotated applications (rack_app, rails_api, sinatra_app). Frameworks: Raw Ruby/Rack, Rails 7, Sinatra 3. TP/TN balance: 50/50. Ruby-specific CWEs: mass assignment via strong params bypass (CWE-915), dynamic method dispatch (CWE-94), SSTI via ERB.new (CWE-1336), unsafe reflection via const_get/send (CWE-470), ReDoS (CWE-1333).
+511 standalone test files in `testcode/` + 3 annotated applications (rack_app, rails_api, sinatra_app). Frameworks: Raw Ruby/Rack, Rails 7, Sinatra 3. TP/TN balance: 50/50. v0.2.0: All 27 categories at 10+ vuln / 10+ safe minimum. New CWE categories: authentication failure (CWE-287) with JWT/Devise/session patterns, authorization failure (CWE-862) with IDOR/Pundit/CanCanCan patterns. Ruby-specific CWEs: mass assignment (CWE-915), dynamic method dispatch (CWE-94), SSTI via ERB.new (CWE-1336), unsafe reflection via const_get/send (CWE-470), ReDoS (CWE-1333).
 
 ### Adversarial Evasion v0.2.0 -- 123 test cases, 10 categories, cross-language
 
@@ -285,7 +287,7 @@ Cross-language (JavaScript, Python, Go). Based on real-world campaigns: Glasswor
 
 See [adversarial/adversarial_benchmark.md](adversarial/adversarial_benchmark.md) for the full methodology, detection requirements matrix, and design philosophy.
 
-### Chain Detection v0.1.0 -- 16 test cases, 4 categories, 8 multi-file scenarios
+### Chain Detection v0.2.0 -- 500 test cases, 20 categories, 250 multi-file scenarios
 
 **This is not a vulnerability benchmark. It is a compositional reasoning benchmark.**
 
@@ -293,12 +295,28 @@ While all other benchmarks test whether a tool can detect a single finding, this
 
 | Category | Scenarios | Vuln | Safe | Total | Chain Pattern |
 |----------|-----------|------|------|-------|---------------|
-| unauth_injection | 2 | 2 | 2 | 4 | Auth bypass + injection = unauthenticated attack |
-| ssrf_pivot | 2 | 2 | 2 | 4 | SSRF + internal service = network boundary bypass |
-| compound_injection | 2 | 2 | 2 | 4 | Injection A enables injection B |
-| multi_stage | 2 | 2 | 2 | 4 | Multi-hop attack requiring 2+ vuln types |
+| unauth_injection | 13 | 13 | 13 | 26 | Auth bypass + injection = unauthenticated attack |
+| ssrf_pivot | 13 | 13 | 13 | 26 | SSRF + internal service = network boundary bypass |
+| compound_injection | 13 | 13 | 13 | 26 | Injection A enables injection B |
+| multi_stage | 13 | 13 | 13 | 26 | Multi-hop attack requiring 2+ vuln types |
+| privesc_chain | 13 | 13 | 13 | 26 | Low-priv access + missing authz = privilege escalation |
+| xxe_to_file_read | 13 | 13 | 13 | 26 | XXE + file:// URI = server file exfiltration |
+| open_redirect_to_phish | 13 | 13 | 13 | 26 | Unvalidated redirect + auth flow = credential theft |
+| weak_crypto_to_forge | 13 | 13 | 13 | 26 | Weak crypto + verification = token forgery |
+| info_leak_to_account_takeover | 13 | 13 | 13 | 26 | Info disclosure + targeted exploit = account takeover |
+| template_injection_to_rce | 13 | 13 | 13 | 26 | SSTI + code execution = RCE |
+| idor_data_leak | 12 | 12 | 12 | 24 | Broken object auth + sensitive data = mass exfil |
+| race_condition_bypass | 12 | 12 | 12 | 24 | TOCTOU + critical operation = security bypass |
+| path_traversal_to_read | 12 | 12 | 12 | 24 | Path traversal + sensitive files = secret leak |
+| csrf_to_state_change | 12 | 12 | 12 | 24 | Missing CSRF + state-changing endpoint = unauth actions |
+| header_injection_to_cache_poison | 12 | 12 | 12 | 24 | Header injection + caching = persistent XSS |
+| mass_assign_to_privesc | 12 | 12 | 12 | 24 | Unfiltered binding + role field = privilege escalation |
+| hardcoded_creds_to_access | 12 | 12 | 12 | 24 | Creds in source + auth endpoint = unauthorized access |
+| insecure_file_perms_to_tamper | 12 | 12 | 12 | 24 | World-writable file + app trusts it = tampering |
+| cors_miscfg_to_data_theft | 12 | 12 | 12 | 24 | Permissive CORS + sensitive API = cross-origin exfil |
+| session_fixation_to_hijack | 12 | 12 | 12 | 24 | Session not regenerated + fixable ID = hijack |
 
-Each scenario is a multi-file Flask application with `vuln/` (exploitable chain) and `safe/` (mitigated chain) variants. Safe variants differ by exactly one file. Based on real-world patterns: Capital One (2019), CVE-2023-22515, CVE-2024-23897, CVE-2015-7501.
+Each scenario is a multi-file Flask application with `vuln/` (exploitable chain) and `safe/` (mitigated chain) variants. Safe variants differ by exactly one file. Based on real-world attack patterns including Capital One (2019), CVE-2023-22515, CVE-2021-41773, CVE-2014-3529, CVE-2019-11581, CVE-2022-26138, and PortSwigger cache poisoning research.
 
 See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodology, scenario descriptions, and safe variant design rules.
 
@@ -307,13 +325,13 @@ See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodol
 | Benchmark | Tests | CWEs/Categories | TP/TN Balance | What It Tests |
 |-----------|-------|-----------------|---------------|---------------|
 | Go | 534 | 24 CWEs | 50/50 | Vulnerability detection |
-| PHP | 369 | 25 CWEs | 50/50 | Vulnerability detection |
+| PHP | 562 | 25 CWEs | 50/50 | Vulnerability detection |
 | Bash | 526 | 20 CWEs | 50/50 | Vulnerability detection |
-| Ruby | 318 | 25 CWEs | 50/50 | Vulnerability detection |
+| Ruby | 573 | 27 CWEs | 50/50 | Vulnerability detection |
 | Rust | 491 | 20 CWEs | 49/51 | Vulnerability detection |
 | Adversarial | 123 | 10 categories | 52/48 | Evasion/concealment detection |
-| Chains | 16 | 4 categories | 50/50 | Compound exploit chain detection |
-| **Total** | **2,377** | **77 unique CWEs + 14 detection categories** | |
+| Chains | 500 | 20 categories | 50/50 | Compound exploit chain detection |
+| **Total** | **3,309** | **79 unique CWEs + 30 detection categories** | |
 
 ## How to Use
 
@@ -352,7 +370,7 @@ Root-cause every FN (missed vulnerability) and FP (false alarm). That's where th
 Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 1,984 across five languages + adversarial + chains. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 2,377 across five languages + adversarial + chains. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
 - **Adversarial coverage**: 123 test cases across 10 categories. Dependency confusion (registry-level) and true AI polymorphic malware (runtime) are not yet covered as they require infrastructure beyond static source files.
 - **Chain coverage**: 16 test cases across 4 categories. Python/Flask only for v0.1.0. Cross-language and longer chains planned for future releases.

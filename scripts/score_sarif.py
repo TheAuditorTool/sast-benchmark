@@ -420,7 +420,7 @@ def main():
         print()
         print("Examples:")
         print("  # Annotation-based (Rust/Bash/PHP/Ruby) -- simplest, auto-detects dirs:")
-        print("  python score_sarif.py theauditor.sarif php/expectedresults-0.1.0.csv")
+        print("  python score_sarif.py theauditor.sarif php/expectedresults-0.2.0.csv")
         print()
         print("  # Go (filename-based matching, no annotations needed):")
         print("  python score_sarif.py results.sarif go/expectedresults-0.3.2.csv")

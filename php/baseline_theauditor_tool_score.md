@@ -1,7 +1,9 @@
 # PHP Benchmark Baseline -- TheAuditor
 
+**Note**: This baseline was scored against v0.1.0 (369 tests). Re-scoring against v0.2.0 (562 tests) is pending.
+
 **Date**: 2026-04-01
-**Version**: TheAuditor (current) -- PERFECT SCORE
+**Version**: TheAuditor (current) -- PERFECT SCORE (v0.1.0)
 **Category-Averaged Score (OWASP)**: +100.0%
 **Flat Score**: +100.0%
 

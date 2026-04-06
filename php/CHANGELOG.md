@@ -1,5 +1,16 @@
 # PHP SAST Benchmark Changelog
 
+## v0.2.0 (2026-04-07)
+
+Expansion release: all 25 categories reach 10 TP + 10 TN minimum.
+
+- 193 new standalone test cases (96 TP / 97 TN) across 21 categories
+- Total: 562 test cases (282 TP / 280 TN), 25 CWE categories, 4 frameworks
+- All categories now have minimum 10 TP + 10 TN (20 total per category)
+- New patterns include: igbinary deserialization, sodium AEAD ciphers, Latte/Mustache SSTI, fsockopen/SoapClient SSRF, class_alias reflection, CHIPS cookie partitioning, PBKDF2/Argon2 key derivation, double-submit CSRF, GD image reprocessing, JSON Schema mass assignment defense, and more
+- 444 standalone testcode files (up from 251)
+- CSV version bump: expectedresults-0.1.0.csv -> expectedresults-0.2.0.csv
+
 ## v0.1.0 (2026-03-23)
 
 Initial release.

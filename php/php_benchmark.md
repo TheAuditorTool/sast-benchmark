@@ -1,4 +1,4 @@
-# PHP SAST Benchmark v0.1.0
+# PHP SAST Benchmark v0.2.0
 
 ## Purpose
 
@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 ## Test Case Inventory
 
-25 CWE categories, 369 test cases (186 TP / 183 TN), 50/50 balance.
+25 CWE categories, 562 test cases (282 TP / 280 TN), 50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -88,7 +88,7 @@ function getUser(PDO $pdo, BenchmarkRequest $req): BenchmarkResponse {
 
 ## Ground Truth
 
-`expectedresults-0.1.0.csv` -- OWASP CSV format:
+`expectedresults-0.2.0.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
