@@ -126,7 +126,7 @@ The OWASP Foundation reviewed v0.3 and identified the 68/32 TP/TN split as the "
 - **apps/deepflow-webhook/** — HTTP webhook server (8 files). socat/netcat listener, GitHub/GitLab/Slack webhook handling, deploy/notify/exec/query endpoints.
 - **apps/deepflow-ops/** — Operations suite with SAFE_MODE toggle (7 files). Backup, cleanup, deploy, notify, webhook handler. Each script has safe + vulnerable code paths.
 - **apps/dataforge/** — Data pipeline scripts (4 files). Backup, deploy, healthcheck, Terraform infrastructure setup.
-- **testcode/** — 13 purpose-built CWE test files with TP/TN pairs.
+- **testcode/** — 13 standalone CWE test files with TP/TN pairs.
 
 ### Test Case Summary
 - 161 vulnerable (TP), 76 safe (TN) — 68/32 split

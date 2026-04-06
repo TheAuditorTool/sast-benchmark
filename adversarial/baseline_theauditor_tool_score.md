@@ -81,7 +81,7 @@ Scored via unified pipeline: `convert_theauditor.py` -> `score_sarif.py`
 
 ## Detection Gap Roadmap
 
-**Quick wins (rule additions, no new paradigm):**
+**Quick wins (rule additions, existing infrastructure):**
 1. Bidi override detection -- scan for U+202A-U+202E in non-string contexts
 2. Install hook exec detection -- flag exec/compile in setup.py and postinstall scripts
 3. charcode_logging FP fix -- distinguish display chars from executable reconstruction
@@ -91,7 +91,7 @@ Scored via unified pipeline: `convert_theauditor.py` -> `score_sarif.py`
 5. Charset mapping detection -- CP mapping database for dangerous transformations
 6. Steganographic pattern -- taint through file-read-of-binary -> decode -> exec
 
-**Hard (new paradigm required):**
+**Hard (new analysis engines required):**
 7. AI prompt injection -- requires NLP-level adversarial intent detection in comments
 8. C2 fingerprint -- requires behavioral modeling of API-response-to-exec patterns
 9. Slopsquatting -- requires package registry integration or hallucination DB

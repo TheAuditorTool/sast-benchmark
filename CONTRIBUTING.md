@@ -1,6 +1,6 @@
 # Contributing to the Go/Rust/Bash/PHP/Ruby + Adversarial + Chain Detection SAST Benchmark
 
-Thank you for your interest in improving SAST tool accuracy. This benchmark exists because no public ground truth existed for Go, Rust, Bash, or PHP vulnerability detection -- or for adversarial evasion detection in any language. Every contribution helps the entire SAST ecosystem.
+Thank you for your interest in improving SAST tool accuracy. This benchmark exists because no public ground truth existed for Go, Rust, Bash, or PHP vulnerability detection -- or for adversarial evasion detection in any language. Every correction makes the ground truth more useful for everyone.
 
 ## How to Contribute
 

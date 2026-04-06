@@ -20,7 +20,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 | crypto | 327* | 12 | 12 | 24 | 50/50 |
 | weakrand | 330 | 12 | 12 | 24 | 50/50 |
 | infodisclosure | 200* | 12 | 12 | 24 | 50/50 |
-| deser | 502 | 12 | 12 | 24 | 50/50 |
+| deserial | 502 | 12 | 12 | 24 | 50/50 |
 | intoverflow | 190 | 12 | 12 | 24 | 50/50 |
 | redos | 1333 | 12 | 12 | 24 | 50/50 |
 | inputval | 20 | 12 | 12 | 24 | 50/50 |
@@ -108,7 +108,7 @@ Maps each benchmark category to SAST rules that detect it.
 | xss | 79 | NONE | - | **GAP** (no .rs in xss rule target_extensions) |
 | crypto | 327 | `rust/supply_chain.py` (dep-level only) | structural | **PARTIAL** (Cargo.toml only, not code-level) |
 | weakrand | 330 | NONE | - | **GAP** |
-| deser | 502 | NONE | - | **GAP** (patterns exist, no rule) |
+| deserial | 502 | NONE | - | **GAP** (patterns exist, no rule) |
 | redos | 1333 | `security/redos_analyze.py` (no .rs) | - | **GAP** (LOW fix: add .rs) |
 | intoverflow | 190 | `rust/integer_safety.py` | structural | **PARTIAL** (crypto/financial only) |
 | infodisclosure | 200+ | NONE | - | **GAP** |
@@ -121,7 +121,7 @@ Maps each benchmark category to SAST rules that detect it.
 | fileupload | 434 | NONE | - | **GAP** |
 | tlsverify | 295 | NONE | - | **GAP** |
 
-**218 of 491 test cases (44%) are in gap categories** (xss=24, weakrand=24, infodisclosure=24, deser=24, redos=24, hardcodedcreds=22, race_condition=20, loginjection=20, securecookie=20, redirect=20, fileupload=20, tlsverify=20) -- expected to show as FN in baseline scoring.
+**218 of 491 test cases (44%) are in gap categories** (xss=24, weakrand=24, infodisclosure=24, deserial=24, redos=24, hardcodedcreds=22, race_condition=20, loginjection=20, securecookie=20, redirect=20, fileupload=20, tlsverify=20) -- expected to show as FN in baseline scoring.
 
 ---
 

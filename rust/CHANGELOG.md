@@ -7,7 +7,7 @@ Every change to benchmark files documented here with rationale.
 ## 2026-04-07 — v0.4.0: Major Expansion (268 → 491 test cases, 13 → 20 CWEs)
 
 ### Context
-OWASP Foundation submission requires comprehensive CWE coverage and statistical significance per category. v0.3.2 had 268 tests across 13 CWEs but several categories were below the 10 TP / 10 TN minimum threshold. This release nearly doubles the benchmark and adds 7 new CWE categories present in Go/PHP/Ruby benchmarks.
+OWASP Foundation submission requires broad CWE coverage and statistical significance per category. v0.3.2 had 268 tests across 13 CWEs but several categories were below the 10 TP / 10 TN minimum threshold. This release nearly doubles the benchmark and adds 7 new CWE categories present in Go/PHP/Ruby benchmarks.
 
 ### Pre-Flight Due Diligence
 - All 7 new CWE numbers verified against MITRE CWE database (cwe.mitre.org)
@@ -33,7 +33,7 @@ All existing categories brought to minimum 12 TP / 12 TN:
 | crypto | 9/11=20 | 12/12=24 | +3 TP, +1 TN |
 | weakrand | 7/9=16 | 12/12=24 | +5 TP, +3 TN |
 | infodisclosure | 6/8=14* | 12/12=24 | +6 TP, +4 TN |
-| deser | 6/6=12 | 12/12=24 | +6 TP, +6 TN |
+| deserial | 6/6=12 | 12/12=24 | +6 TP, +6 TN |
 | intoverflow | 5/7=12 | 12/12=24 | +7 TP, +5 TN |
 | redos | 5/5=10 | 12/12=24 | +7 TP, +7 TN |
 | inputval | 4/6=10 | 12/12=24 | +8 TP, +6 TN |
@@ -76,7 +76,7 @@ All existing categories brought to minimum 12 TP / 12 TN:
 | crypto | 327* | 12 | 12 | 24 | 50/50 |
 | weakrand | 330 | 12 | 12 | 24 | 50/50 |
 | infodisclosure | 200* | 12 | 12 | 24 | 50/50 |
-| deser | 502 | 12 | 12 | 24 | 50/50 |
+| deserial | 502 | 12 | 12 | 24 | 50/50 |
 | intoverflow | 190 | 12 | 12 | 24 | 50/50 |
 | redos | 1333 | 12 | 12 | 24 | 50/50 |
 | inputval | 20 | 12 | 12 | 24 | 50/50 |

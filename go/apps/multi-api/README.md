@@ -1,6 +1,6 @@
 # Multi-Framework Go API - TheAuditor Test Fixture
 
-This project is a comprehensive Go test fixture for TheAuditor's taint analysis, rule detection, and graph strategy testing.
+Go test fixture for TheAuditor's taint analysis, rule detection, and graph strategy testing.
 
 ## Purpose
 

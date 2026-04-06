@@ -1,6 +1,6 @@
 # Rust JobQueue
 
-A comprehensive distributed job queue system written in Rust. This project serves as a **real-world test fixture** for code auditing tools, containing intentional vulnerabilities and covering extensive Rust patterns.
+Distributed job queue system written in Rust. Serves as a **test fixture** for code auditing tools, containing intentional vulnerabilities across multiple CWE categories.
 
 ## Architecture
 

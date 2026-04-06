@@ -46,7 +46,7 @@ VALID_CWES = {
 
 VALID_CATEGORIES = {
     "sqli", "cmdi", "pathtraver", "xss", "ssrf", "weakrand",
-    "crypto", "memsafety", "infodisclosure", "deser",
+    "crypto", "memsafety", "infodisclosure", "deserial",
     "intoverflow", "redos", "inputval",
     "hardcodedcreds", "race_condition", "loginjection",
     "securecookie", "redirect", "fileupload", "tlsverify",

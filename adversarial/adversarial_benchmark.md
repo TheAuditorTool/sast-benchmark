@@ -10,7 +10,7 @@
 
 This benchmark tests a fundamentally different capability than traditional SAST benchmarks. While the Go/Rust/Bash/PHP benchmarks ask "can your tool find this vulnerability?", this benchmark asks: **"can your tool detect that someone is hiding something?"**
 
-Traditional SAST is blind to these attack classes because the AST, regex, and taint analysis see "normal" code. Detection requires new paradigms: byte-level Unicode scanning, visual deception analysis, behavioral intent modeling, and supply chain anomaly detection.
+Traditional SAST is blind to these attack classes because the AST, regex, and taint analysis see "normal" code. Catching them requires different techniques: byte-level Unicode scanning, visual deception analysis, behavioral intent modeling, and supply chain anomaly detection.
 
 ---
 
@@ -202,7 +202,7 @@ Code that calls LLM APIs and feeds the response directly into `eval()`, `exec()`
 
 ## Detection Requirements Matrix
 
-This matrix shows why adversarial evasion is hard. No single analysis technique covers all categories. Effective detection requires layering multiple paradigms.
+This matrix shows why adversarial evasion is hard. No single analysis technique covers all categories. Effective detection requires layering multiple approaches.
 
 | Category | AST Analysis | Regex/Pattern | Byte-Level Scan | Behavioral/Intent |
 |---|---|---|---|---|
@@ -287,7 +287,7 @@ This benchmark is complementary to, not a replacement for, the Go/Rust/Bash/PHP 
 |---|---|---|
 | **Question** | Can you find this vulnerability? | Can you detect concealment? |
 | **Attack model** | Developer writes insecure code | Attacker deliberately hides malicious code |
-| **Detection paradigm** | Taint analysis, pattern matching | Byte-level scan, intent analysis |
+| **Detection method** | Taint analysis, pattern matching | Byte-level scan, intent analysis |
 | **CWE focus** | Injection, crypto, auth (standard CWEs) | CWE-506 (embedded malicious code), CWE-451 (UI misrepresentation), CWE-1059 (insufficient documentation) |
 | **Code appearance** | Looks like normal (if insecure) code | Looks like normal *safe* code |
 | **Why it's hard** | Complex data flows, cross-function tracking | Nothing looks wrong to any standard analysis |

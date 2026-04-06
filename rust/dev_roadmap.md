@@ -10,7 +10,7 @@
 
 - **491 test cases** (243 TP, 248 TN) across 20 CWE categories
 - **CSV ground truth** (`expectedresults-0.4.0.csv`) is the sole scoring authority
-- **~372 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
+- **372 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
 - **All 20 categories** have both TP and TN test cases, minimum 10/10
 - **TP/TN balance:** 49/51 (all categories within 45-55 range)
 - **4 frameworks:** actix-web, axum, Rocket, Warp
