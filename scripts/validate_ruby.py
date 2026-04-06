@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 RUBY_DIR = BENCH_ROOT / "ruby"
-CSV_FILE = RUBY_DIR / "expectedresults-0.1.0.csv"
+CSV_FILE = RUBY_DIR / "expectedresults-0.2.0.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCAN_DIRS = [RUBY_DIR / "apps", RUBY_DIR / "testcode"]
 
@@ -37,9 +37,9 @@ PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
-    22, 78, 79, 89, 90, 94, 98, 113, 117, 327, 328, 330,
+    22, 78, 79, 89, 90, 94, 98, 113, 117, 287, 327, 328, 330,
     352, 434, 470, 502, 601, 611, 614, 798,
-    915, 918, 1333, 1336,
+    862, 915, 918, 1333, 1336,
 }
 
 VALID_CATEGORIES = {
@@ -48,6 +48,7 @@ VALID_CATEGORIES = {
     "dynmethod", "redirect", "xxe", "fileupload", "weakhash",
     "weakrand", "weakcipher", "hardcodedcreds", "csrf", "headerinj",
     "ldapi", "securecookie", "regex", "loginjection",
+    "authnfailure", "authzfailure",
 }
 
 errors = []

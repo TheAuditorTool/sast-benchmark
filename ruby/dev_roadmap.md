@@ -1,11 +1,10 @@
 # Ruby SAST Benchmark Development Roadmap
 
-## v0.2.0 (Planned)
-- Devise authentication pattern tests (CWE-287, CWE-306)
-- Pundit authorization bypass patterns (CWE-862)
-- ActiveStorage file handling patterns
-- rack-attack bypass patterns
-- Additional Rails 7+ Turbo/Hotwire patterns
+## v0.2.0 (Released 2026-04-07)
+- Authentication failure tests (CWE-287): JWT bypass, session fixation, Devise, Warden, OAuth
+- Authorization failure tests (CWE-862): IDOR, Pundit, CanCanCan, tenant isolation, Action Policy
+- All 27 categories expanded to 10+ vuln / 10+ safe minimum
+- 573 total test cases (up from 318)
 
 ## v0.3.0 (Planned)
 - ERB template extraction and analysis

@@ -1,4 +1,4 @@
-# Ruby SAST Benchmark v0.1.0
+# Ruby SAST Benchmark v0.2.0
 
 ## Purpose
 
@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 ## Test Case Inventory
 
-25 CWE categories, 318 test cases (159 TP / 159 TN), 50/50 balance.
+27 CWE categories, 573 test cases (285 TP / 288 TN), ~50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -32,7 +32,14 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 | redirect | 601 | Open Redirect | redirect_to params[:url] |
 | xxe | 611 | XML External Entity | Nokogiri::XML without NONET, REXML |
 
-### Tier 3: Standard Web
+### Tier 3: Authentication & Authorization
+
+| Category | CWE | Description | Ruby-Specific |
+|----------|-----|-------------|---------------|
+| authnfailure | 287 | Improper Authentication | JWT unverified/none-alg, skip_before_action, session fixation, Devise bypass |
+| authzfailure | 862 | Missing Authorization | IDOR, missing Pundit/CanCanCan, tenant isolation, unscoped queries |
+
+### Tier 4: Standard Web
 
 | Category | CWE | Description |
 |----------|-----|-------------|
@@ -84,7 +91,7 @@ end
 
 ## Ground Truth
 
-`expectedresults-0.1.0.csv` -- OWASP CSV format:
+`expectedresults-0.2.0.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
