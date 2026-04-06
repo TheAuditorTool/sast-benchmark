@@ -7,7 +7,7 @@
 your-tool scan ./testcode/ --output results.sarif
 
 # 2. Score against ground truth
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 The scorer outputs two tables: **Category-Averaged** (OWASP standard) and **Flat Aggregate** (for comparison).
@@ -22,14 +22,14 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored. Below are export commands 
 
 ```bash
 semgrep --config auto --sarif --output results.sarif ./testcode/
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 ### Gosec
 
 ```bash
 gosec -fmt sarif -out results.sarif ./testcode/...
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 ### CodeQL
@@ -42,7 +42,7 @@ codeql database create go-bench-db --language=go --source-root=.
 codeql database analyze go-bench-db codeql/go-queries \
     --format=sarifv2.1.0 --output=results.sarif
 
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 ### Staticcheck
@@ -59,7 +59,7 @@ staticcheck -f json ./testcode/... > staticcheck.json
 Export findings as SARIF from the SonarQube UI or API, then score:
 
 ```bash
-python ../scripts/score_sarif.py sonar-results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py sonar-results.sarif expectedresults-0.4.0.csv
 ```
 
 ### TheAuditor
@@ -74,7 +74,7 @@ aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
 
 # Score
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 # Converter auto-detects language, writes theauditor.sarif with integrity hashes
 ```
 
@@ -165,7 +165,7 @@ To contribute your tool's score to the benchmark:
 
 1. Run your tool on the `go/` directory
 2. Export findings as SARIF 2.1.0
-3. Run `python scripts/score_sarif.py <your_output.sarif> go/expectedresults-0.3.2.csv`
+3. Run `python scripts/score_sarif.py <your_output.sarif> go/expectedresults-0.4.0.csv`
 4. Submit a PR adding a `baseline_<toolname>_score.md` to `go/` with your full scorecard
 
 Include the tool name, version, date, and whether any benchmark-specific tuning was applied.

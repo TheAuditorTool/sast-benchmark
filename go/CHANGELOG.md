@@ -1,5 +1,43 @@
 # Go Benchmark Changelog
 
+## v0.4.0 (2026-04-07)
+
+### Category Expansion to 10/10 Minimum (+132 tests across 17 categories)
+- All 24 existing categories now have minimum 10 TP + 10 TN tests
+- weakcipher CWE-327 (00537-00540): AES-CFB without MAC, null cipher (base64), AES-256-GCM, XChaCha20-Poly1305
+- securecookie CWE-614 (00541-00544): SameSite=None without Secure, missing flags, __Secure- prefix, securecookie rotation
+- redirect CWE-601 (00545-00548): javascript: scheme, data: URI, url.Parse+Host allowlist, path-only struct
+- hardcodedcreds CWE-798 (00549-00556): OAuth secret, SMTP password, webhook secret, encryption key vs Vault, KMS, env, config file
+- authnfailure CWE-287 (00557-00564): bcrypt logic inversion, timing-unsafe ==, Basic auth ==, refresh no expiry vs correct bcrypt, ConstantTimeCompare, argon2id, expiry check
+- trustbound CWE-501 (00565-00572): tenant/cookie/header/redirect to session vs JWT claims, allowlist, introspection, URL validation
+- ldapi CWE-90 (00573-00580): OR filter, modify DN, scope injection, department filter vs EscapeFilter, DN from search, scope enum, attribute allowlist
+- deserial CWE-502 (00581-00588): gob cookie, xml interface{}, reflect.New, yaml map vs MaxBytesReader+DisallowUnknownFields, typed struct, LimitReader, validation
+- codeinj CWE-94 (00589-00596): user delimiters, ParseGlob, FuncMap os.ReadFile, side-effect method vs html/template, safe FuncMap, embed.FS, pre-compiled
+- loginjection CWE-117 (00597-00603): Fprintf log.Writer, zerolog Msg concat, User-Agent, slog concat vs zerolog structured, %q verb, LogValuer
+- nosql CWE-943 (00604-00610): raw JSON filter, aggregate pipeline, $set field name, DeleteMany vs bson.D $eq, typed struct, constant pipeline
+- authzfailure CWE-862 (00611-00617): bulk export, horizontal IDOR, admin no role check vs JWT scope, SQL JOIN ownership, ABAC policy, role middleware
+- csrf CWE-352 (00618-00624): multipart no token, JSON credentials:include, DELETE no CSRF vs gorilla/csrf, HMAC token, SameSite+Origin, Referer
+- fileupload CWE-434 (00625-00636): PUT raw body, double extension, zip-slip, user directory, batch upload, file overwrite vs DetectContentType, MaxBytesReader, combo check, MkdirTemp, re-encoding, zip-slip protection
+- inputval CWE-20 (00637-00648): integer overflow, NaN/Inf, header length, type assertion, nil map, negative capacity vs DisallowUnknownFields, range check, enum allowlist, length check, IsNaN/IsInf, comma-ok
+- tlsverify CWE-295 (00649-00658): custom DialTLS, empty ServerName, partial VerifyPeerCertificate, VerifyConnection nil, websocket skip vs SystemCertPool, mTLS, cert pinning, TLS 1.3 only, CN check
+- race_condition CWE-362 (00659-00668): balance TOCTOU, file read-modify-write, bool flag, RLock for write, lazy init vs RWMutex, atomic.Value, channel semaphore, SELECT FOR UPDATE, sync.Pool
+
+### New CWE Category: Information Disclosure CWE-200 (+20 tests)
+- **infodisclosure** (00669-00688): 10 TP + 10 TN
+- TP: debug.Stack(), %+v wrapped errors, public pprof, runtime.Stack() recovery, DB err.Error(), os.Environ(), header reflection, config secrets, Server header, internal IP in error
+- TN: generic error + slog, custom error type, pprof behind auth, request ID only, logged internally, health status only, admin role check, json:"-" tags, Server header omitted, wrapped internal + generic external
+
+### Infrastructure
+- New CSV: expectedresults-0.4.0.csv
+- validate_go.py: added CWE 200, infodisclosure category
+- go.mod: added gorilla/csrf v1.7.2
+
+### Final State
+- 686 test cases (was 534)
+- 25 CWE categories (was 24)
+- 343/343 TP/TN balance (exact 50/50)
+- All 25 categories have minimum 10 TP + 10 TN tests
+
 ## v0.3.2 (2026-03-23)
 
 ### Thin Category Expansion (+32 tests)

@@ -26,13 +26,13 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 GO_DIR = BENCH_ROOT / "go"
-CSV_FILE = GO_DIR / "expectedresults-0.3.2.csv"
+CSV_FILE = GO_DIR / "expectedresults-0.4.0.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 TESTCODE_DIR = GO_DIR / "testcode"
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
-    20, 22, 78, 79, 89, 90, 94, 117, 287, 295, 327, 328, 330,
+    20, 22, 78, 79, 89, 90, 94, 117, 200, 287, 295, 327, 328, 330,
     352, 362, 434, 501, 502, 601, 614, 798, 862, 918, 943,
 }
 
@@ -41,6 +41,7 @@ VALID_CATEGORIES = {
     "weakcipher", "securecookie", "redirect", "hardcodedcreds", "authnfailure",
     "tlsverify", "loginjection", "nosql", "authzfailure", "csrf", "codeinj",
     "ldapi", "trustbound", "deserial", "race_condition", "fileupload", "inputval",
+    "infodisclosure",
 }
 
 errors = []

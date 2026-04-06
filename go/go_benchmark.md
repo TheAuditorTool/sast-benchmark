@@ -1,8 +1,8 @@
-# Go SAST Benchmark v0.3.2
+# Go SAST Benchmark v0.4.0
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories** with 50/50 vulnerable/safe split (267/267). Plus 5 reference apps with 394 classified functions.
+OWASP-style SAST benchmark for Go. **686 test cases** across **25 CWE categories** with 50/50 vulnerable/safe split (343/343). Plus 5 reference apps with 394 classified functions.
 
 **Design principles**:
 - Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities
@@ -10,8 +10,9 @@ OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories
 - 50/50 TP/TN balance prevents classifier gaming (flag-everything scores 0%, not 100%)
 - Category-averaged scoring prevents large categories from dominating small ones
 - Tool-agnostic SARIF-based scoring -- any SAST tool can be scored
+- All 25 categories have minimum 10 TP + 10 TN tests for statistical significance
 
-**Audit status**: All 534 test files verified 2026-03-23. Zero vulnerability hints. Zero duplicate types/functions.
+**Audit status**: All 686 test files verified 2026-04-07. Zero vulnerability hints. Zero duplicate types/functions.
 
 ---
 
@@ -19,11 +20,11 @@ OWASP-style SAST benchmark for Go. **534 test cases** across **24 CWE categories
 
 ```
 gorustbash_benchmark/go/
-  expectedresults-0.3.2.csv     # Answer key: test,category,vulnerable,CWE
+  expectedresults-0.4.0.csv     # Answer key: test,category,vulnerable,CWE
   go_benchmark.md             # This file
   SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
-  testcode/                   # 534 benchmark test files + shared.go + benchmark_services.go
+  testcode/                   # 686 benchmark test files + shared.go + benchmark_services.go
   apps/                       # 5 reference apps with ground_truth.csv each
   cmd/main.go                 # Entry point
   go.mod
@@ -42,24 +43,25 @@ gorustbash_benchmark/go/
 | 5 | ssrf | 918 | 10 | 10 | 20 |
 | 6 | weakrand | 330 | 10 | 10 | 20 |
 | 7 | weakhash | 328 | 10 | 10 | 20 |
-| 8 | weakcipher | 327 | 8 | 8 | 16 |
-| 9 | securecookie | 614 | 8 | 8 | 16 |
-| 10 | redirect | 601 | 8 | 8 | 16 |
-| 11 | hardcodedcreds | 798 | 6 | 6 | 12 |
-| 12 | authnfailure | 287 | 6 | 6 | 12 |
-| 13 | trustbound | 501 | 6 | 6 | 12 |
-| 14 | ldapi | 90 | 6 | 6 | 12 |
-| 15 | deserial | 502 | 6 | 6 | 12 |
-| 16 | codeinj | 94 | 6 | 6 | 12 |
-| 17 | loginjection | 117 | 6 | 7 | 13 |
-| 18 | nosql | 943 | 6 | 7 | 13 |
-| 19 | authzfailure | 862 | 7 | 6 | 13 |
-| 20 | csrf | 352 | 7 | 6 | 13 |
-| 21 | tlsverify | 295 | 5 | 5 | 10 |
-| 22 | race_condition | 362 | 5 | 5 | 10 |
-| 23 | fileupload | 434 | 4 | 4 | 8 |
-| 24 | inputval | 20 | 4 | 4 | 8 |
-| | **TOTAL** | | **267** | **267** | **534** |
+| 8 | weakcipher | 327 | 10 | 10 | 20 |
+| 9 | securecookie | 614 | 10 | 10 | 20 |
+| 10 | redirect | 601 | 10 | 10 | 20 |
+| 11 | infodisclosure | 200 | 10 | 10 | 20 |
+| 12 | hardcodedcreds | 798 | 10 | 10 | 20 |
+| 13 | authnfailure | 287 | 10 | 10 | 20 |
+| 14 | trustbound | 501 | 10 | 10 | 20 |
+| 15 | ldapi | 90 | 10 | 10 | 20 |
+| 16 | deserial | 502 | 10 | 10 | 20 |
+| 17 | codeinj | 94 | 10 | 10 | 20 |
+| 18 | loginjection | 117 | 10 | 10 | 20 |
+| 19 | nosql | 943 | 10 | 10 | 20 |
+| 20 | authzfailure | 862 | 10 | 10 | 20 |
+| 21 | csrf | 352 | 10 | 10 | 20 |
+| 22 | tlsverify | 295 | 10 | 10 | 20 |
+| 23 | race_condition | 362 | 10 | 10 | 20 |
+| 24 | fileupload | 434 | 10 | 10 | 20 |
+| 25 | inputval | 20 | 10 | 10 | 20 |
+| | **TOTAL** | | **343** | **343** | **686** |
 
 ---
 
@@ -417,7 +419,7 @@ Run any SAST tool, export SARIF 2.1.0, then score. **Matching is filename-based*
 your-tool scan ./testcode/ --output results.sarif
 
 # Score against ground truth (filename-based matching)
-python ../scripts/score_sarif.py results.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```
 
 The scorer computes both **category-averaged** (OWASP standard) and **flat aggregate** scores.
@@ -432,7 +434,7 @@ aud full --offline
 
 # Convert DB to CWE-based SARIF, then score
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 ```
 
 ---
@@ -441,4 +443,4 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.2.csv
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-**Current: v0.3.2** -- 534 test cases, 24 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.
+**Current: v0.4.0** -- 686 test cases, 25 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.
