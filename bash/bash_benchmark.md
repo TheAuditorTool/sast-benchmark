@@ -1,9 +1,9 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-04-08 (v0.5.3 — 867 test cases, 20 CWEs, 1-file-1-test)
+**Created:** 2026-03-19 | **Updated:** 2026-04-08 (v0.5.3 — 1,000 test cases, 20 CWEs, 1-file-1-test)
 **Team:** Bash (of 3: Go, Rust, Bash)
 **Version:** v0.5.3
-**Status:** 1-file-1-test restructure complete. 867 individual `benchmark_test_NNNNN.sh` testcode files. Apps moved to `vulnerable_apps/bash/`. All comments and annotation markers removed from testcode source files. Zero target leakage.
+**Status:** 1-file-1-test restructure complete. 1,000 individual `benchmark_test_NNNNN.sh` testcode files. Apps moved to `vulnerable_apps/bash/`. All comments and annotation markers removed from testcode source files. Zero target leakage. All 20 categories meet 25/25 TP/TN minimum.
 
 ---
 
@@ -140,8 +140,8 @@ These patterns have NO rule. The benchmark includes them deliberately as FN-gene
 
 ```
 gorustbash_benchmark/bash/
-+-- testcode/                      # 867 benchmark_test_NNNNN.sh files (1 file = 1 test)
-+-- expectedresults-0.5.3.csv      # Answer key (867 test cases, OWASP CSV format)
++-- testcode/                      # 1,000 benchmark_test_NNNNN.sh files (1 file = 1 test)
++-- expectedresults-0.5.3.csv      # Answer key (1,000 test cases, OWASP CSV format)
 # Apps moved to vulnerable_apps/bash/ (separate scoring)
 +-- bash_benchmark.md              # This file
 +-- CHANGELOG.md                   # Version history
@@ -153,33 +153,31 @@ gorustbash_benchmark/bash/
 
 | Category | CWE | Total | Vulnerable (TP) | Safe (TN) |
 |----------|-----|-------|-----------------|-----------|
-| auth_bypass | 287/306 | 50 | 25 | 25 |
+| auth_bypass | 287 | 50 | 25 | 25 |
 | cleartext_tx | 319 | 50 | 25 | 25 |
-| cmdi | 78 | 34 | 11 | 23 |
-| codeinj | 94 | 35 | 14 | 21 |
+| cmdi | 78 | 50 | 25 | 25 |
+| codeinj | 94 | 50 | 25 | 25 |
 | dos | 770 | 50 | 25 | 25 |
-| hardcoded_creds | 798 | 47 | 22 | 25 |
-| infodisclosure | 200/532 | 40 | 22 | 18 |
-| insecure_perms | 732 | 43 | 23 | 20 |
-| insecure_temp | 367/377 | 48 | 24 | 24 |
+| hardcoded_creds | 798 | 50 | 25 | 25 |
+| infodisclosure | 532 | 50 | 25 | 25 |
+| insecure_perms | 732 | 50 | 25 | 25 |
+| insecure_temp | 377 | 50 | 25 | 25 |
 | loginjection | 117 | 50 | 25 | 25 |
-| pathtraver | 22 | 41 | 21 | 20 |
+| pathtraver | 22 | 50 | 25 | 25 |
 | privilege_escalation | 250 | 50 | 25 | 25 |
 | race_condition | 362 | 50 | 25 | 25 |
-| rce | 94 | 45 | 23 | 22 |
-| sqli | 89 | 20 | 10 | 10 |
-| ssl_bypass | 295 | 44 | 22 | 22 |
-| ssrf | 918 | 37 | 17 | 20 |
-| unquoted | 78 | 39 | 18 | 21 |
-| weakcrypto | 327 | 44 | 22 | 22 |
+| rce | 94 | 50 | 25 | 25 |
+| sqli | 89 | 50 | 25 | 25 |
+| ssl_bypass | 295 | 50 | 25 | 25 |
+| ssrf | 918 | 50 | 25 | 25 |
+| unquoted | 78 | 50 | 25 | 25 |
+| weakcrypto | 327 | 50 | 25 | 25 |
 | weakrand | 330 | 50 | 25 | 25 |
-| **TOTAL** | | **867** | **424** | **443** |
+| **TOTAL** | | **1,000** | **500** | **500** |
 
-**TP/TN split: 48.9% / 51.1%** — Near-balanced. Categories vary from 10/10 (sqli) to 25/25 (Youden significance threshold: 4% per test).
+**TP/TN split: 50.0% / 50.0%** — Exact balance. All 20 categories at 25/25 (Youden significance threshold: 4% per test).
 
-**5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (CI/CD pipeline with 55 TN-only cases).
-
-For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 48.9/51.1 is within OWASP's acceptable range.
+For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 50/50 matches the ideal.
 
 ---
 
@@ -220,7 +218,7 @@ Score formula: `Score = TPR - FPR` (Youden's J statistic)
 3. **Includes patterns likely to be missed** — nameref injection, arithmetic expansion, sed command injection, heredoc expansion, multi-hop taint
 4. **Includes safe patterns that LOOK dangerous** — eval on constants, validated variables in command position, quoted expansions
 5. **Inspired by real-world CVE patterns** — not synthetic toy examples
-6. **Near-balanced TP/TN per category** — eliminates the "flag everything" scoring exploit (v0.3.1); overall split 48.9/51.1
+6. **Exact 50/50 TP/TN per category** — eliminates the "flag everything" scoring exploit; all 20 categories at 25/25
 
 ---
 
@@ -241,19 +239,19 @@ Maps each benchmark category to expected detection mechanism.
 
 | Category | Expected Detection | Taint Analysis Available? | Expected FN Count | Key Gaps |
 |----------|-------------------|--------------------|-------------------|----------|
-| cmdi (74) | bash-eval-injection, bash-command-injection-taint, +8 rules | YES (15 flows) | 5-10 | nameref, sed, awk, arg injection, env var as cmd |
-| codeinj (24) | bash-source-injection, bash-curl-pipe-bash | Partial | 3-5 | trap, heredoc, eval+$(curl), JSON injection, double eval |
-| sqli (27) | **No rule consumes taint data** | YES (19 flows) but UNUSED | 16-21 | GAP-BASH-08: biggest gap |
-| pathtraver (16) | **NO bash rule** | YES (21 flows) but UNUSED | 5-9 | GAP-BASH-10, tar traversal, deploy path |
-| ssrf (13) | **NO bash rule** | YES (26 flows) but UNUSED | 7-11 | GAP-BASH-09, git clone, backup upload |
-| infodisclosure (14) | bash-debug-mode-leak (set -x only) | YES (25 flows) but UNUSED | 3-5 | GAP-BASH-11, incomplete redaction (CWE-532) |
-| hardcoded_creds (11) | bash-hardcoded-credential + secret-hardcoded-assignment | N/A (structural) | 1-2 | heredoc creds likely FN |
-| weakcrypto (9) | bash-weak-crypto (md5sum/sha1sum) | N/A (structural) | 2-3 | openssl not checked |
-| insecure_temp (8) | bash-unsafe-temp | N/A (structural) | 1-2 | timestamp, TOCTOU |
-| insecure_perms (9) | bash-chmod-777, bash-chmod-666 | N/A (structural) | 2-3 | umask, symbolic chmod |
-| ssl_bypass (11) | bash-ssl-bypass, bash-ssh-hostkey-bypass | N/A (structural) | 2-3 | env var bypass, NODE_TLS |
-| unquoted (13) | bash-unquoted-expansion, bash-unquoted-dangerous | N/A (structural) | 0-2 | Strong coverage |
-| rce (8) | bash-curl-pipe-bash | N/A (structural) | 0-1 | Strong coverage |
+| cmdi (50) | bash-eval-injection, bash-command-injection-taint, +8 rules | YES (15 flows) | 5-10 | nameref, sed, awk, arg injection, env var as cmd |
+| codeinj (50) | bash-source-injection, bash-curl-pipe-bash | Partial | 3-5 | trap, heredoc, eval+$(curl), JSON injection, double eval |
+| sqli (50) | **No rule consumes taint data** | YES (19 flows) but UNUSED | 16-21 | GAP-BASH-08: biggest gap |
+| pathtraver (50) | **NO bash rule** | YES (21 flows) but UNUSED | 5-9 | GAP-BASH-10, tar traversal, deploy path |
+| ssrf (50) | **NO bash rule** | YES (26 flows) but UNUSED | 7-11 | GAP-BASH-09, git clone, backup upload |
+| infodisclosure (50) | bash-debug-mode-leak (set -x only) | YES (25 flows) but UNUSED | 3-5 | GAP-BASH-11, incomplete redaction (CWE-532) |
+| hardcoded_creds (50) | bash-hardcoded-credential + secret-hardcoded-assignment | N/A (structural) | 1-2 | heredoc creds likely FN |
+| weakcrypto (50) | bash-weak-crypto (md5sum/sha1sum) | N/A (structural) | 2-3 | openssl not checked |
+| insecure_temp (50) | bash-unsafe-temp | N/A (structural) | 1-2 | timestamp, TOCTOU |
+| insecure_perms (50) | bash-chmod-777, bash-chmod-666 | N/A (structural) | 2-3 | umask, symbolic chmod |
+| ssl_bypass (50) | bash-ssl-bypass, bash-ssh-hostkey-bypass | N/A (structural) | 2-3 | env var bypass, NODE_TLS |
+| unquoted (50) | bash-unquoted-expansion, bash-unquoted-dangerous | N/A (structural) | 0-2 | Strong coverage |
+| rce (50) | bash-curl-pipe-bash | N/A (structural) | 0-1 | Strong coverage |
 
 **Critical finding**: The engine's IFDS taint pipeline confirms 91 non-Command-Injection flows as VULNERABLE (SQL Injection: 19, SSRF: 26, Path Traversal: 21, Info Disclosure: 25) but **no bash rule reads them**. This is the single biggest coverage gap — fixing it requires adding `get_confirmed_flows()` calls for each vulnerability type, following the existing Command Injection pattern in injection_analyze.py.
 

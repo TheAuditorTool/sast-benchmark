@@ -11,36 +11,34 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 | Category | CWE | TP | TN | Total |
 |----------|-----|----|----|-------|
-| sqli | 89 | 5 | 11 | 16 |
-| cmdi | 78 | 14 | 20 | 34 |
-| pathtraver | 22 | 14 | 24 | 38 |
-| ssrf | 918 | 18 | 20 | 38 |
-| memsafety | 119 | 18 | 21 | 39 |
-| crypto | 327* | 20 | 21 | 41 |
-| weakrand | 330 | 22 | 23 | 45 |
-| xss | 79 | 23 | 23 | 46 |
-| infodisclosure | 200* | 22 | 25 | 47 |
-| deserial | 502 | 23 | 24 | 47 |
-| intoverflow | 190 | 23 | 24 | 47 |
-| hardcodedcreds | 798 | 23 | 25 | 48 |
-| redos | 1333 | 24 | 24 | 48 |
-| inputval | 20 | 24 | 25 | 49 |
-| race_condition | 362 | 25 | 25 | 50 |
-| loginjection | 117 | 25 | 25 | 50 |
-| securecookie | 614 | 25 | 25 | 50 |
-| redirect | 601 | 25 | 25 | 50 |
-| fileupload | 434 | 25 | 25 | 50 |
-| tlsverify | 295 | 25 | 25 | 50 |
 | authnfailure | 287 | 25 | 25 | 50 |
-| csrf | 352 | 25 | 25 | 50 |
 | authzfailure | 285 | 25 | 25 | 50 |
+| cmdi | 78 | 25 | 25 | 50 |
+| crypto | 327 | 25 | 25 | 50 |
+| csrf | 352 | 25 | 25 | 50 |
+| deserial | 502 | 25 | 25 | 50 |
+| fileupload | 434 | 25 | 25 | 50 |
+| hardcodedcreds | 798 | 25 | 25 | 50 |
+| infodisclosure | 200 | 25 | 25 | 50 |
+| inputval | 20 | 25 | 25 | 50 |
+| intoverflow | 190 | 25 | 25 | 50 |
 | ldapi | 90 | 25 | 25 | 50 |
+| loginjection | 117 | 25 | 25 | 50 |
+| memsafety | 119 | 25 | 25 | 50 |
 | nosql | 943 | 25 | 25 | 50 |
-| **TOTAL** | | **548** | **585** | **1,133** |
+| pathtraver | 22 | 25 | 25 | 50 |
+| race_condition | 362 | 25 | 25 | 50 |
+| redirect | 601 | 25 | 25 | 50 |
+| redos | 1333 | 25 | 25 | 50 |
+| securecookie | 614 | 25 | 25 | 50 |
+| sqli | 89 | 25 | 25 | 50 |
+| ssrf | 918 | 25 | 25 | 50 |
+| tlsverify | 295 | 25 | 25 | 50 |
+| weakrand | 330 | 25 | 25 | 50 |
+| xss | 79 | 25 | 25 | 50 |
+| **TOTAL** | | **625** | **625** | **1,250** |
 
-*crypto has entries with CWE-347 (JWT alg=none); infodisclosure has entries with CWE-200/209/532
-
-**Testcode-only counts** (119 app entries moved to `vulnerable_apps/rust/` for separate scoring). Categories with heavy app contributions (sqli, cmdi, pathtraver, ssrf, memsafety) are below the 25/25 floor. FPR measurable for 100% of test cases.
+All 25 categories meet the 25/25 TP/TN minimum floor. TP/TN balance: exact 50/50. App entries (119) remain in `vulnerable_apps/rust/` for separate scoring.
 
 ### Anti-Target Leakage Rules (v0.5.2)
 
@@ -58,7 +56,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 ### Frameworks Covered
 
-Testcode uses no framework (raw function signatures). Reference apps in `vulnerable_apps/rust/` cover actix-web, axum, Rocket, and Warp.
+Testcode uses no framework (raw function signatures via `shared.rs`). Framework-specific test cases (actix-web, axum, Rocket, Warp) live in `vulnerable_apps/rust/` and are scored separately.
 
 ---
 
@@ -135,7 +133,7 @@ Maps each benchmark category to SAST rules that detect it.
 | fileupload | 434 | NONE | - | **GAP** |
 | tlsverify | 295 | NONE | - | **GAP** |
 
-**218 of 491 test cases (44%) are in gap categories** (xss=24, weakrand=24, infodisclosure=24, deserial=24, redos=24, hardcodedcreds=22, race_condition=20, loginjection=20, securecookie=20, redirect=20, fileupload=20, tlsverify=20) -- expected to show as FN in baseline scoring.
+**268 of 541 test cases (50%) are in gap categories** (xss=50, weakrand=50, infodisclosure=50, deserial=50, redos=50, hardcodedcreds=50, race_condition=50, loginjection=50, securecookie=50, redirect=50, fileupload=50, tlsverify=50) -- expected to show as FN in baseline scoring.
 
 ---
 

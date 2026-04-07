@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 ## Test Case Inventory
 
-25 CWE categories, 1,138 test cases (569 TP / 569 TN), 50/50 balance.
+25 CWE categories, 1,250 test cases (625 TP / 625 TN), 50/50 balance. All 25 categories meet the 25/25 TP/TN minimum floor.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -50,13 +50,7 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 ## Frameworks Covered
 
-| Framework | Version Target | Usage |
-|-----------|---------------|-------|
-| Raw PHP/PDO | PHP 5.x - 8.x | testcode |
-
-## Applications (moved to vulnerable_apps/php/)
-
-Reference apps (vuln_blog, laravel_api, wp_plugin, symfony_app) moved to `vulnerable_apps/php/` for centralized management. Their 118 test cases are no longer in the main benchmark CSV — they have separate scoring.
+Testcode uses no framework (raw function signatures via `shared.php`). Framework-specific test cases (Laravel, Symfony, WordPress) live in `vulnerable_apps/php/` and are scored separately.
 
 ## Anti-Target Leakage Rules
 

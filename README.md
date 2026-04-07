@@ -48,6 +48,16 @@ Score = TPR - FPR                  Youden's J statistic
 | 0% | Random guessing -- no better than flipping a coin |
 | -100% | Perfectly wrong -- flags safe code, misses vulnerable code |
 
+## Design Principles
+
+- **Test cases written from security knowledge**, not from knowledge of any specific SAST engine's detection capabilities
+- **No vulnerability hints in source code** -- the CSV answer key is the ONLY ground truth. No comments, no CWE references, no category names in filenames or function names.
+- **50/50 TP/TN balance** prevents classifier gaming -- a tool that flags everything scores 0%, not 100%
+- **Category-averaged scoring** prevents large categories from dominating small ones
+- **Minimum 25 TP + 25 TN per category** ensures statistical significance (Youden's J per-case swing ≤ 4%)
+- **Tool-agnostic SARIF-based scoring** -- any SAST tool that exports SARIF 2.1.0 can be scored
+- **1 file = 1 test case** -- standalone functions with no cross-file dependencies
+
 ## Directory Structure
 
 ```
@@ -68,29 +78,29 @@ gorustbash_benchmark/
     SCORING.md
     CHANGELOG.md
     testcode/                # 1,350 standalone test files
-  rust/                    # Rust benchmark (1,133 tests, 25 CWEs)
+  rust/                    # Rust benchmark (1,250 tests, 25 CWEs)
     expectedresults-0.5.2.csv
     rust_benchmark.md
     CHANGELOG.md
     dev_roadmap.md
-    testcode/                # 1,133 standalone test files
-  bash/                    # Bash benchmark (867 tests, 20 CWEs)
+    testcode/                # 1,250 standalone test files
+  bash/                    # Bash benchmark (1,000 tests, 20 CWEs)
     expectedresults-0.5.3.csv
     bash_benchmark.md
     CHANGELOG.md
-    testcode/                # 867 standalone test files
-  php/                     # PHP benchmark (1,138 tests, 25 CWEs)
+    testcode/                # 1,000 standalone test files
+  php/                     # PHP benchmark (1,250 tests, 25 CWEs)
     expectedresults-0.3.2.csv
     php_benchmark.md
     SCORING.md
     CHANGELOG.md
-    testcode/                # 1,138 standalone test files
-  ruby/                    # Ruby benchmark (1,288 tests, 27 CWEs)
+    testcode/                # 1,250 standalone test files
+  ruby/                    # Ruby benchmark (1,350 tests, 27 CWEs)
     expectedresults-0.3.2.csv
     ruby_benchmark.md
     SCORING.md
     CHANGELOG.md
-    testcode/                # 1,288 standalone test files
+    testcode/                # 1,350 standalone test files
   vulnerable_apps/         # 26 reference apps across 5 languages (884 ground truth entries)
     README.md                # Overview, scoring methodology, directory map
     go/                      # 6 apps (394 entries) -- per-app ground_truth.csv
@@ -114,162 +124,164 @@ gorustbash_benchmark/
 
 ## Language Benchmarks
 
-### Go v0.5.1 -- 1,350 test cases, 25 CWEs, 8 frameworks
+All five language benchmarks follow the same architecture: standalone `benchmark_test_NNNNN` files with zero comments, zero vulnerability hints, and generic filenames. The CSV answer key is the sole ground truth. Every category has minimum 25 TP + 25 TN tests. Scoring is tool-agnostic via SARIF 2.1.0.
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| sqli | 89 | 65 | 65 | 130 |
-| cmdi | 78 | 30 | 30 | 60 |
-| pathtraver | 22 | 30 | 30 | 60 |
-| xss | 79 | 25 | 25 | 50 |
-| ssrf | 918 | 25 | 25 | 50 |
-| weakrand | 330 | 25 | 25 | 50 |
-| weakhash | 328 | 25 | 25 | 50 |
-| weakcipher | 327 | 25 | 25 | 50 |
-| securecookie | 614 | 25 | 25 | 50 |
-| redirect | 601 | 25 | 25 | 50 |
-| infodisclosure | 200 | 25 | 25 | 50 |
-| hardcodedcreds | 798 | 25 | 25 | 50 |
-| authnfailure | 287 | 25 | 25 | 50 |
-| trustbound | 501 | 25 | 25 | 50 |
-| ldapi | 90 | 25 | 25 | 50 |
-| deserial | 502 | 25 | 25 | 50 |
-| codeinj | 94 | 25 | 25 | 50 |
-| loginjection | 117 | 25 | 25 | 50 |
-| nosql | 943 | 25 | 25 | 50 |
-| authzfailure | 862 | 25 | 25 | 50 |
-| csrf | 352 | 25 | 25 | 50 |
-| tlsverify | 295 | 25 | 25 | 50 |
-| race_condition | 362 | 25 | 25 | 50 |
-| fileupload | 434 | 25 | 25 | 50 |
-| inputval | 20 | 25 | 25 | 50 |
+### Go v0.5.1 -- 1,350 test cases, 25 CWEs
 
-Frameworks: net/http, gin, chi, echo, fiber, gorilla/mux, beego, gRPC. Tool-agnostic SARIF-based scoring. All 25 categories have minimum 25/25 TP/TN tests. Plus 6 reference apps with 394 classified functions in [vulnerable_apps/go/](vulnerable_apps/go/).
+| Category                | CWE  | Vuln | Safe | Total |
+|-------------------------|------|------|------|-------|
+| authnfailure            |  287 |   25 |   25 |    50 |
+| authzfailure            |  862 |   25 |   25 |    50 |
+| cmdi                    |   78 |   30 |   30 |    60 |
+| codeinj                 |   94 |   25 |   25 |    50 |
+| csrf                    |  352 |   25 |   25 |    50 |
+| deserial                |  502 |   25 |   25 |    50 |
+| fileupload              |  434 |   25 |   25 |    50 |
+| hardcodedcreds          |  798 |   25 |   25 |    50 |
+| infodisclosure          |  200 |   25 |   25 |    50 |
+| inputval                |   20 |   25 |   25 |    50 |
+| ldapi                   |   90 |   25 |   25 |    50 |
+| loginjection            |  117 |   25 |   25 |    50 |
+| nosql                   |  943 |   25 |   25 |    50 |
+| pathtraver              |   22 |   30 |   30 |    60 |
+| race_condition          |  362 |   25 |   25 |    50 |
+| redirect                |  601 |   25 |   25 |    50 |
+| securecookie            |  614 |   25 |   25 |    50 |
+| sqli                    |   89 |   65 |   65 |   130 |
+| ssrf                    |  918 |   25 |   25 |    50 |
+| tlsverify               |  295 |   25 |   25 |    50 |
+| trustbound              |  501 |   25 |   25 |    50 |
+| weakcipher              |  327 |   25 |   25 |    50 |
+| weakhash                |  328 |   25 |   25 |    50 |
+| weakrand                |  330 |   25 |   25 |    50 |
+| xss                     |   79 |   25 |   25 |    50 |
 
-### Rust v0.5.2 -- 1,133 test cases, 25 CWEs, 4 frameworks
+1,350 standalone `benchmark_test_NNNNN.go` test files. 25 CWE categories, all at or above the 25/25 floor. TP/TN balance: 50/50.
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| sqli | 89 | 5 | 11 | 16 |
-| cmdi | 78 | 14 | 20 | 34 |
-| pathtraver | 22 | 14 | 24 | 38 |
-| ssrf | 918 | 18 | 20 | 38 |
-| xss | 79 | 23 | 23 | 46 |
-| memsafety | 119 | 18 | 21 | 39 |
-| crypto | 327 | 20 | 21 | 41 |
-| weakrand | 330 | 22 | 23 | 45 |
-| infodisclosure | 200 | 22 | 25 | 47 |
-| deserial | 502 | 23 | 24 | 47 |
-| intoverflow | 190 | 23 | 24 | 47 |
-| redos | 1333 | 24 | 24 | 48 |
-| inputval | 20 | 24 | 25 | 49 |
-| hardcodedcreds | 798 | 23 | 25 | 48 |
-| race_condition | 362 | 25 | 25 | 50 |
-| loginjection | 117 | 25 | 25 | 50 |
-| securecookie | 614 | 25 | 25 | 50 |
-| redirect | 601 | 25 | 25 | 50 |
-| fileupload | 434 | 25 | 25 | 50 |
-| tlsverify | 295 | 25 | 25 | 50 |
-| authnfailure | 287 | 25 | 25 | 50 |
-| csrf | 352 | 25 | 25 | 50 |
-| authzfailure | 285 | 25 | 25 | 50 |
-| ldapi | 90 | 25 | 25 | 50 |
-| nosql | 943 | 25 | 25 | 50 |
+### Rust v0.5.2 -- 1,250 test cases, 25 CWEs
 
-Frameworks: actix-web, axum, Rocket, Warp. 1,133 standalone test files in `testcode/`. TP/TN balance: 48/52. Filename-based scoring (post-leakage migration). Reference apps in [vulnerable_apps/rust/](vulnerable_apps/rust/).
+| Category                | CWE  | Vuln | Safe | Total |
+|-------------------------|------|------|------|-------|
+| authnfailure            |  287 |   25 |   25 |    50 |
+| authzfailure            |  285 |   25 |   25 |    50 |
+| cmdi                    |   78 |   25 |   25 |    50 |
+| crypto                  |  327 |   25 |   25 |    50 |
+| csrf                    |  352 |   25 |   25 |    50 |
+| deserial                |  502 |   25 |   25 |    50 |
+| fileupload              |  434 |   25 |   25 |    50 |
+| hardcodedcreds          |  798 |   25 |   25 |    50 |
+| infodisclosure          |  200 |   25 |   25 |    50 |
+| inputval                |   20 |   25 |   25 |    50 |
+| intoverflow             |  190 |   25 |   25 |    50 |
+| ldapi                   |   90 |   25 |   25 |    50 |
+| loginjection            |  117 |   25 |   25 |    50 |
+| memsafety               |  119 |   25 |   25 |    50 |
+| nosql                   |  943 |   25 |   25 |    50 |
+| pathtraver              |   22 |   25 |   25 |    50 |
+| race_condition          |  362 |   25 |   25 |    50 |
+| redirect                |  601 |   25 |   25 |    50 |
+| redos                   | 1333 |   25 |   25 |    50 |
+| securecookie            |  614 |   25 |   25 |    50 |
+| sqli                    |   89 |   25 |   25 |    50 |
+| ssrf                    |  918 |   25 |   25 |    50 |
+| tlsverify               |  295 |   25 |   25 |    50 |
+| weakrand                |  330 |   25 |   25 |    50 |
+| xss                     |   79 |   25 |   25 |    50 |
 
-### Bash v0.5.3 -- 867 test cases, 20 CWEs
+1,250 standalone `benchmark_test_NNNNN.rs` test files. 25 CWE categories, all at 25/25. TP/TN balance: 50/50. Includes Rust-specific categories: memsafety (CWE-119), intoverflow (CWE-190), redos (CWE-1333).
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| cmdi | 78 | 11 | 23 | 34 |
-| sqli | 89 | 10 | 10 | 20 |
-| codeinj | 94 | 14 | 21 | 35 |
-| ssrf | 918 | 17 | 20 | 37 |
-| auth_bypass | 287 | 25 | 25 | 50 |
-| cleartext_tx | 319 | 25 | 25 | 50 |
-| dos | 770 | 25 | 25 | 50 |
-| hardcoded_creds | 798 | 22 | 25 | 47 |
-| infodisclosure | 532 | 22 | 18 | 40 |
-| insecure_perms | 732 | 23 | 20 | 43 |
-| insecure_temp | 377 | 24 | 24 | 48 |
-| loginjection | 117 | 25 | 25 | 50 |
-| pathtraver | 22 | 21 | 20 | 41 |
-| privilege_escalation | 250 | 25 | 25 | 50 |
-| race_condition | 362 | 25 | 25 | 50 |
-| rce | 94 | 23 | 22 | 45 |
-| ssl_bypass | 295 | 22 | 22 | 44 |
-| unquoted | 78 | 18 | 21 | 39 |
-| weakrand | 330 | 25 | 25 | 50 |
-| weakcrypto | 327 | 22 | 22 | 44 |
+### Bash v0.5.3 -- 1,000 test cases, 20 CWEs
 
-867 standalone `benchmark_test_NNNNN.sh` files in `testcode/`. 1-file-1-test architecture (post-leakage migration). TP/TN split: 49/51. Reference apps in [vulnerable_apps/bash/](vulnerable_apps/bash/).
+| Category                | CWE  | Vuln | Safe | Total |
+|-------------------------|------|------|------|-------|
+| auth_bypass             |  287 |   25 |   25 |    50 |
+| cleartext_tx            |  319 |   25 |   25 |    50 |
+| cmdi                    |   78 |   25 |   25 |    50 |
+| codeinj                 |   94 |   25 |   25 |    50 |
+| dos                     |  770 |   25 |   25 |    50 |
+| hardcoded_creds         |  798 |   25 |   25 |    50 |
+| infodisclosure          |  532 |   25 |   25 |    50 |
+| insecure_perms          |  732 |   25 |   25 |    50 |
+| insecure_temp           |  377 |   25 |   25 |    50 |
+| loginjection            |  117 |   25 |   25 |    50 |
+| pathtraver              |   22 |   25 |   25 |    50 |
+| privilege_escalation    |  250 |   25 |   25 |    50 |
+| race_condition          |  362 |   25 |   25 |    50 |
+| rce                     |   94 |   25 |   25 |    50 |
+| sqli                    |   89 |   25 |   25 |    50 |
+| ssl_bypass              |  295 |   25 |   25 |    50 |
+| ssrf                    |  918 |   25 |   25 |    50 |
+| unquoted                |   78 |   25 |   25 |    50 |
+| weakcrypto              |  327 |   25 |   25 |    50 |
+| weakrand                |  330 |   25 |   25 |    50 |
 
-### PHP v0.3.2 -- 1,138 test cases, 25 CWEs
+1,000 standalone `benchmark_test_NNNNN.sh` test files. 20 CWE categories, all at 25/25. TP/TN balance: 50/50. Includes shell-specific categories: unquoted expansion (CWE-78), insecure temp files (CWE-377), privilege escalation (CWE-250).
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| sqli | 89 | 15 | 15 | 30 |
-| xss | 79 | 18 | 18 | 36 |
-| cmdi | 78 | 23 | 23 | 46 |
-| pathtraver | 22 | 21 | 21 | 42 |
-| codeinj | 94 | 24 | 24 | 48 |
-| csrf | 352 | 22 | 22 | 44 |
-| deserial | 502 | 24 | 24 | 48 |
-| extract | 621 | 24 | 24 | 48 |
-| fileinclusion | 98 | 23 | 23 | 46 |
-| fileupload | 434 | 23 | 23 | 46 |
-| hardcodedcreds | 798 | 22 | 22 | 44 |
-| headerinj | 113 | 24 | 24 | 48 |
-| ldapi | 90 | 24 | 24 | 48 |
-| massassign | 915 | 23 | 23 | 46 |
-| redirect | 601 | 23 | 23 | 46 |
-| securecookie | 614 | 24 | 24 | 48 |
-| ssrf | 918 | 23 | 23 | 46 |
-| ssti | 1336 | 23 | 23 | 46 |
-| typejuggling | 697 | 23 | 23 | 46 |
-| unsafereflect | 470 | 24 | 24 | 48 |
-| variablevars | 627 | 24 | 24 | 48 |
-| weakcipher | 327 | 25 | 25 | 50 |
-| weakhash | 328 | 24 | 24 | 48 |
-| weakrand | 330 | 23 | 23 | 46 |
-| xxe | 611 | 23 | 23 | 46 |
+### PHP v0.3.2 -- 1,250 test cases, 25 CWEs
 
-1,138 standalone test files in `testcode/`. Generic `benchmark_test_NNNNN.php` naming with seeded shuffle -- no category leakage in filenames, function names, or comments. Filename-based scoring (same as Go). TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336). Plus 4 reference apps with 118 classified snippets in [vulnerable_apps/php/](vulnerable_apps/php/).
+| Category                | CWE  | Vuln | Safe | Total |
+|-------------------------|------|------|------|-------|
+| cmdi                    |   78 |   25 |   25 |    50 |
+| codeinj                 |   94 |   25 |   25 |    50 |
+| csrf                    |  352 |   25 |   25 |    50 |
+| deserial                |  502 |   25 |   25 |    50 |
+| extract                 |  621 |   25 |   25 |    50 |
+| fileinclusion           |   98 |   25 |   25 |    50 |
+| fileupload              |  434 |   25 |   25 |    50 |
+| hardcodedcreds          |  798 |   25 |   25 |    50 |
+| headerinj              |  113 |   25 |   25 |    50 |
+| ldapi                   |   90 |   25 |   25 |    50 |
+| massassign              |  915 |   25 |   25 |    50 |
+| pathtraver              |   22 |   25 |   25 |    50 |
+| redirect                |  601 |   25 |   25 |    50 |
+| securecookie            |  614 |   25 |   25 |    50 |
+| sqli                    |   89 |   25 |   25 |    50 |
+| ssrf                    |  918 |   25 |   25 |    50 |
+| ssti                    | 1336 |   25 |   25 |    50 |
+| typejuggling            |  697 |   25 |   25 |    50 |
+| unsafereflect           |  470 |   25 |   25 |    50 |
+| variablevars            |  627 |   25 |   25 |    50 |
+| weakcipher              |  327 |   25 |   25 |    50 |
+| weakhash                |  328 |   25 |   25 |    50 |
+| weakrand                |  330 |   25 |   25 |    50 |
+| xss                     |   79 |   25 |   25 |    50 |
+| xxe                     |  611 |   25 |   25 |    50 |
 
-### Ruby v0.3.2 -- 1,288 test cases, 27 CWEs, 3 frameworks
+1,250 standalone `benchmark_test_NNNNN.php` test files. 25 CWE categories, all at 25/25. TP/TN balance: 50/50. Includes PHP-specific categories: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
-| Category | CWE | Vuln | Safe | Total |
-|----------|-----|------|------|-------|
-| sqli | 89 | 21 | 21 | 42 |
-| xss | 79 | 22 | 22 | 44 |
-| cmdi | 78 | 23 | 23 | 46 |
-| fileupload | 434 | 23 | 23 | 46 |
-| csrf | 352 | 23 | 23 | 46 |
-| authnfailure | 287 | 25 | 25 | 50 |
-| authzfailure | 862 | 25 | 25 | 50 |
-| codeinj | 94 | 25 | 25 | 50 |
-| deserial | 502 | 23 | 23 | 46 |
-| dynmethod | 94 | 25 | 25 | 50 |
-| fileinclusion | 98 | 25 | 25 | 50 |
-| hardcodedcreds | 798 | 23 | 23 | 46 |
-| headerinj | 113 | 24 | 24 | 48 |
-| ldapi | 90 | 25 | 25 | 50 |
-| loginjection | 117 | 25 | 25 | 50 |
-| massassign | 915 | 23 | 23 | 46 |
-| pathtraver | 22 | 23 | 23 | 46 |
-| redirect | 601 | 23 | 23 | 46 |
-| regex | 1333 | 25 | 25 | 50 |
-| securecookie | 614 | 23 | 23 | 46 |
-| ssrf | 918 | 24 | 24 | 48 |
-| ssti | 1336 | 23 | 23 | 46 |
-| unsafereflect | 470 | 25 | 25 | 50 |
-| weakcipher | 327 | 25 | 25 | 50 |
-| weakhash | 328 | 24 | 24 | 48 |
-| weakrand | 330 | 24 | 24 | 48 |
-| xxe | 611 | 25 | 25 | 50 |
+### Ruby v0.3.2 -- 1,350 test cases, 27 CWEs
 
-1,288 standalone test files in `testcode/`. Frameworks: Raw Ruby/Rack, Rails 7, Sinatra 3. TP/TN balance: exact 50/50. Filename-based scoring (post-leakage migration). Reference apps in [vulnerable_apps/ruby/](vulnerable_apps/ruby/).
+| Category                | CWE  | Vuln | Safe | Total |
+|-------------------------|------|------|------|-------|
+| authnfailure            |  287 |   25 |   25 |    50 |
+| authzfailure            |  862 |   25 |   25 |    50 |
+| cmdi                    |   78 |   25 |   25 |    50 |
+| codeinj                 |   94 |   25 |   25 |    50 |
+| csrf                    |  352 |   25 |   25 |    50 |
+| deserial                |  502 |   25 |   25 |    50 |
+| dynmethod               |   94 |   25 |   25 |    50 |
+| fileinclusion           |   98 |   25 |   25 |    50 |
+| fileupload              |  434 |   25 |   25 |    50 |
+| hardcodedcreds          |  798 |   25 |   25 |    50 |
+| headerinj              |  113 |   25 |   25 |    50 |
+| ldapi                   |   90 |   25 |   25 |    50 |
+| loginjection            |  117 |   25 |   25 |    50 |
+| massassign              |  915 |   25 |   25 |    50 |
+| pathtraver              |   22 |   25 |   25 |    50 |
+| redirect                |  601 |   25 |   25 |    50 |
+| regex                   | 1333 |   25 |   25 |    50 |
+| securecookie            |  614 |   25 |   25 |    50 |
+| sqli                    |   89 |   25 |   25 |    50 |
+| ssrf                    |  918 |   25 |   25 |    50 |
+| ssti                    | 1336 |   25 |   25 |    50 |
+| unsafereflect           |  470 |   25 |   25 |    50 |
+| weakcipher              |  327 |   25 |   25 |    50 |
+| weakhash                |  328 |   25 |   25 |    50 |
+| weakrand                |  330 |   25 |   25 |    50 |
+| xss                     |   79 |   25 |   25 |    50 |
+| xxe                     |  611 |   25 |   25 |    50 |
+
+1,350 standalone `benchmark_test_NNNNN.rb` test files. 27 CWE categories, all at 25/25. TP/TN balance: 50/50. Includes Ruby-specific categories: dynamic method dispatch (CWE-94), mass assignment (CWE-915), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
 ### Adversarial Evasion v0.2.0 -- 123 test cases, 10 categories, cross-language
 
@@ -346,14 +358,14 @@ See [vulnerable_apps/README.md](vulnerable_apps/README.md) for scoring methodolo
 | Benchmark | Tests | CWEs/Categories | TP/TN Balance | What It Tests |
 |-----------|-------|-----------------|---------------|---------------|
 | Go | 1,350 | 25 CWEs | 50/50 | Vulnerability detection |
-| PHP | 1,138 | 25 CWEs | 50/50 | Vulnerability detection |
-| Bash | 867 | 20 CWEs | 49/51 | Vulnerability detection |
-| Ruby | 1,288 | 27 CWEs | 50/50 | Vulnerability detection |
-| Rust | 1,133 | 25 CWEs | 48/52 | Vulnerability detection |
+| Rust | 1,250 | 25 CWEs | 50/50 | Vulnerability detection |
+| Ruby | 1,350 | 27 CWEs | 50/50 | Vulnerability detection |
+| PHP | 1,250 | 25 CWEs | 50/50 | Vulnerability detection |
+| Bash | 1,000 | 20 CWEs | 50/50 | Vulnerability detection |
 | Vulnerable Apps | 884 | Cross-language | Varies | Multi-file app detection |
 | Adversarial | 123 | 10 categories | 52/48 | Evasion/concealment detection |
 | Chains | 500 | 20 categories | 50/50 | Compound exploit chain detection |
-| **Total** | **7,283** | **47 unique CWEs + 30 detection categories** | |
+| **Total** | **7,707** | **47 unique CWEs + 30 detection categories** | |
 
 ## How to Use
 
@@ -392,7 +404,7 @@ Root-cause every FN (missed vulnerability) and FP (false alarm). That's where th
 Known limitations:
 
 - **Classification accuracy**: Verified to our best ability. Community review welcome. Some edge cases may be debatable.
-- **Scale**: OWASP Java has 2,740 tests. We have 7,283 across five languages + reference apps + adversarial + chains. Growing with each release.
+- **Scale**: OWASP Java has 2,740 tests. We have 7,707 across five languages + reference apps + adversarial + chains. Growing with each release.
 - **Self-graded**: We wrote the tests and the answer key. Independent verification is the next milestone.
 - **Adversarial coverage**: 123 test cases across 10 categories. Dependency confusion (registry-level) and true AI polymorphic malware (runtime) are not yet covered as they require infrastructure beyond static source files.
 - **Chain coverage**: 500 test cases across 20 categories. Python/Flask only. Cross-language chains planned for future releases.

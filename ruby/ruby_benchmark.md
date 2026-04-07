@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 ## Test Case Inventory
 
-27 CWE categories, 1,288 test cases (644 TP / 644 TN), exact 50/50 balance.
+27 CWE categories, 1,350 test cases (675 TP / 675 TN), exact 50/50 balance. All 27 categories meet the 25/25 TP/TN minimum floor.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -57,9 +57,7 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 ## Frameworks Covered
 
-| Framework | Version Target | Usage |
-|-----------|---------------|-------|
-| Raw Ruby/Rack | 2.7 - 3.3 | testcode |
+Testcode uses no framework (raw function signatures via `shared.rb`). Framework-specific test cases (Rails, Sinatra) live in `vulnerable_apps/ruby/` and are scored separately.
 
 ## Test File Format
 

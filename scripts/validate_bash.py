@@ -177,16 +177,27 @@ def check_balance(csv_entries):
 # ============================================================================
 # L5: Scoring pipeline readiness
 # ============================================================================
-def check_scoring_pipeline(all_categories):
+def check_scoring_pipeline(csv_entries):
     if not CONVERTER_PY.exists():
         warnings.append("L5 convert_theauditor.py not found")
         return
     content = CONVERTER_PY.read_text(encoding="utf-8")
-    mapped_cats = set(re.findall(r'"([a-z_]+)"', content))
-    for cat in sorted(all_categories):
-        if cat not in mapped_cats:
+
+    mapped_cwes = set()
+    for m in re.finditer(r":\s*(\d+)", content):
+        mapped_cwes.add(int(m.group(1)))
+
+    benchmark_cwes = set()
+    for key, info in csv_entries.items():
+        cwe = info.get("cwe", -1)
+        if cwe > 0:
+            benchmark_cwes.add(cwe)
+
+    for cwe in sorted(benchmark_cwes):
+        if cwe not in mapped_cwes:
             warnings.append(
-                f"L5 Category '{cat}' not mapped in convert_theauditor.py"
+                f"L5 CWE {cwe} exists in ground truth but has no VULN_TYPE_TO_CWE "
+                f"mapping in convert_theauditor.py"
             )
 
 
@@ -265,7 +276,7 @@ def main():
 
     # L5: Pipeline
     print("[L5] Scoring pipeline readiness (convert_theauditor.py coverage)")
-    check_scoring_pipeline(all_categories)
+    check_scoring_pipeline(csv_entries)
     l5_warnings = len(warnings)
     print(f"  Result: {l5_warnings} warnings")
     print()
