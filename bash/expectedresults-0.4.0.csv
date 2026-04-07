@@ -323,7 +323,7 @@ hardcoded_creds_keyfile,hardcoded_creds,false,798
 unquoted_array_iteration,unquoted,false,78
 unquoted_cp_both_quoted,unquoted,false,78
 unquoted_read_r_ifs,unquoted,false,78
-sqli_printf_q_escaped,sqli,false,89
+sqli_printf_q_escaped,sqli,true,89
 sqli_where_constant,sqli,false,89
 pathtraver_readlink,pathtraver,false,22
 weakcrypto_hmac_sha256,weakcrypto,false,327
@@ -525,3 +525,5 @@ infodisclosure_printenv_webdir,infodisclosure,true,200
 infodisclosure_filtered_env,infodisclosure,false,200
 pathtraver_ln_user_path,pathtraver,true,22
 pathtraver_realpath_before_symlink,pathtraver,false,22
+sqli_integer_validated_id,sqli,false,89
+sqli_readonly_static_query,sqli,false,89

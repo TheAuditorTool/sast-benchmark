@@ -1,5 +1,57 @@
 # Bash SAST Benchmark — Changelog
 
+## v0.5.0 (2026-04-07)
+
+1,056 test cases across 20 categories, 5 applications, 75 shell scripts. **25/25 floor expansion.**
+
+### All Categories Expanded to 25/25 Minimum
+
+| Category | v0.4.0 TP/TN | +TP | +TN | v0.5.0 TP/TN |
+|----------|-------------|-----|-----|-------------|
+| cmdi | 53/53 | 0 | 0 | 53/53 (already done) |
+| sqli | 21/21 | +4 | +4 | 25/25 |
+| codeinj | 18/18 | +7 | +7 | 25/25 |
+| ssrf | 11/11 | +14 | +14 | 25/25 |
+| auth_bypass | 10/10 | +15 | +15 | 25/25 |
+| cleartext_tx | 10/10 | +15 | +15 | 25/25 |
+| dos | 10/10 | +15 | +15 | 25/25 |
+| hardcoded_creds | 10/10 | +15 | +15 | 25/25 |
+| infodisclosure | 10/10 | +15 | +15 | 25/25 |
+| insecure_perms | 10/10 | +15 | +15 | 25/25 |
+| insecure_temp | 10/10 | +15 | +15 | 25/25 |
+| loginjection | 10/10 | +15 | +15 | 25/25 |
+| pathtraver | 10/10 | +15 | +15 | 25/25 |
+| privilege_escalation | 10/10 | +15 | +15 | 25/25 |
+| race_condition | 10/10 | +15 | +15 | 25/25 |
+| rce | 10/10 | +15 | +15 | 25/25 |
+| ssl_bypass | 10/10 | +15 | +15 | 25/25 |
+| unquoted | 10/10 | +15 | +15 | 25/25 |
+| weakrand | 10/10 | +15 | +15 | 25/25 |
+| weakcrypto | 10/10 | +15 | +15 | 25/25 |
+
+### Metrics
+- 1,056 test cases (528 TP / 528 TN) — **exact 50.0% / 50.0% balance**
+- All 20 categories at minimum 25V/25S
+- 530 new test cases added across 19 new `_extended_tests.sh` files
+
+### Youden Statistical Rationale
+At 10/10 per category, one misclassified test = 10% category swing (too noisy for per-category comparisons). At 25/25, one test = 4% swing — matching OWASP Java methodology minimum for statistically meaningful per-category scores. This is the threshold where per-category Youden's J becomes reportable.
+
+### Tier 3 Discrimination Tests Added
+Each extended file includes hard discrimination TNs that expose the gap between a real SAST tool and a grep-with-rules approach. Examples:
+- `ssl_curl_localhost_k` — `-k` against loopback only (no network path for attacker)
+- `privesc_sudo_bash_c_literal` — `sudo bash -c` with fully hardcoded string
+- `weakcrypto_md5_dedup_only` — md5sum for deduplication, not security
+- `pathtraver_proc_pid_access` — numeric PID in `/proc/$pid/status` is not traversal
+- `insecure_temp_ci_uuid_name` — CI_JOB_ID is 122-bit UUID, not predictable
+
+### Metadata Updates
+- `expectedresults-0.5.0.csv` — new ground truth (1,056 entries)
+- `bash_benchmark.py` — GROUND_TRUTH_PATH updated to 0.5.0
+- `scripts/validate_bash.py` — CSV_FILE updated to 0.5.0
+
+---
+
 ## v0.4.0 (2026-04-07)
 
 526 test cases across 20 categories, 5 applications, 56 shell scripts. **CWE expansion + 10/10 floor release.**

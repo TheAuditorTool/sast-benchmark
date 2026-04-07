@@ -1,9 +1,9 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-04-07 (v0.4.0 — 526 test cases, 5 apps, 20 CWEs, 50/50 TP/TN)
+**Created:** 2026-03-19 | **Updated:** 2026-04-07 (v0.5.0 — 1,056 test cases, 5 apps, 20 CWEs, 50/50 TP/TN)
 **Team:** Bash (of 3: Go, Rust, Bash)
-**Version:** v0.4.0
-**Status:** CWE expansion complete. 526 test cases, 20 CWE categories, 5 apps, all categories at 10/10 minimum. Baseline score: see `baseline_theauditor_tool_score.md`.
+**Version:** v0.5.0
+**Status:** 25/25 floor expansion complete. 1,056 test cases, 20 CWE categories, 5 apps, all categories at 25/25 minimum. Baseline score: see `baseline_theauditor_tool_score.md`.
 
 ---
 
@@ -134,8 +134,8 @@ gorustbash_benchmark/bash/
 |   +-- deepflow-ops/              # Operations suite with SAFE_MODE (7 files, 20 test cases)
 |   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
 |   +-- securepipeline/            # CI/CD pipeline (7 files, 55 TN-only cases)
-+-- testcode/                      # 20 standalone CWE test files (335 test cases)
-+-- expectedresults-0.4.0.csv      # Answer key (526 test cases, OWASP CSV format)
++-- testcode/                      # 20 standalone CWE test files + 19 _extended_tests.sh (865 test cases)
++-- expectedresults-0.5.0.csv      # Answer key (1,056 test cases, OWASP CSV format)
 +-- bash_benchmark.py              # Scoring script
 +-- BENCHMARK.md                   # This file
 +-- CHANGELOG.md                   # Version history
@@ -148,28 +148,28 @@ gorustbash_benchmark/bash/
 | Category | CWE | Total | Vulnerable (TP) | Safe (TN) |
 |----------|-----|-------|-----------------|-----------|
 | cmdi | 78 | 106 | 53 | 53 |
-| sqli | 89 | 42 | 21 | 21 |
-| codeinj | 94 | 36 | 18 | 18 |
-| ssrf | 918 | 22 | 11 | 11 |
-| auth_bypass | 287 | 20 | 10 | 10 |
-| cleartext_tx | 319 | 20 | 10 | 10 |
-| dos | 770 | 20 | 10 | 10 |
-| hardcoded_creds | 798 | 20 | 10 | 10 |
-| insecure_perms | 732 | 20 | 10 | 10 |
-| insecure_temp | 377 | 20 | 10 | 10 |
-| loginjection | 117 | 20 | 10 | 10 |
-| pathtraver | 22 | 20 | 10 | 10 |
-| privilege_escalation | 250 | 20 | 10 | 10 |
-| race_condition | 362 | 20 | 10 | 10 |
-| rce | 94 | 20 | 10 | 10 |
-| ssl_bypass | 295 | 20 | 10 | 10 |
-| unquoted | 78 | 20 | 10 | 10 |
-| weakrand | 330 | 20 | 10 | 10 |
-| weakcrypto | 327 | 20 | 10 | 10 |
-| infodisclosure | 200 | 20 | 10 | 10 |
-| **TOTAL** | | **526** | **263** | **263** |
+| sqli | 89 | 50 | 25 | 25 |
+| codeinj | 94 | 50 | 25 | 25 |
+| ssrf | 918 | 50 | 25 | 25 |
+| auth_bypass | 287/306 | 50 | 25 | 25 |
+| cleartext_tx | 319 | 50 | 25 | 25 |
+| dos | 770 | 50 | 25 | 25 |
+| hardcoded_creds | 798 | 50 | 25 | 25 |
+| insecure_perms | 732 | 50 | 25 | 25 |
+| insecure_temp | 367/377 | 50 | 25 | 25 |
+| loginjection | 117 | 50 | 25 | 25 |
+| pathtraver | 22 | 50 | 25 | 25 |
+| privilege_escalation | 250 | 50 | 25 | 25 |
+| race_condition | 362 | 50 | 25 | 25 |
+| rce | 94 | 50 | 25 | 25 |
+| ssl_bypass | 295 | 50 | 25 | 25 |
+| unquoted | 78 | 50 | 25 | 25 |
+| weakrand | 330 | 50 | 25 | 25 |
+| weakcrypto | 327 | 50 | 25 | 25 |
+| infodisclosure | 200/532 | 50 | 25 | 25 |
+| **TOTAL** | | **1,056** | **528** | **528** |
 
-**TP/TN split: 50.0% / 50.0%** — Exact balance. A tool that flags everything scores ~50% TPR, not the inflated 68% of v0.3.
+**TP/TN split: 50.0% / 50.0%** — Exact balance. All 20 categories at 25/25 minimum (Youden significance threshold: 4% per test).
 
 **5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (CI/CD pipeline with 55 TN-only cases).
 

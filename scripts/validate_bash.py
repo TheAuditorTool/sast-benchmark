@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 BASH_DIR = BENCH_ROOT / "bash"
-CSV_FILE = BASH_DIR / "expectedresults-0.4.0.csv"
+CSV_FILE = BASH_DIR / "expectedresults-0.5.0.csv"
 BENCHMARK_PY = BASH_DIR / "bash_benchmark.py"
 SCAN_DIRS = [BASH_DIR / "apps", BASH_DIR / "testcode"]
 

@@ -2,21 +2,21 @@
 
 > **Created**: 2026-03-19
 > **Team**: Bash
-> **Status**: v0.4.0 shipped. All phases complete.
+> **Status**: v0.5.0 shipped. All phases complete.
 > **Goal**: Public OWASP-style benchmark for bash shell script SAST. World-first.
 
 ---
 
-## Current State (v0.4.0)
+## Current State (v0.5.0)
 
-- **526 test cases** (263 TP / 263 TN) across 20 CWE categories
+- **1,056 test cases** (528 TP / 528 TN) across 20 CWE categories
 - **TP/TN balance:** 50/50 (exact)
-- **5 annotated applications** + 20 standalone testcode files
-- **CSV ground truth** (`expectedresults-0.4.0.csv`) is the sole scoring authority
+- **5 annotated applications** + 20 standalone testcode files + 19 _extended_tests.sh files
+- **CSV ground truth** (`expectedresults-0.5.0.csv`) is the sole scoring authority
 - **Baseline score** established (see `baseline_theauditor_tool_score.md`)
-- **All 20 categories at minimum 10V/10S**
+- **All 20 categories at minimum 25V/25S** (Youden statistical significance threshold)
 
-The phases below document the development history from initial 158 test cases to current 526.
+The phases below document the development history from initial 158 test cases to current 1,056.
 
 ---
 
@@ -254,7 +254,10 @@ Document surprises — categories that scored better or worse than expected.
 | 17 | New CWE: cleartext_tx (CWE-319) | DONE | 20 (10+10) | http/ftp/telnet/nc vs https/sftp/ssh |
 | 18 | 10/10 floor expansion (11 categories) | DONE | 90 | insecure_temp, auth_bypass, rce, weakrand, race_condition, insecure_perms, weakcrypto, ssl_bypass, hardcoded_creds, infodisclosure, pathtraver |
 
-**Current state (v0.4.0)**: 526 test cases (263 TP / 263 TN = 50.0% / 50.0%). 56 files, 5 apps, 20 CWE categories.
+| 19 | 25/25 floor expansion (19 categories) | DONE | 530 (265V/265S) | 19 new _extended_tests.sh files |
+
+**Current state (v0.5.0)**: 1,056 test cases (528 TP / 528 TN = 50.0% / 50.0%). 75 files, 5 apps, 20 CWE categories.
+**Statistical rationale for 25/25 floor**: At 10/10, one misclassified test = 10% category swing (too noisy). At 25/25, one test = 4% swing (matches OWASP Java methodology minimum for statistically meaningful per-category scores).
 **CWE pre-flight corrections**: CWE-269 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-250. CWE-400 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-770.
 
 ---

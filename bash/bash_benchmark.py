@@ -24,7 +24,7 @@ from pathlib import Path
 # ============================================================================
 BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
-GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.4.0.csv"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.5.0.csv"
 
 # Rule name -> benchmark category mapping
 # VERIFIED against actual Desktop/bash/.pf/repo_index.db (2026-03-19)

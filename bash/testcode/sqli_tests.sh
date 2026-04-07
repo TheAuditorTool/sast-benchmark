@@ -97,13 +97,16 @@ list_users_sorted() {
 
 # vuln-code-snippet start sqli_printf_q_escaped
 search_deployments() {
-    #user input is escaped with printf %q before SQL interpolation.
-    # printf %q escapes all shell metacharacters and single quotes,
-    # preventing SQL injection when the value is wrapped in SQL string quotes.
+    # printf %q is a shell-quoting function, not a SQL escaping function.
+    # It produces backslash-escaped output (e.g. O\'Brien) but SQLite only
+    # supports '' quote-doubling in string literals — backslashes are not
+    # an escape mechanism in SQLite. Any input containing a single quote
+    # causes an "unrecognized token" syntax error, and the escaping provides
+    # no meaningful injection barrier; use ${var//\'/\'\'} instead.
     local search_val="$1"
     local escaped
     escaped=$(printf '%q' "$search_val")
-    sqlite3 "$DB_FILE" "SELECT * FROM deployments WHERE name = '${escaped}'"  # vuln-code-snippet safe-line sqli_printf_q_escaped
+    sqlite3 "$DB_FILE" "SELECT * FROM deployments WHERE name = '${escaped}'"  # vuln-code-snippet vuln-line sqli_printf_q_escaped
 }
 # vuln-code-snippet end sqli_printf_q_escaped
 
