@@ -1,5 +1,59 @@
 # Bash SAST Benchmark — Changelog
 
+## v0.5.2 (2026-04-08)
+
+App separation: moved 5 apps to `vulnerable_apps/bash/`.
+
+- 867 test cases (424 TP / 443 TN), 20 CWE categories
+- Removed 191 app-sourced entries from main CSV
+- Apps (pipeline-manager, deepflow-webhook, deepflow-ops, dataforge, securepipeline) now in centralized `vulnerable_apps/bash/` with separate scoring
+- CSV, validator, scoring script, bash_benchmark.md updated to v0.5.2
+
+## v0.5.1 (2026-04-07)
+
+1,058 test cases. **1-file-1-test restructure. Zero target leakage.**
+
+### Architecture Change: Multi-test files → 1-file-1-test
+
+Prior versions stored multiple test cases per file (e.g., `sqli_tests.sh` contained 10+ functions), named files with the CWE category, and embedded descriptive comments that explained the vulnerability. Any tool processing filenames or comments could score 100% without performing static analysis — completely defeating the benchmark's purpose.
+
+This release restructures the entire bash testcode to match Go's clean architecture:
+
+| Before (v0.5.0) | After (v0.5.1) |
+|---|---|
+| 39 multi-test `.sh` files | 867 individual `benchmark_test_NNNNN.sh` files |
+| Filenames encode CWE: `sqli_tests.sh` | Generic names: `benchmark_test_00634.sh` |
+| 2,263 descriptive comment lines in testcode | 0 comment lines |
+| `vuln-code-snippet` annotation markers in source | No annotations in source |
+| Line-range based scoring | File-based scoring (identical to Go) |
+| `validate_bash.py` checked annotations | `validate_bash.py` checks file/CSV 1:1 match |
+
+### What Changed
+
+- **39 old testcode files** moved to `testcode/archived_v0.5.0/` (delete once satisfied)
+- **1,058 new files** in `testcode/benchmark_test_NNNNN.sh`
+- `expectedresults-0.5.1.csv` — CSV key is now the file stem, not an annotation key
+- `bash_benchmark.py` — rewritten for file-based scoring (no annotation scanning)
+- `validate_bash.py` v3.0 — L1/L2 check file↔CSV 1:1; L3 schema; L4 balance; L5 pipeline
+- `scripts/migrate_bash.py` — migration script (kept for audit trail)
+
+### Metrics (unchanged from v0.5.0 except count fix)
+
+- 1,058 test cases (529 TP / 529 TN) — exact 50.0% / 50.0% balance
+- 20 CWE categories, all at minimum 25V/25S
+- 0 comment lines in testcode source files
+- 0 target leakage vectors
+
+### Anti-Leakage Rules (now enforced — see bash_benchmark.md)
+
+1. Generic file names only (`benchmark_test_NNNNN.sh`)
+2. No comments of any kind in source files
+3. No annotation markers in source files
+4. One file, one test case
+5. CSV is the sole ground truth
+
+---
+
 ## v0.5.0 (2026-04-07)
 
 1,056 test cases across 20 categories, 5 applications, 75 shell scripts. **25/25 floor expansion.**

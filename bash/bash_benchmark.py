@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 """
 Bash SAST Benchmark Scoring Script
-===================================
-Scores any SAST tool's findings against expectedresults-0.3.1.csv.
+====================================
+Scores any SAST tool's findings against expectedresults-0.5.1.csv.
+
+Architecture: 1 file = 1 test case.
+  - benchmark_test_NNNNN.sh in bash/testcode/ is the test unit.
+  - CSV key = file stem (e.g., "benchmark_test_00001")
+  - Scoring: tool flags the file for the correct category -> TP or FP.
+  - No annotation markers in source files.
 
 Usage:
     python3 bash_benchmark.py
 
-The script reads findings from a .pf/repo_index.db database (produced by
-running a SAST tool on this directory) and compares against the ground truth.
-Adapt RULE_MAP and SINK_MAP for your tool's rule names and vulnerability types.
+Requires .pf/repo_index.db produced by running a SAST tool on this directory.
+Adapt RULE_MAP and SINK_MAP for your tool's rule names.
 
-Scoring: TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
+Scoring metric: TPR - FPR (Youden's J). 0% = random guessing. +100% = perfect.
 """
 import sqlite3
 import os
-import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -24,113 +28,108 @@ from pathlib import Path
 # ============================================================================
 BENCHMARK_ROOT = Path(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = BENCHMARK_ROOT / ".pf" / "repo_index.db"
-GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.5.0.csv"
+GROUND_TRUTH_PATH = BENCHMARK_ROOT / "expectedresults-0.5.2.csv"
+TESTCODE_DIR = BENCHMARK_ROOT / "testcode"
 
 # Rule name -> benchmark category mapping
-# VERIFIED against actual Desktop/bash/.pf/repo_index.db (2026-03-19)
-# 27 distinct rules fire for bash. Each maps to a benchmark category.
 RULE_MAP = {
-    # Command injection (CWE-78) — 12 rules
-    "bash-eval-injection": ["cmdi", "codeinj"],  # eval/bash -c — both CWE-78 and CWE-94
-    "bash-exec-injection": "cmdi",              # exec with variable
-    "bash-command-injection-taint": "cmdi",     # IFDS-confirmed taint->command flows
-    "bash-read-without-r": "cmdi",              # read without -r flag (backslash interp)
-    "bash-ifs-modified": "cmdi",                # IFS manipulation without restore
-    "bash-printf-format-injection": "cmdi",     # printf with variable format string
-    "bash-sudo-variable": "cmdi",               # sudo $cmd
-    "bash-variable-as-command": "cmdi",         # $cmd arg1 arg2
-    "bash-variable-command": ["cmdi", "codeinj"],  # variable as command — both CWE-78/94
-    "bash-backtick-injection": "cmdi",          # `$cmd` backtick substitution
-    "bash-indirect-expansion": "cmdi",          # ${!var} indirect expansion
-    "bash-environment-injection": "cmdi",       # LD_PRELOAD, LD_LIBRARY_PATH
-    "bash-path-modification": "cmdi",           # PATH=./bin:$PATH
-    "bash-arithmetic-injection": "cmdi",        # $(( )) arithmetic expansion with variable
-    "bash-unquoted-cmd-injection": "cmdi",     # Unquoted expansion in dangerous commands (rm, ssh, git, etc)
-    "bash-xargs-injection": "cmdi",            # xargs with -I flag or unsafe pipeline splitting
-    "bash-mail-injection": "cmdi",             # mail/sendmail with variable expansion
-    # Code injection (CWE-94) — 7 rules
-    "bash-source-injection": "codeinj",         # source/dot with variable path
-    "bash-bash-c-injection": "codeinj",         # bash -c with variable expansion
-    "bash-sh-c-injection": "codeinj",           # sh -c with variable expansion
-    "bash-zsh-c-injection": "codeinj",          # zsh -c with variable expansion
-    "bash-ksh-c-injection": "codeinj",          # ksh -c with variable expansion
-    "bash-trap-injection": "codeinj",           # trap with variable command string
-    # Unquoted expansion (CWE-78 variant) — 2 rules
-    "bash-unquoted-expansion": "unquoted",      # unquoted vars in commands
-    "bash-unquoted-dangerous": "unquoted",      # unquoted + dangerous cmd (rm, cp, mv)
-    # Hardcoded credentials (CWE-798) — 2 rules
-    "bash-hardcoded-credential": "hardcoded_creds",   # PASSWORD/TOKEN/SECRET vars
-    "secret-hardcoded-assignment": "hardcoded_creds",  # language-agnostic secret rule
-    # Weak crypto (CWE-327) — 1 rule
-    "bash-weak-crypto": "weakcrypto",           # md5sum, sha1sum
-    # Insecure permissions (CWE-732) — 3 rules
-    "bash-chmod-777": "insecure_perms",         # chmod 777, chmod a+rwx (symbolic)
-    "bash-chmod-666": "insecure_perms",         # chmod 666
-    "bash-insecure-umask": "insecure_perms",    # umask 000
-    # SSL/TLS bypass (CWE-295) — 2 rules
-    "bash-ssl-bypass": "ssl_bypass",            # curl -k, wget --no-check-certificate, env var bypass
-    "bash-ssh-hostkey-bypass": "ssl_bypass",    # SSH StrictHostKeyChecking=no
-    # Information disclosure (CWE-200/209) — 4 rules
-    "bash-debug-mode-leak": "infodisclosure",   # set -x / set -o xtrace
-    "bash-env-dump": "infodisclosure",             # env/printenv dumps secrets (CWE-200)
-    "bash-sensitive-in-error": "infodisclosure",   # echo/printf leaks sensitive vars (CWE-209)
-    "bash-json-response-injection": "infodisclosure",  # unescaped var in JSON response (CWE-209)
-    # RCE pipe-to-shell (CWE-94) — 1 rule
-    "bash-curl-pipe-bash": "rce",               # curl|bash, wget|bash
-    # Insecure temp files (CWE-377)
-    "bash-unsafe-temp": "insecure_temp",        # predictable /tmp paths
-    # Weak randomness (CWE-330) — v0.3.1
-    "bash-weak-random": "weakrand",             # $RANDOM for security-sensitive values
-    # Race condition / TOCTOU (CWE-362) — v0.3.1
-    "bash-toctou-race": "race_condition",       # check-then-use file operations
-    # Authentication bypass (CWE-287/306) — v0.3.1
-    "bash-missing-auth-check": "auth_bypass",   # functions that skip authentication
-    "bash-env-auth-bypass": "auth_bypass",      # SKIP_AUTH env var patterns
-    "bash-empty-credential-bypass": "auth_bypass",  # empty cred comparison without -z guard
-    "bash-missing-webhook-signature": "auth_bypass", # webhook body parsed without HMAC
-    "bash-timing-unsafe-compare": "auth_bypass",    # [[ == ]] on secrets without constant-time
-    # JSON body injection (CWE-94) — curl -d with unescaped variable expansion
+    # Command injection (CWE-78)
+    "bash-eval-injection": ["cmdi", "codeinj"],
+    "bash-exec-injection": "cmdi",
+    "bash-command-injection-taint": "cmdi",
+    "bash-read-without-r": "cmdi",
+    "bash-ifs-modified": "cmdi",
+    "bash-printf-format-injection": "cmdi",
+    "bash-sudo-variable": "cmdi",
+    "bash-variable-as-command": "cmdi",
+    "bash-variable-command": ["cmdi", "codeinj"],
+    "bash-backtick-injection": "cmdi",
+    "bash-indirect-expansion": "cmdi",
+    "bash-environment-injection": "cmdi",
+    "bash-path-modification": "cmdi",
+    "bash-arithmetic-injection": "cmdi",
+    "bash-unquoted-cmd-injection": "cmdi",
+    "bash-xargs-injection": "cmdi",
+    "bash-mail-injection": "cmdi",
+    # Code injection (CWE-94)
+    "bash-source-injection": "codeinj",
+    "bash-bash-c-injection": "codeinj",
+    "bash-sh-c-injection": "codeinj",
+    "bash-zsh-c-injection": "codeinj",
+    "bash-ksh-c-injection": "codeinj",
+    "bash-trap-injection": "codeinj",
     "bash-json-body-injection": "codeinj",
-    # Log injection (CWE-117) — v0.4.0
+    # Unquoted expansion (CWE-78 variant)
+    "bash-unquoted-expansion": "unquoted",
+    "bash-unquoted-dangerous": "unquoted",
+    # Hardcoded credentials (CWE-798)
+    "bash-hardcoded-credential": "hardcoded_creds",
+    "secret-hardcoded-assignment": "hardcoded_creds",
+    # Weak crypto (CWE-327)
+    "bash-weak-crypto": "weakcrypto",
+    # Insecure permissions (CWE-732)
+    "bash-chmod-777": "insecure_perms",
+    "bash-chmod-666": "insecure_perms",
+    "bash-insecure-umask": "insecure_perms",
+    # SSL/TLS bypass (CWE-295)
+    "bash-ssl-bypass": "ssl_bypass",
+    "bash-ssh-hostkey-bypass": "ssl_bypass",
+    # Information disclosure (CWE-200/209)
+    "bash-debug-mode-leak": "infodisclosure",
+    "bash-env-dump": "infodisclosure",
+    "bash-sensitive-in-error": "infodisclosure",
+    "bash-json-response-injection": "infodisclosure",
+    # RCE pipe-to-shell (CWE-94)
+    "bash-curl-pipe-bash": "rce",
+    # Insecure temp files (CWE-377)
+    "bash-unsafe-temp": "insecure_temp",
+    # Weak randomness (CWE-330)
+    "bash-weak-random": "weakrand",
+    # Race condition / TOCTOU (CWE-362)
+    "bash-toctou-race": "race_condition",
+    # Authentication bypass (CWE-287/306)
+    "bash-missing-auth-check": "auth_bypass",
+    "bash-env-auth-bypass": "auth_bypass",
+    "bash-empty-credential-bypass": "auth_bypass",
+    "bash-missing-webhook-signature": "auth_bypass",
+    "bash-timing-unsafe-compare": "auth_bypass",
+    # Log injection (CWE-117)
     "bash-log-injection": "loginjection",
-    # Privilege escalation (CWE-250) — v0.4.0
+    # Privilege escalation (CWE-250)
     "bash-privilege-escalation": "privilege_escalation",
     "bash-sudo-user-input": "privilege_escalation",
-    # Denial of service (CWE-770) — v0.4.0
+    # Denial of service (CWE-770)
     "bash-resource-exhaustion": "dos",
     "bash-unbounded-operation": "dos",
-    # Cleartext transmission (CWE-319) — v0.4.0
+    # Cleartext transmission (CWE-319)
     "bash-cleartext-transmission": "cleartext_tx",
     "bash-http-credentials": "cleartext_tx",
-    # Cross-category taint rules
-    "ssrf-taint": "ssrf",                          # SSRF only — codeinj covered by bash-json-body-injection
+    # SSRF
+    "ssrf-taint": "ssrf",
+    # Path traversal (CWE-22)
+    "bash-path-traversal": "pathtraver",
 }
 
-# Rules to IGNORE in scoring (not security-relevant for benchmark categories)
 NOISE_RULES = {
-    "bash-missing-set-e",       # Missing errexit — code quality, not security
-    "bash-missing-set-u",       # Missing nounset — code quality, not security
-    "bash-relative-sensitive-cmd",  # Relative path for chmod/rm — fires 38x, different concern
+    "bash-missing-set-e",
+    "bash-missing-set-u",
+    "bash-relative-sensitive-cmd",
     "deadcode-function",
     "api-missing-auth",
 }
 
-# Taint vulnerability_type -> benchmark category
-# VERIFIED against actual resolved_flow_audit.vulnerability_type values
 SINK_MAP = {
     "Command Injection": "cmdi",
     "SQL Injection": "sqli",
     "Path Traversal": "pathtraver",
-    "Server-Side Request Forgery (SSRF)": "ssrf",  # SSRF only — codeinj covered by structural rule
+    "Server-Side Request Forgery (SSRF)": "ssrf",
     "Information Disclosure": "infodisclosure",
     "Weak Cryptography": "weakcrypto",
     "Remote Code Execution": "rce",
     "Code Injection": "codeinj",
-    # v0.3.1 additions
     "Weak Randomness": "weakrand",
     "Race Condition": "race_condition",
     "Authentication Bypass": "auth_bypass",
-    # v0.4.0 additions
     "Log Injection": "loginjection",
     "Execution with Unnecessary Privileges": "privilege_escalation",
     "Privilege Escalation": "privilege_escalation",
@@ -139,147 +138,91 @@ SINK_MAP = {
     "Cleartext Transmission": "cleartext_tx",
 }
 
+
 # ============================================================================
-# CSV Parser (OWASP standard format — matches Go/Java/Python benchmarks)
+# CSV Parser
 # ============================================================================
 def parse_ground_truth(path):
     """Parse expectedresults CSV. Format: test name,category,real vulnerability,CWE"""
     test_cases = []
-
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             stripped = line.strip()
             if not stripped or stripped.startswith("#"):
                 continue
-
             parts = stripped.split(",")
             if len(parts) < 4:
                 continue
-
             test_cases.append({
-                "key": parts[0].strip(),
+                "key": parts[0].strip(),           # "benchmark_test_00001"
                 "category": parts[1].strip(),
                 "vulnerable": parts[2].strip().lower() == "true",
                 "cwe": int(parts[3].strip()),
             })
-
     return test_cases
-
-
-# ============================================================================
-# Source File Scanner (vuln-code-snippet extraction)
-# ============================================================================
-def scan_annotations(root_dir):
-    """Scan source files for vuln-code-snippet start/end markers.
-    Returns dict: key -> [{file, start_line, end_line}, ...]
-    """
-    snippets = {}
-    pat_start = re.compile(r"vuln-code-snippet\s+start\s+(.+)")
-    pat_end = re.compile(r"vuln-code-snippet\s+end\s+(.+)")
-
-    for dirpath, _, filenames in os.walk(root_dir):
-        for fn in filenames:
-            if not fn.endswith(".sh"):
-                continue
-
-            fp = os.path.join(dirpath, fn)
-            rel = os.path.relpath(fp, root_dir).replace("\\", "/")
-
-            try:
-                with open(fp, "r", encoding="utf-8", errors="replace") as f:
-                    lines = f.readlines()
-            except OSError:
-                continue
-
-            opens = {}
-            for i, ln in enumerate(lines, 1):
-                m = pat_start.search(ln)
-                if m:
-                    for k in m.group(1).strip().split():
-                        opens[k.strip()] = i
-
-                m = pat_end.search(ln)
-                if m:
-                    for k in m.group(1).strip().split():
-                        k = k.strip()
-                        if k in opens:
-                            if k not in snippets:
-                                snippets[k] = []
-                            snippets[k].append({
-                                "file": rel,
-                                "start": opens.pop(k),
-                                "end": i,
-                            })
-
-    return snippets
 
 
 # ============================================================================
 # Scoring
 # ============================================================================
 def main():
-    # Parse ground truth
     test_cases = parse_ground_truth(str(GROUND_TRUTH_PATH))
-    print(f"Loaded {len(test_cases)} test cases from ground truth")
+    print(f"Loaded {len(test_cases)} test cases from {GROUND_TRUTH_PATH.name}")
 
-    # Scan annotations
-    snippets = scan_annotations(str(BENCHMARK_ROOT))
-    print(f"Found {len(snippets)} annotated snippets in source files")
-
-    # Verify coverage
-    missing_annotations = []
+    # Verify source files exist
+    missing_files = []
     for tc in test_cases:
-        if tc["key"] not in snippets:
-            missing_annotations.append(tc["key"])
-    if missing_annotations:
-        print(f"\nWARNING: {len(missing_annotations)} test cases have no source annotation:")
-        for k in missing_annotations[:10]:
-            print(f"  - {k}")
-        if len(missing_annotations) > 10:
-            print(f"  ... and {len(missing_annotations) - 10} more")
+        src = TESTCODE_DIR / (tc["key"] + ".sh")
+        if not src.exists():
+            missing_files.append(tc["key"])
+    if missing_files:
+        print(f"\nWARNING: {len(missing_files)} test case files not found in testcode/:")
+        for k in missing_files[:5]:
+            print(f"  testcode/{k}.sh")
+        if len(missing_files) > 5:
+            print(f"  ... and {len(missing_files) - 5} more")
         print()
 
-    # Load findings from DB
     if not DB_PATH.exists():
         print(f"\nERROR: Database not found at {DB_PATH}")
         print("Run your SAST tool on the benchmark directory first.")
-        print("\nShowing ground truth summary instead:\n")
+        print("\nGround truth summary:\n")
         show_ground_truth_summary(test_cases)
         return
 
     conn = sqlite3.connect(str(DB_PATH))
     c = conn.cursor()
 
-    # Collect findings: file -> set of (line, category)
-    findings = defaultdict(set)
+    # Collect findings: relative_file_path -> set of categories detected
+    # File-based scoring: any finding in the file for the right category counts.
+    file_categories = defaultdict(set)
 
     # Track 1: pattern_findings (rule results)
-    c.execute("SELECT file, line, rule FROM pattern_findings")
-    for f, ln, r in c.fetchall():
-        if r not in NOISE_RULES:
-            cats = RULE_MAP.get(r)
+    c.execute("SELECT file, rule FROM pattern_findings")
+    for filepath, rule in c.fetchall():
+        if rule not in NOISE_RULES:
+            cats = RULE_MAP.get(rule)
             if cats:
                 if isinstance(cats, str):
                     cats = [cats]
+                rel = filepath.replace("\\", "/")
                 for cat in cats:
-                    findings[f].add((ln, cat))
+                    file_categories[rel].add(cat)
 
     # Track 2: resolved_flow_audit (taint-confirmed)
     c.execute(
-        "SELECT sink_file, sink_line, vulnerability_type "
+        "SELECT sink_file, vulnerability_type "
         "FROM resolved_flow_audit WHERE status = 'VULNERABLE'"
     )
-    for f, ln, vt in c.fetchall():
-        cats = SINK_MAP.get(vt)
-        if cats:
-            if isinstance(cats, str):
-                cats = [cats]
-            for cat in cats:
-                findings[f].add((ln, cat))
+    for filepath, vt in c.fetchall():
+        cat = SINK_MAP.get(vt)
+        if cat:
+            rel = filepath.replace("\\", "/")
+            file_categories[rel].add(cat)
 
     conn.close()
 
-    # Score each test case
+    # Score each test case by filename
     cats = sorted(set(tc["category"] for tc in test_cases))
     results = {}
 
@@ -288,22 +231,12 @@ def main():
         cat_cases = [tc for tc in test_cases if tc["category"] == cat]
 
         for tc in cat_cases:
-            key = tc["key"]
-            is_vulnerable = tc["vulnerable"]
-            detected = False
+            # Expected file: testcode/benchmark_test_NNNNN.sh
+            rel_path = f"testcode/{tc['key']}.sh"
+            detected_cats = file_categories.get(rel_path, set())
+            detected = cat in detected_cats
 
-            # Check if any finding falls within annotated line range
-            locs = snippets.get(key, [])
-            for loc in locs:
-                file_findings = findings.get(loc["file"], set())
-                for ln, found_cat in file_findings:
-                    if loc["start"] <= ln <= loc["end"] and found_cat == cat:
-                        detected = True
-                        break
-                if detected:
-                    break
-
-            if is_vulnerable:
+            if tc["vulnerable"]:
                 if detected:
                     tp += 1
                 else:
@@ -314,9 +247,10 @@ def main():
                 else:
                     tn += 1
 
-        results[cat] = {"tp": tp, "fp": fp, "fn": fn, "tn": tn}
-        cwe = cat_cases[0].get("cwe", 0) if cat_cases else 0
-        results[cat]["cwe"] = cwe
+        results[cat] = {
+            "tp": tp, "fp": fp, "fn": fn, "tn": tn,
+            "cwe": cat_cases[0]["cwe"] if cat_cases else 0,
+        }
 
     # Print scorecard
     print()
@@ -348,7 +282,6 @@ def main():
             % (cat, cwe, tp, fp, fn, tn, tpr * 100, fpr * 100, score * 100)
         )
 
-    # Overall
     overall_tpr = total_tp / (total_tp + total_fn) if (total_tp + total_fn) else 0
     overall_fpr = total_fp / (total_fp + total_tn) if (total_fp + total_tn) else 0
     overall_score = overall_tpr - overall_fpr
@@ -356,17 +289,8 @@ def main():
     print("-" * 78)
     print(
         "%-20s %-6s %-5d %-5d %-5d %-5d %6.1f%% %6.1f%% %+6.1f%%"
-        % (
-            "OVERALL",
-            "",
-            total_tp,
-            total_fp,
-            total_fn,
-            total_tn,
-            overall_tpr * 100,
-            overall_fpr * 100,
-            overall_score * 100,
-        )
+        % ("OVERALL", "", total_tp, total_fp, total_fn, total_tn,
+           overall_tpr * 100, overall_fpr * 100, overall_score * 100)
     )
 
     # FN analysis
@@ -375,29 +299,13 @@ def main():
     for tc in test_cases:
         if not tc["vulnerable"]:
             continue
-        key = tc["key"]
-        cat = tc["category"]
-        locs = snippets.get(key, [])
-        detected = False
-        for loc in locs:
-            file_findings = findings.get(loc["file"], set())
-            for ln, found_cat in file_findings:
-                if loc["start"] <= ln <= loc["end"] and found_cat == cat:
-                    detected = True
-                    break
-            if detected:
-                break
+        rel_path = f"testcode/{tc['key']}.sh"
+        detected = tc["category"] in file_categories.get(rel_path, set())
         if not detected:
             fn_count += 1
-            loc_info = locs[0] if locs else {"file": "?", "start": "?", "end": "?"}
-            print(
-                f"  FN: {key} [{tc['category']}] "
-                f"{loc_info['file']}:{loc_info['start']}-{loc_info['end']} "
-                f"-- {tc.get('description', '')}"
-            )
-
+            print(f"  FN: {tc['key']} [{tc['category']}]  testcode/{tc['key']}.sh")
     if fn_count == 0:
-        print("  None! All vulnerabilities detected.")
+        print("  None. All vulnerabilities detected.")
 
     # FP analysis
     print("\n\n=== FALSE POSITIVES (Incorrect Flags on Safe Code) ===\n")
@@ -405,35 +313,18 @@ def main():
     for tc in test_cases:
         if tc["vulnerable"]:
             continue
-        key = tc["key"]
-        cat = tc["category"]
-        locs = snippets.get(key, [])
-        detected = False
-        for loc in locs:
-            file_findings = findings.get(loc["file"], set())
-            for ln, found_cat in file_findings:
-                if loc["start"] <= ln <= loc["end"] and found_cat == cat:
-                    detected = True
-                    break
-            if detected:
-                break
+        rel_path = f"testcode/{tc['key']}.sh"
+        detected = tc["category"] in file_categories.get(rel_path, set())
         if detected:
             fp_count += 1
-            loc_info = locs[0] if locs else {"file": "?", "start": "?", "end": "?"}
-            print(
-                f"  FP: {key} [{tc['category']}] "
-                f"{loc_info['file']}:{loc_info['start']}-{loc_info['end']} "
-                f"-- {tc.get('description', '')}"
-            )
-
+            print(f"  FP: {tc['key']} [{tc['category']}]  testcode/{tc['key']}.sh")
     if fp_count == 0:
-        print("  None! No false positives.")
+        print("  None. No false positives.")
 
     print()
 
 
 def show_ground_truth_summary(test_cases):
-    """Show summary when DB doesn't exist yet."""
     cats = sorted(set(tc["category"] for tc in test_cases))
     print("%-20s %-6s %-8s %-8s %-8s" % ("Category", "CWE", "Total", "Vuln", "Safe"))
     print("-" * 55)
@@ -442,22 +333,16 @@ def show_ground_truth_summary(test_cases):
         cat_cases = [tc for tc in test_cases if tc["category"] == cat]
         vuln = sum(1 for tc in cat_cases if tc["vulnerable"])
         safe = sum(1 for tc in cat_cases if not tc["vulnerable"])
-        cwe = cat_cases[0].get("cwe", 0)
+        cwe = cat_cases[0]["cwe"]
         total += len(cat_cases)
         vuln_total += vuln
         safe_total += safe
-        print(
-            "%-20s %-6d %-8d %-8d %-8d"
-            % (cat, cwe, len(cat_cases), vuln, safe)
-        )
+        print("%-20s %-6d %-8d %-8d %-8d" % (cat, cwe, len(cat_cases), vuln, safe))
     print("-" * 55)
-    print(
-        "%-20s %-6s %-8d %-8d %-8d"
-        % ("TOTAL", "", total, vuln_total, safe_total)
-    )
+    print("%-20s %-6s %-8d %-8d %-8d" % ("TOTAL", "", total, vuln_total, safe_total))
     print(
         f"\nTP/TN split: {vuln_total}/{safe_total} "
-        f"({vuln_total*100/total:.1f}% / {safe_total*100/total:.1f}%)"
+        f"({vuln_total * 100 / total:.1f}% / {safe_total * 100 / total:.1f}%)"
     )
 
 

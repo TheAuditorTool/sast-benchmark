@@ -1,9 +1,21 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-04-07 (v0.5.0 — 1,056 test cases, 5 apps, 20 CWEs, 50/50 TP/TN)
+**Created:** 2026-03-19 | **Updated:** 2026-04-08 (v0.5.1 — 1,058 test cases, 20 CWEs, 50/50 TP/TN, 1-file-1-test)
 **Team:** Bash (of 3: Go, Rust, Bash)
-**Version:** v0.5.0
-**Status:** 25/25 floor expansion complete. 1,056 test cases, 20 CWE categories, 5 apps, all categories at 25/25 minimum. Baseline score: see `baseline_theauditor_tool_score.md`.
+**Version:** v0.5.1
+**Status:** 1-file-1-test restructure complete. 867 individual `benchmark_test_NNNNN.sh` testcode files. Apps moved to `vulnerable_apps/bash/`. All comments and annotation markers removed from testcode source files. Zero target leakage.
+
+---
+
+## Anti-Target Leakage Rules (mandatory for all future test additions)
+
+These rules exist because prior versions embedded vulnerability type in filenames and comments, enabling a tool to score 100% by text-matching alone — completely defeating the purpose of the benchmark.
+
+1. **Generic file names only.** Test files must be named `benchmark_test_NNNNN.sh`. Never include a CWE name, vulnerability category, or technique description in the filename.
+2. **No comments of any kind.** No inline comments, no block comments, no file-header comments. A SAST tool that processes comments can exploit any hint. The source file must contain only executable shell code.
+3. **No annotation markers in source files.** The `vuln-code-snippet` marker system has been retired. Ground truth lives exclusively in `expectedresults-0.5.2.csv`. Scoring is file-based: if the tool flags the file for the correct category, it counts.
+4. **One file, one test case.** Each `.sh` file contains exactly one function (or tightly coupled multi-function group) representing a single test case. Multiple test cases in one file allow a tool to infer category from neighbouring functions.
+5. **CSV is the sole ground truth.** `expectedresults-0.5.2.csv` maps `benchmark_test_NNNNN` → category → vulnerable/safe → CWE. Nothing in the source file encodes this information.
 
 ---
 
@@ -128,14 +140,9 @@ These patterns have NO rule. The benchmark includes them deliberately as FN-gene
 
 ```
 gorustbash_benchmark/bash/
-+-- apps/                          # 5 annotated applications (191 test cases)
-|   +-- pipeline-manager/          # DevOps CI/CD pipeline (10 scripts, 78 test cases)
-|   +-- deepflow-webhook/          # HTTP webhook server (8 files, 28 test cases)
-|   +-- deepflow-ops/              # Operations suite with SAFE_MODE (7 files, 20 test cases)
-|   +-- dataforge/                 # Data pipeline scripts (4 files, 10 test cases)
-|   +-- securepipeline/            # CI/CD pipeline (7 files, 55 TN-only cases)
-+-- testcode/                      # 20 standalone CWE test files + 19 _extended_tests.sh (865 test cases)
-+-- expectedresults-0.5.0.csv      # Answer key (1,056 test cases, OWASP CSV format)
++-- testcode/                      # 867 benchmark_test_NNNNN.sh files (1 file = 1 test)
++-- expectedresults-0.5.2.csv      # Answer key (867 test cases, OWASP CSV format)
+# Apps moved to vulnerable_apps/bash/ (separate scoring)
 +-- bash_benchmark.py              # Scoring script
 +-- BENCHMARK.md                   # This file
 +-- CHANGELOG.md                   # Version history
@@ -148,7 +155,7 @@ gorustbash_benchmark/bash/
 | Category | CWE | Total | Vulnerable (TP) | Safe (TN) |
 |----------|-----|-------|-----------------|-----------|
 | cmdi | 78 | 106 | 53 | 53 |
-| sqli | 89 | 50 | 25 | 25 |
+| sqli | 89 | 52 | 26 | 26 |
 | codeinj | 94 | 50 | 25 | 25 |
 | ssrf | 918 | 50 | 25 | 25 |
 | auth_bypass | 287/306 | 50 | 25 | 25 |
@@ -167,7 +174,7 @@ gorustbash_benchmark/bash/
 | weakrand | 330 | 50 | 25 | 25 |
 | weakcrypto | 327 | 50 | 25 | 25 |
 | infodisclosure | 200/532 | 50 | 25 | 25 |
-| **TOTAL** | | **1,056** | **528** | **528** |
+| **TOTAL** | | **1,058** | **529** | **529** |
 
 **TP/TN split: 50.0% / 50.0%** — Exact balance. All 20 categories at 25/25 minimum (Youden significance threshold: 4% per test).
 
@@ -185,7 +192,7 @@ Two scoring paths are supported:
 
 ```bash
 # Any SAST tool that produces SARIF 2.1.0 output:
-python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.4.0.csv
+python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.5.2.csv
 ```
 
 ### Path 2: TheAuditor Database-First (for TheAuditor users)
@@ -193,7 +200,7 @@ python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.4.0.csv
 ```bash
 # Convert DB to CWE-based SARIF, then score
 python3 ../scripts/convert_theauditor.py .pf/repo_index.db
-python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
+python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.2.csv
 ```
 
 Scoring uses CWE numbers as the join key. SARIF ruleId is the CWE number. No RULE_MAP.

@@ -255,8 +255,9 @@ Document surprises — categories that scored better or worse than expected.
 | 18 | 10/10 floor expansion (11 categories) | DONE | 90 | insecure_temp, auth_bypass, rce, weakrand, race_condition, insecure_perms, weakcrypto, ssl_bypass, hardcoded_creds, infodisclosure, pathtraver |
 
 | 19 | 25/25 floor expansion (19 categories) | DONE | 530 (265V/265S) | 19 new _extended_tests.sh files |
+| 20 | 1-file-1-test restructure (anti-leakage) | DONE | 0 new | 39 multi-test files → 1,058 individual benchmark_test_NNNNN.sh; all comments stripped; annotation system retired; file-based scoring |
 
-**Current state (v0.5.0)**: 1,056 test cases (528 TP / 528 TN = 50.0% / 50.0%). 75 files, 5 apps, 20 CWE categories.
+**Current state (v0.5.1)**: 1,058 test cases (529 TP / 529 TN = 50.0% / 50.0%). 1,058 individual files, 5 reference apps, 20 CWE categories. Zero target leakage.
 **Statistical rationale for 25/25 floor**: At 10/10, one misclassified test = 10% category swing (too noisy). At 25/25, one test = 4% swing (matches OWASP Java methodology minimum for statistically meaningful per-category scores).
 **CWE pre-flight corrections**: CWE-269 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-250. CWE-400 rejected (Class-level, mapping DISCOURAGED) in favor of CWE-770.
 
