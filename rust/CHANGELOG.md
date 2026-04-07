@@ -4,6 +4,25 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-04-08 — v0.5.1: Anti-Target Leakage Migration + App Separation
+
+Testcode files stripped of all comments and renamed to opaque `benchmark_test_NNNNN.rs`.
+Prevents SAST tools from scoring via filename/comment regex instead of actual code analysis.
+
+- 1,133 testcode files: category-encoded names (`sqli_001.rs`) → shuffled opaque names (`benchmark_test_00967.rs`)
+- All `//!` CWE doc comments removed (were on line 1 of every file)
+- All `vuln-code-snippet` annotation markers removed
+- All standalone `//` comments removed (536 lines of vulnerability explanations)
+- All trailing `//` comments stripped from code lines (47 instances)
+- CSV keys: `testcodeSqli001` → `BenchmarkTestNNNNN` (matches Go/Java benchmark convention)
+- 119 app-sourced entries removed from main CSV (apps moved to `vulnerable_apps/rust/`)
+- File shuffle: `random.seed(20260407)`, deterministic and reproducible
+- Rename map: `rust/rename_map.json` (full audit trail: old filename → new filename → old key → new key)
+- Ground truth: `expectedresults-0.5.1.csv` (1,133 entries, 548 TP / 585 TN; replaces 0.5.0)
+- Scoring: filename-based only (annotation-based scoring retired with app separation)
+
+---
+
 ## 2026-04-07 — v0.5.0: 25/25 Expansion (491 → 1,252 test cases, 20 → 25 CWEs)
 
 ### Context

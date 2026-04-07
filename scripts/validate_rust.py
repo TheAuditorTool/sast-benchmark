@@ -30,13 +30,14 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 RUST_DIR = BENCH_ROOT / "rust"
-CSV_FILE = RUST_DIR / "expectedresults-0.5.0.csv"
+CSV_FILE = RUST_DIR / "expectedresults-0.5.1.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
-SCAN_DIRS = [RUST_DIR / "apps", RUST_DIR / "testcode"]
+SCAN_DIRS = [RUST_DIR / "testcode"]
 
 PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
 PAT_END = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
 PAT_TARGET_LINE = re.compile(r"vuln-code-snippet\s+target-line\s+(\S+)")
+PAT_BENCHMARK = re.compile(r"^BenchmarkTest(\d{5})$")
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
@@ -179,6 +180,8 @@ def scan_annotations():
 def check_roundtrip(csv_entries, annotations):
     """Verify annotation files exist on disk and snippets are non-empty."""
     for key, info in csv_entries.items():
+        if PAT_BENCHMARK.match(key):
+            continue
         if key not in annotations:
             continue
 
@@ -239,6 +242,8 @@ def check_semantics(csv_entries, annotations, target_lines):
     and location, not TP/TN distinction by marker type.
     """
     for key, info in csv_entries.items():
+        if PAT_BENCHMARK.match(key):
+            continue
         if key not in annotations:
             continue
 
@@ -336,9 +341,11 @@ def print_report(csv_entries, annotations):
     total_tn = sum(c["tn"] for c in categories.values())
     total = total_tp + total_tn
 
-    print("CSV entries:    %d" % len(csv_entries))
+    fn_based = sum(1 for k in csv_entries if PAT_BENCHMARK.match(k))
+    ann_based = len(csv_entries) - fn_based
+    print("CSV entries:    %d (%d filename-based, %d annotation-based)" % (len(csv_entries), fn_based, ann_based))
     print("Annotations:    %d" % len(annotations))
-    print("Match:          %s" % ("YES" if len(csv_entries) == len(annotations) else "NO - MISMATCH"))
+    print("Ann match:      %s" % ("YES" if ann_based == len(annotations) else "NO - MISMATCH"))
     print("Total TP:       %d" % total_tp)
     print("Total TN:       %d" % total_tn)
     if total > 0:
@@ -387,9 +394,26 @@ def main():
     csv_keys = set(csv_entries.keys())
     ann_keys = set(annotations.keys())
 
-    for key in sorted(csv_keys - ann_keys):
+    # Split CSV keys into filename-based (BenchmarkTestNNNNN) and annotation-based
+    filename_keys = set()
+    annotation_csv_keys = set()
+    for key in csv_keys:
+        if PAT_BENCHMARK.match(key):
+            filename_keys.add(key)
+        else:
+            annotation_csv_keys.add(key)
+
+    # Filename-based keys: verify the .rs file exists on disk
+    for key in sorted(filename_keys):
+        m = PAT_BENCHMARK.match(key)
+        expected_file = RUST_DIR / "testcode" / ("benchmark_test_%s.rs" % m.group(1))
+        if not expected_file.exists():
+            errors.append("L1 Filename-based key '%s': file not found: %s" % (key, expected_file))
+
+    # Annotation-based keys: cross-reference against scanned annotations
+    for key in sorted(annotation_csv_keys - ann_keys):
         errors.append("L1 Orphan CSV: '%s' in ground truth but no annotation in source" % key)
-    for key in sorted(ann_keys - csv_keys):
+    for key in sorted(ann_keys - annotation_csv_keys):
         errors.append("L1 Orphan annotation: '%s' in source but no CSV entry" % key)
 
     l1_errors = len(errors)

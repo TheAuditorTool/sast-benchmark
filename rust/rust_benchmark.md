@@ -4,43 +4,51 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.5.0.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
+**Ground truth**: `expectedresults-0.5.1.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
-### Test Case Inventory (v0.5.0)
+### Test Case Inventory (v0.5.1)
 
-| Category | CWE | TP | TN | Total | Balance |
-|----------|-----|----|----|-------|---------|
-| sqli | 89 | 25 | 27 | 52 | 48/52 |
-| cmdi | 78 | 25 | 25 | 50 | 50/50 |
-| pathtraver | 22 | 25 | 25 | 50 | 50/50 |
-| ssrf | 918 | 25 | 25 | 50 | 50/50 |
-| xss | 79 | 25 | 25 | 50 | 50/50 |
-| memsafety | 119 | 25 | 25 | 50 | 50/50 |
-| crypto | 327* | 25 | 25 | 50 | 50/50 |
-| weakrand | 330 | 25 | 25 | 50 | 50/50 |
-| infodisclosure | 200* | 25 | 25 | 50 | 50/50 |
-| deserial | 502 | 25 | 25 | 50 | 50/50 |
-| intoverflow | 190 | 25 | 25 | 50 | 50/50 |
-| redos | 1333 | 25 | 25 | 50 | 50/50 |
-| inputval | 20 | 25 | 25 | 50 | 50/50 |
-| hardcodedcreds | 798 | 25 | 25 | 50 | 50/50 |
-| race_condition | 362 | 25 | 25 | 50 | 50/50 |
-| loginjection | 117 | 25 | 25 | 50 | 50/50 |
-| securecookie | 614 | 25 | 25 | 50 | 50/50 |
-| redirect | 601 | 25 | 25 | 50 | 50/50 |
-| fileupload | 434 | 25 | 25 | 50 | 50/50 |
-| tlsverify | 295 | 25 | 25 | 50 | 50/50 |
-| authnfailure | 287 | 25 | 25 | 50 | 50/50 |
-| csrf | 352 | 25 | 25 | 50 | 50/50 |
-| authzfailure | 285 | 25 | 25 | 50 | 50/50 |
-| ldapi | 90 | 25 | 25 | 50 | 50/50 |
-| nosql | 943 | 25 | 25 | 50 | 50/50 |
-| **TOTAL** | | **625** | **627** | **1,252** | **49/51** |
+| Category | CWE | TP | TN | Total |
+|----------|-----|----|----|-------|
+| sqli | 89 | 5 | 11 | 16 |
+| cmdi | 78 | 14 | 20 | 34 |
+| pathtraver | 22 | 14 | 24 | 38 |
+| ssrf | 918 | 18 | 20 | 38 |
+| memsafety | 119 | 18 | 21 | 39 |
+| crypto | 327* | 20 | 21 | 41 |
+| weakrand | 330 | 22 | 23 | 45 |
+| xss | 79 | 23 | 23 | 46 |
+| infodisclosure | 200* | 22 | 25 | 47 |
+| deserial | 502 | 23 | 24 | 47 |
+| intoverflow | 190 | 23 | 24 | 47 |
+| hardcodedcreds | 798 | 23 | 25 | 48 |
+| redos | 1333 | 24 | 24 | 48 |
+| inputval | 20 | 24 | 25 | 49 |
+| race_condition | 362 | 25 | 25 | 50 |
+| loginjection | 117 | 25 | 25 | 50 |
+| securecookie | 614 | 25 | 25 | 50 |
+| redirect | 601 | 25 | 25 | 50 |
+| fileupload | 434 | 25 | 25 | 50 |
+| tlsverify | 295 | 25 | 25 | 50 |
+| authnfailure | 287 | 25 | 25 | 50 |
+| csrf | 352 | 25 | 25 | 50 |
+| authzfailure | 285 | 25 | 25 | 50 |
+| ldapi | 90 | 25 | 25 | 50 |
+| nosql | 943 | 25 | 25 | 50 |
+| **TOTAL** | | **548** | **585** | **1,133** |
 
 *crypto has entries with CWE-347 (JWT alg=none); infodisclosure has entries with CWE-200/209/532
 
-**All 25 categories have TP AND TN.** Every category has minimum 25 TP and 25 TN. TP/TN ratio: 49/51 (sqli retains 2 legacy extra TN). FPR measurable for 100% of test cases. At 25/25 per category, one misclassification = 4% TPR/FPR swing (vs 10% at 10/10), enabling reliable tool discrimination.
+**Testcode-only counts** (119 app entries moved to `vulnerable_apps/rust/` for separate scoring). Categories with heavy app contributions (sqli, cmdi, pathtraver, ssrf, memsafety) are below the 25/25 floor. FPR measurable for 100% of test cases.
+
+### Anti-Target Leakage Rules (v0.5.1)
+
+- Test filenames use opaque `benchmark_test_NNNNN.rs` naming. No category or CWE in filename.
+- Test files contain zero comments. No CWE references, no vulnerability descriptions, no annotation markers.
+- 1 file = 1 test case = 1 `pub fn handle()` function.
+- Tools must rely on AST/dataflow analysis to classify test cases. Text-matching filenames or comments is not possible.
+- Naming convention matches OWASP BenchmarkJava and the Go benchmark (`BenchmarkTestNNNNN`).
 
 **Complexity tiers** (no tier label in source files — tiers are for benchmark design documentation only):
 - T1 (Direct): req.param() → sink in ≤3 lines (~40% of new cases)
@@ -50,16 +58,11 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 ### Frameworks Covered
 
-| Framework | Apps | .rs Files |
-|-----------|------|-----------|
-| actix-web | rust_taint_app, deepflow-rust, rust_backend, rust_calorie_app, anarchy_commerce | ~60 |
-| axum | rust_jobqueue | ~39 |
-| rocket | rocket_test | 1 |
-| warp | warp_test | 1 |
+Testcode uses no framework (raw function signatures). Reference apps in `vulnerable_apps/rust/` cover actix-web, axum, Rocket, and Warp.
 
 ---
 
-## App Catalog
+## App Catalog (moved to vulnerable_apps/rust/)
 
 ### 1. rust_taint_app (actix-web + sqlx/rusqlite)
 **Purpose:** Intentional taint flow test app. Every handler is a taint source, downstream modules are sinks.
@@ -143,7 +146,7 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.1.csv
 ```
 
 ---
@@ -158,7 +161,7 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.5.0.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.5.1.csv
 ```
 
 ### TheAuditor (database-first path)
@@ -166,7 +169,7 @@ python ../scripts/score_sarif.py results.sarif expectedresults-0.5.0.csv
 ```bash
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.1.csv
 ```
 
 ---

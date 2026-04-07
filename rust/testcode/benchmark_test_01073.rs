@@ -1,0 +1,14 @@
+use std::sync::{Condvar, Mutex};
+
+pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
+    let _key = req.param("key");
+    let pair = get_condvar_pair();
+    let (lock, _cvar) = &*pair;
+    let guard = lock.lock().unwrap();
+    let _guard = _cvar.wait_while(guard, |ready| !*ready).unwrap();
+    super::shared::BenchmarkResponse::ok("Resource ready")
+}
+
+fn get_condvar_pair() -> std::sync::Arc<(Mutex<bool>, Condvar)> {
+    std::sync::Arc::new((Mutex::new(true), Condvar::new()))
+}

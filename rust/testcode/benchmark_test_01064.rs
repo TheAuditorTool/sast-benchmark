@@ -1,0 +1,15 @@
+pub fn handle(req: &super::shared::BenchmarkRequest) -> super::shared::BenchmarkResponse {
+    let path = req.param("path");
+    match safe_redirect(&path) {
+        Some(location) => super::shared::BenchmarkResponse::ok(&location),
+        None => super::shared::BenchmarkResponse::bad_request("Invalid"),
+    }
+}
+
+fn safe_redirect(path: &str) -> Option<String> {
+    if path.starts_with('/') && !path.starts_with("//") && !path.contains("://") {
+        Some(format!("Location: {}", path))
+    } else {
+        None
+    }
+}
