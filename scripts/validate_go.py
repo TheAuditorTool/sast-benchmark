@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 GO_DIR = BENCH_ROOT / "go"
-CSV_FILE = GO_DIR / "expectedresults-0.4.0.csv"
+CSV_FILE = GO_DIR / "expectedresults-0.5.0.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 TESTCODE_DIR = GO_DIR / "testcode"
 

@@ -1,5 +1,61 @@
 # Go Benchmark Changelog
 
+## v0.5.0 (2026-04-07)
+
+### Category Expansion to 25/25 Minimum (+664 tests across all categories)
+
+All 25 CWE categories expanded from 10/10 to minimum 25/25 TP/TN. Youden's J per-case swing reduced from 10% to 4%. New tests cover multi-hop taint flows (struct field, goroutine closure, context.Value, interface{} type assertion), FP traps (safe code that resembles vulnerable patterns), and new framework sources (gin, echo, fiber, chi, gorilla/mux, beego, gRPC).
+
+**Phase 1 — Balance fixes + XSS (00689–00722, +34 tests):**
+- sqli TN +7 (00689–00695): Fix 65/58 imbalance → 65/65. Patterns: strings.Builder with `?`, ORDER BY allowlist, ParseInt coercion, sqlx named params, second-order sanitized, goroutine placeholder, Replace into non-tainted position
+- pathtraver TP +5 (00696–00700): filepath.Join two user components, http.ServeFile user path, struct field from JSON body, goroutine closure, os.Symlink user src
+- xss TP +12 (00701–00712): fmt.Fprintf to ResponseWriter, w.Write concat, template.HTML cast, template.JS, text/template, Gin c.HTML, Echo c.HTML, X-Forwarded-For header, cookie in HTML, chi path param, user-controlled template string, fiber JS injection
+- xss TN +10 (00713–00722): html/template auto-escape, html.EscapeString, json.Encoder HTML-escape, JSON content-type, url.QueryEscape, Echo html/template, fiber c.JSON, strconv.Atoi→%d, template.HTMLEscapeString, unicode filter
+
+**Phase 2 — ssrf, weakrand, weakhash, weakcipher, securecookie (00723–00872, +150 tests):**
+- ssrf +15TP/+15TN: cookie/JSON/header/gRPC sources; two-param URL assembly, second-order, context.Value; base64 header, chi path+scheme, JWT claim; scheme+host allowlist, signed HMAC token, enum URL map
+- weakrand +15TP/+15TN: password reset, session cookie, 2FA OTP, fixed seed, math/rand.Read; struct field, goroutine, Perm[0], context, interface; XOR with constant, fmt.Sprintf as ID, time.Now seed; crypto/rand, io.ReadFull, uuid.New, A/B bucket
+- weakhash +15TP/+15TN: md5/sha1 for integrity, API signing, webhook HMAC, CRC32; helper func, struct method, goroutine, ORM, context; double-hash, salted sha1, truncated sha256; bcrypt, argon2, scrypt, sha256 HMAC, HKDF
+- weakcipher +15TP/+15TN: static IV, AES-CFB no auth, RC4 fast, DES from hash, ChaCha20 no Poly; interface DES, struct DES, CTR no MAC, no IV random, DES wrapper; AES-CBC no MAC, base64 as encryption, XOR, ECB, OFB no MAC; AES-GCM, ChaCha20Poly1305, NaCl secretbox, HKDF+GCM, CTR+HMAC E-t-M
+- securecookie +15TP/+15TN: gin/echo/fiber/chi/gorilla missing flags; struct Secure:false, goroutine no flags, context zero-value; zero-value struct, raw Set-Cookie, SameSite=None no Secure, long MaxAge; all flags strict, __Host- prefix, SameSite=Lax+flags, __Secure- prefix, AES-GCM+flags
+
+**Phase 3 — redirect, tlsverify, deserial, loginjection, nosql (00873–01022, +150 tests):**
+- redirect +15TP/+15TN: cookie/Referer/next param/Gin/fiber sources; struct field, helper func, goroutine, context; url.Parse passthrough, //evil.com bypass, javascript: no Host, path-only attacker controlled, path.Clean no help; relative only, allowlist, domain check, HasPrefix+not-//, HMAC token, path-only u.Host==""
+- tlsverify +15TP/+15TN: InsecureSkipVerify, grpc.WithInsecure, WebSocket skip, tls.Dial skip, MinVersion:0; helper func, config struct, context; always-nil VerifyPeerCertificate, custom DialTLS ignores errors, post-construction set, env-controlled, TLS 1.0; default client, TLS 1.2, TLS 1.3, SystemCertPool, cert pinning, mTLS
+- deserial +15TP/+15TN: gob/xml/json+reflect/yaml to interface{}; goroutine, struct field, helper returns interface{}, context, second-order; gob.Register+interface{}, UseNumber+interface{}, type URL param, yaml anchor, custom UnmarshalJSON exec; typed structs, DisallowUnknownFields, LimitReader, MaxBytesReader, protobuf-style
+- loginjection +15TP/+15TN: log.Printf/fmt.Fprintf/log.Println/zerolog Msg concat; helper concat, struct method, goroutine, fmt.Sprintf pre-format; slog msg concat, log.Printf(userInput) format injection, zerolog Msgf, multiline \n split; slog structured KV, %q verb, zerolog .Str(), ReplaceAll sanitize, hash of input
+- nosql +15TP/+15TN: aggregate pipeline, bson.D user key, DeleteMany user key, nested operator, $where concat; helper, struct with bson.M, goroutine, context, second-order; bson.Raw from body, $set userFields, $expr $function, Watch with user doc, updateDoc user fields; bson.M typed string, bson.D hardcoded, ObjectIDFromHex, $eq wrapper, email validated, integer Atoi
+
+**Phase 4 — ldapi, trustbound, hardcodedcreds, authnfailure, authzfailure (01023–01172, +150 tests):**
+- ldapi +15TP/+15TN: AND filter two-param, BaseDN from query, attribute name, LDAP Add user DN, department filter; helper, struct, goroutine, context; OR filter, wildcard enumeration, LDAP URL, PasswordModifyRequest, group DN; EscapeFilter, integer bind, allowlist OU, multi-param escape, session-sourced username
+- trustbound +15TP/+15TN: is_admin from URL, user_id from cookie, email from header, role from form pre-auth, tenant from form; struct blind copy, helper copies form, goroutine, context; JSON→session.Values, header range copy, ParseUnverified claims, permissions JSON, SAML groups; DB-verified user_id, role from DB, opaque token, verified JWT, securecookie tamper-evident
+- hardcodedcreds +15TP/+15TN: Redis/Elasticsearch/GitHub PAT/AWS keypair/Stripe key; struct literal, const APIKey, PEM string, init() global, function returns literal; map literal, string concat parts, default branch, XOR obfuscated, base64 decoded; os.Getenv, JSON config, flag.String, Vault/Secrets Manager, placeholder
+- authnfailure +15TP/+15TN: ParseUnverified, empty secret, ==comparison, nil,nil keyFunc, strings.Compare; X-Skip-Auth header, base64 decode no verify, async race, nil interface, non-empty string only; alg:none, no exp check, no iss check, no expiry in DB, TOCTOU token; HMAC assertion, bcrypt, subtle.ConstantTimeCompare, full JWT validation, DB session+expiry
+- authzfailure +15TP/+15TN: admin no role check, delete no ownership, IDOR email update, bulk export no role, file download no ACL; check in outer not helper, goroutine race, user-controlled cache key, user ID from URL in admin query, wrong resource ownership check; X-User-Role header, JWT unverified role, wrong field (creator vs owner), ?admin=true, mass assignment; ownership check, DB role lookup, WHERE owner_id=?, SQL JOIN, context from middleware
+
+**Phase 5 — csrf, codeinj, race_condition, fileupload, inputval, infodisclosure (01173–01352, +180 tests):**
+- csrf +15TP/+15TN: transfer/password/settings/admin/multipart no token; token read but ignored, POST only skipped, cookie==cookie, hardcoded global, URL param; JSON+cookie, PUT no CSRF, Content-Type skip, SameSite=None no token, double-submit client-side; gorilla/csrf, session token+form, X-CSRF-Token header, HMAC+session, SameSite=Strict, Referer+Origin check
+- codeinj +15TP/+15TN: text/template.Parse(userInput), plugin.Open(userPath), template.ParseFiles(userPath), FuncMap+exec, text/template form value; two-param assembly, session plugin path, helper Parse(src), goroutine Parse, DB lookup+Parse; X-Custom-Template header, custom delimiters, ParseGlob user pattern, JSON body "template" field, cookie template; hardcoded template data-only, embed.FS, allowlist map, html/template auto-escape, pre-parsed pool
+- race_condition +15TP/+15TN: goroutine append shared slice, handler read+write map, os.Stat→os.Open TOCTOU, shared *sql.Tx goroutine, RWMutex.RLock for write; counter closure, struct count++, visit map no lock, nil-check singleton, balance TOCTOU; double-checked lock, stat→read TOCTOU, wrong buffer semaphore, loop-variable capture, int64++; sync.Mutex, sync.RWMutex proper, sync.Map, atomic.Int64, sync.Once, channel serialization, SELECT FOR UPDATE, atomic.Value, channel ownership, WaitGroup
+- fileupload +15TP/+15TN: header.Filename→os.Create, original extension, PUT path from URL, batch no type check, zip-slip entry.Name; Content-Disposition filename, dir+filename join, goroutine user dest, helper user path, chmod executable; DetectContentType not checked, double extension, os.Rename user dest, zip-slip Join no prefix check, size only no MIME; uuid+.jpg, DetectContentType+allowlist, filepath.Base, LimitReader, magic bytes+allowlist, extension allowlist+UUID, clean+HasPrefix, zip extract clean+prefix, os.CreateTemp, triple defense
+- inputval +15TP/+15TN: array index no bounds, make([]byte,n) negative, user regex ReDoS, URL scheme javascript:, n*1000 overflow; unbounded allocation, recursive depth, goroutine bomb, type assert no comma-ok, time.Sleep no range; json.Number no range, Duration overflow, header-controlled alloc, float NaN, nil map write; DisallowUnknownFields, bounds check, ParseInt+range, IsNaN/IsInf, [1,1000] cap, allowlist, hardcoded regexp, comma-ok, net/mail validate, MaxBytesReader
+- infodisclosure +15TP/+15TN: fmt.Fprintf err.Error, expvar no auth, GOMAXPROCS in response, SQL query in error, hostname in error; sendError wraps err.Error, Config json:"password", X-Internal-IP header, connstr in error, debug.Stack to response; debug.Stack captured+written, all headers reflected, os.Getwd in error, JWT payload decoded+written, os.Environ; slog.Error+generic, pprof behind auth, custom error Code+Message, opaque UUID request ID, allowlisted error codes, json:"-" tags, Server header removed, health check ok-only, password→***, errors.Is branch
+
+### Infrastructure
+- New CSV: expectedresults-0.5.0.csv (1350 rows)
+- validate_go.py: updated CSV_FILE to 0.5.0
+- go_benchmark.md: version, stats, categories table, audit results all updated
+- SCORING.md: all CSV filename references updated to 0.5.0
+
+### Final State
+- 1350 test cases (was 686)
+- 25 CWE categories
+- 675/675 TP/TN balance (exact 50/50)
+- All 25 categories have minimum 25 TP + 25 TN tests
+- Youden's J per-case swing: ≤4% (was 10% at 10/10)
+
+---
+
 ## v0.4.0 (2026-04-07)
 
 ### Category Expansion to 10/10 Minimum (+132 tests across 17 categories)

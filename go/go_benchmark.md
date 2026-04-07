@@ -1,8 +1,8 @@
-# Go SAST Benchmark v0.4.0
+# Go SAST Benchmark v0.5.0
 
 ## Overview
 
-OWASP-style SAST benchmark for Go. **686 test cases** across **25 CWE categories** with 50/50 vulnerable/safe split (343/343). Plus 5 reference apps with 394 classified functions.
+OWASP-style SAST benchmark for Go. **1350 test cases** across **25 CWE categories** with 50/50 vulnerable/safe split (675/675). Plus 5 reference apps with 394 classified functions.
 
 **Design principles**:
 - Test cases written from security knowledge, NOT from knowledge of any specific SAST engine's detection capabilities
@@ -10,9 +10,9 @@ OWASP-style SAST benchmark for Go. **686 test cases** across **25 CWE categories
 - 50/50 TP/TN balance prevents classifier gaming (flag-everything scores 0%, not 100%)
 - Category-averaged scoring prevents large categories from dominating small ones
 - Tool-agnostic SARIF-based scoring -- any SAST tool can be scored
-- All 25 categories have minimum 10 TP + 10 TN tests for statistical significance
+- All 25 categories have minimum 25 TP + 25 TN tests for statistical significance (Youden's J per-case swing ≤4%)
 
-**Audit status**: All 686 test files verified 2026-04-07. Zero vulnerability hints. Zero duplicate types/functions.
+**Audit status**: All 1350 test files verified 2026-04-07. Zero vulnerability hints. Zero duplicate types/functions.
 
 ---
 
@@ -20,11 +20,11 @@ OWASP-style SAST benchmark for Go. **686 test cases** across **25 CWE categories
 
 ```
 gorustbash_benchmark/go/
-  expectedresults-0.4.0.csv     # Answer key: test,category,vulnerable,CWE
+  expectedresults-0.5.0.csv     # Answer key: test,category,vulnerable,CWE
   go_benchmark.md             # This file
   SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
-  testcode/                   # 686 benchmark test files + shared.go + benchmark_services.go
+  testcode/                   # 1350 benchmark test files + shared.go + benchmark_services.go
   apps/                       # 5 reference apps with ground_truth.csv each
   cmd/main.go                 # Entry point
   go.mod
@@ -36,32 +36,32 @@ gorustbash_benchmark/go/
 
 | # | Category | CWE | Vuln | Safe | Total |
 |---|----------|-----|------|------|-------|
-| 1 | sqli | 89 | 65 | 58 | 123 |
+| 1 | sqli | 89 | 65 | 65 | 130 |
 | 2 | cmdi | 78 | 30 | 30 | 60 |
-| 3 | pathtraver | 22 | 25 | 30 | 55 |
-| 4 | xss | 79 | 13 | 15 | 28 |
-| 5 | ssrf | 918 | 10 | 10 | 20 |
-| 6 | weakrand | 330 | 10 | 10 | 20 |
-| 7 | weakhash | 328 | 10 | 10 | 20 |
-| 8 | weakcipher | 327 | 10 | 10 | 20 |
-| 9 | securecookie | 614 | 10 | 10 | 20 |
-| 10 | redirect | 601 | 10 | 10 | 20 |
-| 11 | infodisclosure | 200 | 10 | 10 | 20 |
-| 12 | hardcodedcreds | 798 | 10 | 10 | 20 |
-| 13 | authnfailure | 287 | 10 | 10 | 20 |
-| 14 | trustbound | 501 | 10 | 10 | 20 |
-| 15 | ldapi | 90 | 10 | 10 | 20 |
-| 16 | deserial | 502 | 10 | 10 | 20 |
-| 17 | codeinj | 94 | 10 | 10 | 20 |
-| 18 | loginjection | 117 | 10 | 10 | 20 |
-| 19 | nosql | 943 | 10 | 10 | 20 |
-| 20 | authzfailure | 862 | 10 | 10 | 20 |
-| 21 | csrf | 352 | 10 | 10 | 20 |
-| 22 | tlsverify | 295 | 10 | 10 | 20 |
-| 23 | race_condition | 362 | 10 | 10 | 20 |
-| 24 | fileupload | 434 | 10 | 10 | 20 |
-| 25 | inputval | 20 | 10 | 10 | 20 |
-| | **TOTAL** | | **343** | **343** | **686** |
+| 3 | pathtraver | 22 | 30 | 30 | 60 |
+| 4 | xss | 79 | 25 | 25 | 50 |
+| 5 | ssrf | 918 | 25 | 25 | 50 |
+| 6 | weakrand | 330 | 25 | 25 | 50 |
+| 7 | weakhash | 328 | 25 | 25 | 50 |
+| 8 | weakcipher | 327 | 25 | 25 | 50 |
+| 9 | securecookie | 614 | 25 | 25 | 50 |
+| 10 | redirect | 601 | 25 | 25 | 50 |
+| 11 | infodisclosure | 200 | 25 | 25 | 50 |
+| 12 | hardcodedcreds | 798 | 25 | 25 | 50 |
+| 13 | authnfailure | 287 | 25 | 25 | 50 |
+| 14 | trustbound | 501 | 25 | 25 | 50 |
+| 15 | ldapi | 90 | 25 | 25 | 50 |
+| 16 | deserial | 502 | 25 | 25 | 50 |
+| 17 | codeinj | 94 | 25 | 25 | 50 |
+| 18 | loginjection | 117 | 25 | 25 | 50 |
+| 19 | nosql | 943 | 25 | 25 | 50 |
+| 20 | authzfailure | 862 | 25 | 25 | 50 |
+| 21 | csrf | 352 | 25 | 25 | 50 |
+| 22 | tlsverify | 295 | 25 | 25 | 50 |
+| 23 | race_condition | 362 | 25 | 25 | 50 |
+| 24 | fileupload | 434 | 25 | 25 | 50 |
+| 25 | inputval | 20 | 25 | 25 | 50 |
+| | **TOTAL** | | **675** | **675** | **1350** |
 
 ---
 
@@ -370,16 +370,16 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ---
 
-## Audit Results (2026-03-23)
+## Audit Results (2026-04-07)
 
 ### Test File Quality
 
 | Check | Result |
 |-------|--------|
-| Files exist | 534/534 |
-| Function names match file numbers | 534/534 PASS |
+| Files exist | 1350/1350 |
+| Function names match file numbers | 1350/1350 PASS |
 | No vulnerability hints in comments | PASS (all clean -- testcode and apps) |
-| CSV classifications match code | PASS (all 534 verified) |
+| CSV classifications match code | PASS (all 1350 verified) |
 | Package declarations correct | PASS |
 | Imports valid | PASS |
 | Shared helpers used | PASS (DB, RespondJSON, ParseJSONBody) |
@@ -419,7 +419,7 @@ Run any SAST tool, export SARIF 2.1.0, then score. **Matching is filename-based*
 your-tool scan ./testcode/ --output results.sarif
 
 # Score against ground truth (filename-based matching)
-python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.5.0.csv
 ```
 
 The scorer computes both **category-averaged** (OWASP standard) and **flat aggregate** scores.
@@ -434,7 +434,7 @@ aud full --offline
 
 # Convert DB to CWE-based SARIF, then score
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
 ```
 
 ---
@@ -443,4 +443,4 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-**Current: v0.4.0** -- 686 test cases, 25 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.
+**Current: v0.5.0** -- 1350 test cases, 25 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.
