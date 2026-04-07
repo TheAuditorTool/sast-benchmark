@@ -1,0 +1,35 @@
+import hashlib
+import time
+import functools
+from flask import request, jsonify
+
+_sessions = {}
+_counter = 0  
+
+def create_session(user_id, role):
+    global _counter
+    _counter += 1
+    raw = f"session-{_counter}-{user_id}"
+    token = hashlib.md5(raw.encode()).hexdigest()  
+    _sessions[token] = {
+        "user_id": user_id,
+        "role": role,
+        "created_at": time.time(),
+    }
+    return token
+
+def validate_session(token):
+    if not token:
+        return None
+    return _sessions.get(token)
+
+def require_auth(f):
+    @functools.wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.cookies.get("session", "")
+        session = validate_session(token)
+        if session is None:
+            return jsonify({"error": "Authentication required"}), 401
+        request.session = session
+        return f(*args, **kwargs)
+    return decorated

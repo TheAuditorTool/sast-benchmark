@@ -1,0 +1,2256 @@
+{
+  "scenario_count": 250,
+  "scenarios": {
+    "accept_lang_poison": {
+      "keys": {
+        "chain_accept_lang_poison_safe": "ChainScenario0143A",
+        "chain_accept_lang_poison_vuln": "ChainScenario0143B"
+      },
+      "new_dir": "scenario_0143",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "account_creation_race": {
+      "keys": {
+        "chain_account_race_safe": "ChainScenario0212A",
+        "chain_account_race_vuln": "ChainScenario0212B"
+      },
+      "new_dir": "scenario_0212",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "account_verified_flag": {
+      "keys": {
+        "chain_verified_flag_safe": "ChainScenario0006B",
+        "chain_verified_flag_vuln": "ChainScenario0006A"
+      },
+      "new_dir": "scenario_0006",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "actuator_secrets_leak": {
+      "keys": {
+        "chain_actuator_leak_safe": "ChainScenario0072A",
+        "chain_actuator_leak_vuln": "ChainScenario0072B"
+      },
+      "new_dir": "scenario_0072",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "admin_impersonation": {
+      "keys": {
+        "chain_admin_impersonate_safe": "ChainScenario0015B",
+        "chain_admin_impersonate_vuln": "ChainScenario0015A"
+      },
+      "new_dir": "scenario_0015",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "admin_password_in_source": {
+      "keys": {
+        "chain_admin_pwd_source_safe": "ChainScenario0050A",
+        "chain_admin_pwd_source_vuln": "ChainScenario0050B"
+      },
+      "new_dir": "scenario_0050",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "api_filter_bypass": {
+      "keys": {
+        "chain_api_filter_safe": "ChainScenario0010B",
+        "chain_api_filter_vuln": "ChainScenario0010A"
+      },
+      "new_dir": "scenario_0010",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "api_key_in_config": {
+      "keys": {
+        "chain_api_key_config_safe": "ChainScenario0009A",
+        "chain_api_key_config_vuln": "ChainScenario0009B"
+      },
+      "new_dir": "scenario_0009",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "api_key_leak_sqli": {
+      "keys": {
+        "chain_api_key_leak_sqli_safe": "ChainScenario0176A",
+        "chain_api_key_leak_sqli_vuln": "ChainScenario0176B"
+      },
+      "new_dir": "scenario_0176",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "api_key_scope_inject": {
+      "keys": {
+        "chain_api_key_scope_safe": "ChainScenario0126B",
+        "chain_api_key_scope_vuln": "ChainScenario0126A"
+      },
+      "new_dir": "scenario_0126",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "api_token_no_expire": {
+      "keys": {
+        "chain_api_token_expire_safe": "ChainScenario0014A",
+        "chain_api_token_expire_vuln": "ChainScenario0014B"
+      },
+      "new_dir": "scenario_0014",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "api_version_bypass": {
+      "keys": {
+        "chain_api_version_safe": "ChainScenario0145B",
+        "chain_api_version_vuln": "ChainScenario0145A"
+      },
+      "new_dir": "scenario_0145",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "api_version_diff": {
+      "keys": {
+        "chain_api_version_leak_safe": "ChainScenario0233A",
+        "chain_api_version_leak_vuln": "ChainScenario0233B"
+      },
+      "new_dir": "scenario_0233",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "auth_bypass_to_cmdi": {
+      "keys": {
+        "chain_auth_cmdi_safe": "ChainScenario0230A",
+        "chain_auth_cmdi_vuln": "ChainScenario0230B"
+      },
+      "new_dir": "scenario_0230",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "auth_bypass_to_sqli": {
+      "keys": {
+        "chain_auth_sqli_safe": "ChainScenario0003A",
+        "chain_auth_sqli_vuln": "ChainScenario0003B"
+      },
+      "new_dir": "scenario_0003",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "avatar_path_read": {
+      "keys": {
+        "chain_avatar_path_safe": "ChainScenario0023A",
+        "chain_avatar_path_vuln": "ChainScenario0023B"
+      },
+      "new_dir": "scenario_0023",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "backup_password_default": {
+      "keys": {
+        "chain_backup_pwd_safe": "ChainScenario0229A",
+        "chain_backup_pwd_vuln": "ChainScenario0229B"
+      },
+      "new_dir": "scenario_0229",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "backup_path_injection": {
+      "keys": {
+        "chain_backup_path_safe": "ChainScenario0036A",
+        "chain_backup_path_vuln": "ChainScenario0036B"
+      },
+      "new_dir": "scenario_0036",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "base64_as_encryption": {
+      "keys": {
+        "chain_base64_encrypt_safe": "ChainScenario0028B",
+        "chain_base64_encrypt_vuln": "ChainScenario0028A"
+      },
+      "new_dir": "scenario_0028",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "basic_auth_cleartext_sqli": {
+      "keys": {
+        "chain_basic_auth_sqli_safe": "ChainScenario0205A",
+        "chain_basic_auth_sqli_vuln": "ChainScenario0205B"
+      },
+      "new_dir": "scenario_0205",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "batch_endpoint_bypass": {
+      "keys": {
+        "chain_batch_bypass_safe": "ChainScenario0080B",
+        "chain_batch_bypass_vuln": "ChainScenario0080A"
+      },
+      "new_dir": "scenario_0080",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "billing_plan_override": {
+      "keys": {
+        "chain_billing_plan_safe": "ChainScenario0136A",
+        "chain_billing_plan_vuln": "ChainScenario0136B"
+      },
+      "new_dir": "scenario_0136",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "bulk_import_privesc": {
+      "keys": {
+        "chain_bulk_import_safe": "ChainScenario0123B",
+        "chain_bulk_import_vuln": "ChainScenario0123A"
+      },
+      "new_dir": "scenario_0123",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cache_dir_tamper": {
+      "keys": {
+        "chain_cache_dir_safe": "ChainScenario0037B",
+        "chain_cache_dir_vuln": "ChainScenario0037A"
+      },
+      "new_dir": "scenario_0037",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cache_key_normalize": {
+      "keys": {
+        "chain_cache_key_safe": "ChainScenario0137A",
+        "chain_cache_key_vuln": "ChainScenario0137B"
+      },
+      "new_dir": "scenario_0137",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "cache_poison_to_xss": {
+      "keys": {
+        "chain_cache_poison_xss_safe": "ChainScenario0246B",
+        "chain_cache_poison_xss_vuln": "ChainScenario0246A"
+      },
+      "new_dir": "scenario_0246",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "concurrent_session_reuse": {
+      "keys": {
+        "chain_concurrent_session_safe": "ChainScenario0191A",
+        "chain_concurrent_session_vuln": "ChainScenario0191B"
+      },
+      "new_dir": "scenario_0191",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "config_edit_escalation": {
+      "keys": {
+        "chain_config_edit_safe": "ChainScenario0181B",
+        "chain_config_edit_vuln": "ChainScenario0181A"
+      },
+      "new_dir": "scenario_0181",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "config_import_xxe": {
+      "keys": {
+        "chain_config_import_xxe_safe": "ChainScenario0241A",
+        "chain_config_import_xxe_vuln": "ChainScenario0241B"
+      },
+      "new_dir": "scenario_0241",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "config_overwrite_to_rce": {
+      "keys": {
+        "chain_config_overwrite_safe": "ChainScenario0097A",
+        "chain_config_overwrite_vuln": "ChainScenario0097B"
+      },
+      "new_dir": "scenario_0097",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "config_template_injection": {
+      "keys": {
+        "chain_config_template_safe": "ChainScenario0232B",
+        "chain_config_template_vuln": "ChainScenario0232A"
+      },
+      "new_dir": "scenario_0232",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "content_type_confusion": {
+      "keys": {
+        "chain_content_type_sniff_safe": "ChainScenario0228B",
+        "chain_content_type_sniff_vuln": "ChainScenario0228A"
+      },
+      "new_dir": "scenario_0228",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cookie_in_cache_key": {
+      "keys": {
+        "chain_cookie_cache_safe": "ChainScenario0054B",
+        "chain_cookie_cache_vuln": "ChainScenario0054A"
+      },
+      "new_dir": "scenario_0054",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cookie_jar_overflow": {
+      "keys": {
+        "chain_cookie_overflow_safe": "ChainScenario0149B",
+        "chain_cookie_overflow_vuln": "ChainScenario0149A"
+      },
+      "new_dir": "scenario_0149",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cookie_replay_to_cmdi": {
+      "keys": {
+        "chain_cookie_replay_cmdi_safe": "ChainScenario0067A",
+        "chain_cookie_replay_cmdi_vuln": "ChainScenario0067B"
+      },
+      "new_dir": "scenario_0067",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "cookie_scope_broad": {
+      "keys": {
+        "chain_cookie_scope_safe": "ChainScenario0122B",
+        "chain_cookie_scope_vuln": "ChainScenario0122A"
+      },
+      "new_dir": "scenario_0122",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cors_chain_with_xss": {
+      "keys": {
+        "chain_cors_xss_safe": "ChainScenario0055B",
+        "chain_cors_xss_vuln": "ChainScenario0055A"
+      },
+      "new_dir": "scenario_0055",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cors_reflects_credentials": {
+      "keys": {
+        "chain_cors_cred_leak_safe": "ChainScenario0175B",
+        "chain_cors_cred_leak_vuln": "ChainScenario0175A"
+      },
+      "new_dir": "scenario_0175",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "coupon_reuse_race": {
+      "keys": {
+        "chain_coupon_reuse_safe": "ChainScenario0133A",
+        "chain_coupon_reuse_vuln": "ChainScenario0133B"
+      },
+      "new_dir": "scenario_0133",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "crc32_integrity": {
+      "keys": {
+        "chain_crc32_integrity_safe": "ChainScenario0081B",
+        "chain_crc32_integrity_vuln": "ChainScenario0081A"
+      },
+      "new_dir": "scenario_0081",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "crlf_to_xss_cache": {
+      "keys": {
+        "chain_crlf_xss_cache_safe": "ChainScenario0152B",
+        "chain_crlf_xss_cache_vuln": "ChainScenario0152A"
+      },
+      "new_dir": "scenario_0152",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cron_file_writable": {
+      "keys": {
+        "chain_cron_file_safe": "ChainScenario0022B",
+        "chain_cron_file_vuln": "ChainScenario0022A"
+      },
+      "new_dir": "scenario_0022",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "cron_inject_to_rce": {
+      "keys": {
+        "chain_cron_inject_safe": "ChainScenario0096A",
+        "chain_cron_inject_vuln": "ChainScenario0096B"
+      },
+      "new_dir": "scenario_0096",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "cross_protocol_fixation": {
+      "keys": {
+        "chain_cross_protocol_safe": "ChainScenario0060A",
+        "chain_cross_protocol_vuln": "ChainScenario0060B"
+      },
+      "new_dir": "scenario_0060",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_admin_create_user": {
+      "keys": {
+        "chain_csrf_admin_create_safe": "ChainScenario0025B",
+        "chain_csrf_admin_create_vuln": "ChainScenario0025A"
+      },
+      "new_dir": "scenario_0025",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "csrf_api_key_regen": {
+      "keys": {
+        "chain_csrf_api_key_safe": "ChainScenario0157A",
+        "chain_csrf_api_key_vuln": "ChainScenario0157B"
+      },
+      "new_dir": "scenario_0157",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_content_type_bypass": {
+      "keys": {
+        "chain_csrf_content_type_safe": "ChainScenario0012A",
+        "chain_csrf_content_type_vuln": "ChainScenario0012B"
+      },
+      "new_dir": "scenario_0012",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_cors_preflight": {
+      "keys": {
+        "chain_csrf_cors_safe": "ChainScenario0164A",
+        "chain_csrf_cors_vuln": "ChainScenario0164B"
+      },
+      "new_dir": "scenario_0164",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_delete_account": {
+      "keys": {
+        "chain_csrf_delete_safe": "ChainScenario0231A",
+        "chain_csrf_delete_vuln": "ChainScenario0231B"
+      },
+      "new_dir": "scenario_0231",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_email_change": {
+      "keys": {
+        "chain_csrf_email_safe": "ChainScenario0066B",
+        "chain_csrf_email_vuln": "ChainScenario0066A"
+      },
+      "new_dir": "scenario_0066",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "csrf_login_csrf": {
+      "keys": {
+        "chain_csrf_login_safe": "ChainScenario0032A",
+        "chain_csrf_login_vuln": "ChainScenario0032B"
+      },
+      "new_dir": "scenario_0032",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_password_change": {
+      "keys": {
+        "chain_csrf_password_safe": "ChainScenario0064B",
+        "chain_csrf_password_vuln": "ChainScenario0064A"
+      },
+      "new_dir": "scenario_0064",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "csrf_permission_grant": {
+      "keys": {
+        "chain_csrf_permission_safe": "ChainScenario0108B",
+        "chain_csrf_permission_vuln": "ChainScenario0108A"
+      },
+      "new_dir": "scenario_0108",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "csrf_samesite_bypass": {
+      "keys": {
+        "chain_csrf_samesite_safe": "ChainScenario0206A",
+        "chain_csrf_samesite_vuln": "ChainScenario0206B"
+      },
+      "new_dir": "scenario_0206",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_transfer_funds": {
+      "keys": {
+        "chain_csrf_transfer_safe": "ChainScenario0213A",
+        "chain_csrf_transfer_vuln": "ChainScenario0213B"
+      },
+      "new_dir": "scenario_0213",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "csrf_webhook_register": {
+      "keys": {
+        "chain_csrf_webhook_safe": "ChainScenario0088B",
+        "chain_csrf_webhook_vuln": "ChainScenario0088A"
+      },
+      "new_dir": "scenario_0088",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "csv_cmdi": {
+      "keys": {
+        "chain_csv_cmdi_safe": "ChainScenario0047B",
+        "chain_csv_cmdi_vuln": "ChainScenario0047A"
+      },
+      "new_dir": "scenario_0047",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "dav_propfind_xxe": {
+      "keys": {
+        "chain_dav_xxe_safe": "ChainScenario0095A",
+        "chain_dav_xxe_vuln": "ChainScenario0095B"
+      },
+      "new_dir": "scenario_0095",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "db_file_writable": {
+      "keys": {
+        "chain_db_file_safe": "ChainScenario0019B",
+        "chain_db_file_vuln": "ChainScenario0019A"
+      },
+      "new_dir": "scenario_0019",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "db_password_in_code": {
+      "keys": {
+        "chain_db_pwd_code_safe": "ChainScenario0065A",
+        "chain_db_pwd_code_vuln": "ChainScenario0065B"
+      },
+      "new_dir": "scenario_0065",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "debug_endpoint_token_leak": {
+      "keys": {
+        "chain_debug_token_leak_safe": "ChainScenario0166A",
+        "chain_debug_token_leak_vuln": "ChainScenario0166B"
+      },
+      "new_dir": "scenario_0166",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "deep_link_hijack": {
+      "keys": {
+        "chain_deep_link_redirect_safe": "ChainScenario0076B",
+        "chain_deep_link_redirect_vuln": "ChainScenario0076A"
+      },
+      "new_dir": "scenario_0076",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "default_creds_to_sqli": {
+      "keys": {
+        "chain_default_creds_sqli_safe": "ChainScenario0170B",
+        "chain_default_creds_sqli_vuln": "ChainScenario0170A"
+      },
+      "new_dir": "scenario_0170",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "deser_to_rce": {
+      "keys": {
+        "chain_deser_rce_safe": "ChainScenario0079B",
+        "chain_deser_rce_vuln": "ChainScenario0079A"
+      },
+      "new_dir": "scenario_0079",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "deterministic_nonce": {
+      "keys": {
+        "chain_deterministic_nonce_safe": "ChainScenario0151A",
+        "chain_deterministic_nonce_vuln": "ChainScenario0151B"
+      },
+      "new_dir": "scenario_0151",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "docx_xxe": {
+      "keys": {
+        "chain_docx_xxe_safe": "ChainScenario0200A",
+        "chain_docx_xxe_vuln": "ChainScenario0200B"
+      },
+      "new_dir": "scenario_0200",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "dotdot_config_read": {
+      "keys": {
+        "chain_dotdot_config_safe": "ChainScenario0189B",
+        "chain_dotdot_config_vuln": "ChainScenario0189A"
+      },
+      "new_dir": "scenario_0189",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "double_spend_transfer": {
+      "keys": {
+        "chain_double_spend_safe": "ChainScenario0118A",
+        "chain_double_spend_vuln": "ChainScenario0118B"
+      },
+      "new_dir": "scenario_0118",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "dynamic_page_ssti": {
+      "keys": {
+        "chain_dynamic_page_safe": "ChainScenario0160A",
+        "chain_dynamic_page_vuln": "ChainScenario0160B"
+      },
+      "new_dir": "scenario_0160",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ecb_mode_token": {
+      "keys": {
+        "chain_ecb_mode_safe": "ChainScenario0017A",
+        "chain_ecb_mode_vuln": "ChainScenario0017B"
+      },
+      "new_dir": "scenario_0017",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "email_template_ssti": {
+      "keys": {
+        "chain_email_ssti_safe": "ChainScenario0085B",
+        "chain_email_ssti_vuln": "ChainScenario0085A"
+      },
+      "new_dir": "scenario_0085",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "email_verify_redirect": {
+      "keys": {
+        "chain_email_verify_redirect_safe": "ChainScenario0002A",
+        "chain_email_verify_redirect_vuln": "ChainScenario0002B"
+      },
+      "new_dir": "scenario_0002",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "encoded_traversal": {
+      "keys": {
+        "chain_encoded_traversal_safe": "ChainScenario0063A",
+        "chain_encoded_traversal_vuln": "ChainScenario0063B"
+      },
+      "new_dir": "scenario_0063",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "encryption_key_in_source": {
+      "keys": {
+        "chain_encrypt_key_src_safe": "ChainScenario0182A",
+        "chain_encrypt_key_src_vuln": "ChainScenario0182B"
+      },
+      "new_dir": "scenario_0182",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "env_file_readable": {
+      "keys": {
+        "chain_env_file_safe": "ChainScenario0043B",
+        "chain_env_file_vuln": "ChainScenario0043A"
+      },
+      "new_dir": "scenario_0043",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "env_inject_to_cmdi": {
+      "keys": {
+        "chain_env_inject_cmdi_safe": "ChainScenario0208B",
+        "chain_env_inject_cmdi_vuln": "ChainScenario0208A"
+      },
+      "new_dir": "scenario_0208",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "error_diff_username_enum": {
+      "keys": {
+        "chain_username_enum_safe": "ChainScenario0129A",
+        "chain_username_enum_vuln": "ChainScenario0129B"
+      },
+      "new_dir": "scenario_0129",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "error_stacktrace_secret": {
+      "keys": {
+        "chain_error_stacktrace_safe": "ChainScenario0218A",
+        "chain_error_stacktrace_vuln": "ChainScenario0218B"
+      },
+      "new_dir": "scenario_0218",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "etag_manipulation": {
+      "keys": {
+        "chain_etag_manip_safe": "ChainScenario0168A",
+        "chain_etag_manip_vuln": "ChainScenario0168B"
+      },
+      "new_dir": "scenario_0168",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "eval_inject_to_data_exfil": {
+      "keys": {
+        "chain_eval_exfil_safe": "ChainScenario0155B",
+        "chain_eval_exfil_vuln": "ChainScenario0155A"
+      },
+      "new_dir": "scenario_0155",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "eval_template_rce": {
+      "keys": {
+        "chain_eval_template_safe": "ChainScenario0048B",
+        "chain_eval_template_vuln": "ChainScenario0048A"
+      },
+      "new_dir": "scenario_0048",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "export_other_users": {
+      "keys": {
+        "chain_export_idor_safe": "ChainScenario0178B",
+        "chain_export_idor_vuln": "ChainScenario0178A"
+      },
+      "new_dir": "scenario_0178",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "feature_flag_inject": {
+      "keys": {
+        "chain_feature_flag_safe": "ChainScenario0033A",
+        "chain_feature_flag_vuln": "ChainScenario0033B"
+      },
+      "new_dir": "scenario_0033",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "file_download_idor": {
+      "keys": {
+        "chain_file_download_idor_safe": "ChainScenario0224A",
+        "chain_file_download_idor_vuln": "ChainScenario0224B"
+      },
+      "new_dir": "scenario_0224",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "file_overwrite_race": {
+      "keys": {
+        "chain_file_overwrite_safe": "ChainScenario0197A",
+        "chain_file_overwrite_vuln": "ChainScenario0197B"
+      },
+      "new_dir": "scenario_0197",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "file_upload_to_rce": {
+      "keys": {
+        "chain_upload_rce_safe": "ChainScenario0045A",
+        "chain_upload_rce_vuln": "ChainScenario0045B"
+      },
+      "new_dir": "scenario_0045",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "format_string_injection": {
+      "keys": {
+        "chain_format_string_safe": "ChainScenario0242B",
+        "chain_format_string_vuln": "ChainScenario0242A"
+      },
+      "new_dir": "scenario_0242",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "forwarded_header_abuse": {
+      "keys": {
+        "chain_forwarded_abuse_safe": "ChainScenario0039B",
+        "chain_forwarded_abuse_vuln": "ChainScenario0039A"
+      },
+      "new_dir": "scenario_0039",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "fstring_code_exec": {
+      "keys": {
+        "chain_fstring_exec_safe": "ChainScenario0056B",
+        "chain_fstring_exec_vuln": "ChainScenario0056A"
+      },
+      "new_dir": "scenario_0056",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "git_hook_to_rce": {
+      "keys": {
+        "chain_git_hook_rce_safe": "ChainScenario0117B",
+        "chain_git_hook_rce_vuln": "ChainScenario0117A"
+      },
+      "new_dir": "scenario_0117",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "graphql_cors_open": {
+      "keys": {
+        "chain_graphql_cors_safe": "ChainScenario0221B",
+        "chain_graphql_cors_vuln": "ChainScenario0221A"
+      },
+      "new_dir": "scenario_0221",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "graphql_introspection": {
+      "keys": {
+        "chain_graphql_introspect_safe": "ChainScenario0091B",
+        "chain_graphql_introspect_vuln": "ChainScenario0091A"
+      },
+      "new_dir": "scenario_0091",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "graphql_mutation_overwrite": {
+      "keys": {
+        "chain_graphql_overwrite_safe": "ChainScenario0240A",
+        "chain_graphql_overwrite_vuln": "ChainScenario0240B"
+      },
+      "new_dir": "scenario_0240",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "graphql_nested_mutation": {
+      "keys": {
+        "chain_graphql_nested_safe": "ChainScenario0194B",
+        "chain_graphql_nested_vuln": "ChainScenario0194A"
+      },
+      "new_dir": "scenario_0194",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "graphql_node_query": {
+      "keys": {
+        "chain_graphql_node_safe": "ChainScenario0243A",
+        "chain_graphql_node_vuln": "ChainScenario0243B"
+      },
+      "new_dir": "scenario_0243",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "group_membership_bypass": {
+      "keys": {
+        "chain_group_bypass_safe": "ChainScenario0163A",
+        "chain_group_bypass_vuln": "ChainScenario0163B"
+      },
+      "new_dir": "scenario_0163",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "guest_to_user_via_signup": {
+      "keys": {
+        "chain_guest_signup_safe": "ChainScenario0029A",
+        "chain_guest_signup_vuln": "ChainScenario0029B"
+      },
+      "new_dir": "scenario_0029",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "hardcoded_jwt_secret": {
+      "keys": {
+        "chain_hardcoded_jwt_safe": "ChainScenario0084B",
+        "chain_hardcoded_jwt_vuln": "ChainScenario0084A"
+      },
+      "new_dir": "scenario_0084",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "header_inject_to_xss": {
+      "keys": {
+        "chain_header_xss_safe": "ChainScenario0234B",
+        "chain_header_xss_vuln": "ChainScenario0234A"
+      },
+      "new_dir": "scenario_0234",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "header_redirect": {
+      "keys": {
+        "chain_header_redirect_safe": "ChainScenario0026B",
+        "chain_header_redirect_vuln": "ChainScenario0026A"
+      },
+      "new_dir": "scenario_0026",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "health_endpoint_secrets": {
+      "keys": {
+        "chain_health_secrets_safe": "ChainScenario0042B",
+        "chain_health_secrets_vuln": "ChainScenario0042A"
+      },
+      "new_dir": "scenario_0042",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "horizontal_to_vertical": {
+      "keys": {
+        "chain_horiz_to_vert_safe": "ChainScenario0209B",
+        "chain_horiz_to_vert_vuln": "ChainScenario0209A"
+      },
+      "new_dir": "scenario_0209",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "host_header_poison": {
+      "keys": {
+        "chain_host_header_poison_safe": "ChainScenario0179B",
+        "chain_host_header_poison_vuln": "ChainScenario0179A"
+      },
+      "new_dir": "scenario_0179",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "internal_api_cors": {
+      "keys": {
+        "chain_internal_api_cors_safe": "ChainScenario0192A",
+        "chain_internal_api_cors_vuln": "ChainScenario0192B"
+      },
+      "new_dir": "scenario_0192",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "inventory_oversell": {
+      "keys": {
+        "chain_inventory_oversell_safe": "ChainScenario0235A",
+        "chain_inventory_oversell_vuln": "ChainScenario0235B"
+      },
+      "new_dir": "scenario_0235",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "invoice_enum": {
+      "keys": {
+        "chain_invoice_enum_safe": "ChainScenario0021B",
+        "chain_invoice_enum_vuln": "ChainScenario0021A"
+      },
+      "new_dir": "scenario_0021",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "ip_allowlist_bypass_sqli": {
+      "keys": {
+        "chain_ip_allowlist_sqli_safe": "ChainScenario0071A",
+        "chain_ip_allowlist_sqli_vuln": "ChainScenario0071B"
+      },
+      "new_dir": "scenario_0071",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "jinja2_ssti_rce": {
+      "keys": {
+        "chain_jinja2_ssti_safe": "ChainScenario0167A",
+        "chain_jinja2_ssti_vuln": "ChainScenario0167B"
+      },
+      "new_dir": "scenario_0167",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "js_redirect_open": {
+      "keys": {
+        "chain_js_redirect_safe": "ChainScenario0038A",
+        "chain_js_redirect_vuln": "ChainScenario0038B"
+      },
+      "new_dir": "scenario_0038",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "jwt_none_to_sqli": {
+      "keys": {
+        "chain_jwt_none_sqli_safe": "ChainScenario0062B",
+        "chain_jwt_none_sqli_vuln": "ChainScenario0062A"
+      },
+      "new_dir": "scenario_0062",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "jwt_secret_hardcoded": {
+      "keys": {
+        "chain_jwt_secret_src_safe": "ChainScenario0202B",
+        "chain_jwt_secret_src_vuln": "ChainScenario0202A"
+      },
+      "new_dir": "scenario_0202",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "ldap_bind_password": {
+      "keys": {
+        "chain_ldap_bind_safe": "ChainScenario0169B",
+        "chain_ldap_bind_vuln": "ChainScenario0169A"
+      },
+      "new_dir": "scenario_0169",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "ldap_inject_to_data_leak": {
+      "keys": {
+        "chain_ldap_leak_safe": "ChainScenario0141B",
+        "chain_ldap_leak_vuln": "ChainScenario0141A"
+      },
+      "new_dir": "scenario_0141",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "limit_bypass_concurrent": {
+      "keys": {
+        "chain_limit_bypass_safe": "ChainScenario0046A",
+        "chain_limit_bypass_vuln": "ChainScenario0046B"
+      },
+      "new_dir": "scenario_0046",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "link_header_injection": {
+      "keys": {
+        "chain_link_header_safe": "ChainScenario0093A",
+        "chain_link_header_vuln": "ChainScenario0093B"
+      },
+      "new_dir": "scenario_0093",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "locale_file_traversal": {
+      "keys": {
+        "chain_locale_traversal_safe": "ChainScenario0004A",
+        "chain_locale_traversal_vuln": "ChainScenario0004B"
+      },
+      "new_dir": "scenario_0004",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "log_dir_writable": {
+      "keys": {
+        "chain_log_dir_writable_safe": "ChainScenario0075B",
+        "chain_log_dir_writable_vuln": "ChainScenario0075A"
+      },
+      "new_dir": "scenario_0075",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "log_file_credential_leak": {
+      "keys": {
+        "chain_log_cred_leak_safe": "ChainScenario0130B",
+        "chain_log_cred_leak_vuln": "ChainScenario0130A"
+      },
+      "new_dir": "scenario_0130",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "log_file_path_injection": {
+      "keys": {
+        "chain_log_path_safe": "ChainScenario0128B",
+        "chain_log_path_vuln": "ChainScenario0128A"
+      },
+      "new_dir": "scenario_0128",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "log_injection_to_xss": {
+      "keys": {
+        "chain_log_xss_safe": "ChainScenario0051A",
+        "chain_log_xss_vuln": "ChainScenario0051B"
+      },
+      "new_dir": "scenario_0051",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "login_redirect_param": {
+      "keys": {
+        "chain_login_redirect_safe": "ChainScenario0058B",
+        "chain_login_redirect_vuln": "ChainScenario0058A"
+      },
+      "new_dir": "scenario_0058",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "logout_redirect_open": {
+      "keys": {
+        "chain_logout_redirect_safe": "ChainScenario0116A",
+        "chain_logout_redirect_vuln": "ChainScenario0116B"
+      },
+      "new_dir": "scenario_0116",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "mako_ssti_rce": {
+      "keys": {
+        "chain_mako_ssti_safe": "ChainScenario0188A",
+        "chain_mako_ssti_vuln": "ChainScenario0188B"
+      },
+      "new_dir": "scenario_0188",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "markdown_ssti": {
+      "keys": {
+        "chain_markdown_ssti_safe": "ChainScenario0099A",
+        "chain_markdown_ssti_vuln": "ChainScenario0099B"
+      },
+      "new_dir": "scenario_0099",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "md5_hmac_token": {
+      "keys": {
+        "chain_md5_hmac_safe": "ChainScenario0204A",
+        "chain_md5_hmac_vuln": "ChainScenario0204B"
+      },
+      "new_dir": "scenario_0204",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "merge_patch_escalation": {
+      "keys": {
+        "chain_merge_patch_safe": "ChainScenario0239B",
+        "chain_merge_patch_vuln": "ChainScenario0239A"
+      },
+      "new_dir": "scenario_0239",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "message_thread_idor": {
+      "keys": {
+        "chain_message_idor_safe": "ChainScenario0216A",
+        "chain_message_idor_vuln": "ChainScenario0216B"
+      },
+      "new_dir": "scenario_0216",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "meta_refresh_redirect": {
+      "keys": {
+        "chain_meta_refresh_safe": "ChainScenario0245B",
+        "chain_meta_refresh_vuln": "ChainScenario0245A"
+      },
+      "new_dir": "scenario_0245",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "method_override_cors": {
+      "keys": {
+        "chain_method_override_safe": "ChainScenario0187A",
+        "chain_method_override_vuln": "ChainScenario0187B"
+      },
+      "new_dir": "scenario_0187",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "mfa_bypass_to_sqli": {
+      "keys": {
+        "chain_mfa_bypass_sqli_safe": "ChainScenario0184A",
+        "chain_mfa_bypass_sqli_vuln": "ChainScenario0184B"
+      },
+      "new_dir": "scenario_0184",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "mobile_token_fixation": {
+      "keys": {
+        "chain_mobile_token_safe": "ChainScenario0225B",
+        "chain_mobile_token_vuln": "ChainScenario0225A"
+      },
+      "new_dir": "scenario_0225",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "nested_object_role": {
+      "keys": {
+        "chain_nested_role_safe": "ChainScenario0154A",
+        "chain_nested_role_vuln": "ChainScenario0154B"
+      },
+      "new_dir": "scenario_0154",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "nested_resource_idor": {
+      "keys": {
+        "chain_nested_resource_safe": "ChainScenario0016A",
+        "chain_nested_resource_vuln": "ChainScenario0016B"
+      },
+      "new_dir": "scenario_0016",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "no_regen_after_login": {
+      "keys": {
+        "chain_no_regen_login_safe": "ChainScenario0195A",
+        "chain_no_regen_login_vuln": "ChainScenario0195B"
+      },
+      "new_dir": "scenario_0195",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "nosql_to_stored_xss": {
+      "keys": {
+        "chain_nosql_xss_safe": "ChainScenario0027A",
+        "chain_nosql_xss_vuln": "ChainScenario0027B"
+      },
+      "new_dir": "scenario_0027",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "notification_template_rce": {
+      "keys": {
+        "chain_notification_ssti_safe": "ChainScenario0135A",
+        "chain_notification_ssti_vuln": "ChainScenario0135B"
+      },
+      "new_dir": "scenario_0135",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "null_byte_traversal": {
+      "keys": {
+        "chain_null_byte_safe": "ChainScenario0074A",
+        "chain_null_byte_vuln": "ChainScenario0074B"
+      },
+      "new_dir": "scenario_0074",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "null_origin_bypass": {
+      "keys": {
+        "chain_null_origin_safe": "ChainScenario0236B",
+        "chain_null_origin_vuln": "ChainScenario0236A"
+      },
+      "new_dir": "scenario_0236",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "null_salt_pbkdf2": {
+      "keys": {
+        "chain_null_salt_safe": "ChainScenario0196B",
+        "chain_null_salt_vuln": "ChainScenario0196A"
+      },
+      "new_dir": "scenario_0196",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "oauth_callback_redirect": {
+      "keys": {
+        "chain_oauth_redirect_safe": "ChainScenario0247B",
+        "chain_oauth_redirect_vuln": "ChainScenario0247A"
+      },
+      "new_dir": "scenario_0247",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "oauth_client_secret": {
+      "keys": {
+        "chain_oauth_secret_safe": "ChainScenario0124B",
+        "chain_oauth_secret_vuln": "ChainScenario0124A"
+      },
+      "new_dir": "scenario_0124",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "oauth_scope_bypass_cmdi": {
+      "keys": {
+        "chain_oauth_scope_cmdi_safe": "ChainScenario0198A",
+        "chain_oauth_scope_cmdi_vuln": "ChainScenario0198B"
+      },
+      "new_dir": "scenario_0198",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "org_member_role_override": {
+      "keys": {
+        "chain_org_role_override_safe": "ChainScenario0061B",
+        "chain_org_role_override_vuln": "ChainScenario0061A"
+      },
+      "new_dir": "scenario_0061",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "pagination_leak": {
+      "keys": {
+        "chain_pagination_leak_safe": "ChainScenario0090B",
+        "chain_pagination_leak_vuln": "ChainScenario0090A"
+      },
+      "new_dir": "scenario_0090",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "payment_return_redirect": {
+      "keys": {
+        "chain_payment_redirect_safe": "ChainScenario0156B",
+        "chain_payment_redirect_vuln": "ChainScenario0156A"
+      },
+      "new_dir": "scenario_0156",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "pdf_export_to_ssrf": {
+      "keys": {
+        "chain_pdf_ssrf_safe": "ChainScenario0018A",
+        "chain_pdf_ssrf_vuln": "ChainScenario0018B"
+      },
+      "new_dir": "scenario_0018",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "permission_revocation_race": {
+      "keys": {
+        "chain_perm_revoke_race_safe": "ChainScenario0248A",
+        "chain_perm_revoke_race_vuln": "ChainScenario0248B"
+      },
+      "new_dir": "scenario_0248",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "persistent_no_rotate": {
+      "keys": {
+        "chain_persistent_no_rotate_safe": "ChainScenario0035B",
+        "chain_persistent_no_rotate_vuln": "ChainScenario0035A"
+      },
+      "new_dir": "scenario_0035",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "pid_file_hijack": {
+      "keys": {
+        "chain_pid_file_safe": "ChainScenario0214B",
+        "chain_pid_file_vuln": "ChainScenario0214A"
+      },
+      "new_dir": "scenario_0214",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "plugin_dir_writable": {
+      "keys": {
+        "chain_plugin_dir_safe": "ChainScenario0222B",
+        "chain_plugin_dir_vuln": "ChainScenario0222A"
+      },
+      "new_dir": "scenario_0222",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "pom_xml_xxe": {
+      "keys": {
+        "chain_pom_xxe_safe": "ChainScenario0040B",
+        "chain_pom_xxe_vuln": "ChainScenario0040A"
+      },
+      "new_dir": "scenario_0040",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "predictable_iv": {
+      "keys": {
+        "chain_predictable_iv_safe": "ChainScenario0180A",
+        "chain_predictable_iv_vuln": "ChainScenario0180B"
+      },
+      "new_dir": "scenario_0180",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "preflight_cache_poison": {
+      "keys": {
+        "chain_preflight_cache_safe": "ChainScenario0148A",
+        "chain_preflight_cache_vuln": "ChainScenario0148B"
+      },
+      "new_dir": "scenario_0148",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "profile_update_is_admin": {
+      "keys": {
+        "chain_profile_is_admin_safe": "ChainScenario0147B",
+        "chain_profile_is_admin_vuln": "ChainScenario0147A"
+      },
+      "new_dir": "scenario_0147",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "project_owner_change": {
+      "keys": {
+        "chain_project_owner_safe": "ChainScenario0125B",
+        "chain_project_owner_vuln": "ChainScenario0125A"
+      },
+      "new_dir": "scenario_0125",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "range_header_poison": {
+      "keys": {
+        "chain_range_poison_safe": "ChainScenario0119B",
+        "chain_range_poison_vuln": "ChainScenario0119A"
+      },
+      "new_dir": "scenario_0119",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "rate_limit_bypass_sqli": {
+      "keys": {
+        "chain_rate_limit_sqli_safe": "ChainScenario0211A",
+        "chain_rate_limit_sqli_vuln": "ChainScenario0211B"
+      },
+      "new_dir": "scenario_0211",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "rate_limit_race": {
+      "keys": {
+        "chain_rate_limit_race_safe": "ChainScenario0219B",
+        "chain_rate_limit_race_vuln": "ChainScenario0219A"
+      },
+      "new_dir": "scenario_0219",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "rbac_missing_role_check": {
+      "keys": {
+        "chain_rbac_missing_sqli_safe": "ChainScenario0215B",
+        "chain_rbac_missing_sqli_vuln": "ChainScenario0215A"
+      },
+      "new_dir": "scenario_0215",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "referrer_leak_redirect": {
+      "keys": {
+        "chain_referrer_leak_safe": "ChainScenario0150B",
+        "chain_referrer_leak_vuln": "ChainScenario0150A"
+      },
+      "new_dir": "scenario_0150",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "reflect_origin_creds": {
+      "keys": {
+        "chain_reflect_origin_safe": "ChainScenario0185B",
+        "chain_reflect_origin_vuln": "ChainScenario0185A"
+      },
+      "new_dir": "scenario_0185",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "regex_bypass_origin": {
+      "keys": {
+        "chain_regex_origin_safe": "ChainScenario0237B",
+        "chain_regex_origin_vuln": "ChainScenario0237A"
+      },
+      "new_dir": "scenario_0237",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "registration_role_inject": {
+      "keys": {
+        "chain_registration_role_safe": "ChainScenario0104A",
+        "chain_registration_role_vuln": "ChainScenario0104B"
+      },
+      "new_dir": "scenario_0104",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "report_download_traversal": {
+      "keys": {
+        "chain_report_traversal_safe": "ChainScenario0193B",
+        "chain_report_traversal_vuln": "ChainScenario0193A"
+      },
+      "new_dir": "scenario_0193",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "report_template_rce": {
+      "keys": {
+        "chain_report_template_safe": "ChainScenario0087B",
+        "chain_report_template_vuln": "ChainScenario0087A"
+      },
+      "new_dir": "scenario_0087",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "reservation_double_book": {
+      "keys": {
+        "chain_reservation_race_safe": "ChainScenario0031A",
+        "chain_reservation_race_vuln": "ChainScenario0031B"
+      },
+      "new_dir": "scenario_0031",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "reset_token_in_response": {
+      "keys": {
+        "chain_reset_token_resp_safe": "ChainScenario0238B",
+        "chain_reset_token_resp_vuln": "ChainScenario0238A"
+      },
+      "new_dir": "scenario_0238",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "role_param_tamper": {
+      "keys": {
+        "chain_role_param_safe": "ChainScenario0101B",
+        "chain_role_param_vuln": "ChainScenario0101A"
+      },
+      "new_dir": "scenario_0101",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "rsa_512_sign": {
+      "keys": {
+        "chain_rsa_512_safe": "ChainScenario0158A",
+        "chain_rsa_512_vuln": "ChainScenario0158B"
+      },
+      "new_dir": "scenario_0158",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "rss_feed_xxe": {
+      "keys": {
+        "chain_rss_xxe_safe": "ChainScenario0114B",
+        "chain_rss_xxe_vuln": "ChainScenario0114A"
+      },
+      "new_dir": "scenario_0114",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "saml_response_xxe": {
+      "keys": {
+        "chain_saml_xxe_safe": "ChainScenario0161B",
+        "chain_saml_xxe_vuln": "ChainScenario0161A"
+      },
+      "new_dir": "scenario_0161",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sequential_id_profile": {
+      "keys": {
+        "chain_seq_id_profile_safe": "ChainScenario0109B",
+        "chain_seq_id_profile_vuln": "ChainScenario0109A"
+      },
+      "new_dir": "scenario_0109",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "server_header_version": {
+      "keys": {
+        "chain_server_header_safe": "ChainScenario0121A",
+        "chain_server_header_vuln": "ChainScenario0121B"
+      },
+      "new_dir": "scenario_0121",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "service_account_key": {
+      "keys": {
+        "chain_svc_account_safe": "ChainScenario0139A",
+        "chain_svc_account_vuln": "ChainScenario0139B"
+      },
+      "new_dir": "scenario_0139",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "session_expire_to_cmdi": {
+      "keys": {
+        "chain_session_expire_cmdi_safe": "ChainScenario0086B",
+        "chain_session_expire_cmdi_vuln": "ChainScenario0086A"
+      },
+      "new_dir": "scenario_0086",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "session_in_hidden_field": {
+      "keys": {
+        "chain_hidden_field_safe": "ChainScenario0113A",
+        "chain_hidden_field_vuln": "ChainScenario0113B"
+      },
+      "new_dir": "scenario_0113",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "session_invalidation_race": {
+      "keys": {
+        "chain_session_inval_race_safe": "ChainScenario0190B",
+        "chain_session_inval_race_vuln": "ChainScenario0190A"
+      },
+      "new_dir": "scenario_0190",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "session_prediction": {
+      "keys": {
+        "chain_session_predict_safe": "ChainScenario0103A",
+        "chain_session_predict_vuln": "ChainScenario0103B"
+      },
+      "new_dir": "scenario_0103",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "shared_link_escalation": {
+      "keys": {
+        "chain_shared_link_safe": "ChainScenario0134A",
+        "chain_shared_link_vuln": "ChainScenario0134B"
+      },
+      "new_dir": "scenario_0134",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "shared_secret_readable": {
+      "keys": {
+        "chain_shared_secret_safe": "ChainScenario0199B",
+        "chain_shared_secret_vuln": "ChainScenario0199A"
+      },
+      "new_dir": "scenario_0199",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "short_secret_jwt": {
+      "keys": {
+        "chain_short_secret_jwt_safe": "ChainScenario0092B",
+        "chain_short_secret_jwt_vuln": "ChainScenario0092A"
+      },
+      "new_dir": "scenario_0092",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "shorturl_redirect": {
+      "keys": {
+        "chain_shorturl_redirect_safe": "ChainScenario0249A",
+        "chain_shorturl_redirect_vuln": "ChainScenario0249B"
+      },
+      "new_dir": "scenario_0249",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "signup_to_account_takeover": {
+      "keys": {
+        "chain_signup_takeover_safe": "ChainScenario0207B",
+        "chain_signup_takeover_vuln": "ChainScenario0207A"
+      },
+      "new_dir": "scenario_0207",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sitemap_xxe": {
+      "keys": {
+        "chain_sitemap_xxe_safe": "ChainScenario0203B",
+        "chain_sitemap_xxe_vuln": "ChainScenario0203A"
+      },
+      "new_dir": "scenario_0203",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "smtp_creds_hardcoded": {
+      "keys": {
+        "chain_smtp_creds_safe": "ChainScenario0011B",
+        "chain_smtp_creds_vuln": "ChainScenario0011A"
+      },
+      "new_dir": "scenario_0011",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "soap_body_xxe": {
+      "keys": {
+        "chain_soap_xxe_safe": "ChainScenario0069B",
+        "chain_soap_xxe_vuln": "ChainScenario0069A"
+      },
+      "new_dir": "scenario_0069",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "socket_file_perms": {
+      "keys": {
+        "chain_socket_perms_safe": "ChainScenario0107B",
+        "chain_socket_perms_vuln": "ChainScenario0107A"
+      },
+      "new_dir": "scenario_0107",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sqli_to_file_write": {
+      "keys": {
+        "chain_sqli_file_write_safe": "ChainScenario0082B",
+        "chain_sqli_file_write_vuln": "ChainScenario0082A"
+      },
+      "new_dir": "scenario_0082",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sqli_to_second_order_cmdi": {
+      "keys": {
+        "chain_sqli_cmdi_safe": "ChainScenario0057B",
+        "chain_sqli_cmdi_vuln": "ChainScenario0057A"
+      },
+      "new_dir": "scenario_0057",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sqli_to_stored_xss": {
+      "keys": {
+        "chain_sqli_xss_safe": "ChainScenario0172B",
+        "chain_sqli_xss_vuln": "ChainScenario0172A"
+      },
+      "new_dir": "scenario_0172",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "sso_relay_redirect": {
+      "keys": {
+        "chain_sso_relay_redirect_safe": "ChainScenario0112A",
+        "chain_sso_relay_redirect_vuln": "ChainScenario0112B"
+      },
+      "new_dir": "scenario_0112",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "sso_session_fixation": {
+      "keys": {
+        "chain_sso_fixation_safe": "ChainScenario0183A",
+        "chain_sso_fixation_vuln": "ChainScenario0183B"
+      },
+      "new_dir": "scenario_0183",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_dns_rebind": {
+      "keys": {
+        "chain_ssrf_dns_rebind_safe": "ChainScenario0159A",
+        "chain_ssrf_dns_rebind_vuln": "ChainScenario0159B"
+      },
+      "new_dir": "scenario_0159",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_parser_differential": {
+      "keys": {
+        "chain_ssrf_parser_diff_safe": "ChainScenario0217A",
+        "chain_ssrf_parser_diff_vuln": "ChainScenario0217B"
+      },
+      "new_dir": "scenario_0217",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_cloud_metadata": {
+      "keys": {
+        "chain_ssrf_metadata_safe": "ChainScenario0250B",
+        "chain_ssrf_metadata_vuln": "ChainScenario0250A"
+      },
+      "new_dir": "scenario_0250",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "ssrf_to_consul": {
+      "keys": {
+        "chain_ssrf_consul_safe": "ChainScenario0024A",
+        "chain_ssrf_consul_vuln": "ChainScenario0024B"
+      },
+      "new_dir": "scenario_0024",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_docker_socket": {
+      "keys": {
+        "chain_ssrf_docker_safe": "ChainScenario0146B",
+        "chain_ssrf_docker_vuln": "ChainScenario0146A"
+      },
+      "new_dir": "scenario_0146",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "ssrf_to_elasticsearch": {
+      "keys": {
+        "chain_ssrf_elasticsearch_safe": "ChainScenario0153A",
+        "chain_ssrf_elasticsearch_vuln": "ChainScenario0153B"
+      },
+      "new_dir": "scenario_0153",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_gcp_metadata": {
+      "keys": {
+        "chain_ssrf_gcp_metadata_safe": "ChainScenario0174A",
+        "chain_ssrf_gcp_metadata_vuln": "ChainScenario0174B"
+      },
+      "new_dir": "scenario_0174",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_internal_admin": {
+      "keys": {
+        "chain_ssrf_admin_safe": "ChainScenario0005A",
+        "chain_ssrf_admin_vuln": "ChainScenario0005B"
+      },
+      "new_dir": "scenario_0005",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_k8s_api": {
+      "keys": {
+        "chain_ssrf_k8s_safe": "ChainScenario0094A",
+        "chain_ssrf_k8s_vuln": "ChainScenario0094B"
+      },
+      "new_dir": "scenario_0094",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_redis": {
+      "keys": {
+        "chain_ssrf_redis_safe": "ChainScenario0100A",
+        "chain_ssrf_redis_vuln": "ChainScenario0100B"
+      },
+      "new_dir": "scenario_0100",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_smtp": {
+      "keys": {
+        "chain_ssrf_smtp_safe": "ChainScenario0077A",
+        "chain_ssrf_smtp_vuln": "ChainScenario0077B"
+      },
+      "new_dir": "scenario_0077",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_to_vault": {
+      "keys": {
+        "chain_ssrf_vault_safe": "ChainScenario0070A",
+        "chain_ssrf_vault_vuln": "ChainScenario0070B"
+      },
+      "new_dir": "scenario_0070",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssrf_via_redirect": {
+      "keys": {
+        "chain_ssrf_redirect_safe": "ChainScenario0115A",
+        "chain_ssrf_redirect_vuln": "ChainScenario0115B"
+      },
+      "new_dir": "scenario_0115",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "ssti_to_file_read": {
+      "keys": {
+        "chain_ssti_file_read_safe": "ChainScenario0030B",
+        "chain_ssti_file_read_vuln": "ChainScenario0030A"
+      },
+      "new_dir": "scenario_0030",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "static_file_bypass": {
+      "keys": {
+        "chain_static_bypass_safe": "ChainScenario0102A",
+        "chain_static_bypass_vuln": "ChainScenario0102B"
+      },
+      "new_dir": "scenario_0102",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "string_template_rce": {
+      "keys": {
+        "chain_string_template_safe": "ChainScenario0144A",
+        "chain_string_template_vuln": "ChainScenario0144B"
+      },
+      "new_dir": "scenario_0144",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "subdomain_redirect": {
+      "keys": {
+        "chain_subdomain_redirect_safe": "ChainScenario0210A",
+        "chain_subdomain_redirect_vuln": "ChainScenario0210B"
+      },
+      "new_dir": "scenario_0210",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "subdomain_takeover_cors": {
+      "keys": {
+        "chain_subdomain_cors_safe": "ChainScenario0220B",
+        "chain_subdomain_cors_vuln": "ChainScenario0220A"
+      },
+      "new_dir": "scenario_0220",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "svg_upload_xxe": {
+      "keys": {
+        "chain_svg_xxe_safe": "ChainScenario0165B",
+        "chain_svg_xxe_vuln": "ChainScenario0165A"
+      },
+      "new_dir": "scenario_0165",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "swagger_endpoint_leak": {
+      "keys": {
+        "chain_swagger_leak_safe": "ChainScenario0049B",
+        "chain_swagger_leak_vuln": "ChainScenario0049A"
+      },
+      "new_dir": "scenario_0049",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "symlink_follow": {
+      "keys": {
+        "chain_symlink_follow_safe": "ChainScenario0044B",
+        "chain_symlink_follow_vuln": "ChainScenario0044A"
+      },
+      "new_dir": "scenario_0044",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "symlink_race_to_read": {
+      "keys": {
+        "chain_symlink_read_safe": "ChainScenario0078A",
+        "chain_symlink_read_vuln": "ChainScenario0078B"
+      },
+      "new_dir": "scenario_0078",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "template_include_traversal": {
+      "keys": {
+        "chain_template_include_safe": "ChainScenario0105A",
+        "chain_template_include_vuln": "ChainScenario0105B"
+      },
+      "new_dir": "scenario_0105",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "template_via_sqli": {
+      "keys": {
+        "chain_template_sqli_safe": "ChainScenario0223A",
+        "chain_template_sqli_vuln": "ChainScenario0223B"
+      },
+      "new_dir": "scenario_0223",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "test_creds_in_prod": {
+      "keys": {
+        "chain_test_creds_safe": "ChainScenario0131B",
+        "chain_test_creds_vuln": "ChainScenario0131A"
+      },
+      "new_dir": "scenario_0131",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "timestamp_seed_rand": {
+      "keys": {
+        "chain_timestamp_seed_safe": "ChainScenario0008A",
+        "chain_timestamp_seed_vuln": "ChainScenario0008B"
+      },
+      "new_dir": "scenario_0008",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "timing_oracle_password": {
+      "keys": {
+        "chain_timing_oracle_safe": "ChainScenario0068B",
+        "chain_timing_oracle_vuln": "ChainScenario0068A"
+      },
+      "new_dir": "scenario_0068",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "tmp_file_race": {
+      "keys": {
+        "chain_tmp_file_race_safe": "ChainScenario0059A",
+        "chain_tmp_file_race_vuln": "ChainScenario0059B"
+      },
+      "new_dir": "scenario_0059",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "token_refresh_race": {
+      "keys": {
+        "chain_token_refresh_race_safe": "ChainScenario0089B",
+        "chain_token_refresh_race_vuln": "ChainScenario0089A"
+      },
+      "new_dir": "scenario_0089",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "token_scope_escalation": {
+      "keys": {
+        "chain_token_scope_safe": "ChainScenario0140A",
+        "chain_token_scope_vuln": "ChainScenario0140B"
+      },
+      "new_dir": "scenario_0140",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "upload_dir_executable": {
+      "keys": {
+        "chain_upload_dir_exec_safe": "ChainScenario0013B",
+        "chain_upload_dir_exec_vuln": "ChainScenario0013A"
+      },
+      "new_dir": "scenario_0013",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "url_session_id": {
+      "keys": {
+        "chain_url_session_safe": "ChainScenario0142B",
+        "chain_url_session_vuln": "ChainScenario0142A"
+      },
+      "new_dir": "scenario_0142",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "user_to_admin_via_api": {
+      "keys": {
+        "chain_user_admin_api_safe": "ChainScenario0034B",
+        "chain_user_admin_api_vuln": "ChainScenario0034A"
+      },
+      "new_dir": "scenario_0034",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "uuid_in_response_leak": {
+      "keys": {
+        "chain_uuid_leak_safe": "ChainScenario0120B",
+        "chain_uuid_leak_vuln": "ChainScenario0120A"
+      },
+      "new_dir": "scenario_0120",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "vary_header_abuse": {
+      "keys": {
+        "chain_vary_header_safe": "ChainScenario0227B",
+        "chain_vary_header_vuln": "ChainScenario0227A"
+      },
+      "new_dir": "scenario_0227",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "vary_origin_missing": {
+      "keys": {
+        "chain_vary_origin_safe": "ChainScenario0007B",
+        "chain_vary_origin_vuln": "ChainScenario0007A"
+      },
+      "new_dir": "scenario_0007",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "viewer_to_editor_via_patch": {
+      "keys": {
+        "chain_viewer_editor_safe": "ChainScenario0186B",
+        "chain_viewer_editor_vuln": "ChainScenario0186A"
+      },
+      "new_dir": "scenario_0186",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "vote_stuffing": {
+      "keys": {
+        "chain_vote_stuffing_safe": "ChainScenario0127B",
+        "chain_vote_stuffing_vuln": "ChainScenario0127A"
+      },
+      "new_dir": "scenario_0127",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "weak_password_hash": {
+      "keys": {
+        "chain_weak_password_hash_safe": "ChainScenario0053B",
+        "chain_weak_password_hash_vuln": "ChainScenario0053A"
+      },
+      "new_dir": "scenario_0053",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "webhook_admin_create": {
+      "keys": {
+        "chain_webhook_admin_safe": "ChainScenario0173A",
+        "chain_webhook_admin_vuln": "ChainScenario0173B"
+      },
+      "new_dir": "scenario_0173",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "webhook_data_exposure": {
+      "keys": {
+        "chain_webhook_exposure_safe": "ChainScenario0244A",
+        "chain_webhook_exposure_vuln": "ChainScenario0244B"
+      },
+      "new_dir": "scenario_0244",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "webhook_secret_hardcoded": {
+      "keys": {
+        "chain_webhook_secret_safe": "ChainScenario0052B",
+        "chain_webhook_secret_vuln": "ChainScenario0052A"
+      },
+      "new_dir": "scenario_0052",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "webhook_to_rce": {
+      "keys": {
+        "chain_webhook_rce_safe": "ChainScenario0110B",
+        "chain_webhook_rce_vuln": "ChainScenario0110A"
+      },
+      "new_dir": "scenario_0110",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "websocket_origin": {
+      "keys": {
+        "chain_websocket_origin_safe": "ChainScenario0098A",
+        "chain_websocket_origin_vuln": "ChainScenario0098B"
+      },
+      "new_dir": "scenario_0098",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "widget_render_ssti": {
+      "keys": {
+        "chain_widget_ssti_safe": "ChainScenario0020A",
+        "chain_widget_ssti_vuln": "ChainScenario0020B"
+      },
+      "new_dir": "scenario_0020",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "wildcard_with_creds": {
+      "keys": {
+        "chain_wildcard_creds_safe": "ChainScenario0132B",
+        "chain_wildcard_creds_vuln": "ChainScenario0132A"
+      },
+      "new_dir": "scenario_0132",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "world_writable_config": {
+      "keys": {
+        "chain_world_writable_config_safe": "ChainScenario0111A",
+        "chain_world_writable_config_vuln": "ChainScenario0111B"
+      },
+      "new_dir": "scenario_0111",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "x_forwarded_host_poison": {
+      "keys": {
+        "chain_x_fwd_host_safe": "ChainScenario0201B",
+        "chain_x_fwd_host_vuln": "ChainScenario0201A"
+      },
+      "new_dir": "scenario_0201",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "xliff_translation_xxe": {
+      "keys": {
+        "chain_xliff_xxe_safe": "ChainScenario0041A",
+        "chain_xliff_xxe_vuln": "ChainScenario0041B"
+      },
+      "new_dir": "scenario_0041",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "xml_rpc_xxe": {
+      "keys": {
+        "chain_xmlrpc_xxe_safe": "ChainScenario0073A",
+        "chain_xmlrpc_xxe_vuln": "ChainScenario0073B"
+      },
+      "new_dir": "scenario_0073",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "xml_upload_xxe": {
+      "keys": {
+        "chain_xml_upload_xxe_safe": "ChainScenario0138B",
+        "chain_xml_upload_xxe_vuln": "ChainScenario0138A"
+      },
+      "new_dir": "scenario_0138",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "xor_cipher_token": {
+      "keys": {
+        "chain_xor_cipher_safe": "ChainScenario0226B",
+        "chain_xor_cipher_vuln": "ChainScenario0226A"
+      },
+      "new_dir": "scenario_0226",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "xslt_xxe": {
+      "keys": {
+        "chain_xslt_xxe_safe": "ChainScenario0001A",
+        "chain_xslt_xxe_vuln": "ChainScenario0001B"
+      },
+      "new_dir": "scenario_0001",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "xss_to_csrf": {
+      "keys": {
+        "chain_xss_csrf_safe": "ChainScenario0083B",
+        "chain_xss_csrf_vuln": "ChainScenario0083A"
+      },
+      "new_dir": "scenario_0083",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "xxe_to_ssrf": {
+      "keys": {
+        "chain_xxe_ssrf_safe": "ChainScenario0162B",
+        "chain_xxe_ssrf_vuln": "ChainScenario0162A"
+      },
+      "new_dir": "scenario_0162",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "yaml_deser_to_rce": {
+      "keys": {
+        "chain_yaml_rce_safe": "ChainScenario0106A",
+        "chain_yaml_rce_vuln": "ChainScenario0106B"
+      },
+      "new_dir": "scenario_0106",
+      "safe_variant": "variant_a",
+      "vuln_variant": "variant_b"
+    },
+    "zip_path_traversal": {
+      "keys": {
+        "chain_zip_traversal_safe": "ChainScenario0171B",
+        "chain_zip_traversal_vuln": "ChainScenario0171A"
+      },
+      "new_dir": "scenario_0171",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    },
+    "zip_slip_to_overwrite": {
+      "keys": {
+        "chain_zip_slip_safe": "ChainScenario0177B",
+        "chain_zip_slip_vuln": "ChainScenario0177A"
+      },
+      "new_dir": "scenario_0177",
+      "safe_variant": "variant_b",
+      "vuln_variant": "variant_a"
+    }
+  },
+  "seed": 20260408
+}

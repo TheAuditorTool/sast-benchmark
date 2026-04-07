@@ -1,0 +1,2 @@
+AES_KEY = "0011223344556677889900aabbccddee0011223344556677889900aabbccddee"
+SECRET_KEY = "dev-only-secret"

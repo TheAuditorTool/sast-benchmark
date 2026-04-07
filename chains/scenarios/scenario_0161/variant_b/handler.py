@@ -1,0 +1,38 @@
+import base64
+import xml.etree.ElementTree as ET
+from flask import Blueprint, request, jsonify, session
+
+saml_bp = Blueprint("saml", __name__)
+
+_SAML_ASSERT_NS = "urn:oasis:names:tc:SAML:2.0:assertion"
+
+def _safe_fromstring(data):
+    parser = ET.XMLParser()
+    parser.entity = {}
+    return ET.fromstring(data, parser=parser)
+
+@saml_bp.route("/saml/acs", methods=["POST"])
+def acs():
+    encoded = request.form.get("SAMLResponse", "")
+    if not encoded:
+        return jsonify({"error": "missing SAMLResponse"}), 400
+    try:
+        xml_bytes = base64.b64decode(encoded)
+    except Exception:
+        return jsonify({"error": "invalid base64"}), 400
+    try:
+# vuln-code-snippet start ChainScenario0161B
+        root = _safe_fromstring(xml_bytes)  # vuln-code-snippet target-line ChainScenario0161B
+# vuln-code-snippet end ChainScenario0161B
+    except ET.ParseError as exc:
+        return jsonify({"error": str(exc)}), 400
+    ns = _SAML_ASSERT_NS
+    attrs = {
+        a.get("Name"): a.findtext(f"{{{ns}}}AttributeValue")
+        for a in root.iter(f"{{{ns}}}Attribute")
+    }
+    uid = attrs.get("uid") or attrs.get("NameID") or ""
+    if not uid:
+        return jsonify({"error": "no subject in assertion"}), 401
+    session["uid"] = uid
+    return jsonify({"authenticated": True, "uid": uid})

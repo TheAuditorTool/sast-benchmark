@@ -1,5 +1,20 @@
 # Chain Detection Benchmark Changelog
 
+## v0.2.1 (2026-04-08)
+
+- Anti-target-leakage migration: eliminate all information leakage from test files
+- Scenario directories renamed from descriptive (`auth_bypass_to_sqli/vuln/`) to opaque (`scenario_NNNN/variant_a|b/`) via seeded shuffle (seed=20260408)
+- Randomized variant assignment: which letter (A/B) is exploitable is randomized per scenario
+- Stripped ALL module, function, and class docstrings (1,522 files, 100% had leaky docstrings)
+- Stripped ALL `#` comments except `vuln-code-snippet` annotations (~305 leaky comments removed)
+- Annotation keys changed from descriptive (`chain_auth_sqli_vuln`) to opaque (`ChainScenario0142A`)
+- Annotation markers unified: `vuln-line`/`safe-line` replaced with `target-line` for both variants
+- CSV category-grouping comment headers removed (leaked chain types by grouping)
+- validate_chains.py v2.0: L4 updated for target-line and anti-leakage checks
+- No test case content changes: all 500 test cases, 20 categories, 250/250 balance preserved
+- rename_map.json written for full auditability (old name -> new name, old key -> new key)
+- Migration script: scripts/migrate_chains_leakage.py (LibCST-based, 5 validation gates)
+
 ## v0.2.0 (2026-04-07)
 
 - Expanded from 8 to 250 scenarios (16 to 500 test cases)

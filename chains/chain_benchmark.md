@@ -1,6 +1,6 @@
 # Chain Detection Benchmark
 
-**Created:** 2026-03-31 | **Updated:** 2026-04-07 | **Version:** v0.2.0
+**Created:** 2026-03-31 | **Updated:** 2026-04-08 | **Version:** v0.2.1
 **Test Cases:** 500 (250 exploitable chains / 250 mitigated chains) across 20 categories
 **Scenarios:** 250 multi-file applications in Python (Flask)
 
@@ -33,18 +33,18 @@ A tool that can identify compound exploit chains -- "these three medium findings
 Each chain scenario is a small multi-file Flask application with two variants:
 
 ```
-scenarios/<name>/
-  vuln/       # Exploitable chain -- all links connected
+scenarios/scenario_NNNN/
+  variant_a/
     app.py
     middleware.py
     routes.py
-  safe/       # Mitigated chain -- exactly one link broken
+  variant_b/
     app.py
     middleware.py
     routes.py
 ```
 
-The **vuln** variant has an exploitable compound vulnerability. The **safe** variant breaks exactly one link in the chain, making the compound path non-exploitable. All other files are byte-identical between variants.
+One variant has an exploitable compound vulnerability. The other breaks exactly one link in the chain, making the compound path non-exploitable. Which variant is exploitable is randomized and recorded only in the CSV. All other files are byte-identical between variants.
 
 ### What Counts as Chain Detection
 
@@ -243,6 +243,19 @@ Exploitable/Mitigated split: 50% / 50%
 
 ---
 
+## Anti-Target Leakage Rules
+
+Test files must not reveal the vulnerability type or expected result to the scanner. These rules are enforced by `validate_chains.py` L4.
+
+- **Opaque directory naming:** Scenario directories use `scenario_NNNN/variant_a|b/` naming. Directory names must not contain vulnerability categories, CWE numbers, or the words "vuln"/"safe".
+- **Zero comments:** Test files must contain no `#` comments except `vuln-code-snippet` annotations with opaque keys. No docstrings (module, function, or class level).
+- **Opaque annotation keys:** Annotation keys use `ChainScenarioNNNNX` format (scenario number + variant letter). Keys must not encode the vulnerability type or exploitability.
+- **Unified target-line:** Both exploitable and mitigated variants use `target-line` (not `vuln-line`/`safe-line`). The CSV is the sole source of truth for exploitability.
+- **1 scenario = 1 test:** Each scenario directory is one test case with exactly two variants. File names within variants must be domain-descriptive (e.g., `app.py`, `routes.py`), not category-descriptive.
+- **Randomized variant assignment:** Which variant is `a` vs `b` is randomized per scenario. There is no correlation between variant letter and exploitability.
+
+---
+
 ## Known Limitations
 
 - **Python only:** All scenarios use Flask. Future versions should add Go (net/http middleware chains), JavaScript (Express middleware), and Java (Spring Security filter chains).
@@ -256,16 +269,19 @@ Exploitable/Mitigated split: 50% / 50%
 
 To add a chain scenario:
 
-1. Create `scenarios/<name>/vuln/` and `scenarios/<name>/safe/` directories
-2. Write 2-5 source files per variant with realistic Flask/Django/Express code
-3. Add `vuln-code-snippet` annotations at the chain endpoint (the final sink)
-4. The safe variant must change **exactly one file** with a minimal fix
-5. All other files must be byte-identical between vuln and safe
-6. Add CSV entries: `chain_<shortname>_vuln,<category>,true,<CWE>` and `chain_<shortname>_safe,<category>,false,<CWE>`
-7. Run `python scripts/validate_chains.py` to verify L1-L5 fidelity
+1. Create `scenarios/scenario_NNNN/variant_a/` and `scenarios/scenario_NNNN/variant_b/` directories (use next available number)
+2. Write 2-5 source files per variant with realistic Flask code
+3. Add `vuln-code-snippet` annotations at the chain endpoint using opaque keys: `ChainScenarioNNNNA` / `ChainScenarioNNNNB`
+4. Use `target-line` for both variants (not `vuln-line`/`safe-line`)
+5. The mitigated variant must change **exactly one file** with a minimal fix
+6. All other files must be byte-identical between variants
+7. Add CSV entries: `ChainScenarioNNNNA,<category>,true|false,<CWE>` (randomly assign which letter is exploitable)
+8. **No comments or docstrings** in test files -- only `vuln-code-snippet` annotations permitted
+9. Run `python scripts/validate_chains.py` to verify L1-L5 fidelity
 
 **Design requirements:**
 - Chain must be based on a real-world attack pattern or CVE
 - Individual findings must each be low/medium severity
 - Compound chain must be high/critical severity
-- Safe variant must break the chain by fixing one link, not by removing the endpoint
+- Mitigated variant must break the chain by fixing one link, not by removing the endpoint
+- File names must be domain-descriptive (`app.py`, `auth.py`), never category-descriptive
