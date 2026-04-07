@@ -329,6 +329,28 @@ def resolve_finding_to_key(file_path, line, file_ranges):
     return None
 
 
+def resolve_chain_key_from_path(file_path):
+    """Extract chain test case key from the directory path.
+    scenarios/scenario_0142/variant_a/app.py -> ChainScenario0142A
+    """
+    m = re.search(r"scenario_(\d{4})[/\\]variant_(a|b)[/\\]", file_path)
+    if m:
+        return "ChainScenario%s%s" % (m.group(1), m.group(2).upper())
+    return None
+
+
+def resolve_test_key(file_path, line, file_ranges, benchmark_type):
+    """Resolve a finding to its test case key. Tries annotation-based first,
+    then path-based for chains."""
+    if file_ranges:
+        tc_key = resolve_finding_to_key(file_path, line, file_ranges)
+        if tc_key:
+            return tc_key
+    if benchmark_type == "chains":
+        return resolve_chain_key_from_path(file_path)
+    return None
+
+
 # ============================================================================
 # Converter
 # ============================================================================
@@ -400,8 +422,7 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
 
     # For annotation-based languages, scan source files
     file_ranges = {}
-    if benchmark_type in ("adversarial", "chains") and benchmark_dir:
-        # Adversarial/chain: scan all languages
+    if benchmark_type == "adversarial" and benchmark_dir:
         all_exts = (".py", ".js", ".go", ".rs", ".php", ".rb", ".sh")
         file_ranges = scan_annotations(benchmark_dir, extensions=all_exts)
     elif language in ("bash", "rust", "php", "ruby") and benchmark_dir:
@@ -456,10 +477,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                 }],
             }
 
-            if file_ranges:
-                tc_key = resolve_finding_to_key(file_path, line, file_ranges)
-                if tc_key:
-                    result["properties"] = {"testCaseKey": tc_key}
+            tc_key = resolve_test_key(file_path, line, file_ranges, benchmark_type)
+            if tc_key:
+                result["properties"] = {"testCaseKey": tc_key}
 
             results.append(result)
     except sqlite3.OperationalError:
@@ -492,10 +512,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                             }
                         }],
                     }
-                    if file_ranges:
-                        tc_key = resolve_finding_to_key(source_file, source_line or 1, file_ranges)
-                        if tc_key:
-                            src_result["properties"] = {"testCaseKey": tc_key}
+                    tc_key = resolve_test_key(source_file, source_line or 1, file_ranges, benchmark_type)
+                    if tc_key:
+                        src_result["properties"] = {"testCaseKey": tc_key}
                     results.append(src_result)
 
             if cwe_num in cwe_covered_by_rules:
@@ -517,10 +536,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                 }],
             }
 
-            if file_ranges:
-                tc_key = resolve_finding_to_key(sink_file, sink_line, file_ranges)
-                if tc_key:
-                    result["properties"] = {"testCaseKey": tc_key}
+            tc_key = resolve_test_key(sink_file, sink_line, file_ranges, benchmark_type)
+            if tc_key:
+                result["properties"] = {"testCaseKey": tc_key}
 
             results.append(result)
     except sqlite3.OperationalError:
@@ -551,10 +569,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                                 }
                             }],
                         }
-                        if file_ranges:
-                            tc_key = resolve_finding_to_key(file_path, line_num, file_ranges)
-                            if tc_key:
-                                result["properties"] = {"testCaseKey": tc_key}
+                        tc_key = resolve_test_key(file_path, line_num, file_ranges, benchmark_type)
+                        if tc_key:
+                            result["properties"] = {"testCaseKey": tc_key}
                         results.append(result)
         except sqlite3.OperationalError:
             pass
@@ -586,10 +603,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                         }
                     }],
                 }
-                if file_ranges:
-                    tc_key = resolve_finding_to_key(ep_file, ep_line, file_ranges)
-                    if tc_key:
-                        result["properties"] = {"testCaseKey": tc_key}
+                tc_key = resolve_test_key(ep_file, ep_line, file_ranges, benchmark_type)
+                if tc_key:
+                    result["properties"] = {"testCaseKey": tc_key}
                 results.append(result)
         except sqlite3.OperationalError:
             pass
@@ -620,10 +636,9 @@ def convert_db_to_sarif(db_path, language=None, benchmark_dir=None, csv_path=Non
                         }
                     }],
                 }
-                if file_ranges:
-                    tc_key = resolve_finding_to_key(sink_file, sink_line, file_ranges)
-                    if tc_key:
-                        result["properties"] = {"testCaseKey": tc_key}
+                tc_key = resolve_test_key(sink_file, sink_line, file_ranges, benchmark_type)
+                if tc_key:
+                    result["properties"] = {"testCaseKey": tc_key}
                 results.append(result)
         except sqlite3.OperationalError:
             pass

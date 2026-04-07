@@ -249,8 +249,7 @@ Test files must not reveal the vulnerability type or expected result to the scan
 
 - **Opaque directory naming:** Scenario directories use `scenario_NNNN/variant_a|b/` naming. Directory names must not contain vulnerability categories, CWE numbers, or the words "vuln"/"safe".
 - **Zero comments:** Test files must contain no `#` comments except `vuln-code-snippet` annotations with opaque keys. No docstrings (module, function, or class level).
-- **Opaque annotation keys:** Annotation keys use `ChainScenarioNNNNX` format (scenario number + variant letter). Keys must not encode the vulnerability type or exploitability.
-- **Unified target-line:** Both exploitable and mitigated variants use `target-line` (not `vuln-line`/`safe-line`). The CSV is the sole source of truth for exploitability.
+- **No annotations in source:** Test files must not contain `vuln-code-snippet` or any other benchmark annotation. Test case keys are derived from directory paths (`scenario_NNNN/variant_X/` -> `ChainScenarioNNNNX`). The CSV is the sole source of truth for exploitability.
 - **1 scenario = 1 test:** Each scenario directory is one test case with exactly two variants. File names within variants must be domain-descriptive (e.g., `app.py`, `routes.py`), not category-descriptive.
 - **Randomized variant assignment:** Which variant is `a` vs `b` is randomized per scenario. There is no correlation between variant letter and exploitability.
 
@@ -271,12 +270,10 @@ To add a chain scenario:
 
 1. Create `scenarios/scenario_NNNN/variant_a/` and `scenarios/scenario_NNNN/variant_b/` directories (use next available number)
 2. Write 2-5 source files per variant with realistic Flask code
-3. Add `vuln-code-snippet` annotations at the chain endpoint using opaque keys: `ChainScenarioNNNNA` / `ChainScenarioNNNNB`
-4. Use `target-line` for both variants (not `vuln-line`/`safe-line`)
-5. The mitigated variant must change **exactly one file** with a minimal fix
-6. All other files must be byte-identical between variants
-7. Add CSV entries: `ChainScenarioNNNNA,<category>,true|false,<CWE>` (randomly assign which letter is exploitable)
-8. **No comments or docstrings** in test files -- only `vuln-code-snippet` annotations permitted
+3. The mitigated variant must change **exactly one file** with a minimal fix
+4. All other files must be byte-identical between variants
+5. Add CSV entries: `ChainScenarioNNNNA,<category>,true|false,<CWE>` (randomly assign which letter is exploitable)
+6. **No comments, docstrings, or annotations** in test files -- zero metadata that could leak the answer
 9. Run `python scripts/validate_chains.py` to verify L1-L5 fidelity
 
 **Design requirements:**

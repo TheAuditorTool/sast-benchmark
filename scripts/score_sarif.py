@@ -52,14 +52,19 @@ def load_expected_results(csv_path):
 
 
 def extract_test_name_from_uri(uri):
-    """Extract BenchmarkTestNNNNN from a SARIF URI.
+    """Extract test case key from a SARIF URI.
 
     Handles:
       testcode/benchmark_test_00001.go  (Go — lowercase with underscores)
       testcode/BenchmarkTest00001.py    (Python/Java — CamelCase)
       /abs/path/testcode/benchmark_test_00001.go
       C:\\Users\\...\\BenchmarkTest00001.py
+      scenarios/scenario_0142/variant_a/app.py  (Chains — directory-based)
     """
+    # Chains: directory-based (scenario_NNNN/variant_X/)
+    m = re.search(r"scenario_(\d{4})/variant_(a|b)/", uri)
+    if m:
+        return "ChainScenario%s%s" % (m.group(1), m.group(2).upper())
     # Go/Rust/Bash/PHP: lowercase with underscores
     m = re.search(r"benchmark_test_(\d{5})\.\w+", uri)
     if m:
@@ -169,6 +174,8 @@ def detect_annotation_mode(expected):
     """Return True if CSV keys use annotation-based identity (not filename-based)."""
     for name in expected:
         if re.match(r"BenchmarkTest\d{5}$", name):
+            return False
+        if re.match(r"ChainScenario\d{4}[AB]$", name):
             return False
     return True
 

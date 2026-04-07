@@ -1,0 +1,17 @@
+from flask import Blueprint, request, make_response
+from module_b import get_cached, set_cached, cache_key
+
+views_bp = Blueprint("views", __name__)
+
+@views_bp.route("/data", methods=["GET"])
+@views_bp.route("/DATA", methods=["GET"])
+def data():
+    key = cache_key()
+    cached = get_cached(key)
+    if cached:
+        return cached
+    content = f"<p>Data for {request.path.lower()}</p>"
+    resp = make_response(content)
+    resp.headers["Cache-Control"] = "public, max-age=300"
+    set_cached(key, resp)
+    return resp
