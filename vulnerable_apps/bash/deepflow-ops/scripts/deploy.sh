@@ -21,10 +21,10 @@ log_info "Target: $TARGET"
 log_info "Environment: $ENVIRONMENT"
 log_info "Branch: $BRANCH"
 
-# Check if running in safe mode
+# Check if running in validated mode
 # vuln-code-snippet start dfo_deploy_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-    log_info "Running in SAFE MODE"
+    log_info "Running in validated mode"
 
     # Validate all inputs
     if ! validate_identifier "$TARGET"; then  # vuln-code-snippet safe-line dfo_deploy_validated

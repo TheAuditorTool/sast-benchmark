@@ -1,7 +1,7 @@
 //! Unsafe operations demonstrating memory safety sinks.
 //!
 //! These operations bypass Rust's safety guarantees and are potential
-//! code injection vectors when combined with tainted data.
+//! code execution vectors when combined with tainted data.
 
 use std::ptr;
 
@@ -15,7 +15,7 @@ pub fn dangerous_transmute(data: &[u8]) -> Result<String, &'static str> {
 
     // TAINT SINK: Transmuting user-controlled bytes (DANGEROUS!)
     unsafe {
-        // SAFETY: THIS IS NOT SAFE - demonstrating vulnerability
+        // SAFETY: NONE - demonstrating unsafe pattern
         let ptr = data.as_ptr() as *const u64;
         let value: u64 = std::mem::transmute(*ptr); // vuln-code-snippet target-line memsafetyTransmute
         Ok(format!("Transmuted value: {}", value))
@@ -63,7 +63,7 @@ pub fn read_from_offset(buffer: &[u8], offset: usize) -> Result<u8, &'static str
 pub fn write_to_address(address: usize, value: u8) {
     unsafe {
         // TAINT SINK: std::ptr::write to user-controlled address
-        // SAFETY: NONE - this is demonstrating a vulnerability
+        // SAFETY: NONE - this is demonstrating an unsafe pattern
         let ptr = address as *mut u8;
         ptr::write(ptr, value); // vuln-code-snippet target-line memsafetyWriteToAddress
     }
@@ -74,7 +74,7 @@ pub fn write_to_address(address: usize, value: u8) {
 pub fn read_from_address(address: usize) -> u8 {
     unsafe {
         // TAINT SINK: std::ptr::read from user-controlled address
-        // SAFETY: NONE - this is demonstrating a vulnerability
+        // SAFETY: NONE - this is demonstrating an unsafe pattern
         let ptr = address as *const u8;
         ptr::read(ptr)
     }
@@ -84,7 +84,7 @@ pub fn read_from_address(address: usize) -> u8 {
 pub fn volatile_write(address: usize, value: u8) {
     unsafe {
         // TAINT SINK: ptr::write_volatile
-        // SAFETY: NONE - demonstrating vulnerability
+        // SAFETY: NONE - demonstrating unsafe pattern
         let ptr = address as *mut u8;
         ptr::write_volatile(ptr, value);
     }
@@ -94,7 +94,7 @@ pub fn volatile_write(address: usize, value: u8) {
 pub fn volatile_read(address: usize) -> u8 {
     unsafe {
         // TAINT SINK: ptr::read_volatile
-        // SAFETY: NONE - demonstrating vulnerability
+        // SAFETY: NONE - demonstrating unsafe pattern
         let ptr = address as *const u8;
         ptr::read_volatile(ptr)
     }
@@ -148,7 +148,7 @@ pub fn multiple_unsafe_blocks(a: &mut [u8], b: &mut [u8]) {
         }
     }
 
-    // Some safe code in between
+    // Some other code in between
     let _sum = a.len() + b.len();
 
     // SAFETY: b is borrowed mutably and non-empty check ensures valid access
@@ -220,7 +220,7 @@ pub fn unsafe_cast<T, U>(value: T) -> U {
 
 /// Drop value without running destructor
 pub fn forget_value<T>(value: T) {
-    // This is safe but can lead to resource leaks
+    // This works but can lead to resource leaks
     std::mem::forget(value);
 }
 

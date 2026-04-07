@@ -364,7 +364,7 @@ impl CommandSink {
 
 impl SinkWriter for CommandSink {
     fn write(&self, data: &str) -> Result<String, String> {
-        // TAINT SINK: Command injection
+        // TAINT SINK: Command execution with user-controlled data
         sinks::execute_shell(&format!("{} {}", self.base_command, data))
     }
 }
@@ -384,7 +384,7 @@ impl DatabaseSink {
 
 impl SinkWriter for DatabaseSink {
     fn write(&self, data: &str) -> Result<String, String> {
-        // TAINT SINK: SQL injection
+        // TAINT SINK: SQL query with user-controlled data
         sinks::execute_query(&format!(
             "INSERT INTO {} (data) VALUES ('{}')",
             self.table, data

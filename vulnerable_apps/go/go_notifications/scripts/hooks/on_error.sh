@@ -1,6 +1,6 @@
 #!/bin/bash
 # Hook script executed when a notification fails
-#Multiple command injection vectors
+#Multiple unvalidated shell command paths
 
 NOTIFICATION_ID="$1"
 ERROR_MESSAGE="$2"

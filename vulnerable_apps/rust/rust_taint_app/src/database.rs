@@ -66,7 +66,7 @@ pub async fn create_user(pool: &SqlitePool, input: &UserInput) -> Result<User, s
 // vuln-code-snippet end sqliCreateUser
 
 // vuln-code-snippet start sqliSearchUsers
-///SQL injection via string concatenation!
+///SQL query built via string concatenation
 /// TAINT SINK: User input directly in SQL query
 pub async fn search_users_dynamic(
     pool: &SqlitePool,
@@ -75,17 +75,17 @@ pub async fn search_users_dynamic(
     //String concatenation with user input!
     let mut query = String::from("SELECT id, username, email, password_hash, role, created_at FROM users WHERE 1=1");
 
-    // TAINT FLOW: query param -> SQL query (SQL INJECTION!)
+    // TAINT FLOW: query param -> SQL query (taint sink)
     if let Some(ref name) = params.name {
         query.push_str(&format!(" AND username LIKE '%{}%'", name)); // vuln-code-snippet target-line sqliSearchUsers
     }
 
-    // TAINT FLOW: query param -> SQL query (SQL INJECTION!)
+    // TAINT FLOW: query param -> SQL query (taint sink)
     if let Some(ref email) = params.email {
         query.push_str(&format!(" AND email LIKE '%{}%'", email));
     }
 
-    // TAINT FLOW: query param -> SQL ORDER BY (SQL INJECTION!)
+    // TAINT FLOW: query param -> SQL ORDER BY (taint sink)
     if let Some(ref sort_by) = params.sort_by {
         query.push_str(&format!(" ORDER BY {}", sort_by));
 
@@ -94,12 +94,12 @@ pub async fn search_users_dynamic(
         }
     }
 
-    // TAINT FLOW: query param -> SQL LIMIT (SQL INJECTION!)
+    // TAINT FLOW: query param -> SQL LIMIT (taint sink)
     if let Some(limit) = params.limit {
         query.push_str(&format!(" LIMIT {}", limit));
     }
 
-    // TAINT SINK: Execute vulnerable query
+    // TAINT SINK: Execute dynamically built query
     let rows = sqlx::query(&query).fetch_all(pool).await?;
 
     let users: Vec<User> = rows
@@ -177,7 +177,7 @@ pub mod rusqlite_ops {
     // vuln-code-snippet end sqliRusqliteGetUser
 
     // vuln-code-snippet start sqliRusqliteDelete
-    ///SQL injection via string concatenation
+    ///SQL query built via string concatenation
     /// TAINT SINK: rusqlite::Connection::execute with user input
     pub fn delete_user_by_name(conn: &Connection, username: &str) -> Result<usize> {
         //String interpolation
@@ -189,7 +189,7 @@ pub mod rusqlite_ops {
     // vuln-code-snippet end sqliRusqliteDelete
 
     // vuln-code-snippet start sqliRusqliteSearch
-    ///Search with SQL injection
+    ///Search using string concatenation
     pub fn search_users_concat(conn: &Connection, search_term: &str) -> Result<Vec<UserRow>> {
         //String concatenation
         let sql = format!(
@@ -213,7 +213,7 @@ pub mod rusqlite_ops {
 
 /// Example using diesel ORM
 pub mod diesel_ops {
-    // Note: Diesel queries are typically safe due to query builder
+    // Note: Diesel queries are typically parameterized via query builder
     // But raw SQL is still possible
 
     ///Using diesel::sql_query with raw SQL

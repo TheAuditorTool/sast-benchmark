@@ -171,7 +171,7 @@ Examples:
   # Start with defaults
   ./server.sh
 
-  # Start on custom port in safe mode
+  # Start on custom port in validated mode
   ./server.sh -p 9000 --safe
 
   # Start with netcat

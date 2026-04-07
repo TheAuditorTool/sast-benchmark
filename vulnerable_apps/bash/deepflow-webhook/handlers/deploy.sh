@@ -92,7 +92,7 @@ do_deploy() {
     send_json_response 200 '{"status": "deployed"}'
 }
 
-# Perform deployment with validation (SAFE version)
+# Perform deployment with validation (validated version)
 # vuln-code-snippet start dfw_deploy_validated
 do_deploy_validated() {
     local target="$1"

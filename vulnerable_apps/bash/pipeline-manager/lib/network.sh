@@ -49,7 +49,7 @@ download_file_noverify() {
 }
 # vuln-code-snippet end wget_no_cert_check
 
-# Safe download
+# Validated download
 # vuln-code-snippet start download_file_verified
 download_file() {
     local url="$1"
@@ -255,7 +255,7 @@ install_from_remote_wget() {
 }
 # vuln-code-snippet end wget_pipe_bash
 
-# Safe alternative
+# Alternate approach
 # vuln-code-snippet start install_from_remote_verified
 install_from_remote_verified() {
     local install_url="$1"

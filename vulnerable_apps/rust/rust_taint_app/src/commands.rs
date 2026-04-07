@@ -181,7 +181,7 @@ pub fn run_system_command(command_name: &str) -> io::Result<Output> {
         .output()
 }
 
-///Command with argument injection
+///Command with user-supplied argument
 // vuln-code-snippet start cmdiRunCommandWithArg
 pub fn run_command_with_arg(base_cmd: &str, user_arg: &str) -> io::Result<String> {
     //User input directly passed as argument
@@ -222,7 +222,7 @@ pub fn execute_allowed_command(cmd_type: &str, target: &str) -> io::Result<Strin
         _ => return Err(io::Error::new(io::ErrorKind::InvalidInput, "Unknown command")),
     };
 
-    // STILL VULNERABLE: target could contain shell metacharacters
+    // target could contain shell metacharacters
     let output = Command::new(command)
         .arg(target) // vuln-code-snippet target-line cmdiExecuteAllowedCommand
         .output()?;

@@ -231,12 +231,12 @@ pub async fn resume_queue(
 }
 
 // ============================================================================
-// Admin Handlers (VULNERABLE)
+// Admin Handlers
 // ============================================================================
 
 /// Search jobs
 ///
-///SQL injection via search term
+///Search term passed directly to SQL query
 // vuln-code-snippet start sqliJobqueueHandlerSearch
 pub async fn search_jobs(
     Extension(state): Extension<Arc<AppState>>,

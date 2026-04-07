@@ -304,7 +304,7 @@ parse_csv_line() {
 }
 # vuln-code-snippet end ifs_modification_lost
 
-# Safe CSV parsing
+# CSV parsing
 # vuln-code-snippet start ifs_modification_restored
 parse_csv_line() {
     local line="$1"

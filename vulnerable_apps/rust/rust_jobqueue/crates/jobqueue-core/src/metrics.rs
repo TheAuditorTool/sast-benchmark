@@ -420,7 +420,7 @@ pub struct MetricsSnapshot {
     pub job_types: HashMap<String, JobTypeMetrics>,
 }
 
-/// Thread-safe metrics wrapper
+/// Synchronized metrics wrapper
 pub type SharedMetrics = Arc<Metrics>;
 
 #[cfg(test)]

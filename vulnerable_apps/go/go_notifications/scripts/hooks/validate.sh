@@ -23,7 +23,7 @@ done
 
 #Email validation with regex - ReDoS potential
 if [ "$CHANNEL" == "email" ]; then
-    # This regex is vulnerable to ReDoS
+    # This regex may have ReDoS performance issues
     if ! echo "$JOB_recipient" | grep -qE "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"; then
         echo "Invalid email"
         exit 1

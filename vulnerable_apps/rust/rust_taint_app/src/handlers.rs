@@ -59,7 +59,7 @@ pub async fn search_users(
 ) -> impl Responder {
     let search_params = query.into_inner();
 
-    // TAINT FLOW: query params -> SQL query (VULNERABLE!)
+    // TAINT FLOW: query params -> SQL query -- taint sink
     match database::search_users_dynamic(&state.db_pool, &search_params).await {
         Ok(users) => HttpResponse::Ok().json(ApiResponse::success(users)),
         Err(e) => HttpResponse::InternalServerError().json(ApiResponse::<Vec<User>>::error(&e.to_string())),
@@ -80,7 +80,7 @@ pub async fn execute_command(
     // TAINT SOURCE: HttpRequest::query_string
     let _query = req.query_string();
 
-    // TAINT FLOW: JSON body -> Command execution (VULNERABLE!)
+    // TAINT FLOW: JSON body -> Command execution -- taint sink
     match commands::execute_command(&cmd_req.command, &cmd_req.args) {
         Ok(output) => HttpResponse::Ok().json(ApiResponse::success(output)),
         Err(e) => HttpResponse::InternalServerError().json(ApiResponse::<String>::error(&e.to_string())),
@@ -94,7 +94,7 @@ pub async fn run_shell_command(
 ) -> impl Responder {
     let shell_req = body.into_inner();
 
-    // TAINT FLOW: JSON body -> Shell execution (CRITICAL VULNERABILITY!)
+    // TAINT FLOW: JSON body -> Shell execution -- taint sink
     match commands::execute_shell_command(&shell_req.shell_command) {
         Ok(output) => HttpResponse::Ok().json(ApiResponse::success(output)),
         Err(e) => HttpResponse::InternalServerError().json(ApiResponse::<String>::error(&e.to_string())),

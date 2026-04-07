@@ -163,7 +163,7 @@ notify_from_template() {
 # vuln-code-snippet end dfw_template_double_eval
 
 # vuln-code-snippet start dfw_notify_sanitized
-# Safe notification sender
+# Notification sender
 notify_sanitized() {
     local channel="$1"
     local message="$2"

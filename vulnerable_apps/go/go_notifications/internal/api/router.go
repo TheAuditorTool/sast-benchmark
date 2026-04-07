@@ -79,7 +79,7 @@ func NewRouter(h *Handlers, gh *GorillaHandlers, apiKey string) *mux.Router {
 	// Wildcard path (path traversal testing)
 	api.HandleFunc("/files/{path:.*}", gh.ServeFile).Methods("GET")
 
-	// Command injection via path params
+	// Command execution via path params
 	api.HandleFunc("/tools/{tool}/run", gh.RunTool).Methods("POST")
 	api.HandleFunc("/network/ping/{host}", gh.PingHost).Methods("GET")
 

@@ -50,7 +50,7 @@ impl JobExecutor for HttpHandler {
             .map_err(|e| jobqueue_core::JobQueueError::SerializationError(e))?
             .url;
 
-        // TAINT SINK: SSRF vulnerability
+        // TAINT SINK: User-controlled URL is fetched without validation
         // User-controlled URL is fetched without validation
         // Attacker can use: http://169.254.169.254/latest/meta-data/
         let response = self.client
@@ -83,7 +83,7 @@ struct HttpJobPayload {
 
 /// Shell command job handler
 ///
-///Command injection
+///Shell command job handler
 pub struct ShellHandler {
     allowed_commands: Option<Vec<String>>,
 }
@@ -95,7 +95,7 @@ impl ShellHandler {
         }
     }
 
-    /// Create with allowlist (still vulnerable due to args)
+    /// Create with allowlist (args are not checked)
     pub fn with_allowlist(commands: Vec<String>) -> Self {
         Self {
             allowed_commands: Some(commands),
@@ -128,7 +128,7 @@ impl JobExecutor for ShellHandler {
             }
         }
 
-        // TAINT SINK: Command injection
+        // TAINT SINK: User-controlled command and args executed directly
         // User-controlled command and args executed directly
         // Attacker payload: command="sh", args=["-c", "cat /etc/passwd"]
         let output = Command::new(&payload.command)

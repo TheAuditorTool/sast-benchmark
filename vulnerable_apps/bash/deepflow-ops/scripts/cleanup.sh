@@ -20,7 +20,7 @@ log_info "Target path: $TARGET_PATH"
 
 # vuln-code-snippet start dfo_cleanup_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-    log_info "Running in SAFE MODE"
+    log_info "Running in validated mode"
     if ! validate_path "$TARGET_PATH" "$DEPLOY_DIR"; then  # vuln-code-snippet safe-line dfo_cleanup_validated
         log_error "Path validation failed - refusing to delete"
         exit 1

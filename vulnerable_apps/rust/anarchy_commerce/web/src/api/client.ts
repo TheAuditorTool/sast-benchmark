@@ -104,7 +104,7 @@ export async function searchProducts(query: string, filters?: {
   sortBy?: string;
 }): Promise<SearchResult<Product>> {
   // TAINT: query flows to Rust service → Elasticsearch
-  // Potential for query injection if not properly escaped
+  // Potential for query issues if not properly escaped
   const response = await client.get('/api/search/products', {
     params: { q: query, ...filters },
   });

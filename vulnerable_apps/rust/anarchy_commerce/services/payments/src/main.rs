@@ -130,7 +130,7 @@ async fn refund_payment(
     if let Some(payment) = payments.get_mut(&payment_id) {
         payment.status = "refunded".to_string();
 
-        //Reason logged without sanitization (log injection)
+        //Reason logged without sanitization
         tracing::info!(
             "Refunded payment {}: reason = {}",
             payment_id, req.reason

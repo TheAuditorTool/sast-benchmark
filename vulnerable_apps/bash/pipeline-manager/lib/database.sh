@@ -104,7 +104,7 @@ db_query_interpolated() {
 # vuln-code-snippet end sql_injection_db_query
 
 # vuln-code-snippet start db_query_escaped
-# Safe parameterized query
+# Parameterized query
 db_query_escaped() {
     local query="$1"
     shift

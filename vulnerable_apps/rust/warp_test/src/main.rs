@@ -66,13 +66,13 @@ fn with_state(
 }
 
 // =============================================================================
-//SQL Injection via Path Parameter
+// Path parameter handler
 // =============================================================================
 
 // vuln-code-snippet start sqliWarpGetUser
 ///User ID directly concatenated into SQL query
 async fn get_user_by_string(id: String) -> Result<impl warp::Reply, Infallible> {
-    //SQL injection - user input directly in query
+    //User input directly in query
     let conn = rusqlite::Connection::open("app.db").unwrap();
     let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet target-line sqliWarpGetUser
 
@@ -92,13 +92,13 @@ async fn get_user_by_string(id: String) -> Result<impl warp::Reply, Infallible> 
 // vuln-code-snippet end sqliWarpGetUser
 
 // =============================================================================
-//Command Injection via Query Parameter
+// Query parameter handler
 // =============================================================================
 
 // vuln-code-snippet start cmdiWarpSearchFiles
 ///Query parameter used in shell command
 async fn search_files(query: SearchQuery) -> Result<impl warp::Reply, Infallible> {
-    //Command injection via search query
+    //Search query passed to command
     let output = Command::new("grep")
         .arg("-r")
         .arg(&query.q) // vuln-code-snippet target-line cmdiWarpSearchFiles
@@ -194,7 +194,7 @@ async fn hash_sha256(data: bytes::Bytes) -> Result<impl warp::Reply, Infallible>
 // vuln-code-snippet end cryptoWarpSha256Hash
 
 // =============================================================================
-//Header Injection
+// Header handler
 // =============================================================================
 
 // vuln-code-snippet start xssWarpEchoHeader
@@ -222,7 +222,7 @@ async fn echo_header_escaped(header_value: String) -> Result<impl warp::Reply, I
 async fn get_profile(session: String) -> Result<impl warp::Reply, Infallible> {
     let conn = rusqlite::Connection::open("app.db").unwrap();
 
-    //SQL injection via cookie value
+    //Cookie value used in query
     let query = format!("SELECT name FROM users WHERE session = '{}'", session); // vuln-code-snippet target-line sqliWarpCookieProfile
     let name: Result<String, _> = conn.query_row(&query, [], |row| row.get(0));
 

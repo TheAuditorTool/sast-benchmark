@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 # Config
-JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret-change-in-prod")  # VULN: Weak default
+JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret-change-in-prod")  # Weak default
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://localhost/anarchy")
 
 # Models
@@ -57,7 +57,7 @@ class UserResponse(BaseModel):
 users_db = {}
 
 def hash_password(password: str) -> str:
-    # VULN: Using MD5 for password hashing (should use bcrypt)
+    # Using MD5 for password hashing (should use bcrypt)
     return hashlib.md5(password.encode()).hexdigest()
 
 def verify_token(authorization: str = Header(None)) -> dict:
@@ -81,7 +81,7 @@ async def register(user: UserRegister):
     if user.email in users_db:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    # VULN: Weak password hashing
+    # Weak password hashing
     password_hash = hash_password(user.password)
 
     user_id = f"user_{len(users_db) + 1}"
@@ -105,7 +105,7 @@ async def login(credentials: UserLogin):
     """
     user = users_db.get(credentials.email)
     if not user:
-        # VULN: Timing attack - different response for non-existent user
+        # Timing attack - different response for non-existent user
         raise HTTPException(status_code=401, detail="User not found")
 
     if user["password_hash"] != hash_password(credentials.password):
@@ -126,7 +126,7 @@ async def get_user(user_id: str, token_data: dict = Depends(verify_token)):
     """
     Get user profile.
     TAINT: user_id flows to database query
-    VULN: No authorization check - any authenticated user can view any profile (IDOR)
+    No authorization check - any authenticated user can view any profile (IDOR)
     """
     # Find user by ID
     for user in users_db.values():
@@ -141,7 +141,7 @@ async def update_user(user_id: str, updates: UserUpdate, token_data: dict = Depe
     """
     Update user profile.
     TAINT: updates.bio could contain XSS payload (stored XSS)
-    VULN: No authorization check - any user can update any profile (IDOR)
+    No authorization check - any user can update any profile (IDOR)
     """
     # Find and update user
     for email, user in users_db.items():
@@ -149,10 +149,10 @@ async def update_user(user_id: str, updates: UserUpdate, token_data: dict = Depe
             if updates.name:
                 user["name"] = updates.name
             if updates.bio:
-                # VULN: No sanitization - stored XSS
+                # No sanitization - stored XSS
                 user["bio"] = updates.bio
             if updates.avatar_url:
-                # VULN: No URL validation - could be javascript: URL
+                # No URL validation - could be javascript: URL
                 user["avatar_url"] = updates.avatar_url
 
             return UserResponse(**user)

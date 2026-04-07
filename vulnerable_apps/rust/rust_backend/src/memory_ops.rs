@@ -76,7 +76,7 @@ pub fn double_free_pattern() -> String {
         // This is commented out to prevent actual crash, but shows the pattern
         // dealloc(ptr, layout);
 
-        "Double free vulnerability pattern (simulated)".to_string()
+        "Double free pattern (simulated)".to_string()
     }
 }
 

@@ -9,7 +9,7 @@ use std::net::TcpStream;
 /// TAINT SINK: reqwest::get with user-controlled URL (SSRF)
 // vuln-code-snippet start ssrfFetchUrl
 pub async fn fetch_url(url: &str) -> Result<String, reqwest::Error> {
-    // TAINT SINK: User-controlled URL (SSRF vulnerability!)
+    // TAINT SINK: User-controlled URL fetched without validation
     let response = reqwest::get(url).await?; // vuln-code-snippet target-line ssrfFetchUrl
     response.text().await
 }
@@ -44,7 +44,7 @@ pub async fn fetch_url_with_options(request: &ProxyRequest) -> Result<String, re
     // TAINT SINK: User-controlled URL (SSRF!)
     let mut req = client.get(&request.url);
 
-    // Add user-controlled headers (header injection risk)
+    // Add user-controlled headers
     if let Some(ref headers) = request.headers {
         for (key, value) in headers {
             req = req.header(key.as_str(), value.as_str());
@@ -230,14 +230,14 @@ pub fn validate_url(url: &str) -> bool {
     false
 }
 
-/// SSRF via URL with basic validation (still vulnerable!)
+/// SSRF via URL with basic validation (incomplete)
 // vuln-code-snippet start ssrfFetchExternalOnly
 pub async fn fetch_external_only(url: &str) -> Result<String, String> {
     if !validate_url(url) {
         return Err("Invalid or internal URL".to_string());
     }
 
-    // Still vulnerable to:
+    // Still susceptible to:
     // - DNS rebinding attacks
     // - URL parsing differences
     // - IPv6 addresses

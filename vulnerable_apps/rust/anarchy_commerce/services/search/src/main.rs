@@ -73,7 +73,7 @@ async fn search_products(query: web::Query<SearchQuery>) -> impl Responder {
     let search_term = query.q.as_deref().unwrap_or("");
 
     //Building query string without proper escaping
-    // This would be vulnerable to Elasticsearch injection
+    // This would affect Elasticsearch query construction
     let es_query = format!(
         r#"{{
             "query": {{

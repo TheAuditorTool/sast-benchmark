@@ -250,9 +250,9 @@ pub fn ffi_strlen(input: &str) -> usize {
 /// DANGEROUS: Execute command via FFI
 pub fn ffi_system(command: &str) -> i32 {
     // SAFETY: CString::as_ptr returns a valid null-terminated C string.
-    // WARNING: This is a command injection sink - user input must be sanitized.
+    // WARNING: User input must be sanitized before passing to this function.
     unsafe {
-        // TAINT SINK: Command injection via FFI
+        // TAINT SINK: Command execution via FFI
         let c_string = std::ffi::CString::new(command).unwrap_or_default();
         system(c_string.as_ptr())
     }
@@ -367,7 +367,7 @@ where
     if x.len() >= y.len() {
         x
     } else {
-        // This is safe because 'b: 'a
+        // This works because 'b: 'a
         unsafe { std::mem::transmute::<&'b str, &'a str>(y) }
     }
 }

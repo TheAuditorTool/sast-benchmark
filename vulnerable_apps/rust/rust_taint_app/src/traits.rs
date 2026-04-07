@@ -5,7 +5,7 @@
 
 use std::marker::PhantomData;
 
-/// A regular safe trait for comparison
+/// A regular trait for comparison
 pub trait SafeProcessor {
     fn process(&self, data: &[u8]) -> Vec<u8>;
     fn validate(&self, input: &str) -> bool;
@@ -64,12 +64,12 @@ impl DataContainer {
 
 impl SafeProcessor for DataContainer {
     fn process(&self, data: &[u8]) -> Vec<u8> {
-        // Safe implementation
+        // Standard implementation
         data.iter().map(|b| b.wrapping_add(1)).collect()
     }
 
     fn validate(&self, input: &str) -> bool {
-        // Safe validation
+        // Standard validation
         !input.is_empty() && input.len() < 1000
     }
 }
@@ -159,11 +159,11 @@ impl<T> Drop for UnsafeContainer<T> {
 }
 
 /// UNSAFE IMPL: Send for UnsafeContainer
-/// This is only safe if T is Send
+/// This requires T is Send
 unsafe impl<T: Send> Send for UnsafeContainer<T> {}
 
 /// UNSAFE IMPL: Sync for UnsafeContainer
-/// This is only safe if T is Sync
+/// This requires T is Sync
 unsafe impl<T: Sync> Sync for UnsafeContainer<T> {}
 
 /// A trait for FFI callbacks

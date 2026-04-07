@@ -88,6 +88,7 @@ cd gorustbash_benchmark/bash
 aud setup-ai --target . --sync
 aud full --offline
 
-# 3. Score
-python3 bash_benchmark.py
+# 3. Convert and score
+python3 ../scripts/convert_theauditor.py .pf/repo_index.db
+python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.3.csv
 ```

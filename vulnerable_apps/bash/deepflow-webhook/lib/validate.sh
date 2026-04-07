@@ -1,7 +1,7 @@
 #!/bin/bash
 # Input validation and sanitization functions
 
-# Validate action against whitelist (SAFE - case statement)
+# Validate action against whitelist (case statement)
 # Sanitizer: case statement whitelist
 validate_action() {
     local action="$1"
@@ -16,7 +16,7 @@ validate_action() {
     esac
 }
 
-# Validate path using realpath (SAFE - canonicalization)
+# Validate path using realpath (canonicalization)
 # Sanitizer: realpath canonicalization
 validate_path() {
     local path="$1"
@@ -35,14 +35,14 @@ validate_path() {
     fi
 }
 
-# Sanitize string for shell usage (SAFE - printf %q)
+# Sanitize string for shell usage (printf %q)
 # Sanitizer: printf %q shell quoting
 sanitize_shell() {
     local input="$1"
     printf '%q' "$input"
 }
 
-# Validate string against regex pattern (SAFE - [[ =~ ]])
+# Validate string against regex pattern ([[ =~ ]])
 # Sanitizer: regex validation
 validate_regex() {
     local input="$1"

@@ -284,13 +284,13 @@ type BasicCounter struct {
 	value int
 }
 
-// Increment is not thread-safe
+// Increment is not synchronized
 func (c *BasicCounter) Increment() {
 	// RACE CONDITION: Read-modify-write without synchronization
 	c.value++
 }
 
-// Get is not thread-safe
+// Get is not synchronized
 func (c *BasicCounter) Get() int {
 	return c.value
 }

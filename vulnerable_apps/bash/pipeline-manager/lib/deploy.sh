@@ -397,7 +397,7 @@ prepare_deploy_directory() {
 }
 # vuln-code-snippet end chmod777_deploy_dir
 
-# Safe version
+# Alternate version
 # vuln-code-snippet start chmod755_deploy_dir
 prepare_deploy_directory() {
     local deploy_path="$1"

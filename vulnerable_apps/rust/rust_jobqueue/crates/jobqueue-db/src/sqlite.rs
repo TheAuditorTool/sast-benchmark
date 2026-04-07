@@ -72,7 +72,7 @@ impl SqliteStore {
 
     /// Search jobs with user-provided query
     ///
-    ///SQL INJECTION
+    /// Raw query execution
     /// The search_term is directly interpolated into SQL without sanitization
     // vuln-code-snippet start sqliJobqueueSearchJobs
     pub async fn search_jobs(&self, search_term: &str, limit: usize) -> DbResult<Vec<Job>> {
@@ -99,7 +99,7 @@ impl SqliteStore {
 
     /// Get jobs by tag
     ///
-    ///SQL INJECTION via tag name
+    /// Raw query execution via tag name
     // vuln-code-snippet start sqliJobqueueGetJobsByTag
     pub async fn get_jobs_by_tag(&self, tag: &str) -> DbResult<Vec<Job>> {
         let conn = self.conn.lock().await;
@@ -122,7 +122,7 @@ impl SqliteStore {
 
     /// Dynamic order by
     ///
-    ///SQL injection via order_by parameter
+    ///order_by parameter passed directly to SQL query
     // vuln-code-snippet start sqliJobqueueListOrdered
     pub async fn list_jobs_ordered(&self, order_by: &str, desc: bool) -> DbResult<Vec<Job>> {
         let conn = self.conn.lock().await;

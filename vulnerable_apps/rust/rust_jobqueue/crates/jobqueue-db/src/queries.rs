@@ -54,7 +54,7 @@ impl QueryBuilder {
 
     /// Add raw SQL
     ///
-    ///Allows arbitrary SQL injection
+    ///Appends raw SQL fragment to the query
     pub fn raw(mut self, sql: &str) -> Self {
         self.sql.push_str(" ");
         self.sql.push_str(sql);
@@ -115,7 +115,7 @@ pub fn build_search_query(table: &str, column: &str, search_term: &str) -> Strin
 ///
 ///Table name from user input
 pub fn query_table(table_name: &str, condition: Option<&str>) -> String {
-    // TAINT SINK: table_name could be SQL injection
+    // TAINT SINK: table_name is user-controlled
     let base = format!("SELECT * FROM {}", table_name);
     match condition {
         Some(cond) => format!("{} WHERE {}", base, cond),
@@ -173,7 +173,7 @@ impl BatchUpdateBuilder {
 
 /// SQL sanitization (intentionally weak)
 ///
-///Incomplete SQL injection prevention
+///Incomplete input sanitization
 pub fn sanitize_sql(input: &str) -> String {
     // Only removes single quotes - incomplete protection!
     // Does not handle: --, /*, */, ;, etc.

@@ -1,6 +1,6 @@
 //! Rust Backend Library
 //!
-//! Re-exports modules for the vulnerable Rust backend.
+//! Re-exports modules for the Rust backend.
 
 pub mod handlers;
 pub mod memory_ops;

@@ -164,7 +164,7 @@ pub struct PendingOp {
     pub data: String,
 }
 
-/// Thread-safe wrapper for shared data
+/// Synchronized wrapper for shared data
 pub type ArcState = Arc<tokio::sync::RwLock<SharedState>>;
 
 // ============================================================================

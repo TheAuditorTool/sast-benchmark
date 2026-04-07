@@ -1,6 +1,6 @@
 #!/bin/bash
 # Hook script executed when a notification is sent
-#Arguments from user input can cause command injection
+#Arguments from user input passed to shell commands
 
 NOTIFICATION_ID="$1"
 CHANNEL="$2"
@@ -13,7 +13,7 @@ echo "[$(date)] Notification $NOTIFICATION_ID sent via $CHANNEL to $RECIPIENT"
 # If RECIPIENT contains shell metacharacters, it's executed
 echo "Recipient: $RECIPIENT" >> /tmp/notifications.log
 
-#Backtick command injection if CHANNEL contains `command`
+#Backtick substitution if CHANNEL contains `command`
 STATUS=`echo "Sent to $CHANNEL"`
 
 #eval with user input

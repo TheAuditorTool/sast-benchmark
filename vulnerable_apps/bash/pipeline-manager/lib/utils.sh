@@ -116,7 +116,7 @@ create_temp_file() {
 # vuln-code-snippet end predictable_temp_file
 
 # vuln-code-snippet start mktemp_temp_file
-# Safe temp file creation
+# Temp file creation
 create_temp_file() {
     local prefix="${1:-tmp}"
     mktemp "/tmp/${prefix}.XXXXXX"  # vuln-code-snippet safe-line mktemp_temp_file

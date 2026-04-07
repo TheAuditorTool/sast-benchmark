@@ -21,7 +21,7 @@ log_info "Destination: $DEST_PATH"
 
 # vuln-code-snippet start dfo_backup_validated
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-    log_info "Running in SAFE MODE"
+    log_info "Running in validated mode"
 
     # Validate source path is within allowed directories
     ALLOWED_SOURCES="/var/deployments /home/deploy /app"

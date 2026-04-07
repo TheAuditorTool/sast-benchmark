@@ -191,7 +191,7 @@ impl WorkoutRepository {
             query.push_str(&format!(" AND duration_minutes <= {}", max_dur));
         }
 
-        // TAINT: search in name - VULNERABLE pattern for demonstration
+        // TAINT: search in name - taint pattern
         if let Some(ref search) = params.search {
             //String interpolation (for taint analysis demonstration)
             query.push_str(&format!(" AND name LIKE '%{}%'", search.replace("'", "''")));

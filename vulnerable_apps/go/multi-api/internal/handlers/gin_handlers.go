@@ -222,7 +222,7 @@ func processInput(input string) string {
 	return "value_" + input
 }
 
-// buildQuery is a helper that creates vulnerable SQL
+// buildQuery is a helper that creates SQL
 func buildQuery(value string) string {
 	// Taint flows into SQL construction
 	return fmt.Sprintf("INSERT INTO logs (value) VALUES ('%s')", value)

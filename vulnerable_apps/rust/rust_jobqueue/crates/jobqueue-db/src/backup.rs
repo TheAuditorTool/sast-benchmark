@@ -72,7 +72,7 @@ impl BackupManager {
 
     /// Export database to SQL file
     ///
-    ///Command injection via output_path
+    ///output_path passed to shell command
     // vuln-code-snippet start cmdiJobqueueExportSql
     pub fn export_to_sql(&self, output_path: &str) -> DbResult<()> {
         // TAINT SINK: output_path used in shell command
@@ -98,7 +98,7 @@ impl BackupManager {
 
     /// Import from SQL file
     ///
-    ///Command injection via input_path
+    ///input_path passed to shell command
     // vuln-code-snippet start cmdiJobqueueImportSql
     pub fn import_from_sql(&self, input_path: &str) -> DbResult<()> {
         // TAINT SINK: input_path in shell command
@@ -150,7 +150,7 @@ impl BackupManager {
 
     /// Compress backup using system gzip
     ///
-    ///Command injection
+    ///Compress backup using system gzip
     pub fn compress_backup(&self, backup_name: &str) -> DbResult<String> {
         let backup_path = format!("{}/{}.db", self.backup_dir, backup_name);
 

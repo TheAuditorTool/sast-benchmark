@@ -2,7 +2,7 @@
 # JSON parsing utilities
 
 # vuln-code-snippet start dfw_json_get_jq
-# Extract a field from JSON using jq (safe)
+# Extract a field from JSON using jq
 # Usage: value=$(json_get "$json" ".field.subfield")
 json_get() {
     local json="$1"

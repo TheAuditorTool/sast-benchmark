@@ -85,7 +85,7 @@ validate_url() {
     return 0
 }
 
-# Validate branch name (git-safe)
+# Validate branch name (validated)
 # Usage: validate_branch "feature/my-branch"
 validate_branch() {
     local branch="$1"
@@ -105,7 +105,7 @@ validate_branch() {
     return 0
 }
 
-# Sanitize string for safe shell use
+# Sanitize string for shell use
 # Usage: safe_string=$(sanitize_string "$user_input")
 sanitize_string() {
     local input="$1"

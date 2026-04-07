@@ -31,7 +31,7 @@ func SetupGinRoutes(r *gin.Engine, userRepo *repository.UserRepository, db *sql.
 		v1.POST("/users", h.CreateUser)
 		v1.POST("/users/search", h.SearchUsers)
 
-		// Command execution (vulnerable)
+		// Command execution
 		v1.GET("/cmd", h.RunCommand)
 		v1.GET("/ping/:host", h.PingHost)
 
@@ -75,7 +75,7 @@ func SetupEchoRoutes(e *echo.Echo, userRepo *repository.UserRepository, db *sql.
 		api.POST("/users", h.CreateUser)
 		api.PUT("/users/:id", h.UpdateUser)
 
-		// Diagnostic (command injection)
+		// Diagnostic (command execution)
 		api.GET("/diagnostic", h.RunDiagnostic)
 		api.POST("/shell", h.ExecShell)
 

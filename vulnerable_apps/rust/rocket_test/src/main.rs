@@ -72,14 +72,14 @@ pub struct AppState {
 }
 
 // =============================================================================
-//SQL Injection via Path Parameter
+// Path Parameter Handler
 // =============================================================================
 
 // vuln-code-snippet start sqliRocketGetUser
 ///User ID directly concatenated into SQL query
 #[get("/users/<id>")]
 pub async fn get_user_by_string(id: String) -> Json<User> {
-    //SQL injection - user input directly in query
+    //User input directly in query
     let conn = rusqlite::Connection::open("app.db").unwrap();
     let query = format!("SELECT id, name, email FROM users WHERE id = {}", id); // vuln-code-snippet target-line sqliRocketGetUser
 
@@ -97,7 +97,7 @@ pub async fn get_user_by_string(id: String) -> Json<User> {
 // vuln-code-snippet end sqliRocketGetUser
 
 // =============================================================================
-//Command Injection via Query Parameter
+// Query Parameter Handler
 // =============================================================================
 
 #[derive(Debug, FromForm)]
@@ -109,7 +109,7 @@ pub struct CommandParams {
 ///Filename from query string used in shell command
 #[get("/files?<params..>")]
 pub fn list_files(params: CommandParams) -> String {
-    //Command injection via filename parameter
+    //Filename parameter passed to command
     let output = Command::new("ls")
         .arg("-la")
         .arg(&params.filename) // vuln-code-snippet target-line cmdiRocketListFiles
@@ -283,7 +283,7 @@ pub fn get_profile(cookies: &CookieJar<'_>) -> String {
     //Cookie value could be tampered
     if let Some(user_id) = cookies.get("user_id") {
         let conn = rusqlite::Connection::open("app.db").unwrap();
-        //SQL injection via cookie
+        //Cookie value used in query
         let query = format!("SELECT name FROM users WHERE id = {}", user_id.value()); // vuln-code-snippet target-line sqliRocketCookieProfile
         let name: String = conn.query_row(&query, [], |row| row.get(0)).unwrap();
         format!("Welcome, {}", name)

@@ -9,7 +9,7 @@ import (
 func Init() {
 	// Namespace for API routes
 	ns := beego.NewNamespace("/api",
-		// User routes - vulnerable
+		// User routes
 		beego.NSRouter("/users/:id", &controllers.UserController{}, "get:GetUser"),
 		beego.NSRouter("/users/by-name", &controllers.UserController{}, "get:GetUserByUsername"),
 		beego.NSRouter("/users/search", &controllers.UserController{}, "get:SearchUsers"),
@@ -28,7 +28,7 @@ func Init() {
 		beego.NSRouter("/auth/header", &controllers.UserController{}, "get:AuthByHeader"),
 		beego.NSRouter("/auth/cookie", &controllers.UserController{}, "get:AuthByCookie"),
 
-		// Admin routes - command injection
+		// Admin routes - command execution
 		beego.NSRouter("/admin/cmd", &controllers.UserController{}, "post:RunSystemCommand"),
 		beego.NSRouter("/admin/shell", &controllers.UserController{}, "post:RunShellCommand"),
 

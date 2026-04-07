@@ -7,7 +7,7 @@ use std::io::{self, Read, Write};
 use std::path::Path;
 
 /// TAINT SINK: fs::read_to_string with user-controlled path
-/// Path traversal vulnerability - user can read arbitrary files
+/// Path traversal risk - user can read arbitrary files
 // vuln-code-snippet start pathtraverReadFile
 pub fn read_file(path: &str) -> io::Result<String> {
     // TAINT SINK: User-controlled file path
@@ -16,7 +16,7 @@ pub fn read_file(path: &str) -> io::Result<String> {
 // vuln-code-snippet end pathtraverReadFile
 
 /// TAINT SINK: fs::write with user-controlled path
-/// Path traversal vulnerability - user can write to arbitrary locations
+/// Path traversal risk - user can write to arbitrary locations
 // vuln-code-snippet start pathtraverWriteFile
 pub fn write_file(path: &str, content: &str) -> io::Result<()> {
     // TAINT SINK: User-controlled file path
@@ -125,14 +125,14 @@ pub fn get_file_info(path: &str) -> io::Result<fs::Metadata> {
     fs::metadata(path)
 }
 
-/// Normalize path (attempt at sanitization, but still vulnerable)
+/// Normalize path (attempt at sanitization, but incomplete)
 pub fn normalize_path(base: &str, user_path: &str) -> String {
     // WARNING: This is NOT sufficient sanitization!
     // Path traversal can still occur via symlinks, etc.
     let base_path = Path::new(base);
     let full_path = base_path.join(user_path);
 
-    // Attempt to canonicalize - still not safe!
+    // Attempt to canonicalize - still not validated!
     match full_path.canonicalize() {
         Ok(p) => p.display().to_string(),
         Err(_) => full_path.display().to_string(),

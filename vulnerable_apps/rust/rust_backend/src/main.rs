@@ -1,8 +1,8 @@
 //! Rust Backend with actix-web HTTP handlers and taint analysis patterns.
 //!
-//! VULNERABILITIES:
-//! 1. SQL Injection via raw SQL
-//! 2. Command Injection via std::process::Command
+//! PATTERNS:
+//! 1. Raw SQL with user input
+//! 2. Shell commands with user input
 //! 3. Path Traversal via std::fs
 //! 4. Unsafe memory operations
 //! 5. Integer overflow
@@ -68,7 +68,7 @@ pub struct ApiResponse<T: Serialize> {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #1: SQL Injection via raw SQL
+// Pattern #1: Raw SQL with user input
 // Source: query.q (user input)
 // Sink: raw SQL query execution
 // -----------------------------------------------------------------------------
@@ -89,14 +89,14 @@ async fn search_users(query: web::Query<SearchQuery>) -> impl Responder {
         data: Some(serde_json::json!({
             "query": sql,
             "message": "Query would be executed",
-            "injection_point": search_term
+            "match_point": search_term
         })),
         error: None,
     })
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #2: Command Injection
+// Pattern #2: Shell command with user input
 // Source: req.command (user input)
 // Sink: std::process::Command
 // -----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ async fn execute_command(req: web::Json<ExecRequest>) -> impl Responder {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #3: Path Traversal
+// Pattern #3: File path handling
 // Source: query.path (user input)
 // Sink: std::fs::read_to_string
 // -----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ async fn read_file(query: web::Query<FileRequest>) -> impl Responder {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #4: Unsafe Buffer Operations
+// Pattern #4: Buffer operations
 // Source: req.size (user controlled)
 // Sink: unsafe { Vec::set_len() }
 // -----------------------------------------------------------------------------
@@ -176,13 +176,13 @@ async fn allocate_buffer(req: web::Json<BufferRequest>) -> impl Responder {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #5: Format String (simulated)
+// Pattern #5: Format string handling
 // Source: req.template (user controlled)
 // Sink: format! macro (via runtime string building)
 // -----------------------------------------------------------------------------
 async fn format_template(req: web::Json<FormatRequest>) -> impl Responder {
     // TAINT SINK: User controlled template
-    // While Rust's format! is compile-time safe, we simulate runtime formatting
+    // While Rust's format! is compile-time checked, we simulate runtime formatting
     let mut result = req.template.clone();
     for (key, value) in &req.values {
         let placeholder = format!("{{{}}}", key);
@@ -200,7 +200,7 @@ async fn format_template(req: web::Json<FormatRequest>) -> impl Responder {
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #6: Unsafe Deserialization
+// Pattern #6: Deserialization
 // Source: req.payload (user controlled)
 // Sink: bincode::deserialize
 // -----------------------------------------------------------------------------
@@ -218,7 +218,7 @@ async fn deserialize_payload(req: web::Json<DeserializeRequest>) -> impl Respond
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #7: SSRF (Server-Side Request Forgery)
+// Pattern #7: HTTP request forwarding
 // Source: url query parameter
 // Sink: reqwest::get()
 // -----------------------------------------------------------------------------
@@ -258,7 +258,7 @@ async fn fetch_url(query: web::Query<std::collections::HashMap<String, String>>)
 }
 
 // -----------------------------------------------------------------------------
-// VULNERABILITY #8: Integer Overflow
+// Pattern #8: Arithmetic operations
 // Source: query parameters
 // Sink: arithmetic operations
 // -----------------------------------------------------------------------------
@@ -316,7 +316,7 @@ async fn main() -> std::io::Result<()> {
             .route("/api/deserialize", web::post().to(deserialize_payload))
             .route("/api/fetch", web::get().to(fetch_url))
             .route("/api/calc", web::get().to(calculate))
-            // Additional vulnerable routes from handlers module
+            // Additional routes from handlers module
             .configure(handlers::configure_routes)
             .configure(patterns::configure_routes)
     })

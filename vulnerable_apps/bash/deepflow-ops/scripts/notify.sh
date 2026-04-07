@@ -20,7 +20,7 @@ log_info "Message: $MESSAGE"
 
 # vuln-code-snippet start dfo_notify_encoded
 if [[ "${SAFE_MODE:-false}" == "true" ]]; then
-    log_info "Running in SAFE MODE"
+    log_info "Running in validated mode"
     if ! validate_message "$MESSAGE"; then  # vuln-code-snippet safe-line dfo_notify_encoded
         log_error "Message validation failed"
         exit 1

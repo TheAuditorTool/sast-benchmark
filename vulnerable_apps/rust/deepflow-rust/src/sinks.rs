@@ -288,12 +288,12 @@ pub fn eval_expression(expr: &str) -> Result<String, String> {
 }
 
 // ============================================================================
-// TEMPLATE/RENDER SINKS (potential for injection)
+// TEMPLATE/RENDER SINKS
 // ============================================================================
 
 /// TAINT SINK: Render template with user data
 pub fn render_template(template: &str, data: &std::collections::HashMap<String, String>) -> String {
-    // TAINT SINK: Template injection if template is user-controlled
+    // TAINT SINK: Template rendered with user-controlled data
     let mut result = template.to_string();
     for (key, value) in data {
         result = result.replace(&format!("{{{{{}}}}}", key), value);
@@ -303,7 +303,7 @@ pub fn render_template(template: &str, data: &std::collections::HashMap<String, 
 
 /// TAINT SINK: Build HTML with user content (XSS)
 pub fn build_html(title: &str, body: &str) -> String {
-    // TAINT SINK: HTML injection / XSS
+    // TAINT SINK: HTML output with user-controlled content
     format!(
         "<!DOCTYPE html><html><head><title>{}</title></head><body>{}</body></html>",
         title, body

@@ -36,10 +36,10 @@ pub struct CryptoRequest {
 pub struct VulnResponse {
     pub success: bool,
     pub result: Option<serde_json::Value>,
-    pub vulnerability: String,
+    pub finding: String,
 }
 
-/// Configure vulnerable routes
+/// Configure routes
 pub fn configure_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api/vuln")
@@ -76,7 +76,7 @@ async fn raw_sql(req: web::Json<SqlRequest>) -> impl Responder {
             "query": query,
             "simulated": simulated_result
         })),
-        vulnerability: "SQL Injection via raw query".to_string(),
+        finding: "SQL query constructed from raw input".to_string(),
     })
 }
 // vuln-code-snippet end sqliBackendRawSql
@@ -96,7 +96,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
             return HttpResponse::BadRequest().json(VulnResponse {
                 success: false,
                 result: None,
-                vulnerability: format!("Invalid regex: {}", e),
+                finding: format!("Invalid regex: {}", e),
             });
         }
     };
@@ -111,7 +111,7 @@ async fn regex_dos(req: web::Json<RegexRequest>) -> impl Responder {
             "input": &req.input,
             "matched": is_match
         })),
-        vulnerability: "ReDoS - catastrophic backtracking possible".to_string(),
+        finding: "ReDoS - catastrophic backtracking possible".to_string(),
     })
 }
 // vuln-code-snippet end redosBackendRegexDos
@@ -123,27 +123,27 @@ async fn regex_validated(req: web::Json<RegexRequest>) -> impl Responder {
     if req.pattern.len() > 256 {
         return HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
-            vulnerability: "Pattern too long".to_string(),
+            finding: "Pattern too long".to_string(),
         });
     }
     if req.input.len() > 10_000 { // vuln-code-snippet target-line redosBackendRegex
         return HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
-            vulnerability: "Input too long".to_string(),
+            finding: "Input too long".to_string(),
         });
     }
     let pattern = match Regex::new(&req.pattern) {
         Ok(p) => p,
         Err(e) => return HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
-            vulnerability: format!("Invalid regex: {}", e),
+            finding: format!("Invalid regex: {}", e),
         }),
     };
     let is_match = pattern.is_match(&req.input);
     HttpResponse::Ok().json(VulnResponse {
         success: true,
         result: Some(serde_json::json!({"matched": is_match})),
-        vulnerability: "ReDoS protected".to_string(),
+        finding: "ReDoS protected".to_string(),
     })
 }
 // vuln-code-snippet end redosBackendRegex
@@ -180,7 +180,7 @@ async fn weak_crypto(req: web::Json<CryptoRequest>) -> impl Responder {
                 "Hardcoded keys are insecure"
             ]
         })),
-        vulnerability: "Weak cryptography".to_string(),
+        finding: "Weak cryptography".to_string(),
     })
 }
 // vuln-code-snippet end cryptoBackendWeakCrypto
@@ -223,7 +223,7 @@ async fn race_condition() -> impl Responder {
             "thread_results": results,
             "final_state_size": SHARED_DATA.lock().unwrap().len()
         })),
-        vulnerability: "Race condition with shared state".to_string(),
+        finding: "Race condition with shared state".to_string(),
     })
 }
 
@@ -256,7 +256,7 @@ async fn integer_overflow(query: web::Query<HashMap<String, String>>) -> impl Re
             "checked_mul": checked_mul,
             "overflow_would_occur": checked_add.is_none() || checked_mul.is_none()
         })),
-        vulnerability: "Integer overflow".to_string(),
+        finding: "Integer overflow".to_string(),
     })
 }
 // vuln-code-snippet end intoverflowBackendOverflow
@@ -276,7 +276,7 @@ async fn integer_checked(query: web::Query<HashMap<String, String>>) -> impl Res
             "checked_mul": checked_mul,
             "overflow_detected": checked_add.is_none() || checked_mul.is_none()
         })),
-        vulnerability: "Integer operations checked for overflow".to_string(),
+        finding: "Integer operations checked for overflow".to_string(),
     })
 }
 // vuln-code-snippet end intoverflowBackendCheckedArithmetic
@@ -288,7 +288,7 @@ async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Respo
     let user_input = query.get("fmt").map(|s| s.as_str()).unwrap_or("default");
 
     // User input used in format-like operation
-    // While Rust's format! is safe, this simulates the vulnerability
+    // While Rust's format! is checked, this simulates the pattern
     let result = user_input.replace("{}", "[REPLACED]")
         .replace("{:x}", "[HEX]")
         .replace("{:p}", "[PTR]");
@@ -299,7 +299,7 @@ async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Respo
             "input": user_input,
             "processed": result
         })),
-        vulnerability: "Format string (simulated)".to_string(),
+        finding: "Format string (simulated)".to_string(),
     })
 }
 
@@ -310,14 +310,14 @@ async fn format_string(query: web::Query<HashMap<String, String>>) -> impl Respo
 async fn deserialize_raw(body: web::Bytes) -> impl Responder {
     // Deserializing request body
 
-    // Try to deserialize as JSON (relatively safe)
+    // Try to deserialize as JSON (structured)
     let json_result: Result<serde_json::Value, _> = serde_json::from_slice(&body); // vuln-code-snippet target-line deserBackendUnsafeDeserialize
 
     // Simulating what would happen with unsafe deserialization
     HttpResponse::Ok().json(VulnResponse {
         success: json_result.is_ok(),
         result: json_result.ok(),
-        vulnerability: "Unsafe deserialization of untrusted data".to_string(),
+        finding: "Unsafe deserialization of untrusted data".to_string(),
     })
 }
 // vuln-code-snippet end deserBackendUnsafeDeserialize
@@ -330,7 +330,7 @@ async fn deserialize_typed(body: web::Bytes) -> impl Responder {
     if body.len() > 1_048_576 {
         return HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
-            vulnerability: "Payload too large".to_string(),
+            finding: "Payload too large".to_string(),
         });
     }
     let result: Result<SafePayload, _> = serde_json::from_slice(&body); // vuln-code-snippet target-line deserBackendDeserialize
@@ -338,11 +338,11 @@ async fn deserialize_typed(body: web::Bytes) -> impl Responder {
         Ok(payload) => HttpResponse::Ok().json(VulnResponse {
             success: true,
             result: Some(serde_json::json!({"data": payload.data, "action": payload.action})),
-            vulnerability: "Safe typed deserialization".to_string(),
+            finding: "Safe typed deserialization".to_string(),
         }),
         Err(_) => HttpResponse::BadRequest().json(VulnResponse {
             success: false, result: None,
-            vulnerability: "Invalid payload".to_string(),
+            finding: "Invalid payload".to_string(),
         }),
     }
 }
@@ -372,7 +372,7 @@ async fn memory_corruption(query: web::Query<HashMap<String, String>>) -> impl R
             "value": result,
             "would_be_oob": offset >= data.len()
         })),
-        vulnerability: "Memory corruption via unchecked access".to_string(),
+        finding: "Memory corruption via unchecked access".to_string(),
     })
 }
 // vuln-code-snippet end memsafetyBackendMemoryCorruption

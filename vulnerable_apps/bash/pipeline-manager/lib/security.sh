@@ -91,7 +91,7 @@ authenticate_with_password() {
 # vuln-code-snippet end read_without_r
 
 # vuln-code-snippet start read_with_r
-# Safe password reading
+# Password reading
 authenticate_with_password() {
     local environment="$1"
 
@@ -224,7 +224,7 @@ debug_mode() {
 # vuln-code-snippet end set_x_debug_leak
 
 # vuln-code-snippet start debug_mode_filtered
-# Safe debug mode
+# Debug mode
 debug_mode_filtered() {
     # Filter sensitive variables before enabling trace
     log_info "Debug mode enabled (filtered)"
@@ -306,7 +306,7 @@ format_output_dynamic() {
 # vuln-code-snippet end printf_format_injection
 
 # vuln-code-snippet start printf_literal_format
-# Safe formatting
+# Formatting
 format_output_literal() {
     local format="$1"
     shift

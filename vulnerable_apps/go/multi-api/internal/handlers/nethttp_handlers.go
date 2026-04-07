@@ -316,7 +316,7 @@ func sanitizeFieldName(field string) string {
 
 // buildInsertQuery - Helper that propagates taint
 func buildInsertQuery(table, field, value string) string {
-	// Taint flows through and creates vulnerable query
+	// Taint flows through and creates query
 	return fmt.Sprintf("INSERT INTO %s (%s) VALUES ('%s')", table, field, value)
 }
 

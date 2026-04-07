@@ -119,17 +119,17 @@ func (r *UserRepository) FindByEmailAlt(email string) (*models.User, error) {
 	return &user, err
 }
 
-// CreateUser - Uses GORM Create (safe by default)
+// CreateUser - Uses GORM Create 
 func (r *UserRepository) CreateUser(user *models.User) error {
 	return r.db.Create(user).Error
 }
 
-// UpdateUser - Uses GORM Save (safe by default)
+// UpdateUser - Uses GORM Save 
 func (r *UserRepository) UpdateUser(user *models.User) error {
 	return r.db.Save(user).Error
 }
 
-// DeleteUser - Uses GORM Delete (safe by default)
+// DeleteUser - Uses GORM Delete 
 func (r *UserRepository) DeleteUser(id uint) error {
 	return r.db.Delete(&models.User{}, id).Error
 }

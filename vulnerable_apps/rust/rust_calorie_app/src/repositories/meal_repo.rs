@@ -230,7 +230,7 @@ impl MealRepository {
             bindings.push(Box::new(max_cal.to_string()));
         }
 
-        // TAINT: search term in LIKE (potential SQL injection if not parameterized)
+        // TAINT: search term in LIKE (requires parameterized query)
         if let Some(ref search) = query_params.search {
             query.push_str(" AND name LIKE ?");
             bindings.push(Box::new(format!("%{}%", search)));

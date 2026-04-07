@@ -312,7 +312,7 @@ pub fn make_conditional(
 }
 
 // ============================================================================
-// FN TRAIT OBJECTS
+// FUNCTION TRAIT OBJECTS
 // ============================================================================
 
 /// Process through Fn trait object
