@@ -1,5 +1,31 @@
 # Ruby SAST Benchmark Changelog
 
+## v0.3.0 (2026-04-07)
+
+Major statistical hardening: all 27 categories expanded from 10/10 to 25/25 minimum.
+
+- 1,350 test cases across 27 CWE categories (675 TP / 675 TN, exact 50/50 balance)
+- Every category now has exactly 25 vulnerable + 25 safe test cases (up from 10/10)
+- 777 new standalone test files added to testcode/
+- Three-tier test design: Tier 1 (direct), Tier 2 (multi-hop/indirect, FN bait),
+  Tier 3 (discriminating near-miss, FP bait)
+- Youden's J noise reduced 60%: each test worth ±4% (down from ±10% at 10/10)
+- New TP patterns: Oj compat/rails/wab deserial, YAML.load_file traversal+deserial,
+  cookie/Redis Marshal.load, Psych.load_stream, JSON.load object injection; hardcoded
+  GCP keys, Twilio tokens, PKCS12 passwords, PEM private key heredocs, Azure/MongoDB
+  credentials; Nokogiri dtdload/recover, REXML full document, XSLT from user, Ox
+  tolerant; ReDoS via user-controlled patterns, alternation loops, lookahead loops,
+  backreference catastrophic backtracking, Regexp.union with user patterns
+- New TN patterns: Oj strict/hash mode, Psych.safe_load empty permitted_classes,
+  schema-bound Protobuf/Avro/Thrift; Vault/AWS Secrets Manager/GCP Secret Manager/
+  Azure KeyVault/Infisical/EJSON credential retrieval; Nokogiri nonet+nodtdload,
+  REXML entity_expansion_limit=0, Ox strict/hash mode, HTML5 parser (DTD-immune);
+  Regexp.timeout= (Ruby 3.2+), per-object timeout, RE2 gem, Regexp.escape,
+  possessive/atomic quantifiers
+- All APIs verified against MITRE CWE 4.19.1 and Ruby stdlib/gem documentation
+- YAML.load TPs annotated: "TP: vulnerable in Ruby < 3.1 / Psych < 4; marked conservatively"
+- Regexp.timeout TN patterns annotated: "# Ruby 3.2+"
+
 ## v0.2.0 (2026-04-07)
 
 Major expansion: all categories to 10/10 minimum, two new CWE categories.

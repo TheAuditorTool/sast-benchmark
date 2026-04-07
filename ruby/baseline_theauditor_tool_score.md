@@ -1,7 +1,12 @@
 # Ruby Benchmark Baseline -- TheAuditor
 
+> **STALE — regenerate after v0.3.0 scan**
+> This baseline was recorded against v0.2.0 (573 tests). The benchmark is now v0.3.0
+> (1,350 tests). Re-run `aud full --offline` and `convert_theauditor.py` to produce
+> a fresh baseline against the expanded test suite.
+
 **Date**: 2026-04-01
-**Version**: TheAuditor (current)
+**Version**: TheAuditor (current — v0.2.0 baseline, pre-v0.3.0 expansion)
 **Category-Averaged Score (OWASP)**: +100.0%
 **Flat Score**: +100.0%
 

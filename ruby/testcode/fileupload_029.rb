@@ -1,0 +1,18 @@
+require_relative 'shared'
+require 'securerandom'
+
+UPLOAD_BASE   = '/var/uploads'.freeze
+MAX_TOTAL_MB  = 500
+
+# vuln-code-snippet start ruby_fileupload_no_quota
+def upload_with_no_quota_check(req)
+  upload  = req.file('file')
+  user_id = req.post('user_id')
+  return BenchmarkResponse.bad_request('no file') unless upload
+
+  dest = File.join(UPLOAD_BASE, user_id.to_s, SecureRandom.uuid + File.extname(upload[:filename]))
+  File.write(dest, upload[:data]) # vuln-code-snippet vuln-line ruby_fileupload_no_quota
+
+  BenchmarkResponse.ok("stored #{upload[:data].bytesize} bytes")
+end
+# vuln-code-snippet end ruby_fileupload_no_quota

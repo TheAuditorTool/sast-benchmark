@@ -7,7 +7,7 @@
 your-tool --output results.sarif ruby/
 
 # 2. Score against ground truth (apps/ and testcode/ auto-detected from CSV path)
-python scripts/score_sarif.py results.sarif ruby/expectedresults-0.2.0.csv
+python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.0.csv
 ```
 
 ## Detection Method: Annotation-Based Matching
@@ -70,7 +70,7 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored. Tool-specific instructions
 cd ruby/
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.2.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.0.csv
 ```
 
 The converter auto-detects language and benchmark directory from the DB path,
@@ -80,13 +80,13 @@ DB+CSV haven't changed. Use `--force` to regenerate unconditionally.
 ### Brakeman
 ```bash
 brakeman -o brakeman.sarif --format sarif ruby/
-python scripts/score_sarif.py brakeman.sarif ruby/expectedresults-0.2.0.csv
+python scripts/score_sarif.py brakeman.sarif ruby/expectedresults-0.3.0.csv
 ```
 
 ### Semgrep
 ```bash
 semgrep --config auto --sarif -o semgrep.sarif ruby/
-python scripts/score_sarif.py semgrep.sarif ruby/expectedresults-0.2.0.csv
+python scripts/score_sarif.py semgrep.sarif ruby/expectedresults-0.3.0.csv
 ```
 
 ## Validation

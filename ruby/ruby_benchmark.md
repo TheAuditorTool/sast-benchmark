@@ -1,4 +1,4 @@
-# Ruby SAST Benchmark v0.2.0
+# Ruby SAST Benchmark v0.3.0
 
 ## Purpose
 
@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 ## Test Case Inventory
 
-27 CWE categories, 573 test cases (285 TP / 288 TN), ~50/50 balance.
+27 CWE categories, 1,350 test cases (675 TP / 675 TN), exact 50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -91,7 +91,7 @@ end
 
 ## Ground Truth
 
-`expectedresults-0.2.0.csv` -- OWASP CSV format:
+`expectedresults-0.3.0.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
