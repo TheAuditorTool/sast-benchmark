@@ -6,24 +6,17 @@
 # 1. Run your SAST tool on ruby/ and export SARIF 2.1.0
 your-tool --output results.sarif ruby/
 
-# 2. Score against ground truth (apps/ and testcode/ auto-detected from CSV path)
-python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.0.csv
+# 2. Score against ground truth (testcode/ auto-detected from CSV path)
+python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.1.csv
 ```
 
-## Detection Method: Annotation-Based Matching
+## Detection Method: Filename-Based Matching
 
-Ruby uses annotation-based matching (same as PHP, Rust, and Bash). Test cases are marked with `vuln-code-snippet` comments in Ruby source files:
+Ruby uses filename-based matching with CWE awareness (same as Go and OWASP Java).
+Each test file is `benchmark_test_NNNNN.rb` with CSV key `BenchmarkTestNNNNN`.
 
-```ruby
-# vuln-code-snippet start ruby_sqli_ar_concat
-def get_user(params)
-  id = params[:id]
-  User.where("id = #{id}") # vuln-code-snippet vuln-line ruby_sqli_ar_concat
-end
-# vuln-code-snippet end ruby_sqli_ar_concat
-```
-
-A test case is **detected** if a SARIF finding's `(file, line)` falls within the annotation's `[start_line, end_line]` range AND the finding's ruleId category matches the test case's expected category.
+A test case is **detected** if a SARIF finding references the test file AND the
+finding's ruleId CWE matches the test case's expected CWE.
 
 ## Scoring Formula
 
@@ -57,8 +50,8 @@ Sum all TP/FP/FN/TN across all tests, compute global TPR and FPR.
 
 ```csv
 # test name,category,real vulnerability,CWE
-ruby_sqli_ar_concat,sqli,true,89
-ruby_sqli_ar_prepared,sqli,false,89
+BenchmarkTest00001,ssrf,true,918
+BenchmarkTest00002,weakcipher,true,327
 ```
 
 ## Supported Tools
@@ -70,7 +63,7 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored. Tool-specific instructions
 cd ruby/
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.1.csv
 ```
 
 The converter auto-detects language and benchmark directory from the DB path,
@@ -80,13 +73,13 @@ DB+CSV haven't changed. Use `--force` to regenerate unconditionally.
 ### Brakeman
 ```bash
 brakeman -o brakeman.sarif --format sarif ruby/
-python scripts/score_sarif.py brakeman.sarif ruby/expectedresults-0.3.0.csv
+python scripts/score_sarif.py brakeman.sarif ruby/expectedresults-0.3.1.csv
 ```
 
 ### Semgrep
 ```bash
 semgrep --config auto --sarif -o semgrep.sarif ruby/
-python scripts/score_sarif.py semgrep.sarif ruby/expectedresults-0.3.0.csv
+python scripts/score_sarif.py semgrep.sarif ruby/expectedresults-0.3.1.csv
 ```
 
 ## Validation
@@ -99,4 +92,7 @@ Runs L1-L6 fidelity checks: structural integrity, roundtrip fidelity, schema val
 
 ### CWE-94 Disambiguation (codeinj vs dynmethod)
 
-Both `codeinj` and `dynmethod` categories use CWE-94. The scorer distinguishes them by **annotation key prefix**, not by CWE number. A SARIF finding with CWE-94 is matched to the test case whose annotation range contains the finding location. Since `codeinj` and `dynmethod` test cases are in separate files with non-overlapping annotation ranges, the CWE collision does not affect scoring accuracy.
+Both `codeinj` and `dynmethod` categories use CWE-94. With filename-based matching,
+a SARIF finding with CWE-94 on a file is matched to the CSV entry for that file.
+Since each file maps to exactly one category, the CWE collision does not affect
+scoring accuracy.

@@ -15,7 +15,17 @@
   ReDoS, per-object Regexp.timeout (Ruby 3.2+), RE2 gem, hardcoded GCP/Twilio/PKCS12/
   PEM keys, Vault/SecretsManager/EJSON credential retrieval
 
+## v0.3.1 (Released 2026-04-08)
+- Anti-target leakage migration: all testcode files match OWASP Java/Go gold standard
+- All 1,288 testcode files renamed to `benchmark_test_NNNNN.rb` (seeded shuffle)
+- ALL comments stripped from test files (zero annotations, zero prose)
+- 48 category-leaking function names replaced with domain-descriptive names
+- Scoring switched from annotation-based to filename-based matching
+- 62 apps/ entries excluded from testcode CSV (separate concern)
+- 16 categories at 21-24 TP/TN pending backfill to 25/25
+
 ## v0.4.0 (Planned)
+- Backfill 62 testcode replacements for apps/ entries (restore 25/25 all categories)
 - ERB template extraction and analysis
 - Haml/Slim template benchmark integration
 - Liquid template injection patterns (CWE-1336)

@@ -1,5 +1,18 @@
 # Ruby SAST Benchmark Changelog
 
+## v0.3.1 (2026-04-08)
+
+Anti-target leakage migration: testcode files match OWASP Java/Go gold standard.
+
+- All 1,288 testcode files renamed to `benchmark_test_NNNNN.rb` (seeded shuffle)
+- ALL comments stripped: annotations, prose, trailing — zero `#` in any test file
+- 48 category-leaking function names replaced with domain-descriptive names
+- Scoring switched from annotation-based to filename-based matching (same as Go/Java)
+- CSV keys now `BenchmarkTestNNNNN` format matching filenames
+- 62 apps/ entries excluded from testcode CSV (apps/ untouched, separate concern)
+- 1,288 test cases (644 TP / 644 TN), 27 CWE categories
+- rename_map.json preserved for traceability
+
 ## v0.3.0 (2026-04-07)
 
 Major statistical hardening: all 27 categories expanded from 10/10 to 25/25 minimum.

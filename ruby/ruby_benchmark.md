@@ -1,4 +1,4 @@
-# Ruby SAST Benchmark v0.3.0
+# Ruby SAST Benchmark v0.3.1
 
 ## Purpose
 
@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 ## Test Case Inventory
 
-27 CWE categories, 1,350 test cases (675 TP / 675 TN), exact 50/50 balance.
+27 CWE categories, 1,288 test cases (644 TP / 644 TN), exact 50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -59,49 +59,59 @@ The first public OWASP-style SAST benchmark for Ruby. No equivalent exists from 
 
 | Framework | Version Target | Usage |
 |-----------|---------------|-------|
-| Raw Ruby/Rack | 2.7 - 3.3 | testcode + rack_app |
-| Rails | 7.x | rails_api |
-| Sinatra | 3.x | sinatra_app |
+| Raw Ruby/Rack | 2.7 - 3.3 | testcode |
 
-## Applications
+## Test File Format
 
-| App | Framework | Test Cases | Description |
-|-----|-----------|------------|-------------|
-| rack_app | Raw Ruby/Rack | 24 | Raw Rack app with auth, posts, admin, uploads |
-| rails_api | Rails 7 | 26 | REST API with ActiveRecord, strong params, CSRF |
-| sinatra_app | Sinatra 3 | 12 | Route-based app with SQL, XSS, SSRF patterns |
-
-## Annotation Format
-
-Test cases are marked with `vuln-code-snippet` comments (same format as PHP, Rust, and Bash benchmarks):
+Each test file is a standalone Ruby script containing one function. Files contain
+zero comments -- no annotations, no prose, no CWE references. This follows the
+OWASP Java Benchmark gold standard (identical to Go).
 
 ```ruby
-# vuln-code-snippet start ruby_sqli_ar_concat
-def get_user(params)
-  id = params[:id]
-  User.where("id = #{id}") # vuln-code-snippet vuln-line ruby_sqli_ar_concat
+require_relative 'shared'
+
+def get_user_profile(req)
+  db = get_db_connection
+  id = req.param('id')
+  rows = db.execute("SELECT * FROM users WHERE id = #{id}")
+  user = rows.first
+  return BenchmarkResponse.bad_request('user not found') unless user
+  BenchmarkResponse.json({ id: user[0], name: user[1], email: user[2] })
 end
-# vuln-code-snippet end ruby_sqli_ar_concat
 ```
 
-- `vuln-code-snippet start KEY` -- Opens a test case
-- `vuln-code-snippet end KEY` -- Closes a test case
-- `vuln-code-snippet vuln-line KEY` -- Marks the vulnerable line (TP test cases)
-- `vuln-code-snippet safe-line KEY` -- Marks the safe line (TN test cases)
+## Anti-Target Leakage Rules
+
+1. **1 file = 1 test** -- every testcode file contains exactly one test case
+2. **Generic filenames** -- `benchmark_test_NNNNN.rb`, no category in filename
+3. **Zero comments** -- no annotations, no prose, no trailing explanations
+4. **Opaque CSV keys** -- `BenchmarkTestNNNNN`, no category encoding
+5. **Domain-descriptive function names** -- never category-prefixed (`xss_*`, `ssti_*`, etc.)
+6. **No CWE references** -- no CWE numbers anywhere in test files
+
+These rules ensure SAST tools must rely on actual dataflow/AST analysis rather
+than text-matching filenames, comments, or annotations.
 
 ## Ground Truth
 
-`expectedresults-0.3.0.csv` -- OWASP CSV format:
+`expectedresults-0.3.1.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
-ruby_sqli_ar_concat,sqli,true,89
-ruby_sqli_ar_prepared,sqli,false,89
+BenchmarkTest00001,ssrf,true,918
+BenchmarkTest00002,weakcipher,true,327
 ```
 
 ## Scoring
 
-See [SCORING.md](SCORING.md) for full methodology and tool-specific instructions.
+Filename-based matching with CWE awareness (same as Go/Java):
+
+```bash
+python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.1.csv
+```
+
+A test case is detected if a SARIF finding references the test file AND the
+finding's ruleId CWE matches the expected CWE. See [SCORING.md](SCORING.md).
 
 ## Validation
 
@@ -109,7 +119,7 @@ See [SCORING.md](SCORING.md) for full methodology and tool-specific instructions
 python scripts/validate_ruby.py
 ```
 
-Runs L1-L6 fidelity checks: structural integrity, roundtrip fidelity, schema validation, semantic fidelity, scoring pipeline readiness, and SARIF integrity.
+Runs structural integrity, file existence, CSV consistency, and TP/TN balance checks.
 
 ## Ruby-Unique CWEs
 
