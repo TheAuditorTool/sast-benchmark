@@ -1,6 +1,6 @@
 # Chain Detection Benchmark
 
-**Created:** 2026-03-31 | **Updated:** 2026-04-08 | **Version:** v0.2.1
+**Created:** 2026-03-31 | **Updated:** 2026-04-08 | **Version:** v0.2.2
 **Test Cases:** 500 (250 exploitable chains / 250 mitigated chains) across 20 categories
 **Scenarios:** 250 multi-file applications in Python (Flask)
 
@@ -34,17 +34,12 @@ Each chain scenario is a small multi-file Flask application with two variants:
 
 ```
 scenarios/scenario_NNNN/
-  variant_a/
-    app.py
-    middleware.py
-    routes.py
-  variant_b/
-    app.py
-    middleware.py
-    routes.py
+  module_a.py
+  module_b.py
+  module_c.py
 ```
 
-One variant has an exploitable compound vulnerability. The other breaks exactly one link in the chain, making the compound path non-exploitable. Which variant is exploitable is randomized and recorded only in the CSV. All other files are byte-identical between variants.
+Each scenario is a standalone multi-file Flask application. Some scenarios have an exploitable compound vulnerability; others have the chain broken by a minimal fix. The CSV is the sole source of truth for exploitability. Scenarios are shuffled so exploitable and mitigated cases are interleaved with no visible pairing.
 
 ### What Counts as Chain Detection
 
@@ -207,9 +202,9 @@ Session ID not regenerated after authentication combined with predictable or inj
 
 ---
 
-## Safe Variant Design
+## Mitigated Scenario Design
 
-The safe variant design is critical for benchmark quality. Each safe variant changes **exactly one file** with a **minimal fix** that breaks one link in the chain. A tool that flags both vuln and safe variants equally is detecting individual findings, not chains.
+For each exploitable scenario, a corresponding mitigated scenario exists with a **minimal fix** that breaks one link in the chain. A tool that flags both equally is detecting individual findings, not chains. Exploitable and mitigated scenarios are not paired on disk -- they are shuffled independently.
 
 ---
 
@@ -247,11 +242,11 @@ Exploitable/Mitigated split: 50% / 50%
 
 Test files must not reveal the vulnerability type or expected result to the scanner. These rules are enforced by `validate_chains.py` L4.
 
-- **Opaque directory naming:** Scenario directories use `scenario_NNNN/variant_a|b/` naming. Directory names must not contain vulnerability categories, CWE numbers, or the words "vuln"/"safe".
-- **Zero comments:** Test files must contain no `#` comments except `vuln-code-snippet` annotations with opaque keys. No docstrings (module, function, or class level).
-- **No annotations in source:** Test files must not contain `vuln-code-snippet` or any other benchmark annotation. Test case keys are derived from directory paths (`scenario_NNNN/variant_X/` -> `ChainScenarioNNNNX`). The CSV is the sole source of truth for exploitability.
-- **1 scenario = 1 test:** Each scenario directory is one test case with exactly two variants. File names within variants must be domain-descriptive (e.g., `app.py`, `routes.py`), not category-descriptive.
-- **Randomized variant assignment:** Which variant is `a` vs `b` is randomized per scenario. There is no correlation between variant letter and exploitability.
+- **Opaque directory naming:** Scenario directories use `scenario_NNNN/` naming. Directory names must not contain vulnerability categories, CWE numbers, or the words "vuln"/"safe".
+- **Zero comments, docstrings, or annotations:** Test files must contain no `#` comments, no docstrings, and no `vuln-code-snippet` markers. Zero metadata that could leak the answer.
+- **Generic filenames:** All source files use `module_a.py` through `module_d.py`. No descriptive filenames that correlate with vulnerability categories.
+- **Flat structure, no pairing:** Each scenario is an independent directory. Exploitable and mitigated scenarios are shuffled together with no visible pairing. A scanner cannot diff two variants to find the answer -- it must analyze each scenario on its own merits.
+- **1 scenario = 1 test:** Test case keys are derived from directory paths (`scenario_NNNN/` -> `ChainScenarioNNNN`). The CSV is the sole source of truth for exploitability.
 
 ---
 
@@ -268,12 +263,12 @@ Test files must not reveal the vulnerability type or expected result to the scan
 
 To add a chain scenario:
 
-1. Create `scenarios/scenario_NNNN/variant_a/` and `scenarios/scenario_NNNN/variant_b/` directories (use next available number)
-2. Write 2-5 source files per variant with realistic Flask code
-3. The mitigated variant must change **exactly one file** with a minimal fix
-4. All other files must be byte-identical between variants
-5. Add CSV entries: `ChainScenarioNNNNA,<category>,true|false,<CWE>` (randomly assign which letter is exploitable)
-6. **No comments, docstrings, or annotations** in test files -- zero metadata that could leak the answer
+1. Create `scenarios/scenario_NNNN/` directory (use next available number)
+2. Write 2-5 source files with generic names (`module_a.py`, `module_b.py`, etc.)
+3. For the mitigated counterpart, create a separate `scenario_MMMM/` with the chain broken
+4. Add CSV entries: `ChainScenarioNNNN,<category>,true|false,<CWE>`
+5. **No comments, docstrings, or annotations** in test files -- zero metadata that could leak the answer
+6. Exploitable and mitigated scenarios must not be adjacent in numbering
 9. Run `python scripts/validate_chains.py` to verify L1-L5 fidelity
 
 **Design requirements:**

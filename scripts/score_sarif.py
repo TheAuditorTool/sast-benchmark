@@ -61,10 +61,10 @@ def extract_test_name_from_uri(uri):
       C:\\Users\\...\\BenchmarkTest00001.py
       scenarios/scenario_0142/variant_a/app.py  (Chains — directory-based)
     """
-    # Chains: directory-based (scenario_NNNN/variant_X/)
-    m = re.search(r"scenario_(\d{4})/variant_(a|b)/", uri)
+    # Chains: directory-based (scenario_NNNN/)
+    m = re.search(r"scenario_(\d{4})/", uri)
     if m:
-        return "ChainScenario%s%s" % (m.group(1), m.group(2).upper())
+        return "ChainScenario%s" % m.group(1)
     # Go/Rust/Bash/PHP: lowercase with underscores
     m = re.search(r"benchmark_test_(\d{5})\.\w+", uri)
     if m:
@@ -175,7 +175,7 @@ def detect_annotation_mode(expected):
     for name in expected:
         if re.match(r"BenchmarkTest\d{5}$", name):
             return False
-        if re.match(r"ChainScenario\d{4}[AB]$", name):
+        if re.match(r"ChainScenario\d{4}$", name):
             return False
     return True
 

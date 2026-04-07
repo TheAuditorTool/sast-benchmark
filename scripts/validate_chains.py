@@ -27,7 +27,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 CHAINS_DIR = BENCH_ROOT / "chains"
-CSV_FILE = CHAINS_DIR / "expectedresults-0.2.1.csv"
+CSV_FILE = CHAINS_DIR / "expectedresults-0.2.2.csv"
 BENCHMARK_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCENARIOS_DIR = CHAINS_DIR / "scenarios"
 
@@ -121,8 +121,7 @@ def parse_csv():
 
 def scan_scenario_keys():
     """Derive test case keys from scenario directory structure.
-    scenarios/scenario_NNNN/variant_a/ -> ChainScenarioNNNNA
-    scenarios/scenario_NNNN/variant_b/ -> ChainScenarioNNNNB
+    scenarios/scenario_NNNN/ -> ChainScenarioNNNN
     """
     keys = set()
 
@@ -138,12 +137,7 @@ def scan_scenario_keys():
             warnings.append(f"L1 Non-standard scenario dir: {scenario_dir.name}")
             continue
 
-        num = m.group(1)
-        for variant in ("variant_a", "variant_b"):
-            variant_dir = scenario_dir / variant
-            if variant_dir.is_dir():
-                letter = variant[-1].upper()
-                keys.add("ChainScenario%s%s" % (num, letter))
+        keys.add("ChainScenario%s" % m.group(1))
 
     return keys
 
@@ -152,29 +146,26 @@ def scan_scenario_keys():
 # L2: Roundtrip Fidelity
 # ============================================================================
 def check_roundtrip(csv_entries, scenario_keys):
-    """Verify scenario directories exist and have paired variants."""
-    # Group keys by scenario number
-    scenarios = defaultdict(set)
-    for key in scenario_keys:
-        m = re.match(r"ChainScenario(\d{4})([AB])$", key)
-        if m:
-            scenarios[m.group(1)].add(m.group(2))
+    """Verify scenario directories exist with .py files and no subdirectories."""
+    for key in sorted(scenario_keys):
+        m = re.match(r"ChainScenario(\d{4})$", key)
+        if not m:
+            continue
 
-    for num, variants in sorted(scenarios.items()):
-        if variants != {"A", "B"}:
+        scenario_dir = SCENARIOS_DIR / ("scenario_%s" % m.group(1))
+        if not scenario_dir.is_dir():
+            errors.append(f"L2 Missing scenario dir: {scenario_dir}")
+            continue
+
+        py_files = list(scenario_dir.glob("*.py"))
+        if not py_files:
+            errors.append(f"L2 Empty scenario: {scenario_dir}")
+
+        subdirs = [d for d in scenario_dir.iterdir() if d.is_dir()]
+        if subdirs:
             errors.append(
-                f"L2 Scenario {num} has incomplete variants: {variants} (need A and B)"
+                f"L2 Scenario has subdirectories (should be flat): {scenario_dir} -> {[d.name for d in subdirs]}"
             )
-
-        scenario_dir = SCENARIOS_DIR / ("scenario_%s" % num)
-        for v in ("variant_a", "variant_b"):
-            variant_dir = scenario_dir / v
-            if variant_dir.is_dir():
-                py_files = list(variant_dir.glob("*.py"))
-                if not py_files:
-                    errors.append(f"L2 Empty variant: {variant_dir}")
-            else:
-                errors.append(f"L2 Missing variant dir: {variant_dir}")
 
 
 # ============================================================================

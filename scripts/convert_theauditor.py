@@ -331,11 +331,11 @@ def resolve_finding_to_key(file_path, line, file_ranges):
 
 def resolve_chain_key_from_path(file_path):
     """Extract chain test case key from the directory path.
-    scenarios/scenario_0142/variant_a/app.py -> ChainScenario0142A
+    scenarios/scenario_0142/module_a.py -> ChainScenario0142
     """
-    m = re.search(r"scenario_(\d{4})[/\\]variant_(a|b)[/\\]", file_path)
+    m = re.search(r"scenario_(\d{4})[/\\]", file_path)
     if m:
-        return "ChainScenario%s%s" % (m.group(1), m.group(2).upper())
+        return "ChainScenario%s" % m.group(1)
     return None
 
 

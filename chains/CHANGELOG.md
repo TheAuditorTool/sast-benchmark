@@ -1,5 +1,18 @@
 # Chain Detection Benchmark Changelog
 
+## v0.2.2 (2026-04-08)
+
+- Flatten paired variant structure into 500 independent scenario directories
+- Eliminates diff-based cheating: previously variant_a/variant_b sat side-by-side
+  and differed by exactly one file, letting any tool find the answer by diffing
+- All 500 scenarios are now top-level: scenario_0001/ through scenario_0500/
+- No subdirectories, no variant pairing visible on disk
+- Exploitable and mitigated scenarios shuffled together (seed=20260409)
+- CSV keys simplified: ChainScenarioNNNN (no A/B suffix)
+- Same approach as Go/Rust/Bash/PHP/Ruby single-file benchmarks: each test
+  case is fully independent, CSV is sole source of truth
+- validate_chains.py v3.0 updated for flat structure
+
 ## v0.2.1 (2026-04-08)
 
 - Anti-target-leakage migration: eliminate all information leakage from test files
