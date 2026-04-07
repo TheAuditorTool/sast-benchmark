@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Go SAST Benchmark Fidelity Validator v2.0
+"""Go SAST Benchmark Fidelity Validator v2.1
 
 Go uses filename-based test identity (like Java benchmark):
   CSV key: BenchmarkTest00001
@@ -7,11 +7,10 @@ Go uses filename-based test identity (like Java benchmark):
 
 Fidelity levels:
   L1 -- Structural integrity (CSV <-> file cross-reference)
+  L2 -- Zero target leakage (no comments, no annotations, no CWE mentions)
   L3 -- Schema validation (required fields, valid CWEs, valid categories)
+  L4 -- Balance check (per-category TP/TN counts)
   L5 -- Scoring pipeline readiness (CWE coverage in converter)
-
-NOTE: L2 (roundtrip) and L4 (semantic/annotation) are N/A for Go's
-filename-based architecture -- Go has no vuln-code-snippet annotations.
 
 Exit 0 if all checks pass, 1 if any ERRORS, 2 if only WARNINGS.
 No dependencies -- stdlib only.
@@ -26,7 +25,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 GO_DIR = BENCH_ROOT / "go"
-CSV_FILE = GO_DIR / "expectedresults-0.5.0.csv"
+CSV_FILE = GO_DIR / "expectedresults-0.5.1.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 TESTCODE_DIR = GO_DIR / "testcode"
 
@@ -125,6 +124,87 @@ def scan_test_files():
             key = filename_to_csv_key(fn)
             keys.add(key)
     return keys
+
+
+# ============================================================================
+# L2: Zero Target Leakage
+# ============================================================================
+PAT_ANNOTATION = re.compile(r"vuln-code-snippet")
+PAT_CWE_MENTION = re.compile(r"CWE-\d+", re.IGNORECASE)
+
+
+def check_leakage():
+    """Scan every benchmark_test_*.go for comments, annotations, CWE mentions."""
+    leakage_count = 0
+
+    if not TESTCODE_DIR.is_dir():
+        return leakage_count
+
+    for fn in sorted(os.listdir(TESTCODE_DIR)):
+        if not (fn.startswith("benchmark_test_") and fn.endswith(".go")):
+            continue
+
+        filepath = TESTCODE_DIR / fn
+        with open(filepath, "r", encoding="utf-8", errors="replace") as fh:
+            content = fh.read()
+
+        if PAT_ANNOTATION.search(content):
+            errors.append("L2 Annotation remnant in %s" % fn)
+            leakage_count += 1
+
+        if PAT_CWE_MENTION.search(content):
+            errors.append("L2 CWE mention in %s" % fn)
+            leakage_count += 1
+
+        for i, line in enumerate(content.split("\n"), 1):
+            stripped = line.lstrip()
+            if not stripped.startswith("//"):
+                continue
+            if stripped.startswith("//go:") or stripped.startswith("//+build"):
+                continue
+            errors.append("L2 Comment found in %s:%d: %s" % (fn, i, stripped.rstrip()))
+            leakage_count += 1
+
+    return leakage_count
+
+
+# ============================================================================
+# L4: Balance Check
+# ============================================================================
+MIN_PER_CATEGORY = 25
+
+
+def check_balance(csv_entries):
+    """Check per-category TP/TN counts and global balance."""
+    cat_counts = defaultdict(lambda: {"tp": 0, "tn": 0})
+    for key, info in csv_entries.items():
+        cat = info.get("category", "unknown")
+        if info.get("vulnerable", False):
+            cat_counts[cat]["tp"] += 1
+        else:
+            cat_counts[cat]["tn"] += 1
+
+    for cat, counts in sorted(cat_counts.items()):
+        if counts["tp"] < MIN_PER_CATEGORY:
+            warnings.append(
+                "L4 Category '%s' has only %d TP (minimum %d)"
+                % (cat, counts["tp"], MIN_PER_CATEGORY)
+            )
+        if counts["tn"] < MIN_PER_CATEGORY:
+            warnings.append(
+                "L4 Category '%s' has only %d TN (minimum %d)"
+                % (cat, counts["tn"], MIN_PER_CATEGORY)
+            )
+
+    total_tp = sum(c["tp"] for c in cat_counts.values())
+    total_tn = sum(c["tn"] for c in cat_counts.values())
+    if total_tp != total_tn:
+        warnings.append(
+            "L4 Global TP/TN imbalance: %d TP vs %d TN (ideal: exact 50/50)"
+            % (total_tp, total_tn)
+        )
+
+    return cat_counts
 
 
 # ============================================================================
@@ -245,8 +325,8 @@ def print_report(csv_entries, file_keys):
 
 def main():
     print("=" * 64)
-    print("  Go SAST Benchmark Fidelity Validator v2.0")
-    print("  Filename-based matching (L1, L3, L5)")
+    print("  Go SAST Benchmark Fidelity Validator v2.1")
+    print("  Filename-based matching (L1-L5)")
     print("=" * 64)
     print()
 
@@ -268,24 +348,38 @@ def main():
     print("  Result: %d errors found" % l1_errors)
     print()
 
+    # --- L2: Zero Target Leakage ---
+    print("[L2] Zero Target Leakage (no comments, no annotations, no CWE mentions)")
+    leakage = check_leakage()
+    l2_errors = len(errors) - l1_errors
+    print("  Leakage instances: %d" % leakage)
+    print("  Result: %d errors found" % l2_errors)
+    print()
+
     # --- L3: Schema Validation ---
     print("[L3] Schema Validation (required fields, valid CWEs, valid categories)")
     all_categories = check_schema(csv_entries)
-    l3_errors = len(errors) - l1_errors
+    l3_errors = len(errors) - l1_errors - l2_errors
     print("  Checks: 4 CSV columns present, CWE in valid set, category in valid set")
     print("  Categories found: %d (%s)" % (len(all_categories), ", ".join(sorted(all_categories))))
     print("  Result: %d errors found" % l3_errors)
     print()
 
-    # --- L5: Scoring Pipeline Readiness ---
-    print("[L5] Scoring Pipeline Readiness (CWE coverage in converter)")
-    check_scoring_pipeline(csv_entries)
-    l5_warnings = len(warnings)
-    print("  Checks: every CWE has VULN_TYPE_TO_CWE mapping")
-    print("  Result: %d warnings" % l5_warnings)
+    # --- L4: Balance Check ---
+    pre_l4_warnings = len(warnings)
+    print("[L4] Balance Check (per-category TP/TN, minimum %d each)" % MIN_PER_CATEGORY)
+    cat_counts = check_balance(csv_entries)
+    l4_warnings = len(warnings) - pre_l4_warnings
+    print("  Result: %d warnings" % l4_warnings)
     print()
 
-    print("NOTE: L2 (roundtrip) and L4 (semantic) are N/A for Go (filename-based, no annotations)")
+    # --- L5: Scoring Pipeline Readiness ---
+    print("[L5] Scoring Pipeline Readiness (CWE coverage in converter)")
+    pre_l5_warnings = len(warnings)
+    check_scoring_pipeline(csv_entries)
+    l5_warnings = len(warnings) - pre_l5_warnings
+    print("  Checks: every CWE has VULN_TYPE_TO_CWE mapping")
+    print("  Result: %d warnings" % l5_warnings)
     print()
 
     # --- Summary ---

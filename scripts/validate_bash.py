@@ -11,7 +11,7 @@ Levels:
   L2 — Completeness: every .sh file in testcode/ has a CSV entry (no orphans)
   L3 — Schema validation: required fields, valid CWEs, valid categories
   L4 — Balance: per-category TP/TN counts, minimum 25/25 floor
-  L5 — Scoring pipeline readiness: bash_benchmark.py category coverage
+  L5 — Scoring pipeline readiness: convert_theauditor.py + score_sarif.py coverage
 
 Exit 0 = all pass, 1 = errors, 2 = warnings only.
 """
@@ -25,9 +25,9 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 BASH_DIR = BENCH_ROOT / "bash"
-CSV_FILE = BASH_DIR / "expectedresults-0.5.2.csv"
+CSV_FILE = BASH_DIR / "expectedresults-0.5.3.csv"
 TESTCODE_DIR = BASH_DIR / "testcode"
-BENCHMARK_PY = BASH_DIR / "bash_benchmark.py"
+CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 
 VALID_CWES = {
     20, 22, 77, 78, 79, 88, 89, 90, 93, 94, 117, 119, 190, 200, 250, 269,
@@ -178,15 +178,15 @@ def check_balance(csv_entries):
 # L5: Scoring pipeline readiness
 # ============================================================================
 def check_scoring_pipeline(all_categories):
-    if not BENCHMARK_PY.exists():
-        warnings.append("L5 bash_benchmark.py not found")
+    if not CONVERTER_PY.exists():
+        warnings.append("L5 convert_theauditor.py not found")
         return
-    content = BENCHMARK_PY.read_text(encoding="utf-8")
-    mapped_cats = set(re.findall(r':\s*"([a-z_]+)"', content))
+    content = CONVERTER_PY.read_text(encoding="utf-8")
+    mapped_cats = set(re.findall(r'"([a-z_]+)"', content))
     for cat in sorted(all_categories):
         if cat not in mapped_cats:
             warnings.append(
-                f"L5 Category '{cat}' not mapped in bash_benchmark.py RULE_MAP/SINK_MAP"
+                f"L5 Category '{cat}' not mapped in convert_theauditor.py"
             )
 
 
@@ -264,7 +264,7 @@ def main():
     print()
 
     # L5: Pipeline
-    print("[L5] Scoring pipeline readiness (bash_benchmark.py coverage)")
+    print("[L5] Scoring pipeline readiness (convert_theauditor.py coverage)")
     check_scoring_pipeline(all_categories)
     l5_warnings = len(warnings)
     print(f"  Result: {l5_warnings} warnings")

@@ -1,5 +1,5 @@
 # test name,category,real vulnerability,CWE
-# Go SAST Benchmark v0.5.0
+# Go SAST Benchmark v0.5.1
 # 1350 test cases, 25 CWE categories, 675/675 TP/TN
 # Categories: sqli, cmdi, pathtraver, xss, ssrf, weakrand, weakhash, weakcipher, securecookie, redirect, hardcodedcreds, authnfailure, tlsverify, loginjection, nosql, authzfailure, csrf, codeinj, ldapi, trustbound, deserial, race_condition, fileupload, inputval, infodisclosure
 BenchmarkTest00001,sqli,true,89

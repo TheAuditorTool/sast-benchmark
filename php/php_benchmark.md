@@ -1,4 +1,4 @@
-# PHP SAST Benchmark v0.3.1
+# PHP SAST Benchmark v0.3.2
 
 ## Purpose
 
@@ -74,7 +74,7 @@ filenames or comments.
 
 ## Ground Truth
 
-`expectedresults-0.3.1.csv` -- OWASP CSV format:
+`expectedresults-0.3.2.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE

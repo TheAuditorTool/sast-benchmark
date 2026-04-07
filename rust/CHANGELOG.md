@@ -4,6 +4,22 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-04-08 — v0.5.2: Standardization Release
+
+File naming convention standardized, comments stripped, CWE ordering shuffled to eliminate positional bias. No test case changes -- ground truth identical to v0.5.1.
+
+- CSV version bump to 0.5.2
+- Removed all legacy CSV versions (0.3.2, 0.4.0, 0.5.0, 0.5.1)
+- Updated all documentation references to 0.5.2
+- validate_rust.py updated to point to 0.5.2
+
+### Final State
+- 1,133 test cases (unchanged)
+- 25 CWE categories (unchanged)
+- 548/585 TP/TN (unchanged)
+
+---
+
 ## 2026-04-08 — v0.5.1: Anti-Target Leakage Migration + App Separation
 
 Testcode files stripped of all comments and renamed to opaque `benchmark_test_NNNNN.rs`.

@@ -1,5 +1,23 @@
 # Go Benchmark Changelog
 
+## v0.5.1 (2026-04-08)
+
+### Standardization Release
+
+File naming convention standardized, comments stripped, CWE ordering shuffled to eliminate positional bias. No test case changes -- ground truth identical to v0.5.0.
+
+- CSV version bump to 0.5.1
+- Removed all legacy CSV versions (0.3.2, 0.4.0, 0.5.0)
+- Updated all documentation references to 0.5.1
+- validate_go.py updated to point to 0.5.1
+
+### Final State
+- 1350 test cases (unchanged)
+- 25 CWE categories (unchanged)
+- 675/675 TP/TN balance (unchanged)
+
+---
+
 ## v0.5.0 (2026-04-07)
 
 ### Category Expansion to 25/25 Minimum (+664 tests across all categories)

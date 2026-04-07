@@ -1,5 +1,24 @@
 # Bash SAST Benchmark — Changelog
 
+## v0.5.3 (2026-04-08)
+
+### Standardization Release
+
+File naming convention standardized, comments stripped, CWE ordering shuffled to eliminate positional bias. No test case changes -- ground truth identical to v0.5.2.
+
+- CSV version bump to 0.5.3
+- Removed all legacy CSV versions (0.3.1, 0.4.0, 0.5.0, 0.5.1, 0.5.2)
+- Deleted `bash_benchmark.py` -- scoring centralized to `scripts/convert_theauditor.py` + `scripts/score_sarif.py`
+- Updated all documentation references to 0.5.3
+- validate_bash.py L5 updated to check convert_theauditor.py instead of deleted bash_benchmark.py
+
+### Final State
+- 867 test cases (unchanged)
+- 20 CWE categories (unchanged)
+- 424/443 TP/TN (unchanged)
+
+---
+
 ## v0.5.2 (2026-04-08)
 
 App separation: moved 5 apps to `vulnerable_apps/bash/`.

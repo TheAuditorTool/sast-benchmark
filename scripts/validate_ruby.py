@@ -23,7 +23,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 RUBY_DIR = BENCH_ROOT / "ruby"
-CSV_FILE = RUBY_DIR / "expectedresults-0.3.1.csv"
+CSV_FILE = RUBY_DIR / "expectedresults-0.3.2.csv"
 TESTCODE_DIR = RUBY_DIR / "testcode"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 

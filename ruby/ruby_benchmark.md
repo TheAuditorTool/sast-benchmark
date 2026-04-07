@@ -1,4 +1,4 @@
-# Ruby SAST Benchmark v0.3.1
+# Ruby SAST Benchmark v0.3.2
 
 ## Purpose
 
@@ -94,7 +94,7 @@ than text-matching filenames, comments, or annotations.
 
 ## Ground Truth
 
-`expectedresults-0.3.1.csv` -- OWASP CSV format:
+`expectedresults-0.3.2.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
@@ -107,7 +107,7 @@ BenchmarkTest00002,weakcipher,true,327
 Filename-based matching with CWE awareness (same as Go/Java):
 
 ```bash
-python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.1.csv
+python scripts/score_sarif.py results.sarif ruby/expectedresults-0.3.2.csv
 ```
 
 A test case is detected if a SARIF finding references the test file AND the

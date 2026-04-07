@@ -2,21 +2,21 @@
 
 > **Created**: 2026-03-19
 > **Team**: Bash
-> **Status**: v0.5.0 shipped. All phases complete.
+> **Status**: v0.5.3 shipped. All phases complete.
 > **Goal**: Public OWASP-style benchmark for bash shell script SAST. World-first.
 
 ---
 
-## Current State (v0.5.0)
+## Current State (v0.5.3)
 
-- **1,056 test cases** (528 TP / 528 TN) across 20 CWE categories
-- **TP/TN balance:** 50/50 (exact)
-- **5 annotated applications** + 20 standalone testcode files + 19 _extended_tests.sh files
-- **CSV ground truth** (`expectedresults-0.5.0.csv`) is the sole scoring authority
+- **867 test cases** (424 TP / 443 TN) across 20 CWE categories
+- **TP/TN balance:** 48.9/51.1
+- **1-file-1-test architecture** — 867 individual `benchmark_test_NNNNN.sh` files
+- **CSV ground truth** (`expectedresults-0.5.3.csv`) is the sole scoring authority
 - **Baseline score** established (see `baseline_theauditor_tool_score.md`)
-- **All 20 categories at minimum 25V/25S** (Youden statistical significance threshold)
+- **Apps moved to `vulnerable_apps/bash/`** (5 apps, 191 entries, scored separately)
 
-The phases below document the development history from initial 158 test cases to current 1,056.
+The phases below document the development history from initial 158 test cases to current 867.
 
 ---
 
@@ -176,7 +176,7 @@ Each new test case follows the pattern: vulnerable function + safe variant, both
 - Expected FP count
 
 ### 4.3 Scoring Script Verification
-- Run `bash_benchmark.py` — confirm all test cases load
+- Run `python3 ../scripts/score_sarif.py` — confirm all test cases load
 - Confirm annotation count matches ground truth count
 - Confirm RULE_MAP is complete
 
@@ -200,7 +200,7 @@ Each new test case follows the pattern: vulnerable function + safe variant, both
 Tell human to run on the benchmark directory.
 
 ### 5.2 Run Scoring Script
-Execute `bash_benchmark.py` against the new DB.
+Run `python3 ../scripts/convert_theauditor.py .pf/repo_index.db` then `python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.3.csv`.
 
 ### 5.3 Scorecard Documentation
 Record baseline in BENCHMARK.md with full category breakdown.

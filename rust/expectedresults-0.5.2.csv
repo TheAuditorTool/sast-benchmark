@@ -1,5 +1,5 @@
 # test name,category,real vulnerability,CWE
-# Rust SAST Benchmark v0.5.1
+# Rust SAST Benchmark v0.5.2
 # 1133 test cases (548 TP / 585 TN), 25 categories
 # Categories: authnfailure, authzfailure, cmdi, crypto, csrf, deserial, fileupload, hardcodedcreds, infodisclosure, inputval, intoverflow, ldapi, loginjection, memsafety, nosql, pathtraver, race_condition, redirect, redos, securecookie, sqli, ssrf, tlsverify, weakrand, xss
 # App test cases removed to vulnerable_apps/rust/ (separate scoring)

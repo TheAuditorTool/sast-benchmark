@@ -1,5 +1,5 @@
 # test name,category,real vulnerability,CWE
-# PHP SAST Benchmark v0.3.1
+# PHP SAST Benchmark v0.3.2
 # 1138 test cases (569 TP / 569 TN), 25 CWE categories
 # Anti-target-leakage: generic filenames, no annotations
 BenchmarkTest00001,massassign,false,915

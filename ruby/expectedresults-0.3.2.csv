@@ -1,5 +1,5 @@
 # test name,category,real vulnerability,CWE
-# Ruby SAST Benchmark v0.3.1
+# Ruby SAST Benchmark v0.3.2
 # 1288 test cases (644 TP / 644 TN), 27 CWE categories
 BenchmarkTest00227,authnfailure,true,287
 BenchmarkTest00394,authnfailure,true,287

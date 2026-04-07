@@ -1,5 +1,23 @@
 # PHP SAST Benchmark Changelog
 
+## v0.3.2 (2026-04-08)
+
+### Standardization Release
+
+File naming convention standardized, comments stripped, CWE ordering shuffled to eliminate positional bias. No test case changes -- ground truth identical to v0.3.1.
+
+- CSV version bump to 0.3.2
+- Removed all legacy CSV versions (0.1.0, 0.2.0, 0.3.0, 0.3.1)
+- Updated all documentation references to 0.3.2
+- validate_php.py updated to point to 0.3.2
+
+### Final State
+- 1,138 test cases (unchanged)
+- 25 CWE categories (unchanged)
+- 569/569 TP/TN balance (unchanged)
+
+---
+
 ## v0.3.1 (2026-04-08)
 
 Anti-target-leakage migration + app separation.

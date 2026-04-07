@@ -420,10 +420,10 @@ def main():
         print()
         print("Examples:")
         print("  # Annotation-based (Rust/Bash/PHP/Ruby) -- simplest, auto-detects dirs:")
-        print("  python score_sarif.py theauditor.sarif php/expectedresults-0.2.0.csv")
+        print("  python score_sarif.py theauditor.sarif php/expectedresults-0.3.2.csv")
         print()
         print("  # Go (filename-based matching, no annotations needed):")
-        print("  python score_sarif.py results.sarif go/expectedresults-0.3.2.csv")
+        print("  python score_sarif.py results.sarif go/expectedresults-0.5.1.csv")
         sys.exit(1)
 
     sarif_path = positional[0]

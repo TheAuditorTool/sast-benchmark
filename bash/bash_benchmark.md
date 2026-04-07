@@ -1,8 +1,8 @@
 # Bash SAST Benchmark
 
-**Created:** 2026-03-19 | **Updated:** 2026-04-08 (v0.5.1 — 1,058 test cases, 20 CWEs, 50/50 TP/TN, 1-file-1-test)
+**Created:** 2026-03-19 | **Updated:** 2026-04-08 (v0.5.3 — 867 test cases, 20 CWEs, 1-file-1-test)
 **Team:** Bash (of 3: Go, Rust, Bash)
-**Version:** v0.5.1
+**Version:** v0.5.3
 **Status:** 1-file-1-test restructure complete. 867 individual `benchmark_test_NNNNN.sh` testcode files. Apps moved to `vulnerable_apps/bash/`. All comments and annotation markers removed from testcode source files. Zero target leakage.
 
 ---
@@ -13,9 +13,9 @@ These rules exist because prior versions embedded vulnerability type in filename
 
 1. **Generic file names only.** Test files must be named `benchmark_test_NNNNN.sh`. Never include a CWE name, vulnerability category, or technique description in the filename.
 2. **No comments of any kind.** No inline comments, no block comments, no file-header comments. A SAST tool that processes comments can exploit any hint. The source file must contain only executable shell code.
-3. **No annotation markers in source files.** The `vuln-code-snippet` marker system has been retired. Ground truth lives exclusively in `expectedresults-0.5.2.csv`. Scoring is file-based: if the tool flags the file for the correct category, it counts.
+3. **No annotation markers in source files.** The `vuln-code-snippet` marker system has been retired. Ground truth lives exclusively in `expectedresults-0.5.3.csv`. Scoring is file-based: if the tool flags the file for the correct category, it counts.
 4. **One file, one test case.** Each `.sh` file contains exactly one function (or tightly coupled multi-function group) representing a single test case. Multiple test cases in one file allow a tool to infer category from neighbouring functions.
-5. **CSV is the sole ground truth.** `expectedresults-0.5.2.csv` maps `benchmark_test_NNNNN` → category → vulnerable/safe → CWE. Nothing in the source file encodes this information.
+5. **CSV is the sole ground truth.** `expectedresults-0.5.3.csv` maps `benchmark_test_NNNNN` → category → vulnerable/safe → CWE. Nothing in the source file encodes this information.
 
 ---
 
@@ -141,10 +141,9 @@ These patterns have NO rule. The benchmark includes them deliberately as FN-gene
 ```
 gorustbash_benchmark/bash/
 +-- testcode/                      # 867 benchmark_test_NNNNN.sh files (1 file = 1 test)
-+-- expectedresults-0.5.2.csv      # Answer key (867 test cases, OWASP CSV format)
++-- expectedresults-0.5.3.csv      # Answer key (867 test cases, OWASP CSV format)
 # Apps moved to vulnerable_apps/bash/ (separate scoring)
-+-- bash_benchmark.py              # Scoring script
-+-- BENCHMARK.md                   # This file
++-- bash_benchmark.md              # This file
 +-- CHANGELOG.md                   # Version history
 ```
 
@@ -154,33 +153,33 @@ gorustbash_benchmark/bash/
 
 | Category | CWE | Total | Vulnerable (TP) | Safe (TN) |
 |----------|-----|-------|-----------------|-----------|
-| cmdi | 78 | 106 | 53 | 53 |
-| sqli | 89 | 52 | 26 | 26 |
-| codeinj | 94 | 50 | 25 | 25 |
-| ssrf | 918 | 50 | 25 | 25 |
 | auth_bypass | 287/306 | 50 | 25 | 25 |
 | cleartext_tx | 319 | 50 | 25 | 25 |
+| cmdi | 78 | 34 | 11 | 23 |
+| codeinj | 94 | 35 | 14 | 21 |
 | dos | 770 | 50 | 25 | 25 |
-| hardcoded_creds | 798 | 50 | 25 | 25 |
-| insecure_perms | 732 | 50 | 25 | 25 |
-| insecure_temp | 367/377 | 50 | 25 | 25 |
+| hardcoded_creds | 798 | 47 | 22 | 25 |
+| infodisclosure | 200/532 | 40 | 22 | 18 |
+| insecure_perms | 732 | 43 | 23 | 20 |
+| insecure_temp | 367/377 | 48 | 24 | 24 |
 | loginjection | 117 | 50 | 25 | 25 |
-| pathtraver | 22 | 50 | 25 | 25 |
+| pathtraver | 22 | 41 | 21 | 20 |
 | privilege_escalation | 250 | 50 | 25 | 25 |
 | race_condition | 362 | 50 | 25 | 25 |
-| rce | 94 | 50 | 25 | 25 |
-| ssl_bypass | 295 | 50 | 25 | 25 |
-| unquoted | 78 | 50 | 25 | 25 |
+| rce | 94 | 45 | 23 | 22 |
+| sqli | 89 | 20 | 10 | 10 |
+| ssl_bypass | 295 | 44 | 22 | 22 |
+| ssrf | 918 | 37 | 17 | 20 |
+| unquoted | 78 | 39 | 18 | 21 |
+| weakcrypto | 327 | 44 | 22 | 22 |
 | weakrand | 330 | 50 | 25 | 25 |
-| weakcrypto | 327 | 50 | 25 | 25 |
-| infodisclosure | 200/532 | 50 | 25 | 25 |
-| **TOTAL** | | **1,058** | **529** | **529** |
+| **TOTAL** | | **867** | **424** | **443** |
 
-**TP/TN split: 50.0% / 50.0%** — Exact balance. All 20 categories at 25/25 minimum (Youden significance threshold: 4% per test).
+**TP/TN split: 48.9% / 51.1%** — Near-balanced. Categories vary from 10/10 (sqli) to 25/25 (Youden significance threshold: 4% per test).
 
 **5 applications tested**: Pipeline Manager (DevOps CI/CD), deepflow-webhook (HTTP webhook server), deepflow-ops (operations suite with SAFE_MODE toggle), dataforge (data pipeline backup/deploy/healthcheck), securepipeline (CI/CD pipeline with 55 TN-only cases).
 
-For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 50/50 is within OWASP's acceptable range.
+For comparison: OWASP Java = 52/48%, OWASP Python = 37/63%. Our 48.9/51.1 is within OWASP's acceptable range.
 
 ---
 
@@ -192,7 +191,7 @@ Two scoring paths are supported:
 
 ```bash
 # Any SAST tool that produces SARIF 2.1.0 output:
-python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.5.2.csv
+python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.5.3.csv
 ```
 
 ### Path 2: TheAuditor Database-First (for TheAuditor users)
@@ -200,7 +199,7 @@ python3 ../scripts/score_sarif.py <tool_output.sarif> expectedresults-0.5.2.csv
 ```bash
 # Convert DB to CWE-based SARIF, then score
 python3 ../scripts/convert_theauditor.py .pf/repo_index.db
-python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.2.csv
+python3 ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.3.csv
 ```
 
 Scoring uses CWE numbers as the join key. SARIF ruleId is the CWE number. No RULE_MAP.
@@ -221,7 +220,7 @@ Score formula: `Score = TPR - FPR` (Youden's J statistic)
 3. **Includes patterns likely to be missed** — nameref injection, arithmetic expansion, sed command injection, heredoc expansion, multi-hop taint
 4. **Includes safe patterns that LOOK dangerous** — eval on constants, validated variables in command position, quoted expansions
 5. **Inspired by real-world CVE patterns** — not synthetic toy examples
-6. **50/50 TP/TN balance per category** — eliminates the "flag everything" scoring exploit (v0.3.1)
+6. **Near-balanced TP/TN per category** — eliminates the "flag everything" scoring exploit (v0.3.1); overall split 48.9/51.1
 
 ---
 

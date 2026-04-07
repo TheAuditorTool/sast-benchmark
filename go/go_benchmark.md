@@ -1,4 +1,4 @@
-# Go SAST Benchmark v0.5.0
+# Go SAST Benchmark v0.5.1
 
 ## Overview
 
@@ -20,7 +20,7 @@ OWASP-style SAST benchmark for Go. **1350 test cases** across **25 CWE categorie
 
 ```
 gorustbash_benchmark/go/
-  expectedresults-0.5.0.csv     # Answer key: test,category,vulnerable,CWE
+  expectedresults-0.5.1.csv     # Answer key: test,category,vulnerable,CWE
   go_benchmark.md             # This file
   SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
@@ -75,7 +75,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ### SQL Injection (CWE-89) -- Tests 00001-00050
 
-**VULNERABLE patterns (25 tests):**
+**VULNERABLE patterns (65 tests):**
 
 | Pattern | Tests | Source | Sink |
 |---------|-------|--------|------|
@@ -103,7 +103,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 | Interface{} type assertion | 46 | json.Decode to interface{} -> cast | db.Query |
 | Multi-function chain | 50 | r.URL.Query -> buildWhere -> buildQuery | db.Query |
 
-**SAFE patterns (25 tests):**
+**SAFE patterns (65 tests):**
 
 | Pattern | Tests | Why Safe |
 |---------|-------|----------|
@@ -129,7 +129,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ### Command Injection (CWE-78) -- Tests 00051-00080
 
-**VULNERABLE patterns (13 tests):**
+**VULNERABLE patterns (30 tests):**
 
 | Pattern | Tests | Mechanism |
 |---------|-------|-----------|
@@ -144,7 +144,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 | Header to shell | 78 | r.Header.Get -> exec.Command("sh", "-c", ...) |
 | Env var manipulation | 68 | os.Setenv with user value |
 
-**SAFE patterns (17 tests):**
+**SAFE patterns (30 tests):**
 
 | Pattern | Tests | Why Safe |
 |---------|-------|----------|
@@ -160,7 +160,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ### Path Traversal (CWE-22) -- Tests 00081-00110
 
-**VULNERABLE patterns (16 tests):**
+**VULNERABLE patterns (30 tests):**
 
 | Pattern | Tests | Mechanism |
 |---------|-------|-----------|
@@ -174,7 +174,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 | JSON body output path | 107 | filepath.Join(input.OutputDir, ...) |
 | Both src+dst from user | 110 | Read + write both user-controlled |
 
-**SAFE patterns (14 tests):**
+**SAFE patterns (30 tests):**
 
 | Pattern | Tests | Why Safe |
 |---------|-------|----------|
@@ -191,87 +191,87 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ### XSS (CWE-79) -- Tests 00111-00130
 
-**VULNERABLE (9):** template.HTML(111), template.JS(112), template.URL(113), template.CSS(114), fmt.Fprintf to HTML(115), raw w.Write concat(116), text/template(117), script tag injection(119), header reflection to HTML(120)
+**VULNERABLE (25):** template.HTML(111), template.JS(112), template.URL(113), template.CSS(114), fmt.Fprintf to HTML(115), raw w.Write concat(116), text/template(117), script tag injection(119), header reflection to HTML(120)
 
-**SAFE (11):** Go json.Encoder HTML-escapes by default(118), html/template auto-escape(121), html.EscapeString(122), JSON content-type(123), html/template {{.}}(124), text/plain(125), url.QueryEscape(126), base64 encoding(127), int-only output(128), DB result not direct(129), static ServeFile(130)
+**SAFE (25):** Go json.Encoder HTML-escapes by default(118), html/template auto-escape(121), html.EscapeString(122), JSON content-type(123), html/template {{.}}(124), text/plain(125), url.QueryEscape(126), base64 encoding(127), int-only output(128), DB result not direct(129), static ServeFile(130)
 
 ### SSRF (CWE-918) -- Tests 00131-00150
 
-**VULNERABLE (10):** http.Get(userURL)(131), http.Post(userURL)(132), http.NewRequest(userURL)(133), header webhook URL(134), JSON body callback(135), host concat(136), port concat(137), url.URL struct(138), FormValue endpoint(139), cookie as URL(140)
+**VULNERABLE (25):** http.Get(userURL)(131), http.Post(userURL)(132), http.NewRequest(userURL)(133), header webhook URL(134), JSON body callback(135), host concat(136), port concat(137), url.URL struct(138), FormValue endpoint(139), cookie as URL(140)
 
-**SAFE (10):** hardcoded URL(141), allowlisted domain(142), config URL(143), scheme+host check(144), user in query param only(145), IP private check(146), display only(147), map lookup(148), user in body not URL(149), DNS resolution check(150)
+**SAFE (25):** hardcoded URL(141), allowlisted domain(142), config URL(143), scheme+host check(144), user in query param only(145), IP private check(146), display only(147), map lookup(148), user in body not URL(149), DNS resolution check(150)
 
 ### Weak Random (CWE-330) -- Tests 00151-00170
 
-**VULNERABLE (10):** math/rand.Intn for token(151), math/rand.Read for key(152), seeded NewSource for reset(153), Float64 for CSRF(154), Int63 for API key(155), Shuffle for ID(156), aliased mathrand.Read(157), Uint32 for nonce(158), Perm for OTP(159), Int for salt(160)
+**VULNERABLE (25):** math/rand.Intn for token(151), math/rand.Read for key(152), seeded NewSource for reset(153), Float64 for CSRF(154), Int63 for API key(155), Shuffle for ID(156), aliased mathrand.Read(157), Uint32 for nonce(158), Perm for OTP(159), Int for salt(160)
 
-**SAFE (10):** crypto/rand.Read(161), crypto/rand.Int(162), uuid.New(163), math/rand for display order(164), bcrypt(165), io.ReadFull crypto reader(166), hex of crypto bytes(167), base64 of crypto bytes(168), crypto/rand.Prime(169), math/rand for delay(170)
+**SAFE (25):** crypto/rand.Read(161), crypto/rand.Int(162), uuid.New(163), math/rand for display order(164), bcrypt(165), io.ReadFull crypto reader(166), hex of crypto bytes(167), base64 of crypto bytes(168), crypto/rand.Prime(169), math/rand for delay(170)
 
 ### Weak Hash (CWE-328) -- Tests 00171-00190
 
-**VULNERABLE (10):** md5.Sum password(171), md5.New password(172), sha1.Sum integrity(173), sha1 HMAC key(174), md5 signature(175), md5 token(176), sha1 cert fingerprint(177), md5 reset token(178), sha1 API key(179), md5 auth file check(180)
+**VULNERABLE (25):** md5.Sum password(171), md5.New password(172), sha1.Sum integrity(173), sha1 HMAC key(174), md5 signature(175), md5 token(176), sha1 cert fingerprint(177), md5 reset token(178), sha1 API key(179), md5 auth file check(180)
 
-**SAFE (10):** sha256(181), sha512(182), sha256 HMAC(183), bcrypt(184), sha256 content addr(185), hmac sha256(186), sha256 file checksum(187), md5 cache key(188), sha256 CSRF(189), sha256 digital sig(190)
+**SAFE (25):** sha256(181), sha512(182), sha256 HMAC(183), bcrypt(184), sha256 content addr(185), hmac sha256(186), sha256 file checksum(187), md5 cache key(188), sha256 CSRF(189), sha256 digital sig(190)
 
 ### Weak Cipher (CWE-327) -- Tests 00191-00206
 
-**VULNERABLE (8):** DES(191), 3DES(192), RC4(193), Blowfish(194), AES-ECB(195), XOR cipher(196), AES-CBC no auth(197), ROT13(198)
+**VULNERABLE (25):** DES(191), 3DES(192), RC4(193), Blowfish(194), AES-ECB(195), XOR cipher(196), AES-CBC no auth(197), ROT13(198)
 
-**SAFE (8):** AES-GCM(199,201,203,206), ChaCha20-Poly1305(200), TLS 1.3 config(202), AES-CTR+HMAC(204), NaCl secretbox(205)
+**SAFE (25):** AES-GCM(199,201,203,206), ChaCha20-Poly1305(200), TLS 1.3 config(202), AES-CTR+HMAC(204), NaCl secretbox(205)
 
 ### Secure Cookie (CWE-614) -- Tests 00207-00222
 
-**VULNERABLE (8):** Secure:false(207), Secure omitted(208), HttpOnly:false(209), SameSiteNone(210), raw Set-Cookie header(211), raw user ID value(212), broad Domain(213), MaxAge:0 no flags(214)
+**VULNERABLE (25):** Secure:false(207), Secure omitted(208), HttpOnly:false(209), SameSiteNone(210), raw Set-Cookie header(211), raw user ID value(212), broad Domain(213), MaxAge:0 no flags(214)
 
-**SAFE (8):** all flags strict(215), MaxAge+path+flags(216), gorilla securecookie(217), SameSiteLax+flags(218), crypto/rand session ID(219), __Host- prefix(220), AES-GCM encrypted value(221), short MaxAge+flags(222)
+**SAFE (25):** all flags strict(215), MaxAge+path+flags(216), gorilla securecookie(217), SameSiteLax+flags(218), crypto/rand session ID(219), __Host- prefix(220), AES-GCM encrypted value(221), short MaxAge+flags(222)
 
 ### Open Redirect (CWE-601) -- Tests 00223-00238
 
-**VULNERABLE (8):** direct query param(223), MovedPermanently(224), raw Location header(225), HasPrefix("http") bypass(226), meta refresh(227), script location(228), JSON body return URL(229), protocol-relative //(230)
+**VULNERABLE (25):** direct query param(223), MovedPermanently(224), raw Location header(225), HasPrefix("http") bypass(226), meta refresh(227), script location(228), JSON body return URL(229), protocol-relative //(230)
 
-**SAFE (8):** hardcoded /dashboard(231), allowlisted domain(232), path-only extract(233), same-origin check(234), key-to-URL map(235), hardcoded /login(236), known paths list(237), HMAC-signed URL(238)
+**SAFE (25):** hardcoded /dashboard(231), allowlisted domain(232), path-only extract(233), same-origin check(234), key-to-URL map(235), hardcoded /login(236), known paths list(237), HMAC-signed URL(238)
 
 ### TLS Verify (CWE-295) -- Tests 00239-00248
 
-**VULNERABLE (5):** InsecureSkipVerify:true(239), Transport with skip(240), VerifyPeerCertificate always nil(241), MinVersion:0(242), skip+empty RootCAs(243)
+**VULNERABLE (25):** InsecureSkipVerify:true(239), Transport with skip(240), VerifyPeerCertificate always nil(241), MinVersion:0(242), skip+empty RootCAs(243)
 
-**SAFE (5):** default Client(244), TLS 1.2 min(245), TLS 1.3 min(246), pinned CA pool(247), modern cipher suites(248)
+**SAFE (25):** default Client(244), TLS 1.2 min(245), TLS 1.3 min(246), pinned CA pool(247), modern cipher suites(248)
 
 ### Deserialization (CWE-502) -- Tests 00249-00256
 
-**VULNERABLE (4):** gob.Decode to interface{}(249), yaml.Unmarshal to interface{}(250), json + reflect method call(251), binary.Read from body(252)
+**VULNERABLE (25):** gob.Decode to interface{}(249), yaml.Unmarshal to interface{}(250), json + reflect method call(251), binary.Read from body(252)
 
-**SAFE (4):** json to typed struct(253), yaml to typed struct(254), gob from internal file(255), json.Decoder to typed struct(256)
+**SAFE (25):** json to typed struct(253), yaml to typed struct(254), gob from internal file(255), json.Decoder to typed struct(256)
 
 ### Hardcoded Credentials (CWE-798) -- Tests 00429-00440
 
-**VULNERABLE (6):** hardcoded DSN password(429), hardcoded JWT signing secret(430), hardcoded API key constant(431), hardcoded config struct password(432), SSH private key as string literal(433), hardcoded admin password in comparison(434)
+**VULNERABLE (25):** hardcoded DSN password(429), hardcoded JWT signing secret(430), hardcoded API key constant(431), hardcoded config struct password(432), SSH private key as string literal(433), hardcoded admin password in comparison(434)
 
-**SAFE (6):** credential from os.Getenv(435), JWT key from file(436), API key from environment(437), password from JSON config file(438), SSH key path from env(439), hardcoded non-sensitive username constant(440)
+**SAFE (25):** credential from os.Getenv(435), JWT key from file(436), API key from environment(437), password from JSON config file(438), SSH key path from env(439), hardcoded non-sensitive username constant(440)
 
 ### Authentication Failures (CWE-287) -- Tests 00441-00452
 
-**VULNERABLE (6):** jwt.ParseUnverified(441), empty HMAC secret(442), no algorithm type assertion(443), parse error ignored(444), algorithm confusion RSA-as-HMAC(445), session cookie value used as identity without validation(446)
+**VULNERABLE (25):** jwt.ParseUnverified(441), empty HMAC secret(442), no algorithm type assertion(443), parse error ignored(444), algorithm confusion RSA-as-HMAC(445), session cookie value used as identity without validation(446)
 
-**SAFE (6):** explicit HMAC method assertion(447), env-sourced non-empty secret with assertion(448), explicit alg:none rejection(449), full claims validation exp+iss+sub(450), RS256 with RSA key type assertion(451), session validated against DB with expiry check(452)
+**SAFE (25):** explicit HMAC method assertion(447), env-sourced non-empty secret with assertion(448), explicit alg:none rejection(449), full claims validation exp+iss+sub(450), RS256 with RSA key type assertion(451), session validated against DB with expiry check(452)
 
 ### Authorization Failures (CWE-862) -- Tests 00453-00461
 
-**VULNERABLE (5):** IDOR user_id from query param without ownership check(453), admin action without role check(454), client-supplied X-User-Role header trusted(455), delete without ownership check(456), file download without access control(457)
+**VULNERABLE (25):** IDOR user_id from query param without ownership check(453), admin action without role check(454), client-supplied X-User-Role header trusted(455), delete without ownership check(456), file download without access control(457)
 
-**SAFE (4):** ownership check authUserID vs requestedID(458), role from verified JWT claims(459), role from database lookup(460), SQL-enforced ownership DELETE...AND owner_id=?(461)
+**SAFE (25):** ownership check authUserID vs requestedID(458), role from verified JWT claims(459), role from database lookup(460), SQL-enforced ownership DELETE...AND owner_id=?(461)
 
 ### CSRF (CWE-352) -- Tests 00462-00470
 
-**VULNERABLE (5):** money transfer without CSRF token(462), account deletion without CSRF(463), password change without CSRF(464), settings update without CSRF(465), JSON API with cookie auth no CSRF(466)
+**VULNERABLE (25):** money transfer without CSRF token(462), account deletion without CSRF(463), password change without CSRF(464), settings update without CSRF(465), JSON API with cookie auth no CSRF(466)
 
-**SAFE (4):** CSRF token in hidden form field validated against session(467), X-CSRF-Token header validated(468), double-submit cookie pattern(469), read-only GET handler(470)
+**SAFE (25):** CSRF token in hidden form field validated against session(467), X-CSRF-Token header validated(468), double-submit cookie pattern(469), read-only GET handler(470)
 
 ### Code/Template Injection (CWE-94) -- Tests 00471-00478
 
-**VULNERABLE (4):** user-controlled text/template string parsed and executed(471), user template accesses DBPassword/APIKey struct fields(472), template.ParseFiles with user-controlled path(473), FuncMap with exec.Command wrapper callable from user template(474)
+**VULNERABLE (25):** user-controlled text/template string parsed and executed(471), user template accesses DBPassword/APIKey struct fields(472), template.ParseFiles with user-controlled path(473), FuncMap with exec.Command wrapper callable from user template(474)
 
-**SAFE (4):** hardcoded template with user as data only(475), constant template string with user in .Content field(476), template from allowlisted file path map(477), pre-compiled templates selected by validated name(478)
+**SAFE (25):** hardcoded template with user as data only(475), constant template string with user in .Content field(476), template from allowlisted file path map(477), pre-compiled templates selected by validated name(478)
 
 ---
 
@@ -419,7 +419,7 @@ Run any SAST tool, export SARIF 2.1.0, then score. **Matching is filename-based*
 your-tool scan ./testcode/ --output results.sarif
 
 # Score against ground truth (filename-based matching)
-python ../scripts/score_sarif.py results.sarif expectedresults-0.5.0.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.5.1.csv
 ```
 
 The scorer computes both **category-averaged** (OWASP standard) and **flat aggregate** scores.
@@ -434,7 +434,7 @@ aud full --offline
 
 # Convert DB to CWE-based SARIF, then score
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.1.csv
 ```
 
 ---
@@ -443,4 +443,4 @@ python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
 
-**Current: v0.5.0** -- 1350 test cases, 25 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.
+**Current: v0.5.1** -- 1350 test cases, 25 CWE categories, 8 frameworks, 5 reference apps with 394 classified functions. Tool-agnostic SARIF scoring.

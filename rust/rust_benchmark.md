@@ -4,10 +4,10 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.5.1.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
+**Ground truth**: `expectedresults-0.5.2.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
-### Test Case Inventory (v0.5.1)
+### Test Case Inventory (v0.5.2)
 
 | Category | CWE | TP | TN | Total |
 |----------|-----|----|----|-------|
@@ -42,7 +42,7 @@ Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% 
 
 **Testcode-only counts** (119 app entries moved to `vulnerable_apps/rust/` for separate scoring). Categories with heavy app contributions (sqli, cmdi, pathtraver, ssrf, memsafety) are below the 25/25 floor. FPR measurable for 100% of test cases.
 
-### Anti-Target Leakage Rules (v0.5.1)
+### Anti-Target Leakage Rules (v0.5.2)
 
 - Test filenames use opaque `benchmark_test_NNNNN.rs` naming. No category or CWE in filename.
 - Test files contain zero comments. No CWE references, no vulnerability descriptions, no annotation markers.
@@ -146,7 +146,7 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.1.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.2.csv
 ```
 
 ---
@@ -161,7 +161,7 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.5.1.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.5.2.csv
 ```
 
 ### TheAuditor (database-first path)
@@ -169,7 +169,7 @@ python ../scripts/score_sarif.py results.sarif expectedresults-0.5.1.csv
 ```bash
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.1.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.2.csv
 ```
 
 ---
