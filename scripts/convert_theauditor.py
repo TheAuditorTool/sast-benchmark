@@ -54,6 +54,7 @@ VULN_TYPE_TO_CWE = {
     "SSRF": 918,
     "NoSQL Injection": 943,
     "LDAP Injection": 90,
+    "Improper Authorization": 285,
     "Open Redirect": 601,
     "Log Injection": 117,
     "Insecure Deserialization": 502,

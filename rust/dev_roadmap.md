@@ -1,18 +1,18 @@
 # Rust SAST Benchmark — Development Roadmap
 
-> **Version:** 0.4.0 (2026-04-07)
-> **Status:** v0.4.0 shipped. Major expansion: 268 → 491 test cases, 13 → 20 CWE categories. 7 new categories (hardcodedcreds, race_condition, loginjection, securecookie, redirect, fileupload, tlsverify). All categories at 10+ TP/TN minimum. 2 CWE-798 reclassifications from infodisclosure to hardcodedcreds. TP/TN balance: 49/51.
+> **Version:** 0.5.0 (2026-04-07)
+> **Status:** v0.5.0 shipped. Scale expansion: 491 → 1,252 test cases, 20 → 25 CWE categories. All existing categories expanded to 25/25 minimum. 5 new categories (authnfailure/287, csrf/352, authzfailure/285, ldapi/90, nosql/943). T1-T4 complexity tiers. TP/TN balance: 49/51.
 > **Gold standard reference:** OWASP BenchmarkJava (2,740 test cases, 11 CWEs, 52/48 TP/TN, +100% achieved)
 
 ---
 
-## Current State (v0.4.0)
+## Current State (v0.5.0)
 
-- **491 test cases** (243 TP, 248 TN) across 20 CWE categories
-- **CSV ground truth** (`expectedresults-0.4.0.csv`) is the sole scoring authority
-- **372 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
-- **All 20 categories** have both TP and TN test cases, minimum 10/10
-- **TP/TN balance:** 49/51 (all categories within 45-55 range)
+- **1,252 test cases** (625 TP, 627 TN) across 25 CWE categories
+- **CSV ground truth** (`expectedresults-0.5.0.csv`) is the sole scoring authority
+- **633 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
+- **All 25 categories** have both TP and TN test cases, minimum 25/25
+- **TP/TN balance:** 49/51 (sqli retains 2 legacy extra TN)
 - **4 frameworks:** actix-web, axum, Rocket, Warp
 - **Scoring:** SARIF-based via `scripts/score_sarif.py`, Youden's J per category
 
@@ -148,9 +148,24 @@ cmdiExecuteCommand,cmdi,true,78
 
 ---
 
-## Milestone 5: Scale to 300+
+## Milestone 5: Scale to 25/25 per Category ✅ COMPLETE (v0.5.0)
 
-**Goal:** Statistically significant test case count per category.
+**Goal:** Statistically significant test case count per category — minimum 25 TP + 25 TN per CWE.
+
+**Delivered (2026-04-07):**
+- All 20 existing categories expanded to 25/25 minimum
+- 5 new categories added at 25/25 from day one: authnfailure (CWE-287), csrf (CWE-352), authzfailure (CWE-285), ldapi (CWE-90), nosql (CWE-943)
+- T1-T4 complexity tiers introduced: T1 direct (≤3 lines), T2 indirect (1 intermediate), T3 hard TN (dead-code/overwrite/Vec-shuffle/HashMap-mismatch/ignore-arg), T4 hard TP (incomplete validation)
+- XXE dropped (Rust XML parsers don't support external entity resolution by design — would create fraudulent tests)
+- 1,252 total test cases (625 TP, 627 TN). At 25/25, one misclassification = 4% TPR/FPR swing vs 10% at 10/10
+
+**Youden J benefit:** More tests per category = more reliable tool discrimination = publishable benchmark. Statistical significance threshold met for OWASP Foundation submission.
+
+---
+
+## Milestone 5-ORIG (archived): Scale to 300+
+
+**Goal (original):** Statistically significant test case count per category.
 
 **Scope:**
 - Minimum 10 TP + 10 TN per category = 20 per category x 13 categories = 260 minimum

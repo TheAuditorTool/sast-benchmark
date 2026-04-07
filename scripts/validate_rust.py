@@ -30,7 +30,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 RUST_DIR = BENCH_ROOT / "rust"
-CSV_FILE = RUST_DIR / "expectedresults-0.4.0.csv"
+CSV_FILE = RUST_DIR / "expectedresults-0.5.0.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCAN_DIRS = [RUST_DIR / "apps", RUST_DIR / "testcode"]
 
@@ -40,8 +40,8 @@ PAT_TARGET_LINE = re.compile(r"vuln-code-snippet\s+target-line\s+(\S+)")
 
 REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
-    20, 22, 78, 79, 89, 117, 119, 190, 200, 209, 295, 327, 330, 347,
-    362, 434, 502, 532, 601, 614, 798, 918, 1333,
+    20, 22, 78, 79, 89, 90, 117, 119, 190, 200, 209, 285, 287, 295,
+    327, 330, 347, 352, 362, 434, 502, 532, 601, 614, 798, 918, 943, 1333,
 }
 
 VALID_CATEGORIES = {
@@ -50,6 +50,7 @@ VALID_CATEGORIES = {
     "intoverflow", "redos", "inputval",
     "hardcodedcreds", "race_condition", "loginjection",
     "securecookie", "redirect", "fileupload", "tlsverify",
+    "authnfailure", "csrf", "authzfailure", "ldapi", "nosql",
 }
 
 errors = []

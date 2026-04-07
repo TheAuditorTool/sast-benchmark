@@ -4,6 +4,58 @@ Every change to benchmark files documented here with rationale.
 
 ---
 
+## 2026-04-07 — v0.5.0: 25/25 Expansion (491 → 1,252 test cases, 20 → 25 CWEs)
+
+### Context
+OWASP Foundation submission (contacts: Dave Wichers, Sascha Fahl). Statistical significance requires minimum 25 TP + 25 TN per category — at 25/25, one misclassification = 4% TPR/FPR swing (vs 10% at 10/10). More tests = more reliable tool discrimination = publishable benchmark.
+
+### Pre-Flight Due Diligence
+All CWE numbers verified against MITRE before writing any code. Key decisions:
+- **authnfailure**: CWE-287 (NOT CWE-306). CWE-287 = improper/bypassable auth. CWE-306 = entirely missing auth. OWASP Java+Go both use 287.
+- **authzfailure**: CWE-285 (NOT CWE-862). CWE-285 = "Improper Authorization" (parent). OWASP Java+Go both use 285.
+- **nosql**: CWE-943 confirmed via MITRE — "Improper Neutralization of Special Elements in Data Query Logic". Active CVEs filed under 943.
+- **XXE DROPPED**: All major Rust XML parsers (quick-xml, roxmltree, serde-xml-rs) do NOT support external entity resolution by design. XXE as CWE-611 is untestable in Rust — would create fraudulent test cases. Replaced with authzfailure (CWE-285).
+
+### Complexity Tier System (T1-T4)
+No tier label appears in source files (that would be a hint to tools). Documented here only.
+- **T1 (Direct)**: req.param() → sink in ≤3 lines. ~40% of new cases.
+- **T2 (Indirect)**: Taint through 1 intermediate — struct field, format!, helper fn, variable. ~35%.
+- **T3 (Hard TN)**: Dead-code branch / overwrite / Vec-remove / HashMap-key-mismatch / ignore-arg. ~15% of new TN. Patterns: T3-A (constant-folded dead branch), T3-B (Vec shuffle removes tainted entry), T3-C (unconditional overwrite), T3-D (HashMap key mismatch), T3-E (function ignores argument).
+- **T4 (Hard TP)**: Incomplete validation bypass — partial char check, length-only, prefix-doesn't-prevent. ~15% of new TP. Patterns: T4-A (incomplete char check), T4-B (struct field taint), T4-C (length-only), T4-D (prefix preserves traversal), T4-E (format! preserves taint).
+
+### Batch A: 6 categories 10/10 → 25/25 (+180 files)
+`race_condition`, `loginjection`, `securecookie`, `redirect`, `fileupload`, `tlsverify` — each +15 TP + 15 TN.
+
+### Batch B: 9 categories 12/12 → 25/25 + hardcodedcreds (+262 files)
+`crypto`, `deserial`, `infodisclosure`, `inputval`, `intoverflow`, `memsafety`, `redos`, `weakrand`, `xss` — each +13 TP + 13 TN.
+`hardcodedcreds` — +13 TP + 15 TN.
+**Critical redos rule**: ALL TP cases use `fancy_regex::Regex` (supports catastrophic backtracking via lookaheads/backreferences). TN cases use `regex::Regex` (linear-time NFA, provably immune to ReDoS). Using `regex` crate for ReDoS TP would create fraudulent test cases.
+
+### Batch C: Larger existing categories (+69 files)
+`sqli` (+2 TP — brings to 25/27, 2 legacy extra TN retained), `cmdi` (+11 TP +9 TN), `pathtraver` (+11 TP +11 TN), `ssrf` (+13 TP +12 TN).
+
+### Batch D: 5 new categories (+250 files)
+| Category | CWE | TP | TN | Notes |
+|----------|-----|----|----|-------|
+| authnfailure | 287 | 25 | 25 | JWT bypass, password skip, magic tokens, user-supplied claims, timing oracle |
+| csrf | 352 | 25 | 25 | No token check, presence-only, non-CT comparison, token-in-URL, Origin/CT mitigations |
+| authzfailure | 285 | 25 | 25 | IDOR, admin no-check, user-controlled role, HPAE, ownership-based TN |
+| ldapi | 90 | 25 | 25 | Filter concat, DN injection, struct taint, multi-condition, partial escape |
+| nosql | 943 | 25 | 25 | JSON-to-doc, format! injection, $where JS, aggregation pipeline, partial validation |
+
+### Infrastructure Updates
+- `scripts/validate_rust.py`: VALID_CWES += {90, 285, 287, 352, 943}; VALID_CATEGORIES += {"authnfailure", "csrf", "authzfailure", "ldapi", "nosql"}; CSV_FILE → expectedresults-0.5.0.csv
+- `scripts/convert_theauditor.py`: VULN_TYPE_TO_CWE += {"Improper Authorization": 285}
+- `rust/expectedresults-0.5.0.csv`: New answer key (1,252 entries). Old 0.4.0 file retained as historical record.
+
+### Final Counts
+- **CSV entries**: 1,252 (625 TP, 627 TN)
+- **Annotations**: 1,252 (1:1 match)
+- **Categories**: 25 (all at 25 TP + 25 TN minimum)
+- **Validator result**: PASS WITH WARNINGS (1 non-blocking: stale SARIF hash — expected)
+
+---
+
 ## 2026-04-07 — v0.4.0: Major Expansion (268 → 491 test cases, 13 → 20 CWEs)
 
 ### Context

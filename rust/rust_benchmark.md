@@ -4,38 +4,49 @@
 
 Modeled after OWASP BenchmarkJava (the gold standard — 2,740 test cases, 100% achieved).
 
-**Ground truth**: `expectedresults-0.4.0.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
+**Ground truth**: `expectedresults-0.5.0.csv` — CSV answer key (sole scoring authority). Matches OWASP Java/Python format.
 **Scoring**: Youden's J (TPR - FPR) per CWE category. 0% = random guessing. +100% = perfect.
 
-### Test Case Inventory
+### Test Case Inventory (v0.5.0)
 
 | Category | CWE | TP | TN | Total | Balance |
 |----------|-----|----|----|-------|---------|
-| sqli | 89 | 23 | 27 | 50 | 46/54 |
-| cmdi | 78 | 14 | 16 | 30 | 47/53 |
-| pathtraver | 22 | 14 | 14 | 28 | 50/50 |
-| ssrf | 918 | 12 | 13 | 25 | 48/52 |
-| xss | 79 | 12 | 12 | 24 | 50/50 |
-| memsafety | 119 | 12 | 12 | 24 | 50/50 |
-| crypto | 327* | 12 | 12 | 24 | 50/50 |
-| weakrand | 330 | 12 | 12 | 24 | 50/50 |
-| infodisclosure | 200* | 12 | 12 | 24 | 50/50 |
-| deserial | 502 | 12 | 12 | 24 | 50/50 |
-| intoverflow | 190 | 12 | 12 | 24 | 50/50 |
-| redos | 1333 | 12 | 12 | 24 | 50/50 |
-| inputval | 20 | 12 | 12 | 24 | 50/50 |
-| hardcodedcreds | 798 | 12 | 10 | 22 | 55/45 |
-| race_condition | 362 | 10 | 10 | 20 | 50/50 |
-| loginjection | 117 | 10 | 10 | 20 | 50/50 |
-| securecookie | 614 | 10 | 10 | 20 | 50/50 |
-| redirect | 601 | 10 | 10 | 20 | 50/50 |
-| fileupload | 434 | 10 | 10 | 20 | 50/50 |
-| tlsverify | 295 | 10 | 10 | 20 | 50/50 |
-| **TOTAL** | | **243** | **248** | **491** | **49/51** |
+| sqli | 89 | 25 | 27 | 52 | 48/52 |
+| cmdi | 78 | 25 | 25 | 50 | 50/50 |
+| pathtraver | 22 | 25 | 25 | 50 | 50/50 |
+| ssrf | 918 | 25 | 25 | 50 | 50/50 |
+| xss | 79 | 25 | 25 | 50 | 50/50 |
+| memsafety | 119 | 25 | 25 | 50 | 50/50 |
+| crypto | 327* | 25 | 25 | 50 | 50/50 |
+| weakrand | 330 | 25 | 25 | 50 | 50/50 |
+| infodisclosure | 200* | 25 | 25 | 50 | 50/50 |
+| deserial | 502 | 25 | 25 | 50 | 50/50 |
+| intoverflow | 190 | 25 | 25 | 50 | 50/50 |
+| redos | 1333 | 25 | 25 | 50 | 50/50 |
+| inputval | 20 | 25 | 25 | 50 | 50/50 |
+| hardcodedcreds | 798 | 25 | 25 | 50 | 50/50 |
+| race_condition | 362 | 25 | 25 | 50 | 50/50 |
+| loginjection | 117 | 25 | 25 | 50 | 50/50 |
+| securecookie | 614 | 25 | 25 | 50 | 50/50 |
+| redirect | 601 | 25 | 25 | 50 | 50/50 |
+| fileupload | 434 | 25 | 25 | 50 | 50/50 |
+| tlsverify | 295 | 25 | 25 | 50 | 50/50 |
+| authnfailure | 287 | 25 | 25 | 50 | 50/50 |
+| csrf | 352 | 25 | 25 | 50 | 50/50 |
+| authzfailure | 285 | 25 | 25 | 50 | 50/50 |
+| ldapi | 90 | 25 | 25 | 50 | 50/50 |
+| nosql | 943 | 25 | 25 | 50 | 50/50 |
+| **TOTAL** | | **625** | **627** | **1,252** | **49/51** |
 
-*crypto has 2 entries with CWE-347 (JWT); infodisclosure has entries with CWE-200/209/532
+*crypto has entries with CWE-347 (JWT alg=none); infodisclosure has entries with CWE-200/209/532
 
-**All 20 categories have TP AND TN.** Every category has minimum 10 TP and 10 TN. TP/TN ratio: 49/51 (Java gold standard: 52/48). FPR measurable for 100% of test cases.
+**All 25 categories have TP AND TN.** Every category has minimum 25 TP and 25 TN. TP/TN ratio: 49/51 (sqli retains 2 legacy extra TN). FPR measurable for 100% of test cases. At 25/25 per category, one misclassification = 4% TPR/FPR swing (vs 10% at 10/10), enabling reliable tool discrimination.
+
+**Complexity tiers** (no tier label in source files — tiers are for benchmark design documentation only):
+- T1 (Direct): req.param() → sink in ≤3 lines (~40% of new cases)
+- T2 (Indirect): taint through 1 intermediate — struct field, format!, helper fn (~35%)
+- T3 (Hard TN): dead-code branch / overwrite / Vec-remove / HashMap-key-mismatch / ignore-arg (~15% of new TN)
+- T4 (Hard TP): incomplete validation bypass — partial char check, length-only, prefix-doesn't-prevent (~15% of new TP)
 
 ### Frameworks Covered
 
@@ -132,7 +143,7 @@ See [baseline_theauditor_tool_score.md](baseline_theauditor_tool_score.md) for f
 Score via the CWE-based SARIF pipeline (see [SCORING.md](SCORING.md)):
 ```bash
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
 ```
 
 ---
@@ -147,7 +158,7 @@ See [SCORING.md](SCORING.md) for full tool-agnostic scoring instructions (SARIF-
 
 ```bash
 # Export SARIF from your tool, then:
-python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
+python ../scripts/score_sarif.py results.sarif expectedresults-0.5.0.csv
 ```
 
 ### TheAuditor (database-first path)
@@ -155,7 +166,7 @@ python ../scripts/score_sarif.py results.sarif expectedresults-0.4.0.csv
 ```bash
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.4.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.5.0.csv
 ```
 
 ---
