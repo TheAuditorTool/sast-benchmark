@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        language: [rust, go, bash, php, ruby, adversarial, chains]
+        language: [rust, go, bash, php, ruby, adversarial, chains, vulnerable_apps]
 
     steps:
       - name: Checkout
