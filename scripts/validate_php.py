@@ -26,7 +26,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 PHP_DIR = BENCH_ROOT / "php"
-CSV_FILE = PHP_DIR / "expectedresults-0.2.0.csv"
+CSV_FILE = PHP_DIR / "expectedresults-0.3.0.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
 SCAN_DIRS = [PHP_DIR / "apps", PHP_DIR / "testcode"]
 

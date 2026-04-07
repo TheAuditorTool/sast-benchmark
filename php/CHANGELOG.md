@@ -1,5 +1,22 @@
 # PHP SAST Benchmark Changelog
 
+## v0.3.0 (2026-04-07)
+
+Expansion release: all 25 categories reach 25 TP + 25 TN minimum.
+
+- 694 new standalone test cases (346 TP / 348 TN) across 24 categories
+- Total: 1,256 test cases (628 TP / 628 TN), 25 CWE categories, 4 frameworks
+- All categories now have minimum 25 TP + 25 TN (50 total per category)
+- sqli unchanged at 28/28 (already above floor)
+- Youden precision improved: one misclassification now equals ±4% score swing (was ±10%)
+- Legacy PHP patterns annotated with version comments (PHP 5.x/7.x)
+- New patterns cover: mail() 5th-arg injection, PHAR chain variants, magic hash bypasses,
+  JWT/CSRF combinations, PHAR stream alternatives, PHP 8 type juggling vectors,
+  cloud metadata SSRF, gopher:// protocol SSRF, Twig createTemplate SSTI,
+  DOM text node XSS defense, GD re-encode upload defense, and many more
+- 1,138 standalone testcode files (up from 444)
+- CSV version bump: expectedresults-0.2.0.csv → expectedresults-0.3.0.csv
+
 ## v0.2.0 (2026-04-07)
 
 Expansion release: all 25 categories reach 10 TP + 10 TN minimum.

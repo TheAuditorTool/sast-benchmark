@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 ## Test Case Inventory
 
-25 CWE categories, 562 test cases (282 TP / 280 TN), 50/50 balance.
+25 CWE categories, 1,256 test cases (628 TP / 628 TN), 50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 

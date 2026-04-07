@@ -7,7 +7,7 @@
 your-tool --output results.sarif php/
 
 # 2. Score against ground truth (apps/ and testcode/ auto-detected from CSV path)
-python scripts/score_sarif.py results.sarif php/expectedresults-0.2.0.csv
+python scripts/score_sarif.py results.sarif php/expectedresults-0.3.0.csv
 ```
 
 ## Detection Method: Annotation-Based Matching
@@ -70,7 +70,7 @@ Any SAST tool that outputs SARIF 2.1.0 can be scored. Tool-specific instructions
 cd php/
 aud full --offline
 python ../scripts/convert_theauditor.py .pf/repo_index.db
-python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.2.0.csv
+python ../scripts/score_sarif.py theauditor.sarif expectedresults-0.3.0.csv
 ```
 
 The converter auto-detects language and benchmark directory from the DB path,
@@ -80,19 +80,19 @@ DB+CSV haven't changed. Use `--force` to regenerate unconditionally.
 ### Semgrep
 ```bash
 semgrep --config auto --sarif -o semgrep.sarif php/
-python scripts/score_sarif.py semgrep.sarif php/expectedresults-0.2.0.csv
+python scripts/score_sarif.py semgrep.sarif php/expectedresults-0.3.0.csv
 ```
 
 ### Psalm (Taint Analysis)
 ```bash
 cd php/ && psalm --taint-analysis --output-format=sarif > psalm.sarif
-python ../scripts/score_sarif.py psalm.sarif expectedresults-0.2.0.csv
+python ../scripts/score_sarif.py psalm.sarif expectedresults-0.3.0.csv
 ```
 
 ### Bearer
 ```bash
 bearer scan php/ --format sarif --output bearer.sarif
-python scripts/score_sarif.py bearer.sarif php/expectedresults-0.2.0.csv
+python scripts/score_sarif.py bearer.sarif php/expectedresults-0.3.0.csv
 ```
 
 ## Validation

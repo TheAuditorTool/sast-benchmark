@@ -1,0 +1,10 @@
+<?php
+require_once __DIR__ . '/shared.php';
+
+// vuln-code-snippet start php_redirect_location_no_check
+function redirect021(BenchmarkRequest $req): BenchmarkResponse {
+    $url = $req->param('url');
+    header('Location: ' . $url); // vuln-code-snippet vuln-line php_redirect_location_no_check
+    return BenchmarkResponse::ok('');
+}
+// vuln-code-snippet end php_redirect_location_no_check
