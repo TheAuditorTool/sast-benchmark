@@ -1,5 +1,21 @@
 # PHP SAST Benchmark Changelog
 
+## v0.3.1 (2026-04-08)
+
+Anti-target-leakage migration + app separation.
+
+- Renamed all 1,138 testcode files from `{category}_{NNN}.php` to
+  `benchmark_test_NNNNN.php` with seeded shuffle (seed=20260407)
+- Renamed all entry functions from `{category}NNN()` to `benchmarkTestNNNNN()`
+- Stripped all `vuln-code-snippet` annotations (3,414 lines removed)
+- Stripped all non-annotation comments (23 lines: Legacy PHP, Simulates, etc.)
+- CSV keys changed from `php_{category}_{descriptor}` to `BenchmarkTestNNNNN`
+- Scoring switched from annotation-based to filename-based matching (same as Go)
+- Removed 118 app-sourced entries from main CSV (apps moved to `vulnerable_apps/php/`)
+- Validator v2.0: L4 now enforces anti-leakage (zero comments, zero annotations)
+- Migration script: `scripts/migrate_php_leakage.py` (deterministic, reproducible)
+- Audit trail: `rename_map.json` maps old filenames/keys to new ones
+
 ## v0.3.0 (2026-04-07)
 
 Expansion release: all 25 categories reach 25 TP + 25 TN minimum.

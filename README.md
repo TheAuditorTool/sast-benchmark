@@ -59,7 +59,7 @@ gorustbash_benchmark/
     score_sarif.py           # SARIF scorer (any SAST tool)
     convert_theauditor.py    # TheAuditor DB to SARIF bridge
     validate_go.py           # Go CSV/file consistency checker
-    validate_php.py          # PHP CSV/annotation consistency checker
+    validate_php.py          # PHP filename-based fidelity + anti-leakage checker
     validate_adversarial.py  # Adversarial CSV/annotation consistency checker
     validate_chains.py       # Chain detection CSV/annotation consistency checker
   go/                      # Go benchmark (1350 tests, 25 CWEs)
@@ -83,7 +83,7 @@ gorustbash_benchmark/
     CHANGELOG.md             # Version history
     apps/                    # 5 annotated applications
     testcode/                # 20 standalone CWE test files
-  php/                     # PHP benchmark (1,256 tests, 25 CWEs)
+  php/                     # PHP benchmark (1,138 tests, 25 CWEs)
     expectedresults-0.3.0.csv  # Answer key (1,256 test cases, OWASP CSV format)
     php_benchmark.md         # Full benchmark specification
     SCORING.md               # Scoring methodology and tool instructions
@@ -204,37 +204,37 @@ Frameworks: actix-web, axum, Rocket, Warp. 8 reference apps in `apps/` + 633 sta
 
 5 applications: DevOps pipeline manager (10 scripts), HTTP webhook server (8 files), operations suite with SAFE_MODE toggle (7 files), data pipeline backup/deploy/healthcheck (4 files), CI/CD pipeline (7 files, TN-only). Plus 20 standalone CWE test files + 19 extended test files. TP/TN split: 50/50. All categories at 25/25 minimum (Youden significance threshold).
 
-### PHP v0.3.0 -- 1,256 test cases, 25 CWEs, 4 frameworks
+### PHP v0.3.1 -- 1,138 test cases, 25 CWEs
 
 | Category | CWE | Vuln | Safe | Total |
 |----------|-----|------|------|-------|
-| sqli | 89 | 28 | 28 | 56 |
-| xss | 79 | 25 | 25 | 50 |
-| cmdi | 78 | 25 | 25 | 50 |
-| pathtraver | 22 | 25 | 25 | 50 |
-| codeinj | 94 | 25 | 25 | 50 |
-| csrf | 352 | 25 | 25 | 50 |
-| deserial | 502 | 25 | 25 | 50 |
-| extract | 621 | 25 | 25 | 50 |
-| fileinclusion | 98 | 25 | 25 | 50 |
-| fileupload | 434 | 25 | 25 | 50 |
-| hardcodedcreds | 798 | 25 | 25 | 50 |
-| headerinj | 113 | 25 | 25 | 50 |
-| ldapi | 90 | 25 | 25 | 50 |
-| massassign | 915 | 25 | 25 | 50 |
-| redirect | 601 | 25 | 25 | 50 |
-| securecookie | 614 | 25 | 25 | 50 |
-| ssrf | 918 | 25 | 25 | 50 |
-| ssti | 1336 | 25 | 25 | 50 |
-| typejuggling | 697 | 25 | 25 | 50 |
-| unsafereflect | 470 | 25 | 25 | 50 |
-| variablevars | 627 | 25 | 25 | 50 |
+| sqli | 89 | 15 | 15 | 30 |
+| xss | 79 | 18 | 18 | 36 |
+| cmdi | 78 | 23 | 23 | 46 |
+| pathtraver | 22 | 21 | 21 | 42 |
+| codeinj | 94 | 24 | 24 | 48 |
+| csrf | 352 | 22 | 22 | 44 |
+| deserial | 502 | 24 | 24 | 48 |
+| extract | 621 | 24 | 24 | 48 |
+| fileinclusion | 98 | 23 | 23 | 46 |
+| fileupload | 434 | 23 | 23 | 46 |
+| hardcodedcreds | 798 | 22 | 22 | 44 |
+| headerinj | 113 | 24 | 24 | 48 |
+| ldapi | 90 | 24 | 24 | 48 |
+| massassign | 915 | 23 | 23 | 46 |
+| redirect | 601 | 23 | 23 | 46 |
+| securecookie | 614 | 24 | 24 | 48 |
+| ssrf | 918 | 23 | 23 | 46 |
+| ssti | 1336 | 23 | 23 | 46 |
+| typejuggling | 697 | 23 | 23 | 46 |
+| unsafereflect | 470 | 24 | 24 | 48 |
+| variablevars | 627 | 24 | 24 | 48 |
 | weakcipher | 327 | 25 | 25 | 50 |
-| weakhash | 328 | 25 | 25 | 50 |
-| weakrand | 330 | 25 | 25 | 50 |
-| xxe | 611 | 25 | 25 | 50 |
+| weakhash | 328 | 24 | 24 | 48 |
+| weakrand | 330 | 23 | 23 | 46 |
+| xxe | 611 | 23 | 23 | 46 |
 
-1,138 standalone test files in `testcode/` + 4 annotated applications (vuln_blog, laravel_api, wp_plugin, symfony_app). Frameworks: Raw PHP/PDO, Laravel, WordPress, Symfony. Covers both modern PHP 8.x and legacy PHP 5.x/7.x patterns. TP/TN balance: 50/50. All 25 categories have minimum 25 TP + 25 TN. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
+1,138 standalone test files in `testcode/`. Generic `benchmark_test_NNNNN.php` naming with seeded shuffle -- no category leakage in filenames, function names, or comments. Filename-based scoring (same as Go). TP/TN balance: 50/50. 6 PHP-unique CWEs not found in any other benchmark: file inclusion (CWE-98), type juggling (CWE-697), variable extraction (CWE-621), variable variables (CWE-627), unsafe reflection (CWE-470), SSTI (CWE-1336).
 
 ### Ruby v0.3.0 -- 1,350 test cases, 27 CWEs, 3 frameworks
 
@@ -331,13 +331,13 @@ See [chains/chain_benchmark.md](chains/chain_benchmark.md) for the full methodol
 | Benchmark | Tests | CWEs/Categories | TP/TN Balance | What It Tests |
 |-----------|-------|-----------------|---------------|---------------|
 | Go | 1,350 | 25 CWEs | 50/50 | Vulnerability detection |
-| PHP | 1,256 | 25 CWEs | 50/50 | Vulnerability detection |
+| PHP | 1,138 | 25 CWEs | 50/50 | Vulnerability detection |
 | Bash | 1,056 | 20 CWEs | 50/50 | Vulnerability detection |
 | Ruby | 1,350 | 27 CWEs | 50/50 | Vulnerability detection |
 | Rust | 1,252 | 25 CWEs | 49/51 | Vulnerability detection |
 | Adversarial | 123 | 10 categories | 52/48 | Evasion/concealment detection |
 | Chains | 500 | 20 categories | 50/50 | Compound exploit chain detection |
-| **Total** | **6,887** | **47 unique CWEs + 30 detection categories** | |
+| **Total** | **6,769** | **47 unique CWEs + 30 detection categories** | |
 
 ## How to Use
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""PHP SAST Benchmark Fidelity Validator v1.0
+"""PHP SAST Benchmark Fidelity Validator v2.0
 
-Modeled after validate_bash.py and TheAuditor's multi-level fidelity system:
-  L1 -- Structural integrity (CSV <-> annotation cross-reference)
-  L2 -- Roundtrip fidelity (file paths, line markers, snippet content)
+Filename-based validation (post-leakage migration). No annotations.
+  L1 -- Structural integrity (CSV <-> file cross-reference)
+  L2 -- Naming convention (benchmark_test_NNNNN.php, benchmarkTestNNNNN function)
   L3 -- Schema validation (required fields, valid CWEs, valid categories)
-  L4 -- Semantic fidelity (vuln-line vs safe-line correctness, overlap detection)
-  L5 -- Scoring pipeline readiness (RULE_MAP/SINK_MAP coverage in converter)
+  L4 -- Anti-target-leakage (no annotations, no CWE mentions, no category in comments)
+  L5 -- Scoring pipeline readiness (filename-based scoring support)
 
 Exit 0 if all checks pass, 1 if any ERRORS, 2 if only WARNINGS.
 No dependencies -- stdlib only.
@@ -14,7 +14,6 @@ No dependencies -- stdlib only.
 
 import hashlib
 import json
-import os
 import re
 import sys
 from collections import defaultdict
@@ -26,16 +25,17 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 BENCH_ROOT = SCRIPT_DIR.parent
 PHP_DIR = BENCH_ROOT / "php"
-CSV_FILE = PHP_DIR / "expectedresults-0.3.0.csv"
+CSV_FILE = PHP_DIR / "expectedresults-0.3.1.csv"
 CONVERTER_PY = SCRIPT_DIR / "convert_theauditor.py"
-SCAN_DIRS = [PHP_DIR / "apps", PHP_DIR / "testcode"]
+TESTCODE_DIR = PHP_DIR / "testcode"
 
-PAT_START = re.compile(r"vuln-code-snippet\s+start\s+(\S+)")
-PAT_END = re.compile(r"vuln-code-snippet\s+end\s+(\S+)")
-PAT_VULN_LINE = re.compile(r"vuln-code-snippet\s+vuln-line\s+(\S+)")
-PAT_SAFE_LINE = re.compile(r"vuln-code-snippet\s+safe-line\s+(\S+)")
+PAT_BENCHMARK_FILE = re.compile(r"^benchmark_test_(\d{5})\.php$")
+PAT_BENCHMARK_KEY = re.compile(r"^BenchmarkTest(\d{5})$")
+PAT_ENTRY_FUNC = re.compile(r"^function\s+benchmarkTest(\d{5})\(", re.MULTILINE)
+PAT_ANNOTATION = re.compile(r"vuln-code-snippet")
+PAT_CWE_MENTION = re.compile(r"CWE-\d+", re.IGNORECASE)
+PAT_STANDALONE_COMMENT = re.compile(r"^\s*//\s")
 
-REQUIRED_FIELDS = {"key", "category", "cwe", "vulnerable"}
 VALID_CWES = {
     20, 22, 78, 79, 89, 90, 94, 98, 113, 327, 328, 330,
     352, 434, 470, 502, 601, 611, 614, 621, 627, 697, 798,
@@ -58,7 +58,6 @@ warnings = []
 # L1: Structural Integrity
 # ============================================================================
 def parse_csv():
-    """Parse expectedresults CSV. Format: test name,category,real vulnerability,CWE"""
     entries = {}
     seen_keys = {}
 
@@ -92,7 +91,7 @@ def parse_csv():
             try:
                 cwe = int(cwe_str)
             except ValueError:
-                errors.append("L3 Invalid CWE value '%s' for key '%s' at CSV line %d" % (cwe_str, key, line_num))
+                errors.append("L3 Invalid CWE '%s' for key '%s' at CSV line %d" % (cwe_str, key, line_num))
                 cwe = -1
 
             entries[key] = {
@@ -100,102 +99,61 @@ def parse_csv():
                 "category": category,
                 "vulnerable": vulnerable_str == "true",
                 "cwe": cwe,
-                "_csv_line": line_num,
             }
 
     return entries
 
 
-def scan_annotations():
-    """Scan .php files for vuln-code-snippet markers.
-    Returns:
-      annotations: {key: {file, start, end}}
-      vuln_lines: {key: [(file, line_num), ...]}
-      safe_lines: {key: [(file, line_num), ...]}
-      file_lines: {rel_path: [line1, line2, ...]}  (cached for L2 checks)
-    """
-    annotations = {}
-    open_snippets = {}
-    vuln_lines = defaultdict(list)
-    safe_lines = defaultdict(list)
-    file_lines = {}
+def scan_test_files():
+    files = {}
+    if not TESTCODE_DIR.is_dir():
+        errors.append("L1 testcode directory not found: %s" % TESTCODE_DIR)
+        return files
 
-    for scan_dir in SCAN_DIRS:
-        if not scan_dir.is_dir():
+    for f in sorted(TESTCODE_DIR.glob("*.php")):
+        if f.name == "shared.php":
             continue
-        for root, dirs, files in os.walk(scan_dir):
-            dirs[:] = [d for d in dirs if d not in (
-                ".git", "node_modules", ".auditor_venv", ".pf", "vendor", "target"
-            )]
-            for fn in sorted(files):
-                if not fn.endswith(".php"):
-                    continue
-                filepath = Path(root) / fn
-                rel = str(filepath.relative_to(PHP_DIR)).replace("\\", "/")
-                try:
-                    with open(filepath, "r", encoding="utf-8", errors="replace") as f:
-                        lines = f.readlines()
-                except OSError:
-                    continue
+        m = PAT_BENCHMARK_FILE.match(f.name)
+        if m:
+            num = m.group(1)
+            csv_key = "BenchmarkTest" + num
+            files[csv_key] = f
+        else:
+            errors.append("L2 Non-standard filename in testcode/: %s" % f.name)
 
-                file_lines[rel] = lines
+    return files
 
-                for i, line in enumerate(lines, 1):
-                    m = PAT_START.search(line)
-                    if m:
-                        key = m.group(1)
-                        if key in open_snippets:
-                            errors.append(
-                                "L1 Duplicate annotation start for '%s' in %s:%d "
-                                "(first at %s:%d)" % (key, rel, i, open_snippets[key][0], open_snippets[key][1])
-                            )
-                        open_snippets[key] = (rel, i)
 
-                    m = PAT_END.search(line)
-                    if m:
-                        key = m.group(1)
-                        if key in open_snippets:
-                            start_file, start_line = open_snippets.pop(key)
-                            if key in annotations:
-                                errors.append("L1 Duplicate annotation key '%s' in %s:%d" % (key, rel, i))
-                            annotations[key] = {"file": start_file, "start": start_line, "end": i}
-                        else:
-                            errors.append("L1 End without start for '%s' in %s:%d" % (key, rel, i))
+def check_structural(csv_entries, test_files):
+    csv_keys = set(csv_entries.keys())
+    file_keys = set(test_files.keys())
 
-                    m = PAT_VULN_LINE.search(line)
-                    if m:
-                        vuln_lines[m.group(1)].append((rel, i))
-
-                    m = PAT_SAFE_LINE.search(line)
-                    if m:
-                        safe_lines[m.group(1)].append((rel, i))
-
-    for key, (file, line) in open_snippets.items():
-        errors.append("L1 Unclosed annotation start for '%s' in %s:%d" % (key, file, line))
-
-    return annotations, vuln_lines, safe_lines, file_lines
+    for key in sorted(csv_keys - file_keys):
+        errors.append("L1 Orphan CSV: '%s' has no matching file" % key)
+    for key in sorted(file_keys - csv_keys):
+        errors.append("L1 Orphan file: '%s' has no CSV entry" % key)
 
 
 # ============================================================================
-# L2: Roundtrip Fidelity
+# L2: Naming Convention
 # ============================================================================
-def check_roundtrip(csv_entries, annotations):
-    """Verify annotation files exist on disk and snippets are non-empty."""
-    for key, info in csv_entries.items():
-        if key not in annotations:
+def check_naming(test_files):
+    for csv_key, filepath in test_files.items():
+        m = PAT_BENCHMARK_KEY.match(csv_key)
+        if not m:
+            errors.append("L2 CSV key '%s' does not match BenchmarkTestNNNNN pattern" % csv_key)
             continue
 
-        ann = annotations[key]
-        ann_file = ann["file"]
+        expected_num = m.group(1)
+        content = filepath.read_text(encoding="utf-8", errors="replace")
 
-        full_path = PHP_DIR / ann_file
-        if not full_path.exists():
-            errors.append("L2 File not found on disk: '%s' (key '%s')" % (ann_file, key))
-
-        if ann["end"] - ann["start"] <= 1:
-            warnings.append(
-                "L2 Empty snippet for '%s' in %s:%d-%d "
-                "(no code between start/end markers)" % (key, ann_file, ann["start"], ann["end"])
+        func_match = PAT_ENTRY_FUNC.search(content)
+        if not func_match:
+            errors.append("L2 No benchmarkTestNNNNN entry function in %s" % filepath.name)
+        elif func_match.group(1) != expected_num:
+            errors.append(
+                "L2 Function number mismatch in %s: function has %s, file has %s"
+                % (filepath.name, func_match.group(1), expected_num)
             )
 
 
@@ -203,156 +161,82 @@ def check_roundtrip(csv_entries, annotations):
 # L3: Schema Validation
 # ============================================================================
 def check_schema(csv_entries):
-    """Validate required fields, CWE values, and category consistency."""
     all_categories = set()
 
     for key, info in csv_entries.items():
-        missing = REQUIRED_FIELDS - set(info.keys())
-        if missing:
-            errors.append(
-                "L3 Missing required fields for '%s': %s "
-                "(CSV line %s)" % (key, sorted(missing), info.get("_csv_line", "?"))
-            )
-
         cwe = info.get("cwe")
         if cwe is not None and cwe not in VALID_CWES:
-            warnings.append(
-                "L3 CWE %d for key '%s' is not in the known CWE set "
-                "(may be valid but not in our allowlist)" % (cwe, key)
-            )
+            warnings.append("L3 CWE %d for key '%s' not in known set" % (cwe, key))
 
         cat = info.get("category")
         if cat:
             all_categories.add(cat)
             if cat not in VALID_CATEGORIES:
-                warnings.append(
-                    "L3 Category '%s' for key '%s' is not in the expected category set" % (cat, key)
-                )
+                warnings.append("L3 Category '%s' for key '%s' not in expected set" % (cat, key))
 
     return all_categories
 
 
 # ============================================================================
-# L4: Semantic Fidelity
+# L4: Anti-Target-Leakage
 # ============================================================================
-def check_semantics(csv_entries, annotations, vuln_lines, safe_lines):
-    """Verify vuln-line/safe-line markers match vulnerable classification."""
-    for key, info in csv_entries.items():
-        if key not in annotations:
-            continue
+def check_leakage(test_files):
+    leakage_count = 0
 
-        is_vuln = info.get("vulnerable", None)
-        ann = annotations[key]
-        has_vuln_marker = key in vuln_lines
-        has_safe_marker = key in safe_lines
+    for csv_key, filepath in test_files.items():
+        content = filepath.read_text(encoding="utf-8", errors="replace")
 
-        if is_vuln is True:
-            if not has_vuln_marker:
-                errors.append(
-                    "L4 Key '%s' is vulnerable=true but has NO vuln-line marker "
-                    "in %s:%d-%d" % (key, ann["file"], ann["start"], ann["end"])
-                )
-            if has_safe_marker:
-                errors.append(
-                    "L4 Key '%s' is vulnerable=true but has a safe-line marker "
-                    "(should be vuln-line)" % key
-                )
-        elif is_vuln is False:
-            if not has_safe_marker:
-                errors.append(
-                    "L4 Key '%s' is vulnerable=false but has NO safe-line marker "
-                    "in %s:%d-%d" % (key, ann["file"], ann["start"], ann["end"])
-                )
-            if has_vuln_marker:
-                errors.append(
-                    "L4 Key '%s' is vulnerable=false but has a vuln-line marker "
-                    "(should be safe-line)" % key
-                )
+        if PAT_ANNOTATION.search(content):
+            errors.append("L4 Annotation remnant in %s" % filepath.name)
+            leakage_count += 1
 
-        for marker_list in [vuln_lines.get(key, []), safe_lines.get(key, [])]:
-            for (mfile, mline) in marker_list:
-                if mfile != ann["file"]:
-                    errors.append(
-                        "L4 Marker for '%s' at %s:%d is in a different file "
-                        "than the snippet (%s)" % (key, mfile, mline, ann["file"])
-                    )
-                elif not (ann["start"] <= mline <= ann["end"]):
-                    errors.append(
-                        "L4 Marker for '%s' at %s:%d is OUTSIDE snippet range "
-                        "%d-%d" % (key, mfile, mline, ann["start"], ann["end"])
-                    )
+        if PAT_CWE_MENTION.search(content):
+            errors.append("L4 CWE mention in %s" % filepath.name)
+            leakage_count += 1
 
-    by_file = defaultdict(list)
-    for key, ann in annotations.items():
-        by_file[ann["file"]].append((ann["start"], ann["end"], key))
+        for i, line in enumerate(content.split("\n"), 1):
+            if PAT_STANDALONE_COMMENT.match(line):
+                errors.append("L4 Standalone comment at %s:%d" % (filepath.name, i))
+                leakage_count += 1
+                break
 
-    for file, ranges in by_file.items():
-        ranges.sort()
-        for i in range(len(ranges) - 1):
-            s1, e1, k1 = ranges[i]
-            s2, e2, k2 = ranges[i + 1]
-            if s2 <= e1:
-                errors.append(
-                    "L4 Overlapping snippets in %s: '%s' (%d-%d) "
-                    "overlaps with '%s' (%d-%d)" % (file, k1, s1, e1, k2, s2, e2)
-                )
+    return leakage_count
 
 
 # ============================================================================
 # L5: Scoring Pipeline Readiness
 # ============================================================================
 def check_scoring_pipeline(csv_entries):
-    """Verify all CWEs in the benchmark have coverage in convert_theauditor.py.
-
-    The refactored converter uses CWE numbers directly (from pattern_findings.cwe
-    and VULN_TYPE_TO_CWE). We check that every CWE in the CSV has at least one
-    mapping in VULN_TYPE_TO_CWE, and that 'php' is in the annotation-language set.
-    """
     if not CONVERTER_PY.exists():
-        warnings.append("L5 convert_theauditor.py not found - cannot verify scoring pipeline")
+        warnings.append("L5 convert_theauditor.py not found")
         return
 
-    with open(CONVERTER_PY, "r", encoding="utf-8") as f:
-        converter_content = f.read()
+    converter_content = CONVERTER_PY.read_text(encoding="utf-8")
 
-    # Extract CWE numbers from VULN_TYPE_TO_CWE dict values
     mapped_cwes = set()
     for m in re.finditer(r":\s*(\d+)", converter_content):
         mapped_cwes.add(int(m.group(1)))
 
-    # Collect unique CWEs from benchmark CSV
     benchmark_cwes = set()
-    for key, info in csv_entries.items():
+    for info in csv_entries.values():
         cwe = info.get("cwe")
         if cwe and cwe > 0:
             benchmark_cwes.add(cwe)
 
     for cwe in sorted(benchmark_cwes):
         if cwe not in mapped_cwes:
-            warnings.append(
-                "L5 CWE %d exists in ground truth but has no VULN_TYPE_TO_CWE "
-                "mapping in convert_theauditor.py (taint flows for this CWE "
-                "won't be converted)" % cwe
-            )
+            warnings.append("L5 CWE %d has no VULN_TYPE_TO_CWE mapping" % cwe)
 
-    # Verify PHP is in the annotation-language set
-    if '"php"' not in converter_content:
-        warnings.append(
-            "L5 'php' not found in convert_theauditor.py annotation-language set"
-        )
     if '".php"' not in converter_content:
-        warnings.append(
-            "L5 '.php' extension not found in convert_theauditor.py extension map"
-        )
+        warnings.append("L5 '.php' extension not in converter extension map")
 
 
 # ============================================================================
 # Report
 # ============================================================================
-def print_report(csv_entries, annotations):
-    """Print the full fidelity report."""
+def print_report(csv_entries):
     categories = defaultdict(lambda: {"tp": 0, "tn": 0})
-    for key, info in csv_entries.items():
+    for info in csv_entries.values():
         cat = info.get("category", "unknown")
         if info.get("vulnerable", False):
             categories[cat]["tp"] += 1
@@ -364,133 +248,106 @@ def print_report(csv_entries, annotations):
     total = total_tp + total_tn
 
     print("CSV entries:    %d" % len(csv_entries))
-    print("Annotations:    %d" % len(annotations))
-    print("Match:          %s" % ("YES" if len(csv_entries) == len(annotations) else "NO - MISMATCH"))
     print("Total TP:       %d" % total_tp)
     print("Total TN:       %d" % total_tn)
     if total > 0:
         print("TP/TN split:    %.1f%% / %.1f%%" % (total_tp * 100.0 / total, total_tn * 100.0 / total))
     print()
 
-    print("%-20s %5s %4s %4s %6s %8s" % ("Category", "CWE", "TP", "TN", "Total", "Balance"))
-    print("-" * 52)
-
     cat_cwes = {}
-    for key, info in csv_entries.items():
+    for info in csv_entries.values():
         cat = info.get("category")
         cwe = info.get("cwe")
         if cat and cwe:
             cat_cwes[cat] = cwe
 
+    print("%-20s %5s %4s %4s %6s" % ("Category", "CWE", "TP", "TN", "Total"))
+    print("-" * 42)
+
     for cat in sorted(categories.keys()):
         tp = categories[cat]["tp"]
         tn = categories[cat]["tn"]
-        cat_total = tp + tn
         cwe = cat_cwes.get(cat, "?")
-        if cat_total > 0:
-            balance = "%d/%d" % (tp * 100 // cat_total, tn * 100 // cat_total)
-        else:
-            balance = "N/A"
-        print("%-20s %5s %4d %4d %6d %8s" % (cat, cwe, tp, tn, cat_total, balance))
+        print("%-20s %5s %4d %4d %6d" % (cat, cwe, tp, tn, tp + tn))
 
-    print("-" * 52)
-    balance_str = "%d/%d" % (total_tp * 100 // total, total_tn * 100 // total) if total > 0 else "N/A"
-    print("%-20s %5s %4d %4d %6d %8s" % ("TOTAL", "", total_tp, total_tn, total, balance_str))
+    print("-" * 42)
+    print("%-20s %5s %4d %4d %6d" % ("TOTAL", "", total_tp, total_tn, total))
     print()
 
 
 def main():
     print("=" * 64)
-    print("  PHP SAST Benchmark Fidelity Validator v1.0")
-    print("  Modeled after TheAuditor fidelity system (L1-L5)")
+    print("  PHP SAST Benchmark Fidelity Validator v2.0")
+    print("  Filename-based (post-leakage migration)")
     print("=" * 64)
     print()
 
-    # --- L1: Structural Integrity ---
-    print("[L1] Structural Integrity (CSV <-> annotation cross-reference)")
+    print("[L1] Structural Integrity (CSV <-> file cross-reference)")
     csv_entries = parse_csv()
-    annotations, vuln_lines, safe_lines, file_lines = scan_annotations()
-
-    csv_keys = set(csv_entries.keys())
-    ann_keys = set(annotations.keys())
-
-    for key in sorted(csv_keys - ann_keys):
-        errors.append("L1 Orphan CSV: '%s' in ground truth but no annotation in source" % key)
-    for key in sorted(ann_keys - csv_keys):
-        errors.append("L1 Orphan annotation: '%s' in source but no CSV entry" % key)
-
+    test_files = scan_test_files()
+    check_structural(csv_entries, test_files)
     l1_errors = len(errors)
-    print("  Checks: duplicate keys, orphans, balanced start/end, unclosed snippets")
-    print("  Result: %d errors found" % l1_errors)
+    print("  CSV keys: %d  |  Test files: %d" % (len(csv_entries), len(test_files)))
+    print("  Result: %d errors" % l1_errors)
     print()
 
-    # --- L2: Roundtrip Fidelity ---
-    print("[L2] Roundtrip Fidelity (file existence, empty snippets)")
-    check_roundtrip(csv_entries, annotations)
+    print("[L2] Naming Convention (file + function pattern)")
+    check_naming(test_files)
     l2_errors = len(errors) - l1_errors
-    print("  Checks: annotation source files exist on disk, snippets non-empty")
-    print("  Result: %d errors found" % l2_errors)
+    print("  Result: %d errors" % l2_errors)
     print()
 
-    # --- L3: Schema Validation ---
-    print("[L3] Schema Validation (required fields, valid CWEs, valid categories)")
+    print("[L3] Schema Validation (CWEs, categories)")
     all_categories = check_schema(csv_entries)
     l3_errors = len(errors) - l1_errors - l2_errors
-    print("  Checks: 4 CSV columns present, CWE in valid set, category in valid set")
-    print("  Categories found: %d (%s)" % (len(all_categories), ", ".join(sorted(all_categories))))
-    print("  Result: %d errors found" % l3_errors)
+    print("  Categories: %d (%s)" % (len(all_categories), ", ".join(sorted(all_categories))))
+    print("  Result: %d errors" % l3_errors)
     print()
 
-    # --- L4: Semantic Fidelity ---
-    print("[L4] Semantic Fidelity (vuln-line/safe-line correctness, overlap detection)")
-    check_semantics(csv_entries, annotations, vuln_lines, safe_lines)
+    print("[L4] Anti-Target-Leakage (no annotations, no CWE mentions, no comments)")
+    leakage = check_leakage(test_files)
     l4_errors = len(errors) - l1_errors - l2_errors - l3_errors
-    print("  Checks: TP has vuln-line, TN has safe-line, markers inside snippet, no overlaps")
-    print("  Result: %d errors found" % l4_errors)
+    print("  Leakage instances: %d" % leakage)
+    print("  Result: %d errors" % l4_errors)
     print()
 
-    # --- L5: Scoring Pipeline Readiness ---
-    print("[L5] Scoring Pipeline Readiness (CWE coverage + annotation support)")
+    print("[L5] Scoring Pipeline Readiness")
     check_scoring_pipeline(csv_entries)
     l5_warnings = len(warnings)
-    print("  Checks: every CWE has VULN_TYPE_TO_CWE mapping, PHP in annotation set")
     print("  Result: %d warnings" % l5_warnings)
     print()
 
-    # --- L6: SARIF Integrity ---
-    print("[L6] SARIF Integrity (theauditor.sarif freshness)")
+    print("[L6] SARIF Integrity")
     sarif_path = PHP_DIR / "theauditor.sarif"
     if not sarif_path.exists():
-        print("  theauditor.sarif not found -- skipping (run converter to generate)")
+        print("  theauditor.sarif not found -- skipping")
     else:
         try:
             with open(sarif_path, "r", encoding="utf-8") as sf:
                 sarif_data = json.load(sf)
             integrity = sarif_data.get("runs", [{}])[0].get("properties", {}).get("integrity")
             if integrity is None:
-                warnings.append("L6 theauditor.sarif has no integrity metadata (legacy file, regenerate with converter v2.0+)")
+                warnings.append("L6 theauditor.sarif has no integrity metadata")
             else:
                 h = hashlib.sha256()
                 with open(CSV_FILE, "rb") as cf:
                     for chunk in iter(lambda: cf.read(65536), b""):
                         h.update(chunk)
                 if h.hexdigest() != integrity.get("csv_sha256"):
-                    warnings.append("L6 theauditor.sarif is STALE: CSV hash mismatch (re-run convert_theauditor.py)")
+                    warnings.append("L6 theauditor.sarif is STALE (CSV hash mismatch)")
                 else:
-                    print("  SARIF integrity: CURRENT (CSV hash matches)")
+                    print("  SARIF integrity: CURRENT")
         except (json.JSONDecodeError, OSError) as e:
             warnings.append("L6 Could not read theauditor.sarif: %s" % e)
     l6_warnings = len(warnings) - l5_warnings
     print("  Result: %d warnings" % l6_warnings)
     print()
 
-    # --- Summary ---
     print("=" * 64)
     print("  SUMMARY")
     print("=" * 64)
     print()
-
-    print_report(csv_entries, annotations)
+    print_report(csv_entries)
 
     if errors:
         print("ERRORS: %d" % len(errors))
@@ -505,16 +362,13 @@ def main():
         print()
 
     if errors:
-        print("RESULT: FAIL")
-        print("  %d errors must be fixed before benchmark is valid." % len(errors))
+        print("RESULT: FAIL (%d errors)" % len(errors))
         return 1
     elif warnings:
-        print("RESULT: PASS WITH WARNINGS")
-        print("  %d warnings found. Review recommended but not blocking." % len(warnings))
+        print("RESULT: PASS WITH WARNINGS (%d warnings)" % len(warnings))
         return 2
     else:
         print("RESULT: PASS")
-        print("  All L1-L5 fidelity checks passed. Benchmark is valid.")
         return 0
 
 

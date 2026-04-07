@@ -1,4 +1,4 @@
-# PHP SAST Benchmark v0.2.0
+# PHP SAST Benchmark v0.3.1
 
 ## Purpose
 
@@ -6,7 +6,7 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 ## Test Case Inventory
 
-25 CWE categories, 1,256 test cases (628 TP / 628 TN), 50/50 balance.
+25 CWE categories, 1,138 test cases (569 TP / 569 TN), 50/50 balance.
 
 ### Tier 1: Core (High SAST Detectability)
 
@@ -52,48 +52,34 @@ The first public OWASP-style SAST benchmark for PHP. No equivalent exists from O
 
 | Framework | Version Target | Usage |
 |-----------|---------------|-------|
-| Raw PHP/PDO | PHP 5.x - 8.x | testcode + vuln_blog app |
-| Laravel | 8.x - 11.x patterns | laravel_api app |
-| WordPress | 5.x - 6.x patterns | wp_plugin app |
-| Symfony | 5.x - 7.x patterns | symfony_app app |
+| Raw PHP/PDO | PHP 5.x - 8.x | testcode |
 
-## Applications
+## Applications (moved to vulnerable_apps/php/)
 
-| App | Framework | Test Cases | Description |
-|-----|-----------|------------|-------------|
-| vuln_blog | Raw PHP/PDO | 40 | Blog with auth, posts, comments, uploads, search |
-| laravel_api | Laravel-style | 30 | REST API with Eloquent ORM, Blade templates |
-| wp_plugin | WordPress | 24 | Plugin with $wpdb, nonces, shortcodes, AJAX |
-| symfony_app | Symfony-style | 24 | Forms with Doctrine, Twig, LDAP auth |
+Reference apps (vuln_blog, laravel_api, wp_plugin, symfony_app) moved to `vulnerable_apps/php/` for centralized management. Their 118 test cases are no longer in the main benchmark CSV — they have separate scoring.
 
-## Annotation Format
+## Anti-Target Leakage Rules
 
-Test cases are marked with `vuln-code-snippet` comments (same format as Rust and Bash benchmarks):
+Test files use generic `benchmark_test_NNNNN.php` naming with shuffled
+numbering (seeded, reproducible). Files contain NO comments indicating
+vulnerability category, CWE, or TP/TN status. This ensures SAST tools
+must perform actual dataflow/AST analysis rather than text-matching
+filenames or comments.
 
-```php
-// vuln-code-snippet start php_sqli_pdo_concat
-function getUser(PDO $pdo, BenchmarkRequest $req): BenchmarkResponse {
-    $id = $req->param('id');
-    $query = "SELECT * FROM users WHERE id = " . $id; // vuln-code-snippet vuln-line php_sqli_pdo_concat
-    $result = $pdo->query($query);
-    return BenchmarkResponse::ok(json_encode($result->fetchAll()));
-}
-// vuln-code-snippet end php_sqli_pdo_concat
-```
-
-- `vuln-code-snippet start KEY` -- Opens a test case
-- `vuln-code-snippet end KEY` -- Closes a test case
-- `vuln-code-snippet vuln-line KEY` -- Marks the vulnerable line (TP test cases)
-- `vuln-code-snippet safe-line KEY` -- Marks the safe line (TN test cases)
+- 1 file = 1 test case
+- Filename: `benchmark_test_NNNNN.php` (5-digit, seeded shuffle)
+- Entry function: `benchmarkTestNNNNN(BenchmarkRequest $req): BenchmarkResponse`
+- Ground truth lives in the CSV only -- never in source files
+- No comments except where functionally required by the code
 
 ## Ground Truth
 
-`expectedresults-0.2.0.csv` -- OWASP CSV format:
+`expectedresults-0.3.1.csv` -- OWASP CSV format:
 
 ```csv
 # test name,category,real vulnerability,CWE
-php_sqli_pdo_concat,sqli,true,89
-php_sqli_pdo_prepare,sqli,false,89
+BenchmarkTest00001,weakrand,false,330
+BenchmarkTest00002,ssrf,true,918
 ```
 
 ## Scoring
@@ -106,7 +92,8 @@ See [SCORING.md](SCORING.md) for full methodology and tool-specific instructions
 python scripts/validate_php.py
 ```
 
-Runs L1-L5 fidelity checks matching the Bash/Rust validation standard.
+Runs L1-L5 fidelity checks: structural integrity, naming convention,
+schema validation, anti-target-leakage, and scoring pipeline readiness.
 
 ## PHP-Unique CWEs
 
