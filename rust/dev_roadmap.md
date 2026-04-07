@@ -8,12 +8,10 @@
 
 ## Current State (v0.5.0)
 
-- **1,252 test cases** (625 TP, 627 TN) across 25 CWE categories
-- **CSV ground truth** (`expectedresults-0.5.0.csv`) is the sole scoring authority
-- **633 standalone test files** in `testcode/` + 8 annotated applications in `apps/`
-- **All 25 categories** have both TP and TN test cases, minimum 25/25
-- **TP/TN balance:** 49/51 (sqli retains 2 legacy extra TN)
-- **4 frameworks:** actix-web, axum, Rocket, Warp
+- **1,133 test cases** (548 TP, 585 TN) across 25 CWE categories
+- **CSV ground truth** (`expectedresults-0.5.1.csv`) is the sole scoring authority
+- **1,133 standalone test files** in `testcode/` (apps moved to `vulnerable_apps/rust/`)
+- **TP/TN balance:** 48/52
 - **Scoring:** SARIF-based via `scripts/score_sarif.py`, Youden's J per category
 
 ---
@@ -137,12 +135,12 @@ cmdiExecuteCommand,cmdi,true,78
 - Each test case becomes its own `.rs` file with minimal boilerplate
 - File naming: `BenchmarkTest_sqli_001.rs` (vulnerable), `BenchmarkTest_sqli_002.rs` (safe)
 - Each file is a complete, compilable Rust function (no framework dependency needed)
-- Keep `apps/` as the "real world" test suite
-- Both `testcode/` and `apps/` contribute to scoring
+- Apps moved to `vulnerable_apps/rust/` (separate scoring)
+- Only `testcode/` contributes to main benchmark scoring
 
 **Why optional:** This is the highest effort milestone with diminishing returns. The Java benchmark uses this structure because Servlet test cases are naturally self-contained. Rust test cases often depend on framework extractors (actix, axum) which require external crate dependencies. Standalone files would need to simulate framework input, reducing realism.
 
-**Alternative:** Keep apps/ as primary, but ensure every test case is clearly isolated within its file (one function = one test case, no overlapping annotations).
+**Alternative:** Apps moved to `vulnerable_apps/rust/` with separate scoring. Testcode is now primary.
 
 **Estimated effort:** Very large. Only pursue if M1-M3 and M5 are complete.
 

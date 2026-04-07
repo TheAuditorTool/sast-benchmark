@@ -25,7 +25,7 @@ gorustbash_benchmark/go/
   SCORING.md                  # Full scoring methodology and tool instructions
   CHANGELOG.md                # Every change documented
   testcode/                   # 1350 benchmark test files + shared.go + benchmark_services.go
-  apps/                       # 5 reference apps with ground_truth.csv each
+  # Reference apps moved to vulnerable_apps/go/ (centralized across all languages)
   cmd/main.go                 # Entry point
   go.mod
 ```
@@ -275,7 +275,7 @@ See `baseline_theauditor_tool_score.md` for TheAuditor's baseline score against 
 
 ---
 
-## Reference App Inventory (apps/)
+## Reference App Inventory (vulnerable_apps/go/)
 
 ### 1. multi-api
 

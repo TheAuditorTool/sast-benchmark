@@ -15,7 +15,7 @@
 |-------|-------|---------|
 | Test files (testcode/) | 256 | Mixed -- hand-written (1-110) decent, agent-written (111-256) variable |
 | CSV answer key | 256 entries | Classifications verified correct |
-| Reference apps (apps/) | 6 apps, 67 .go files | Fully audited, 100+ vulnerabilities documented |
+| Reference apps (vulnerable_apps/go/) | 6 apps, 67 .go files | Fully audited, 100+ vulnerabilities documented |
 | Documentation | go_benchmark.md (450 lines) | Test registry, app inventory, scoring script |
 | Shared infra | shared.go, cmd/main.go, go.mod | Minimal -- main.go doesn't register handlers |
 
@@ -31,7 +31,7 @@
 
 **Problem 5: No compilation verification.** We haven't verified that all 256 test files compile together as a Go package. Import conflicts, unused imports, and type errors may exist.
 
-**Problem 6: Reference apps not integrated.** The 6 apps in `apps/` are copied material. They aren't scored against ground truth. They have existing TAINT SOURCE/SINK annotations which would need to be removed or converted to vuln-code-snippet format for benchmark use.
+**Problem 6: Reference apps not integrated.** The 6 apps in `vulnerable_apps/go/` (moved from `apps/`) are copied material. They aren't scored against ground truth. They have existing TAINT SOURCE/SINK annotations which would need to be removed or converted to vuln-code-snippet format for benchmark use.
 
 ---
 
