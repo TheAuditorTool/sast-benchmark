@@ -1,6 +1,9 @@
 # Archive (local pre-rewrite bundle -- never published)
 .archive/
 
+# Local working folder (not published)
+www/
+
 # SAST scan artifacts
 *.sarif
 *.db
