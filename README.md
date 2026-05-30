@@ -5,6 +5,16 @@ accurately a static analysis tool finds real vulnerabilities — and how often i
 
 **[benchproctor.com](https://benchproctor.com)** · [blog](https://blog.benchproctor.com) · Apache-2.0
 
+> ## Release status
+>
+> The corpus spans nine languages, but we publish each only once it's verified production-ready — we won't ship labels we can't defend.
+>
+> - **Java — production-ready. Full public launch before the end of June 2026** (Spring + Jakarta EE).
+> - **Python — close behind** (Flask / Django / FastAPI).
+> - Go, Rust, PHP, Ruby, JavaScript, TypeScript, and Bash follow as each clears the same bar.
+>
+> Why one language at a time? [Read the release plan →](https://blog.benchproctor.com/java-first-release-plan/)
+
 A SAST tool is only as trustworthy as its accuracy, and accuracy is unmeasurable without ground
 truth. BenchProctor gives you labeled corpora — programs marked `vulnerable` or `safe` — so you
 can score any tool that emits SARIF 2.1.0 and get a real number: true-positive rate,
