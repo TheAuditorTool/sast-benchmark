@@ -54,7 +54,7 @@ BenchProctor is built to remove all three.
 | **Frameworks** | 18 — at least two per language, real idioms (DTOs, Pydantic models, ORM calls) |
 | **Categories** | 234 |
 | **Unique CWEs** | 219 |
-| **OWASP Top 10 2025** | 213 / 249 mapped CWEs (85.5%) |
+| **Top-10 web-risk coverage** | 213 / 249 mapped CWEs (85.5%) |
 | **Balance** | ~50 / 50 vulnerable / safe |
 
 - **Combinatorial, not hand-written.** Each category is a vulnerability class expressed as a taint
@@ -111,7 +111,7 @@ separate a real analyzer from a pattern matcher:
 
 Adding a language changes nothing about the categories, so coverage stays uniform across the matrix.
 
-## OWASP Top 10 2025
+## Web-risk category coverage
 
 | Category | Covered / Mapped | |
 |---|---|---|
